@@ -6,11 +6,8 @@ import { useConfigStore } from "@/stores/config";
 import {
   bookshelfExport,
   bookshelfList,
-  bookDelete,
-  bookMoveToTop,
   groupList,
   VIRTUAL_GROUP,
-  BOOK_SORT_LABELS,
 } from "@/api/books";
 import type { Book, BookGroup } from "@/api/bindings";
 import TitleBar from "@/components/android/TitleBar.vue";
@@ -41,7 +38,6 @@ const configStore = useConfigStore();
 
 const bookshelfConfigVisible = ref(false);
 const activeGroup = ref<number>(VIRTUAL_GROUP.all);
-const menuBook = ref<Book | null>(null);
 const manageMenuVisible = ref(false);
 const userGroups = ref<BookGroup[]>([]);
 const message = ref("");
@@ -56,16 +52,29 @@ const groups = computed(() => [
   ...userGroups.value.map((group) => ({ id: group.groupId, name: group.groupName })),
 ]);
 
+const activeGroupName = computed(
+  () => groups.value.find((group) => group.id === activeGroup.value)?.name ?? "全部",
+);
+
+type FolderItem =
+  | { type: "group"; group: BookGroup }
+  | { type: "book"; book: Book };
+
+const folderItems = computed<FolderItem[]>(() => {
+  if (!folderStyle.value || activeGroup.value !== VIRTUAL_GROUP.all) {
+    return booksStore.list.map((book) => ({ type: "book" as const, book }));
+  }
+  return [
+    ...userGroups.value.map((group) => ({ type: "group" as const, group })),
+    ...booksStore.list.map((book) => ({ type: "book" as const, book })),
+  ];
+});
+
 const gridColumns = computed(() =>
   configStore.global.bookshelfLayout === 0
     ? 0
     : configStore.global.bookshelfLayout + 2,
 );
-
-const sortOptions = Object.entries(BOOK_SORT_LABELS).map(([value, label]) => ({
-  value: Number(value),
-  label,
-}));
 
 async function load() {
   booksStore.setList(
@@ -95,17 +104,20 @@ function openBook(book: Book) {
   router.push({ path: "/reader", query: { bookUrl: book.bookUrl } });
 }
 
-async function onMoveToTop(book: Book) {
-  await bookMoveToTop(book.bookUrl);
-  menuBook.value = null;
-  await load();
+function openInfo(book: Book) {
+  router.push({ path: "/book-info", query: { bookUrl: book.bookUrl } });
 }
 
-async function onDelete(book: Book) {
-  if (!confirm(`删除《${book.name}》及其章节数据？`)) return;
-  await bookDelete(book.bookUrl);
-  menuBook.value = null;
-  await load();
+function openGroup(group: BookGroup) {
+  activeGroup.value = group.groupId;
+  rememberTab();
+  load();
+}
+
+function backToRoot() {
+  activeGroup.value = VIRTUAL_GROUP.all;
+  rememberTab();
+  load();
 }
 
 async function onExport() {
@@ -138,13 +150,6 @@ function onManage(key: string) {
   else if (key === "export") onExport();
   else if (key === "importShelf") router.push("/legacy/activity_import_book");
   else if (key === "log") router.push("/legacy/activity_config");
-}
-
-async function changeSort(event: Event) {
-  const value = Number((event.target as HTMLSelectElement).value);
-  configStore.global.bookshelfSort = value;
-  await configStore.persist("bookshelfSort");
-  await load();
 }
 
 async function onConfigSaved() {
@@ -195,7 +200,12 @@ onMounted(async () => {
 
 <template>
   <div class="bookshelf-page">
-    <TitleBar data-id="title_bar" title="书架" :back="false">
+    <TitleBar
+      data-id="title_bar"
+      :title="folderStyle && activeGroup !== VIRTUAL_GROUP.all ? `书架（${activeGroupName}）` : '书架'"
+      :back="folderStyle && activeGroup !== VIRTUAL_GROUP.all"
+      @back="backToRoot"
+    >
       <template #content>
         <div v-if="!folderStyle" class="tabs" data-id="view_pager_bookshelf">
           <button
@@ -212,11 +222,6 @@ onMounted(async () => {
         <button aria-label="搜索" @click="router.push('/book-search')">
           <Icon name="ic_search" :size="24" />
         </button>
-        <select class="sort-select" :value="configStore.global.bookshelfSort" @change="changeSort">
-          <option v-for="option in sortOptions" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
-        </select>
         <button aria-label="管理" @click="manageMenuVisible = !manageMenuVisible">
           <Icon name="ic_more_vert" :size="24" />
         </button>
@@ -246,46 +251,44 @@ onMounted(async () => {
         :class="layout"
         :style="layout === 'grid' ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` } : {}"
       >
-        <BookItem
-          v-for="book in booksStore.list"
-          :key="book.bookUrl"
-          :book="book"
-          :layout="layout"
-          :show-last-update-time="configStore.global.showLastUpdateTime"
-          :show-unread="configStore.global.showUnread"
-          :show-wait-up-count="configStore.global.showWaitUpCount"
-          @open="openBook"
-          @menu="menuBook = $event"
-        />
+        <template v-for="item in folderItems" :key="item.type === 'group' ? `group-${item.group.groupId}` : item.book.bookUrl">
+          <div
+            v-if="item.type === 'group'"
+            class="group-item"
+            :class="layout"
+            @click="openGroup(item.group)"
+          >
+            <CoverImage
+              :name="item.group.groupName"
+              :src="item.group.coverUrl"
+              :width="layout === 'list' ? 66 : 0"
+              :height="layout === 'list' ? 90 : 0"
+              :fill="layout === 'grid'"
+            />
+            <span class="group-name">{{ item.group.groupName }}</span>
+          </div>
+          <BookItem
+            v-else
+            :book="item.book"
+            :layout="layout"
+            :show-last-update-time="configStore.global.showLastUpdateTime"
+            :show-unread="configStore.global.showUnread"
+            :show-wait-up-count="configStore.global.showWaitUpCount"
+            @open="openBook"
+            @menu="openInfo"
+          />
+        </template>
       </div>
 
       <EmptyState
-        v-if="booksStore.list.length === 0"
+        v-if="folderItems.length === 0"
         data-id="tv_empty_msg"
         icon="ic_bottom_books_e"
-        text="书架还很空哦～快去添加书籍添加进来吧！"
+        text="书架还很空哦～快去添加书籍添加进来吧"
         action="添加本地书籍"
         @action="router.push('/import')"
       />
     </main>
-
-
-
-    <div v-if="menuBook" class="mask" @click.self="menuBook = null">
-      <div class="book-sheet">
-        <div class="book-preview">
-          <CoverImage :name="menuBook.name" :width="44" :height="60" />
-          <div>
-            <p class="preview-name">{{ menuBook.name }}</p>
-            <p class="preview-meta">{{ menuBook.author }}</p>
-          </div>
-        </div>
-        <button @click="openBook(menuBook)">打开</button>
-        <button @click="onMoveToTop(menuBook)">置顶</button>
-        <button class="danger" @click="onDelete(menuBook)">删除书籍</button>
-        <button @click="menuBook = null">取消</button>
-      </div>
-    </div>
 
     <BookshelfConfigDialog v-model="bookshelfConfigVisible" @saved="onConfigSaved" />
   </div>
@@ -298,6 +301,34 @@ onMounted(async () => {
   height: 100%;
   min-height: 0;
   background: var(--ac-background);
+}
+.group-item.list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--ac-divider);
+  background: var(--ac-background);
+  cursor: pointer;
+}
+.group-item.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: var(--ac-background);
+  cursor: pointer;
+}
+.group-item .group-name {
+  font-size: 15px;
+  color: var(--ac-primary-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.group-item.grid .group-name {
+  font-size: 12px;
+  text-align: center;
 }
 .tabs {
   display: flex;

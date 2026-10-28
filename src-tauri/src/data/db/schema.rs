@@ -36,7 +36,8 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             canUpdate         INTEGER NOT NULL DEFAULT 0,
             "order"           INTEGER NOT NULL DEFAULT 0,
             syncTime          INTEGER NOT NULL DEFAULT 0,
-            readConfig        TEXT
+            readConfig        TEXT,
+            customIntro       TEXT
         );
         CREATE UNIQUE INDEX IF NOT EXISTS idx_books_name_author ON books(name, author);
 
@@ -167,5 +168,21 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
         );
         "#,
     )?;
+    ensure_column(conn, "books", "customIntro", "TEXT")?;
+    Ok(())
+}
+
+fn ensure_column(conn: &Connection, table: &str, column: &str, kind: &str) -> Result<()> {
+    let mut stmt = conn.prepare(&format!("PRAGMA table_info({table})"))?;
+    let exists = stmt
+        .query_map([], |row| row.get::<_, String>(1))?
+        .filter_map(std::result::Result::ok)
+        .any(|name| name == column);
+    if !exists {
+        conn.execute(
+            &format!("ALTER TABLE {table} ADD COLUMN {column} {kind}"),
+            [],
+        )?;
+    }
     Ok(())
 }

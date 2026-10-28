@@ -4,6 +4,7 @@ pub mod content_processor;
 pub mod epub_import;
 pub mod import_service;
 pub mod layout_engine;
+pub mod local_import;
 pub mod model;
 pub mod pdf_import;
 pub mod pinyin;

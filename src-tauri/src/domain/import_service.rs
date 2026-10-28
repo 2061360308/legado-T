@@ -9,6 +9,8 @@ use std::path::{Path, PathBuf};
 
 use rusqlite::Connection;
 
+use md5::{Digest, Md5};
+
 use crate::data::keyvalue::KeyValue;
 use crate::data::repositories::{BookRepo, ChapterRepo, TxtTocRuleRepo};
 use crate::domain::epub_import;
@@ -77,6 +79,36 @@ fn mtime_secs(path: &Path) -> i64 {
                 .unwrap_or(0)
         })
         .unwrap_or(0)
+}
+
+fn write_cover(data_dir: &Path, book_url: &str, cover: epub_import::CoverData) -> Result<String> {
+    let dir = data_dir.join("covers");
+    fs::create_dir_all(&dir)?;
+    let digest = Md5::digest(book_url.as_bytes());
+    let path = dir.join(format!("{digest:x}.{}", cover.ext));
+    fs::write(&path, cover.bytes)?;
+    Ok(path.to_string_lossy().to_string())
+}
+
+pub fn ensure_epub_cover(book: &mut Book, data_dir: &Path) -> Result<bool> {
+    if !is_epub(&book.book_url)
+        || book
+            .cover_url
+            .as_deref()
+            .map(|value| !value.trim().is_empty())
+            .unwrap_or(false)
+    {
+        return Ok(false);
+    }
+    let path = Path::new(&book.book_url);
+    if !path.exists() {
+        return Ok(false);
+    }
+    let Some(cover) = epub_import::extract_cover(path)? else {
+        return Ok(false);
+    };
+    book.cover_url = Some(write_cover(data_dir, &book.book_url, cover)?);
+    Ok(true)
 }
 
 pub fn is_epub(path: &str) -> bool {
@@ -297,6 +329,9 @@ pub fn import_epub(
     } else {
         parsed.intro.clone()
     };
+    let cover_url = epub_import::extract_cover(&dst)?
+        .map(|cover| write_cover(data_dir, &book_url, cover))
+        .transpose()?;
     let book = Book {
         book_url: book_url.clone(),
         name: book_name,
@@ -315,6 +350,7 @@ pub fn import_epub(
         } else {
             Some(intro.clone())
         },
+        cover_url,
         total_chapter_num: chapters.len() as i32,
         can_update: false,
         sync_time: mtime_secs(&dst),

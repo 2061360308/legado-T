@@ -101,6 +101,8 @@ pub struct Book {
     pub sync_time: i64,
     #[serde(default)]
     pub read_config: Option<ReadConfig>,
+    #[serde(default)]
+    pub custom_intro: Option<String>,
 }
 
 impl Book {

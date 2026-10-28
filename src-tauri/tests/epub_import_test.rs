@@ -74,6 +74,7 @@ fn write_epub(path: &std::path::Path) {
     <item id="c1" href="ch1.xhtml" media-type="application/xhtml+xml"/>
     <item id="c2" href="ch2.xhtml" media-type="application/xhtml+xml"/>
     <item id="pic" href="images/pic.gif" media-type="image/gif"/>
+    <item id="cover" href="images/cover.gif" media-type="image/gif" properties="cover-image"/>
   </manifest>
   <spine>
     <itemref idref="c1"/>
@@ -102,6 +103,7 @@ fn write_epub(path: &std::path::Path) {
         false,
     );
     add_bytes(&mut zip, "OEBPS/images/pic.gif", ONE_PIXEL_GIF, false);
+    add_bytes(&mut zip, "OEBPS/images/cover.gif", ONE_PIXEL_GIF, false);
     add(
         &mut zip,
         "OEBPS/ch2.xhtml",
@@ -127,6 +129,17 @@ fn imports_epub_text_and_reads_cached_chapters() {
     assert_eq!(import.book.author, "测试作者");
     assert_eq!(import.chapter_count, 2);
     assert_eq!(import.intro, "一本测试书");
+    let cover = import.book.cover_url.as_deref().expect("EPUB cover");
+    assert!(std::path::Path::new(cover).exists());
+
+    let mut repaired = import.book.clone();
+    repaired.cover_url = None;
+    assert!(import_service::ensure_epub_cover(&mut repaired, &dir).unwrap());
+    assert!(repaired
+        .cover_url
+        .as_deref()
+        .map(|value| std::path::Path::new(value).exists())
+        .unwrap_or(false));
 
     let chapters =
         local_reader_lib::data::repositories::ChapterRepo::list(&conn, &import.book.book_url)

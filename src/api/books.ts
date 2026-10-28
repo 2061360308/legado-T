@@ -4,6 +4,8 @@ import {
   type Book,
   type BookChapter,
   type BookGroup,
+  type LocalImportEntry,
+  type LocalImportResult,
   type TxtTocRule,
 } from "./bindings";
 
@@ -89,6 +91,46 @@ export interface ImportResult {
   charset: string;
   rule: string;
   intro: string;
+}
+
+export function localImportList(path: string): Promise<LocalImportEntry[]> {
+  return invoke<LocalImportEntry[]>(COMMANDS.localImportList, { path });
+}
+
+export function localImportScan(path: string): Promise<LocalImportEntry[]> {
+  return invoke<LocalImportEntry[]>(COMMANDS.localImportScan, { path });
+}
+
+export function localImportImport(
+  paths: string[],
+  group: number | null,
+  nameScript: string | null,
+): Promise<LocalImportResult[]> {
+  return invoke<LocalImportResult[]>(COMMANDS.localImportImport, {
+    paths,
+    group,
+    nameScript,
+  });
+}
+
+export function localImportDelete(paths: string[]): Promise<number> {
+  return invoke<number>(COMMANDS.localImportDelete, { paths });
+}
+
+export function bookCoverSave(bookUrl: string, srcPath: string): Promise<string> {
+  return invoke<string>(COMMANDS.bookCoverSave, { bookUrl, srcPath });
+}
+
+export function bookCoverRefresh(bookUrl: string): Promise<string | null> {
+  return invoke<string | null>(COMMANDS.bookCoverRefresh, { bookUrl });
+}
+
+export function bookFileSize(bookUrl: string): Promise<number> {
+  return invoke<number>(COMMANDS.bookFileSize, { bookUrl });
+}
+
+export function bookClearCache(bookUrl: string): Promise<void> {
+  return invoke<void>(COMMANDS.bookClearCache, { bookUrl });
 }
 
 export function importTxt(

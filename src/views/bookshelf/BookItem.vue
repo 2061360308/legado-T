@@ -21,6 +21,7 @@ const props = withDefaults(
 const emit = defineEmits<{ open: [book: Book]; menu: [book: Book] }>();
 
 let pressTimer: number | undefined;
+let longPressed = false;
 
 function fmtDate(ts?: number): string {
   if (!ts) return "";
@@ -47,7 +48,11 @@ const unreadCount = computed(() => {
 
 function startPress() {
   window.clearTimeout(pressTimer);
-  pressTimer = window.setTimeout(() => emit("menu", props.book), 480);
+  longPressed = false;
+  pressTimer = window.setTimeout(() => {
+    longPressed = true;
+    emit("menu", props.book);
+  }, 480);
 }
 
 function cancelPress() {
@@ -58,6 +63,10 @@ function open() {
   if (pressTimer) {
     window.clearTimeout(pressTimer);
     pressTimer = undefined;
+  }
+  if (longPressed) {
+    longPressed = false;
+    return;
   }
   emit("open", props.book);
 }
@@ -76,7 +85,7 @@ onBeforeUnmount(() => window.clearTimeout(pressTimer));
     @pointerup="cancelPress"
     @pointerleave="cancelPress"
   >
-    <CoverImage :name="book.name" :width="66" :height="90" data-id="iv_cover" />
+    <CoverImage :name="book.name" :src="book.customCoverUrl || book.coverUrl" :width="66" :height="90" data-id="iv_cover" />
     <div class="row-text">
       <div class="name-line">
         <span class="name" data-id="tv_name">{{ book.name }}</span>
@@ -108,7 +117,7 @@ onBeforeUnmount(() => window.clearTimeout(pressTimer));
     @pointerleave="cancelPress"
   >
     <div class="grid-cover-wrap">
-      <CoverImage :name="book.name" fill class="grid-cover" />
+      <CoverImage :name="book.name" :src="book.customCoverUrl || book.coverUrl" fill class="grid-cover" />
       <span v-if="showUnread && unreadCount > 0" class="badge grid-badge" data-id="bv_unread">{{ unreadCount > 99 ? "99+" : unreadCount }}</span>
     </div>
     <span class="grid-name">{{ book.name }}</span>

@@ -24,6 +24,11 @@ pub struct ParsedEpub {
     pub chapters: Vec<ParsedChapter>,
 }
 
+pub struct CoverData {
+    pub bytes: Vec<u8>,
+    pub ext: String,
+}
+
 fn compile(pattern: &str) -> Result<Regex> {
     Regex::new(pattern).map_err(|e| Error::Internal(format!("EPUB HTML regex error: {e}")))
 }
@@ -170,6 +175,86 @@ fn image_extension(src: &str) -> String {
     } else {
         "bin".to_string()
     }
+}
+
+fn cover_extension(media_type: &str, href: &str) -> String {
+    match media_type.to_ascii_lowercase().as_str() {
+        "image/jpeg" | "image/jpg" => "jpg".to_string(),
+        "image/png" => "png".to_string(),
+        "image/gif" => "gif".to_string(),
+        "image/webp" => "webp".to_string(),
+        "image/svg+xml" => "svg".to_string(),
+        "image/bmp" => "bmp".to_string(),
+        _ => image_extension(href),
+    }
+}
+
+fn first_image_src(html: &str) -> Option<String> {
+    let regex = compile(r"(?is)<(?:img|image)\b[^>]*>").ok()?;
+    for found in regex.find_iter(html) {
+        let Ok(found) = found else {
+            continue;
+        };
+        let tag = found.as_str();
+        if let Some(src) = attr(tag, "src").or_else(|| attr(tag, "xlink:href")) {
+            if !src.trim().is_empty() {
+                return Some(src);
+            }
+        }
+    }
+    None
+}
+
+/// Extract the EPUB cover without parsing every chapter.
+pub fn extract_cover(path: &Path) -> Result<Option<CoverData>> {
+    let epub = Epub::open(path).map_err(|e| Error::Invalid(format!("EPUB open failed: {e}")))?;
+    if let Some(entry) = epub.manifest().cover_image() {
+        if let Ok(bytes) = entry.read_bytes() {
+            if !bytes.is_empty() {
+                let href = entry.href().to_string();
+                return Ok(Some(CoverData {
+                    bytes,
+                    ext: cover_extension(entry.media_type(), &href),
+                }));
+            }
+        }
+    }
+
+    for entry in epub.spine().iter() {
+        let Some(manifest) = entry.manifest_entry() else {
+            continue;
+        };
+        let href = manifest.href().to_string();
+        let lower = href.to_ascii_lowercase();
+        if !lower.contains("cover") && !lower.contains("titlepage") {
+            continue;
+        }
+        let Ok(html) = manifest.read_str() else {
+            continue;
+        };
+        let Some(src) = first_image_src(&html) else {
+            continue;
+        };
+        let Some(resolved) = resolve_href(&href, &src) else {
+            continue;
+        };
+        let Some(image_entry) = epub
+            .manifest()
+            .by_href(&format!("/{resolved}"))
+            .or_else(|| epub.manifest().by_href(&resolved))
+        else {
+            continue;
+        };
+        if let Ok(bytes) = image_entry.read_bytes() {
+            if !bytes.is_empty() {
+                return Ok(Some(CoverData {
+                    bytes,
+                    ext: cover_extension(image_entry.media_type(), &resolved),
+                }));
+            }
+        }
+    }
+    Ok(None)
 }
 
 fn cache_image(

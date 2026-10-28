@@ -33,7 +33,7 @@ onMounted(async () => {
     <TitleBar title="阅读记录" @back="router.back()" />
     <main class="list">
       <button v-for="book in records" :key="book.bookUrl" class="record" @click="open(book)">
-        <CoverImage :name="book.name" :width="44" :height="60" />
+        <CoverImage :name="book.name" :src="book.customCoverUrl || book.coverUrl" :width="44" :height="60" />
         <span class="text">
           <span class="name">{{ book.name }}</span>
           <span class="chapter">

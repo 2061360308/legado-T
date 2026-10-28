@@ -36,6 +36,7 @@ export interface Book {
   group?: number;
   tocUrl?: string;
   intro?: string | null;
+  customIntro?: string | null;
   kind?: string | null;
   customTag?: string | null;
   coverUrl?: string | null;
@@ -50,6 +51,24 @@ export interface Book {
   order?: number;
   syncTime?: number;
   readConfig?: ReadConfig | null;
+}
+
+export interface LocalImportEntry {
+  path: string;
+  name: string;
+  isDir: boolean;
+  size: number;
+  modified: number;
+  ext: string;
+  supported: boolean;
+  onShelf: boolean;
+}
+
+export interface LocalImportResult {
+  path: string;
+  name: string;
+  bookUrl?: string | null;
+  error?: string | null;
 }
 
 export interface BookChapter {
@@ -237,6 +256,14 @@ export const COMMANDS = {
   readerSaveProgress: "reader_save_progress",
   readerEffectiveRules: "reader_effective_rules",
   readerSaveChapterContent: "reader_save_chapter_content",
+  localImportList: "local_import_list",
+  localImportScan: "local_import_scan",
+  localImportImport: "local_import_import",
+  localImportDelete: "local_import_delete",
+  bookCoverSave: "book_cover_save",
+  bookCoverRefresh: "book_cover_refresh",
+  bookFileSize: "book_file_size",
+  bookClearCache: "book_clear_cache",
   txtTocRuleSave: "txt_toc_rule_save",
   txtTocRuleDelete: "txt_toc_rule_delete",
   txtTocRuleReorder: "txt_toc_rule_reorder",

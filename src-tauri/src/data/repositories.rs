@@ -41,8 +41,8 @@ impl BookRepo {
             r#"INSERT INTO books (
                 bookUrl,name,author,origin,originName,charset,type,"group",tocUrl,intro,kind,
                 customTag,coverUrl,customCoverUrl,latestChapterTitle,durChapterIndex,durChapterPos,
-                durChapterTitle,durChapterTime,totalChapterNum,canUpdate,"order",syncTime,readConfig)
-               VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24)
+                durChapterTitle,durChapterTime,totalChapterNum,canUpdate,"order",syncTime,readConfig,customIntro)
+               VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25)
                ON CONFLICT(bookUrl) DO UPDATE SET
                 name=excluded.name, author=excluded.author, origin=excluded.origin,
                 originName=excluded.originName, charset=excluded.charset, type=excluded.type,
@@ -52,13 +52,14 @@ impl BookRepo {
                 durChapterIndex=excluded.durChapterIndex, durChapterPos=excluded.durChapterPos,
                 durChapterTitle=excluded.durChapterTitle, durChapterTime=excluded.durChapterTime,
                 totalChapterNum=excluded.totalChapterNum, canUpdate=excluded.canUpdate,
-                "order"=excluded."order", syncTime=excluded.syncTime, readConfig=excluded.readConfig"#,
+                "order"=excluded."order", syncTime=excluded.syncTime, readConfig=excluded.readConfig,
+                customIntro=excluded.customIntro"#,
             params![
                 b.book_url, b.name, b.author, b.origin, b.origin_name, b.charset, b.r#type as i64,
                 b.group as i64, b.toc_url, b.intro, b.kind, b.custom_tag, b.cover_url,
                 b.custom_cover_url, b.latest_chapter_title, b.dur_chapter_index, b.dur_chapter_pos,
                 b.dur_chapter_title, b.dur_chapter_time, b.total_chapter_num, b.can_update as i64,
-                b.order, b.sync_time, read_config_to_json(b),
+                b.order, b.sync_time, read_config_to_json(b), b.custom_intro,
             ],
         )?;
         Ok(())
@@ -68,7 +69,7 @@ impl BookRepo {
         let mut stmt = conn.prepare(
             r#"SELECT bookUrl,name,author,origin,originName,charset,type,"group",tocUrl,intro,kind,
                       customTag,coverUrl,customCoverUrl,latestChapterTitle,durChapterIndex,durChapterPos,
-                      durChapterTitle,durChapterTime,totalChapterNum,canUpdate,"order",syncTime,readConfig
+                      durChapterTitle,durChapterTime,totalChapterNum,canUpdate,"order",syncTime,readConfig,customIntro
                FROM books WHERE bookUrl = ?1"#,
         )?;
         let mut rows = stmt.query_map([book_url], map_book)?;
@@ -82,7 +83,7 @@ impl BookRepo {
         let mut stmt = conn.prepare(
             r#"SELECT bookUrl,name,author,origin,originName,charset,type,"group",tocUrl,intro,kind,
                       customTag,coverUrl,customCoverUrl,latestChapterTitle,durChapterIndex,durChapterPos,
-                      durChapterTitle,durChapterTime,totalChapterNum,canUpdate,"order",syncTime,readConfig
+                      durChapterTitle,durChapterTime,totalChapterNum,canUpdate,"order",syncTime,readConfig,customIntro
                FROM books ORDER BY "order" ASC"#,
         )?;
         let rows = stmt.query_map([], map_book)?;
@@ -131,6 +132,7 @@ fn map_book(row: &Row<'_>) -> rusqlite::Result<Book> {
         order: row.get(21)?,
         sync_time: row.get(22)?,
         read_config: json_to_read_config(read_config),
+        custom_intro: row.get(24)?,
     })
 }
 
