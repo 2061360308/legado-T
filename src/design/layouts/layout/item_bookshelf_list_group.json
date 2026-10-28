@@ -1,0 +1,201 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "id": "cv_content",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content"
+  },
+  "children": [
+    {
+      "tag": "CoverImageView",
+      "attrs": {
+        "id": "iv_cover",
+        "layout_width": 66,
+        "layout_height": 90,
+        "layout_marginStart": 16,
+        "layout_marginTop": 16,
+        "layout_marginBottom": 12,
+        "contentDescription": "封面",
+        "scaleType": "centerCrop",
+        "src": "image_cover_default",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "FrameLayout",
+      "attrs": {
+        "id": "fl_has_new",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_marginEnd": 16,
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "@+id/iv_cover"
+      },
+      "children": [
+        {
+          "tag": "BadgeView",
+          "attrs": {
+            "id": "bv_unread",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "right",
+            "layout_margin": 5
+          },
+          "children": []
+        },
+        {
+          "tag": "RotateLoading",
+          "attrs": {
+            "id": "rl_loading",
+            "layout_width": 26,
+            "layout_height": 26,
+            "layout_gravity": "right",
+            "visibility": "invisible"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_name",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_marginLeft": 10,
+        "layout_marginTop": 12,
+        "paddingBottom": 4,
+        "paddingLeft": 2,
+        "singleLine": "true",
+        "text": "书名",
+        "textColor": "#de000000",
+        "textSize": 16,
+        "layout_constraintBottom_toTopOf": "@+id/tv_author",
+        "layout_constraintLeft_toRightOf": "@+id/iv_cover",
+        "layout_constraintRight_toLeftOf": "@id/fl_has_new",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_author",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "maxLines": "1",
+        "paddingEnd": 6,
+        "text": "作者",
+        "textColor": "#8A2C2C2C",
+        "textSize": 13,
+        "layout_constraintBottom_toTopOf": "@+id/tv_read",
+        "layout_constraintLeft_toRightOf": "@+id/iv_author",
+        "layout_constraintRight_toRightOf": "@id/fl_has_new",
+        "layout_constraintTop_toBottomOf": "@+id/tv_name"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_read",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "singleLine": "true",
+        "text": "最近：%s",
+        "textColor": "#8A2C2C2C",
+        "textSize": 13,
+        "layout_constraintBottom_toTopOf": "@id/tv_last",
+        "layout_constraintLeft_toRightOf": "@+id/iv_read",
+        "layout_constraintRight_toRightOf": "@+id/fl_has_new",
+        "layout_constraintTop_toBottomOf": "@+id/tv_author"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_last",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_marginBottom": 8,
+        "singleLine": "true",
+        "text": "最新：%s",
+        "textColor": "#8A2C2C2C",
+        "textSize": 13,
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toRightOf": "@+id/iv_last",
+        "layout_constraintRight_toRightOf": "@id/fl_has_new",
+        "layout_constraintTop_toBottomOf": "@+id/tv_read"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_author",
+        "layout_width": "@dimen/desc_icon_size",
+        "layout_height": "@dimen/desc_icon_size",
+        "contentDescription": "作者",
+        "paddingStart": 2,
+        "paddingEnd": 2,
+        "src": "ic_author",
+        "layout_constraintBottom_toBottomOf": "@+id/tv_author",
+        "layout_constraintLeft_toLeftOf": "@+id/tv_name",
+        "layout_constraintTop_toTopOf": "@+id/tv_author",
+        "tint": "#8A2C2C2C"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_read",
+        "layout_width": "@dimen/desc_icon_size",
+        "layout_height": "@dimen/desc_icon_size",
+        "contentDescription": "最近：%s",
+        "paddingStart": 2,
+        "paddingEnd": 2,
+        "src": "ic_history",
+        "layout_constraintBottom_toBottomOf": "@+id/tv_read",
+        "layout_constraintLeft_toLeftOf": "@+id/tv_name",
+        "layout_constraintTop_toTopOf": "@+id/tv_read",
+        "tint": "#8A2C2C2C"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_last",
+        "layout_width": "@dimen/desc_icon_size",
+        "layout_height": "@dimen/desc_icon_size",
+        "contentDescription": "最新：%s",
+        "paddingStart": 2,
+        "paddingEnd": 2,
+        "src": "ic_book_last",
+        "layout_constraintBottom_toBottomOf": "@+id/tv_last",
+        "layout_constraintLeft_toLeftOf": "@+id/tv_name",
+        "layout_constraintTop_toTopOf": "@+id/tv_last",
+        "tint": "#8A2C2C2C"
+      },
+      "children": []
+    },
+    {
+      "tag": "View",
+      "attrs": {
+        "id": "vw_foreground",
+        "layout_width": "match_parent",
+        "layout_height": 0,
+        "background": "?android:attr/selectableItemBackground",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintTop_toTopOf": "parent",
+        "layout_constraintVertical_bias": "0.0"
+      },
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "source": "layout/item_icon_preference.xml",
+  "hash": "773e26e0e5d48a86cd12b3f27aced9d901204289",
+  "nodeCount": 3,
+  "attrCount": 27,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "?android:attr/listPreferredItemHeight",
+      "path": "$",
+      "value": "56px",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "6dip",
+      "path": "$",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "10dip",
+      "path": "$/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/icon",
+      "value": "@+id/icon",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "adjustViewBounds",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "ICON",
+      "value": "ICON",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "HardcodedText",
+      "value": "HardcodedText",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "10dp",
+      "path": "$/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "?android:attr/textColorAlertDialogListItem",
+      "path": "$/1",
+      "value": "var(--ac-primary-text)",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "marquee",
+      "value": "marquee",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "minHeight",
+      "raw": "?android:attr/listPreferredItemHeight",
+      "path": "$/1",
+      "value": "56px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/label",
+      "value": "@+id/label",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_alignParentEnd",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "constraint mapped to flex/grid intent"
+    },
+    {
+      "name": "layout_toRightOf",
+      "raw": "@+id/icon",
+      "value": "@+id/icon",
+      "status": "ignored",
+      "reason": "constraint mapped to flex/grid intent"
+    },
+    {
+      "name": "checkMark",
+      "raw": "?android:attr/listChoiceIndicatorSingle",
+      "value": "?android:attr/listChoiceIndicatorSingle",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "textAppearance",
+      "raw": "?android:attr/textAppearanceMedium",
+      "value": "?android:attr/textAppearanceMedium",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "textIsSelectable",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded,RtlSymmetry",
+      "value": "RtlHardcoded,RtlSymmetry",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,129 @@
+{
+  "source": "menu/replace_rule_sel.xml",
+  "hash": "593e5db02bc102d731abdeed8e5d028b573ae936",
+  "nodeCount": 6,
+  "attrCount": 17,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_enable_selection",
+      "value": "@+id/menu_enable_selection",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/enable_selection",
+      "value": "启用所选",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_disable_selection",
+      "value": "@+id/menu_disable_selection",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/disable_selection",
+      "value": "禁用所选",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_top_sel",
+      "value": "@+id/menu_top_sel",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/selection_to_top",
+      "value": "置顶所选",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_bottom_sel",
+      "value": "@+id/menu_bottom_sel",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/selection_to_bottom",
+      "value": "置底所选",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_export_selection",
+      "value": "@+id/menu_export_selection",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/export_selection",
+      "value": "导出所选",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

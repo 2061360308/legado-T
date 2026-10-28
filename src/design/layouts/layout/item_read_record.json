@@ -1,0 +1,103 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "background": "?attr/selectableItemBackground",
+    "paddingLeft": 10,
+    "paddingRight": 10
+  },
+  "children": [
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_book_name",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "textColor": "#de000000",
+        "singleLine": "true",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toTopOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/tv_remove"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_reading_time_tag",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "singleLine": "true",
+        "text": "阅读时长:",
+        "textColor": "#8a000000",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toBottomOf": "@id/tv_book_name"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_reading_time",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "singleLine": "true",
+        "textColor": "#8a000000",
+        "layout_constraintLeft_toRightOf": "@+id/tv_reading_time_tag",
+        "layout_constraintTop_toBottomOf": "@id/tv_book_name",
+        "layout_constraintRight_toLeftOf": "@+id/tv_remove"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_last_read_time_tag",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "singleLine": "true",
+        "text": "最后阅读时间:",
+        "textColor": "#8a000000",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toBottomOf": "@id/tv_reading_time_tag"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_last_read_time",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "singleLine": "true",
+        "textColor": "#8a000000",
+        "layout_constraintLeft_toRightOf": "@+id/tv_last_read_time_tag",
+        "layout_constraintTop_toBottomOf": "@id/tv_reading_time_tag",
+        "layout_constraintRight_toLeftOf": "@+id/tv_remove"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_remove",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "text": "清除",
+        "textColor": "#de000000",
+        "background": "?attr/selectableItemBackground",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "parent",
+        "layout_constraintBottom_toBottomOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,507 @@
+{
+  "bg_chapter_item_divider": [
+    "bg_chapter_item_divider"
+  ],
+  "bg_edit": [
+    "bg_edit"
+  ],
+  "bg_eink_border_dialog": [
+    "bg_eink_border_dialog"
+  ],
+  "bg_find_book_group": [
+    "bg_find_book_group"
+  ],
+  "bg_gradient": [
+    "bg_gradient"
+  ],
+  "bg_img_border": [
+    "bg_img_border"
+  ],
+  "bg_item_focused_on_tv": [
+    "bg_item_focused_on_tv"
+  ],
+  "bg_popup_menu": [
+    "bg_popup_menu"
+  ],
+  "bg_prefs_color": [
+    "bg_prefs_color"
+  ],
+  "bg_searchview": [
+    "bg_searchview"
+  ],
+  "bg_shadow_bottom": [
+    "bg_shadow_bottom"
+  ],
+  "bg_shadow_bottom_night": [
+    "bg_shadow_bottom_night"
+  ],
+  "bg_shadow_top": [
+    "bg_shadow_top"
+  ],
+  "bg_shadow_top_night": [
+    "bg_shadow_top_night"
+  ],
+  "fastscroll_bubble": [
+    "fastscroll_bubble"
+  ],
+  "fastscroll_handle": [
+    "fastscroll_handle"
+  ],
+  "fastscroll_track": [
+    "fastscroll_track"
+  ],
+  "icon_read_book": [
+    "icon_read_book"
+  ],
+  "ic_add": [
+    "ic_add"
+  ],
+  "ic_add_online": [
+    "ic_add_online"
+  ],
+  "ic_arrange": [
+    "ic_arrange"
+  ],
+  "ic_arrow_back": [
+    "ic_arrow_back"
+  ],
+  "ic_arrow_down": [
+    "ic_arrow_down"
+  ],
+  "ic_arrow_drop_down": [
+    "ic_arrow_drop_down"
+  ],
+  "ic_arrow_drop_up": [
+    "ic_arrow_drop_up"
+  ],
+  "ic_arrow_right": [
+    "ic_arrow_right"
+  ],
+  "ic_author": [
+    "ic_author"
+  ],
+  "ic_auto_page": [
+    "ic_auto_page"
+  ],
+  "ic_auto_page_stop": [
+    "ic_auto_page_stop"
+  ],
+  "ic_backup": [
+    "ic_backup"
+  ],
+  "ic_baseline_close": [
+    "ic_baseline_close"
+  ],
+  "ic_baseline_sort_24": [
+    "ic_baseline_sort_24"
+  ],
+  "ic_bookmark": [
+    "ic_bookmark"
+  ],
+  "ic_book_has": [
+    "ic_book_has"
+  ],
+  "ic_book_last": [
+    "ic_book_last"
+  ],
+  "ic_bottom_books": [
+    "ic_bottom_books",
+    "ic_bottom_books-checked"
+  ],
+  "ic_bottom_books_e": [
+    "ic_bottom_books_e"
+  ],
+  "ic_bottom_books_s": [
+    "ic_bottom_books_s"
+  ],
+  "ic_bottom_explore": [
+    "ic_bottom_explore",
+    "ic_bottom_explore-checked"
+  ],
+  "ic_bottom_explore_e": [
+    "ic_bottom_explore_e"
+  ],
+  "ic_bottom_explore_s": [
+    "ic_bottom_explore_s"
+  ],
+  "ic_bottom_person": [
+    "ic_bottom_person",
+    "ic_bottom_person-checked"
+  ],
+  "ic_bottom_person_e": [
+    "ic_bottom_person_e"
+  ],
+  "ic_bottom_person_s": [
+    "ic_bottom_person_s"
+  ],
+  "ic_bottom_rss_feed": [
+    "ic_bottom_rss_feed",
+    "ic_bottom_rss_feed-checked"
+  ],
+  "ic_bottom_rss_feed_e": [
+    "ic_bottom_rss_feed_e"
+  ],
+  "ic_bottom_rss_feed_s": [
+    "ic_bottom_rss_feed_s"
+  ],
+  "ic_brightness": [
+    "ic_brightness"
+  ],
+  "ic_brightness_auto": [
+    "ic_brightness_auto"
+  ],
+  "ic_bubble_chart": [
+    "ic_bubble_chart"
+  ],
+  "ic_bug_report": [
+    "ic_bug_report"
+  ],
+  "ic_cfg_about": [
+    "ic_cfg_about"
+  ],
+  "ic_cfg_backup": [
+    "ic_cfg_backup"
+  ],
+  "ic_cfg_donate": [
+    "ic_cfg_donate"
+  ],
+  "ic_cfg_other": [
+    "ic_cfg_other"
+  ],
+  "ic_cfg_replace": [
+    "ic_cfg_replace"
+  ],
+  "ic_cfg_source": [
+    "ic_cfg_source"
+  ],
+  "ic_cfg_theme": [
+    "ic_cfg_theme"
+  ],
+  "ic_cfg_web": [
+    "ic_cfg_web"
+  ],
+  "ic_chapter_list": [
+    "ic_chapter_list"
+  ],
+  "ic_check": [
+    "ic_check"
+  ],
+  "ic_check_source": [
+    "ic_check_source"
+  ],
+  "ic_clear_all": [
+    "ic_clear_all"
+  ],
+  "ic_copy": [
+    "ic_copy"
+  ],
+  "ic_create_folder_outline": [
+    "ic_create_folder_outline"
+  ],
+  "ic_cursor_left": [
+    "ic_cursor_left"
+  ],
+  "ic_cursor_right": [
+    "ic_cursor_right"
+  ],
+  "ic_daytime": [
+    "ic_daytime"
+  ],
+  "ic_divider": [
+    "ic_divider"
+  ],
+  "ic_download": [
+    "ic_download"
+  ],
+  "ic_download_line": [
+    "ic_download_line"
+  ],
+  "ic_edit": [
+    "ic_edit"
+  ],
+  "ic_exchange": [
+    "ic_exchange"
+  ],
+  "ic_exchange_order": [
+    "ic_exchange_order"
+  ],
+  "ic_exit": [
+    "ic_exit"
+  ],
+  "ic_expand_less": [
+    "ic_expand_less"
+  ],
+  "ic_expand_more": [
+    "ic_expand_more"
+  ],
+  "ic_export": [
+    "ic_export"
+  ],
+  "ic_fast_forward": [
+    "ic_fast_forward"
+  ],
+  "ic_fast_rewind": [
+    "ic_fast_rewind"
+  ],
+  "ic_find_replace": [
+    "ic_find_replace"
+  ],
+  "ic_folder": [
+    "ic_folder"
+  ],
+  "ic_folder_open": [
+    "ic_folder_open"
+  ],
+  "ic_folder_outline": [
+    "ic_folder_outline"
+  ],
+  "ic_groups": [
+    "ic_groups"
+  ],
+  "ic_help": [
+    "ic_help"
+  ],
+  "ic_history": [
+    "ic_history"
+  ],
+  "ic_image": [
+    "ic_image"
+  ],
+  "ic_import": [
+    "ic_import"
+  ],
+  "ic_interface_setting": [
+    "ic_interface_setting"
+  ],
+  "ic_launcher1": [
+    "ic_launcher1"
+  ],
+  "ic_launcher1_b": [
+    "ic_launcher1_b"
+  ],
+  "ic_launcher2": [
+    "ic_launcher2"
+  ],
+  "ic_launcher3": [
+    "ic_launcher3"
+  ],
+  "ic_launcher4": [
+    "ic_launcher4"
+  ],
+  "ic_launcher4_b": [
+    "ic_launcher4_b"
+  ],
+  "ic_launcher5": [
+    "ic_launcher5"
+  ],
+  "ic_launcher5_b": [
+    "ic_launcher5_b"
+  ],
+  "ic_launcher6": [
+    "ic_launcher6"
+  ],
+  "ic_launcher7": [
+    "ic_launcher7"
+  ],
+  "ic_launcher7_b": [
+    "ic_launcher7_b"
+  ],
+  "ic_lock_outline": [
+    "ic_lock_outline"
+  ],
+  "ic_menu": [
+    "ic_menu"
+  ],
+  "ic_more": [
+    "ic_more"
+  ],
+  "ic_more_vert": [
+    "ic_more_vert"
+  ],
+  "ic_network_check": [
+    "ic_network_check"
+  ],
+  "ic_outline_cloud_24": [
+    "ic_outline_cloud_24"
+  ],
+  "ic_outline_delete": [
+    "ic_outline_delete"
+  ],
+  "ic_pause_24dp": [
+    "ic_pause_24dp"
+  ],
+  "ic_pause_outline_24dp": [
+    "ic_pause_outline_24dp"
+  ],
+  "ic_play_24dp": [
+    "ic_play_24dp"
+  ],
+  "ic_play_mode_list_end_stop": [
+    "ic_play_mode_list_end_stop"
+  ],
+  "ic_play_mode_list_loop": [
+    "ic_play_mode_list_loop"
+  ],
+  "ic_play_mode_random": [
+    "ic_play_mode_random"
+  ],
+  "ic_play_mode_single_loop": [
+    "ic_play_mode_single_loop"
+  ],
+  "ic_play_outline_24dp": [
+    "ic_play_outline_24dp"
+  ],
+  "ic_praise": [
+    "ic_praise"
+  ],
+  "ic_read_aloud": [
+    "ic_read_aloud"
+  ],
+  "ic_reduce": [
+    "ic_reduce"
+  ],
+  "ic_refresh_black_24dp": [
+    "ic_refresh_black_24dp"
+  ],
+  "ic_refresh_white_24dp": [
+    "ic_refresh_white_24dp"
+  ],
+  "ic_restore": [
+    "ic_restore"
+  ],
+  "ic_save": [
+    "ic_save"
+  ],
+  "ic_scan": [
+    "ic_scan"
+  ],
+  "ic_scoring": [
+    "ic_scoring"
+  ],
+  "ic_screen": [
+    "ic_screen"
+  ],
+  "ic_search": [
+    "ic_search"
+  ],
+  "ic_search_hint": [
+    "ic_search_hint"
+  ],
+  "ic_settings": [
+    "ic_settings"
+  ],
+  "ic_share": [
+    "ic_share"
+  ],
+  "ic_skip_next": [
+    "ic_skip_next"
+  ],
+  "ic_skip_previous": [
+    "ic_skip_previous"
+  ],
+  "ic_sort": [
+    "ic_sort"
+  ],
+  "ic_star": [
+    "ic_star"
+  ],
+  "ic_star_border": [
+    "ic_star_border"
+  ],
+  "ic_stop_black_24dp": [
+    "ic_stop_black_24dp"
+  ],
+  "ic_storage_black_24dp": [
+    "ic_storage_black_24dp"
+  ],
+  "ic_swap_horiz": [
+    "ic_swap_horiz"
+  ],
+  "ic_timer_black_24dp": [
+    "ic_timer_black_24dp"
+  ],
+  "ic_time_add_24dp": [
+    "ic_time_add_24dp"
+  ],
+  "ic_toc": [
+    "ic_toc"
+  ],
+  "ic_translate": [
+    "ic_translate"
+  ],
+  "ic_update": [
+    "ic_update"
+  ],
+  "ic_view_quilt": [
+    "ic_view_quilt"
+  ],
+  "ic_visibility_off": [
+    "ic_visibility_off"
+  ],
+  "ic_volume_up": [
+    "ic_volume_up"
+  ],
+  "ic_web_outline": [
+    "ic_web_outline"
+  ],
+  "ic_web_service_noti": [
+    "ic_web_service_noti"
+  ],
+  "image_cover_default": [
+    "image_cover_default"
+  ],
+  "image_legado": [
+    "image_legado"
+  ],
+  "image_loading_error": [
+    "image_loading_error"
+  ],
+  "image_rss": [
+    "image_rss"
+  ],
+  "image_rss_article": [
+    "image_rss_article"
+  ],
+  "selector_btn_accent_bg": [
+    "selector_btn_accent_bg"
+  ],
+  "selector_circle_btn_bg": [
+    "selector_circle_btn_bg"
+  ],
+  "selector_common_bg": [
+    "selector_common_bg"
+  ],
+  "selector_fillet_btn_bg": [
+    "selector_fillet_btn_bg"
+  ],
+  "shape_card_view": [
+    "shape_card_view"
+  ],
+  "shape_circle": [
+    "shape_circle"
+  ],
+  "shape_fillet_btn": [
+    "shape_fillet_btn"
+  ],
+  "shape_fillet_btn_press": [
+    "shape_fillet_btn_press"
+  ],
+  "shape_pop_checkaddshelf_bg": [
+    "shape_pop_checkaddshelf_bg"
+  ],
+  "shape_radius_10dp": [
+    "shape_radius_10dp"
+  ],
+  "shape_radius_1dp": [
+    "shape_radius_1dp"
+  ],
+  "shape_space_divider": [
+    "shape_space_divider"
+  ],
+  "shape_text_cursor": [
+    "shape_text_cursor"
+  ],
+  "shape_translucent_card": [
+    "shape_translucent_card"
+  ]
+}

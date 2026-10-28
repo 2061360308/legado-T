@@ -1,0 +1,18 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent"
+  },
+  "children": [
+    {
+      "tag": "FastScrollRecyclerView",
+      "attrs": {
+        "id": "recycler_view",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent"
+      },
+      "children": []
+    }
+  ]
+}

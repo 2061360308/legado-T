@@ -1,0 +1,109 @@
+{
+  "source": "layout/item_text.xml",
+  "hash": "98b8829b4edab5ff5a1b2661f6afe251d4ca0438",
+  "nodeCount": 1,
+  "attrCount": 14,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "5dp",
+      "path": "$",
+      "value": "5px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "?attr/selectableItemBackground",
+      "path": "$",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "maxLines",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "line-clamp"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "end",
+      "value": "end",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/text_view",
+      "value": "@+id/text_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

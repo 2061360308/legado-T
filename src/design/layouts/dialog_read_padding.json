@@ -1,0 +1,238 @@
+{
+  "tag": "NestedScrollView",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content"
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "orientation": "vertical",
+        "padding": 10
+      },
+      "children": [
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_header_padding",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "vertical"
+          },
+          "children": [
+            {
+              "tag": "LinearLayout",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "gravity": "center_vertical",
+                "orientation": "horizontal",
+                "paddingBottom": 10
+              },
+              "children": [
+                {
+                  "tag": "AccentTextView",
+                  "attrs": {
+                    "id": "tv_header_padding",
+                    "layout_width": 0,
+                    "layout_height": "wrap_content",
+                    "layout_weight": "1",
+                    "text": "页眉",
+                    "textSize": 18
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "TextView",
+                  "attrs": {
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "text": "显示分隔线"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "SmoothCheckBox",
+                  "attrs": {
+                    "id": "cb_show_top_line",
+                    "layout_width": 20,
+                    "layout_height": 20,
+                    "layout_margin": 6
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "DetailSeekBar",
+              "attrs": {
+                "id": "dsb_header_padding_top",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content"
+              },
+              "children": []
+            },
+            {
+              "tag": "DetailSeekBar",
+              "attrs": {
+                "id": "dsb_header_padding_bottom",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content"
+              },
+              "children": []
+            },
+            {
+              "tag": "DetailSeekBar",
+              "attrs": {
+                "id": "dsb_header_padding_left",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content"
+              },
+              "children": []
+            },
+            {
+              "tag": "DetailSeekBar",
+              "attrs": {
+                "id": "dsb_header_padding_right",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "AccentTextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "paddingTop": 10,
+                "paddingBottom": 10,
+                "text": "页脚",
+                "textSize": 18
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "显示分隔线"
+              },
+              "children": []
+            },
+            {
+              "tag": "SmoothCheckBox",
+              "attrs": {
+                "id": "cb_show_bottom_line",
+                "layout_width": 20,
+                "layout_height": 20,
+                "layout_margin": 6
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "id": "tv_body_padding",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "paddingTop": 10,
+            "paddingBottom": 10,
+            "text": "正文",
+            "textSize": 18
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_padding_top",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_padding_bottom",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_padding_left",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_padding_right",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_footer_padding_top",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_footer_padding_bottom",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_footer_padding_left",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_footer_padding_right",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

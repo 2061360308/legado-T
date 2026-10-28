@@ -1,0 +1,53 @@
+{
+  "source": "menu/main_explore.xml",
+  "hash": "ca9d43a0b171389e2b9c7925676ba767c5a09bf0",
+  "nodeCount": 2,
+  "attrCount": 6,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_group",
+      "value": "@+id/menu_group",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/group",
+      "value": "分组",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_groups",
+      "value": "ic_groups",
+      "status": "mapped",
+      "drawable": "ic_groups",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

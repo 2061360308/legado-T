@@ -1,0 +1,72 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_login",
+        "title": "登录",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_refresh_sort",
+        "title": "刷新分类",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_set_source_variable",
+        "title": "设置源变量",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_edit_source",
+        "title": "编辑源",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_switch_layout",
+        "title": "切换布局",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_read_record",
+        "title": "阅读记录",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_clear",
+        "title": "清除",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

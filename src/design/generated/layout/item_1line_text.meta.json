@@ -1,0 +1,116 @@
+{
+  "source": "layout/item_1line_text.xml",
+  "hash": "044a7f4efb6becacf80626d7d20b6122e860dd06",
+  "nodeCount": 2,
+  "attrCount": 15,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "6dp",
+      "path": "$",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "?attr/selectableItemBackground",
+      "path": "$",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UseCompoundDrawables",
+      "value": "UseCompoundDrawables",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/text_view",
+      "value": "@+id/text_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

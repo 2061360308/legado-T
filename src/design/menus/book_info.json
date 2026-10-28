@@ -1,0 +1,149 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_edit",
+        "icon": "ic_edit",
+        "title": "编辑",
+        "showAsAction": "ifRoom"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_share_it",
+        "icon": "ic_share",
+        "title": "分享",
+        "showAsAction": "ifRoom"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_upload",
+        "title": "上传 WebDav",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_refresh",
+        "title": "刷新",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_login",
+        "title": "登录",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_top",
+        "title": "置顶",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_set_source_variable",
+        "title": "设置源变量",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_set_book_variable",
+        "title": "设置书籍变量",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_copy_book_url",
+        "title": "拷贝书籍 URL",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_copy_toc_url",
+        "title": "拷贝目录 URL",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_can_update",
+        "title": "允许更新",
+        "checkable": "true",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_split_long_chapter",
+        "title": "拆分超长章节",
+        "checkable": "true",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_delete_alert",
+        "title": "删除提醒",
+        "checkable": "true",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_clear_cache",
+        "title": "清理缓存",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_log",
+        "title": "日志",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

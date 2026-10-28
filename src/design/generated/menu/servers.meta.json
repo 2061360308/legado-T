@@ -1,0 +1,53 @@
+{
+  "source": "menu/servers.xml",
+  "hash": "4cc293d04f30f785237f8f569431bba67ead4d53",
+  "nodeCount": 2,
+  "attrCount": 6,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_add",
+      "value": "@+id/menu_add",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_add",
+      "value": "ic_add",
+      "status": "mapped",
+      "drawable": "ic_add",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/create",
+      "value": "新建",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

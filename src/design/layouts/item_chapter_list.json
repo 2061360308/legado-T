@@ -1,0 +1,101 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "id": "tv_chapter_item",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "background": "?android:attr/selectableItemBackground",
+    "orientation": "vertical",
+    "padding": 12
+  },
+  "children": [
+    {
+      "tag": "ImageView",
+      "attrs": {
+        "id": "iv_locked",
+        "layout_width": 24,
+        "layout_height": 24,
+        "paddingEnd": 8,
+        "src": "@drawable/ic_lock_outline",
+        "visibility": "gone",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toTopOf": "parent",
+        "tint": "#8a000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "ImageView",
+      "attrs": {
+        "id": "iv_checked",
+        "layout_width": 24,
+        "layout_height": 24,
+        "contentDescription": "成功",
+        "padding": 4,
+        "src": "@drawable/ic_check",
+        "visibility": "invisible",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "parent",
+        "tint": "#8a000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_chapter_name",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "singleLine": "true",
+        "layout_constraintBottom_toTopOf": "@id/barrier",
+        "layout_constraintLeft_toRightOf": "@+id/iv_locked",
+        "layout_constraintRight_toLeftOf": "@+id/iv_checked",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_word_count",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "paddingEnd": 18,
+        "singleLine": "true",
+        "textSize": 12,
+        "visibility": "gone",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toRightOf": "@+id/iv_locked",
+        "layout_constraintTop_toBottomOf": "@+id/barrier"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_tag",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "singleLine": "true",
+        "textSize": 12,
+        "visibility": "gone",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toRightOf": "@id/tv_word_count",
+        "layout_constraintRight_toLeftOf": "@+id/iv_checked",
+        "layout_constraintTop_toBottomOf": "@+id/barrier"
+      },
+      "children": []
+    },
+    {
+      "tag": "Barrier",
+      "attrs": {
+        "id": "barrier",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content"
+      },
+      "children": []
+    }
+  ]
+}

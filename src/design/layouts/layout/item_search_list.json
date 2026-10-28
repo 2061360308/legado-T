@@ -1,0 +1,25 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "orientation": "vertical",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "background": "?android:attr/selectableItemBackground",
+    "padding": 12
+  },
+  "children": [
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_search_result",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "singleLine": "false",
+        "layout_constraintTop_toTopOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toLeftOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

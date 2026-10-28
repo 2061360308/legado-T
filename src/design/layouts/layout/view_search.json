@@ -1,0 +1,12 @@
+{
+  "tag": "SearchView",
+  "attrs": {
+    "id": "search_view",
+    "background": "bg_searchview",
+    "layout_width": "match_parent",
+    "layout_height": 30,
+    "layout_marginTop": 10,
+    "layout_marginBottom": 10
+  },
+  "children": []
+}

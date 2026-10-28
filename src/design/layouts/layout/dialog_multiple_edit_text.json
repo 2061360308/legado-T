@@ -1,0 +1,59 @@
+{
+  "tag": "NestedScrollView",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "padding": 16
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "vertical"
+      },
+      "children": [
+        {
+          "tag": "TextInputLayout",
+          "attrs": {
+            "id": "layout_1",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": [
+            {
+              "tag": "AutoCompleteTextView",
+              "attrs": {
+                "id": "edit_1",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "TextInputLayout",
+          "attrs": {
+            "id": "layout_2",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "visibility": "gone"
+          },
+          "children": [
+            {
+              "tag": "AutoCompleteTextView",
+              "attrs": {
+                "id": "edit_2",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

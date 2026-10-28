@@ -1,0 +1,459 @@
+{
+  "source": "layout/activity_welcome.xml",
+  "hash": "2577556af89095130ad210fa9fbc1891cd5449f0",
+  "nodeCount": 7,
+  "attrCount": 64,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_legado",
+      "value": "@+id/tv_legado",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintVertical_bias",
+      "raw": "0.4",
+      "value": "0.4",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toTopOf",
+      "raw": "@+id/iv_book",
+      "value": "@+id/iv_book",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "6dp",
+      "path": "$/0/0",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/0/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@color/accent",
+      "path": "$/0/0",
+      "value": "#AD1457",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/vw_title_line",
+      "value": "@+id/vw_title_line",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "@+id/tv_title",
+      "value": "@+id/tv_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "@+id/tv_title",
+      "value": "@+id/tv_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginLeft",
+      "raw": "6dp",
+      "path": "$/0/1",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "49sp",
+      "path": "$/0/1",
+      "value": "49px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_title",
+      "value": "@+id/tv_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "ems",
+      "raw": "1",
+      "value": "1px",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "text",
+      "raw": "阅读",
+      "value": "阅读",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toLeftOf",
+      "raw": "@+id/tv_sub_title",
+      "value": "@+id/tv_sub_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toRightOf",
+      "raw": "@+id/vw_title_line",
+      "value": "@+id/vw_title_line",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "HardcodedText,RtlHardcoded",
+      "value": "HardcodedText,RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "60dp",
+      "path": "$/0/2",
+      "value": "60px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginLeft",
+      "raw": "6dp",
+      "path": "$/0/2",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "16sp",
+      "path": "$/0/2",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_sub_title",
+      "value": "@+id/tv_sub_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "ems",
+      "raw": "1",
+      "value": "1px",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "text",
+      "raw": "享受美好时光",
+      "value": "享受美好时光",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "@+id/tv_title",
+      "value": "@+id/tv_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toRightOf",
+      "raw": "@id/tv_title",
+      "value": "@id/tv_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "HardcodedText,RtlHardcoded",
+      "value": "HardcodedText,RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "120dp",
+      "path": "$/1",
+      "value": "120px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "120dp",
+      "path": "$/1",
+      "value": "120px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginBottom",
+      "raw": "32dp",
+      "path": "$/1",
+      "value": "32px",
+      "status": "mapped"
+    },
+    {
+      "name": "scaleType",
+      "raw": "fitCenter",
+      "value": "fitCenter",
+      "status": "mapped",
+      "target": "object-fit"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_book",
+      "value": "@+id/iv_book",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/icon_read_book",
+      "value": "@drawable/icon_read_book",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/welcome",
+      "value": "@string/welcome",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toTopOf",
+      "raw": "@+id/tv_gzh",
+      "value": "@+id/tv_gzh",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginBottom",
+      "raw": "32dp",
+      "path": "$/2",
+      "value": "32px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_gzh",
+      "value": "@+id/tv_gzh",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "关注公众号[开源阅读]\\n看文章点广告支持作者",
+      "value": "关注公众号[开源阅读]\\n看文章点广告支持作者",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "HardcodedText",
+      "value": "HardcodedText",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

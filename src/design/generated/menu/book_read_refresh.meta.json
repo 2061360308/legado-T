@@ -1,0 +1,111 @@
+{
+  "source": "menu/book_read_refresh.xml",
+  "hash": "bd3a050e5824e6f9a44863899971d327255ef7a2",
+  "nodeCount": 4,
+  "attrCount": 14,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_refresh_dur",
+      "value": "@+id/menu_refresh_dur",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_bubble_chart",
+      "value": "ic_bubble_chart",
+      "status": "mapped",
+      "drawable": "ic_bubble_chart",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/menu_refresh_dur",
+      "value": "刷新当前章节",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_refresh_after",
+      "value": "@+id/menu_refresh_after",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_bubble_chart",
+      "value": "ic_bubble_chart",
+      "status": "mapped",
+      "drawable": "ic_bubble_chart",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/menu_refresh_after",
+      "value": "刷新之后章节",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_refresh_all",
+      "value": "@+id/menu_refresh_all",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_bubble_chart",
+      "value": "ic_bubble_chart",
+      "status": "mapped",
+      "drawable": "ic_bubble_chart",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/menu_refresh_all",
+      "value": "刷新全部章节",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,48 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "tools:context": ".ui.main.MainActivity",
+    "tools:ignore": "AlwaysShowAction"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_login",
+        "title": "登录",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_chapter_pay",
+        "title": "购买",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_edit_source",
+        "title": "编辑书源",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_disable_source",
+        "title": "禁用书源",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

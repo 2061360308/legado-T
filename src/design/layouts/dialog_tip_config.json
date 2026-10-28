@@ -1,0 +1,485 @@
+{
+  "tag": "NestedScrollView",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content"
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "vertical",
+        "padding": 16
+      },
+      "children": [
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "正文标题",
+            "textSize": 18
+          },
+          "children": []
+        },
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "id": "tv_header_padding",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "页眉",
+            "textSize": 18
+          },
+          "children": []
+        },
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "页脚",
+            "textSize": 18
+          },
+          "children": []
+        },
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "页眉&页脚",
+            "textSize": 18
+          },
+          "children": []
+        },
+        {
+          "tag": "RadioGroup",
+          "attrs": {
+            "id": "rg_title_mode",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "id": "rb_title_mode1",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 3,
+                "text": "靠左"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "id": "rb_title_mode2",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 3,
+                "text": "居中"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "id": "rb_title_mode3",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 3,
+                "text": "隐藏"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_title_size",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "padding": 3
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_title_top",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "padding": 3
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_title_bottom",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "padding": 3
+          },
+          "children": []
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_header_show",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "显示/隐藏",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_header_show",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_header_left",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "左",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_header_left",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_header_middle",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "中",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_header_middle",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_header_right",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "右",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_header_right",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_footer_show",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "显示/隐藏",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_footer_show",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_footer_left",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "左",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_footer_left",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_footer_middle",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "中",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_footer_middle",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_footer_right",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "右",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_footer_right",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_tip_color",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "文字颜色",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_tip_color",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_tip_divider_color",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "wrap_content",
+                "layout_weight": "1",
+                "padding": 6,
+                "text": "分隔线颜色",
+                "textColor": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_tip_divider_color",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "padding": 6,
+                "textColor": "#de000000"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

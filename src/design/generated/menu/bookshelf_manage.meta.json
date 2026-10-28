@@ -1,0 +1,116 @@
+{
+  "source": "menu/bookshelf_manage.xml",
+  "hash": "08451f76ca2be87df7e421468df9e81b4fa3009e",
+  "nodeCount": 6,
+  "attrCount": 15,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "AlwaysShowAction",
+      "value": "AlwaysShowAction",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_book_group",
+      "value": "@+id/menu_book_group",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_groups",
+      "value": "ic_groups",
+      "status": "mapped",
+      "drawable": "ic_groups",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/group",
+      "value": "分组",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_group_manage",
+      "value": "@+id/menu_group_manage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/group_manage",
+      "value": "分组管理",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_export_all_use_book_source",
+      "value": "@+id/menu_export_all_use_book_source",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/export_all_use_book_source",
+      "value": "导出所有书的书源",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_open_book_info_by_click_title",
+      "value": "@+id/menu_open_book_info_by_click_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/open_book_info_by_click_title",
+      "value": "点击书名打开详情",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

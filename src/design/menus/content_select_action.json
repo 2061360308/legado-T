@@ -1,0 +1,76 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_replace",
+        "title": "替换"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_copy",
+        "title": "@android:string/copy"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_bookmark",
+        "title": "书签"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_aloud",
+        "title": "朗读"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_dict",
+        "title": "字典"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_search_content",
+        "title": "全文搜索",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_browser",
+        "title": "浏览器",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_share_str",
+        "title": "分享",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

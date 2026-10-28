@@ -1,0 +1,123 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "tools:ignore": "AlwaysShowAction"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_search",
+        "title": "搜索",
+        "actionViewClass": "androidx.appcompat.widget.SearchView",
+        "showAsAction": "always"
+      },
+      "children": []
+    },
+    {
+      "tag": "group",
+      "attrs": {
+        "id": "menu_group_text",
+        "visible": "false"
+      },
+      "children": [
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_toc_regex",
+            "title": "TXT 目录规则",
+            "showAsAction": "never"
+          },
+          "children": []
+        },
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_split_long_chapter",
+            "checkable": "true",
+            "title": "拆分超长章节",
+            "showAsAction": "never"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "group",
+      "attrs": {
+        "id": "menu_group_toc",
+        "visible": "true"
+      },
+      "children": [
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_reverse_toc",
+            "title": "反转目录",
+            "showAsAction": "never"
+          },
+          "children": []
+        },
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_use_replace",
+            "checkable": "true",
+            "title": "使用替换",
+            "showAsAction": "never"
+          },
+          "children": []
+        },
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_load_word_count",
+            "checkable": "true",
+            "title": "加载字数",
+            "showAsAction": "never"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "group",
+      "attrs": {
+        "id": "menu_group_bookmark",
+        "visible": "false"
+      },
+      "children": [
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_export_bookmark",
+            "title": "导出",
+            "showAsAction": "never"
+          },
+          "children": []
+        },
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_export_md",
+            "title": "导出(MD)",
+            "showAsAction": "never"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_log",
+        "title": "日志",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "id": "ll_content",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "TitleBar",
+      "attrs": {
+        "id": "title_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "subtitle": "您的支持是我更新的动力",
+        "title": "捐赠"
+      },
+      "children": []
+    },
+    {
+      "tag": "FrameLayout",
+      "attrs": {
+        "id": "fl_fragment",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent"
+      },
+      "children": []
+    }
+  ]
+}

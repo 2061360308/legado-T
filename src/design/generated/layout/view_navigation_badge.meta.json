@@ -1,0 +1,88 @@
+{
+  "source": "layout/view_navigation_badge.xml",
+  "hash": "db03869cf537aeff26a783597c8ce7d23c192a80",
+  "nodeCount": 2,
+  "attrCount": 11,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "18dp",
+      "path": "$/0",
+      "value": "18px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "2dp",
+      "path": "$/0",
+      "value": "2px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginLeft",
+      "raw": "12dp",
+      "path": "$/0",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/view_badge",
+      "value": "@+id/view_badge",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded",
+      "value": "RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,16 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_change_source_delay",
+        "title": "换源间隔"
+      },
+      "children": []
+    }
+  ]
+}

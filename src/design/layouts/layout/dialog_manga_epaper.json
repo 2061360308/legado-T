@@ -1,0 +1,41 @@
+{
+  "tag": "NestedScrollView",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "padding": 16
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "vertical"
+      },
+      "children": [
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "paddingBottom": 8,
+            "text": "墨水屏设置",
+            "textSize": 18
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_epaper",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "title": "阈值"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

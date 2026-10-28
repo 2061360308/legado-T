@@ -1,0 +1,54 @@
+{
+  "tag": "FrameLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "padding": 16
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "id": "vw_bg",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_gravity": "center",
+        "background": "shape_card_view",
+        "orientation": "vertical"
+      },
+      "children": [
+        {
+          "tag": "Toolbar",
+          "attrs": {
+            "id": "tool_bar",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "background": "@color/background_menu",
+            "title": "登录"
+          },
+          "children": []
+        },
+        {
+          "tag": "NestedScrollView",
+          "attrs": {
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content"
+          },
+          "children": [
+            {
+              "tag": "FlexboxLayout",
+              "attrs": {
+                "id": "flexbox",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "layout_marginTop": 8,
+                "padding": 3
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

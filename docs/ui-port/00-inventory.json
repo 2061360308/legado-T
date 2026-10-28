@@ -1,0 +1,2004 @@
+[
+  {
+    "index": 1,
+    "file": "layout/activity_about.xml",
+    "status": "已完成",
+    "target": "views/config/AboutView.vue",
+    "note": ""
+  },
+  {
+    "index": 2,
+    "file": "layout/activity_all_bookmark.xml",
+    "status": "已完成",
+    "target": "views/config/BookmarksView.vue",
+    "note": ""
+  },
+  {
+    "index": 3,
+    "file": "layout/activity_arrange_book.xml",
+    "status": "已完成",
+    "target": "views/bookshelf/ArrangeBooksView.vue",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 4,
+    "file": "layout/activity_audio_play.xml",
+    "status": "视觉禁用",
+    "target": "views/audio/AudioPlayView.vue",
+    "note": ""
+  },
+  {
+    "index": 5,
+    "file": "layout/activity_book_info_edit.xml",
+    "status": "已完成",
+    "target": "views/bookshelf/BookInfoEditView.vue",
+    "note": ""
+  },
+  {
+    "index": 6,
+    "file": "layout/activity_book_info.xml",
+    "status": "已完成",
+    "target": "views/bookshelf/BookInfoView.vue",
+    "note": ""
+  },
+  {
+    "index": 7,
+    "file": "layout/activity_book_read.xml",
+    "status": "进行中",
+    "target": "views/reader/ReaderView.vue",
+    "note": ""
+  },
+  {
+    "index": 8,
+    "file": "layout/activity_book_search.xml",
+    "status": "已完成",
+    "target": "views/search/BookSearchView.vue",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 9,
+    "file": "layout/activity_book_source_edit.xml",
+    "status": "已完成",
+    "target": "views/source/BookSourceEditView.vue",
+    "note": ""
+  },
+  {
+    "index": 10,
+    "file": "layout/activity_book_source.xml",
+    "status": "已完成",
+    "target": "views/source/BookSourceView.vue",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 11,
+    "file": "layout/activity_cache_book.xml",
+    "status": "已完成",
+    "target": "views/source/CacheBookView.vue",
+    "note": ""
+  },
+  {
+    "index": 12,
+    "file": "layout/activity_chapter_list.xml",
+    "status": "已完成",
+    "target": "views/toc/TocView.vue",
+    "note": "TitleBar contentLayout 展开 Tab 栏"
+  },
+  {
+    "index": 13,
+    "file": "layout/activity_config.xml",
+    "status": "进行中",
+    "target": "views/config/ConfigView.vue",
+    "note": ""
+  },
+  {
+    "index": 14,
+    "file": "layout/activity_dict_rule.xml",
+    "status": "进行中",
+    "target": "views/dict/DictRulesView.vue",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构"
+  },
+  {
+    "index": 15,
+    "file": "layout/activity_donate.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_donate.vue",
+    "note": ""
+  },
+  {
+    "index": 16,
+    "file": "layout/activity_explore_show.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_explore_show.vue",
+    "note": ""
+  },
+  {
+    "index": 17,
+    "file": "layout/activity_file_manage.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_file_manage.vue",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 18,
+    "file": "layout/activity_import_book.xml",
+    "status": "进行中",
+    "target": "views/import/ImportView.vue",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 19,
+    "file": "layout/activity_main.xml",
+    "status": "进行中",
+    "target": "App.vue + BottomNav",
+    "note": ""
+  },
+  {
+    "index": 20,
+    "file": "layout/activity_manga.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_manga.vue",
+    "note": ""
+  },
+  {
+    "index": 21,
+    "file": "layout/activity_qrcode_capture.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_qrcode_capture.vue",
+    "note": ""
+  },
+  {
+    "index": 22,
+    "file": "layout/activity_read_record.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_read_record.vue",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 23,
+    "file": "layout/activity_replace_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_replace_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 24,
+    "file": "layout/activity_replace_rule.xml",
+    "status": "进行中",
+    "target": "views/replace/ReplaceView.vue",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 25,
+    "file": "layout/activity_rss_artivles.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_rss_artivles.vue",
+    "note": ""
+  },
+  {
+    "index": 26,
+    "file": "layout/activity_rss_favorites.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_rss_favorites.vue",
+    "note": ""
+  },
+  {
+    "index": 27,
+    "file": "layout/activity_rss_read.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_rss_read.vue",
+    "note": ""
+  },
+  {
+    "index": 28,
+    "file": "layout/activity_rss_source_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_rss_source_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 29,
+    "file": "layout/activity_rss_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_rss_source.vue",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 30,
+    "file": "layout/activity_rule_sub.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_rule_sub.vue",
+    "note": ""
+  },
+  {
+    "index": 31,
+    "file": "layout/activity_search_content.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_search_content.vue",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 32,
+    "file": "layout/activity_source_debug.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_source_debug.vue",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 33,
+    "file": "layout/activity_source_login.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_source_login.vue",
+    "note": ""
+  },
+  {
+    "index": 34,
+    "file": "layout/activity_translucence.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_translucence.vue",
+    "note": ""
+  },
+  {
+    "index": 35,
+    "file": "layout/activity_txt_toc_rule.xml",
+    "status": "进行中",
+    "target": "views/toc/TocRulesView.vue",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构"
+  },
+  {
+    "index": 36,
+    "file": "layout/activity_web_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_web_view.vue",
+    "note": ""
+  },
+  {
+    "index": 37,
+    "file": "layout/activity_welcome.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/activity_welcome.vue",
+    "note": ""
+  },
+  {
+    "index": 38,
+    "file": "layout/dialog_add_to_bookshelf.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_add_to_bookshelf.vue",
+    "note": ""
+  },
+  {
+    "index": 39,
+    "file": "layout/dialog_auto_read.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_auto_read.vue",
+    "note": ""
+  },
+  {
+    "index": 40,
+    "file": "layout/dialog_book_change_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_book_change_source.vue",
+    "note": ""
+  },
+  {
+    "index": 41,
+    "file": "layout/dialog_book_group_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_book_group_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 42,
+    "file": "layout/dialog_book_group_picker.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_book_group_picker.vue",
+    "note": ""
+  },
+  {
+    "index": 43,
+    "file": "layout/dialog_bookmark.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_bookmark.vue",
+    "note": ""
+  },
+  {
+    "index": 44,
+    "file": "layout/dialog_bookshelf_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_bookshelf_config.vue",
+    "note": ""
+  },
+  {
+    "index": 45,
+    "file": "layout/dialog_change_cover.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_change_cover.vue",
+    "note": ""
+  },
+  {
+    "index": 46,
+    "file": "layout/dialog_chapter_change_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_chapter_change_source.vue",
+    "note": ""
+  },
+  {
+    "index": 47,
+    "file": "layout/dialog_check_source_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_check_source_config.vue",
+    "note": ""
+  },
+  {
+    "index": 48,
+    "file": "layout/dialog_click_action_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_click_action_config.vue",
+    "note": ""
+  },
+  {
+    "index": 49,
+    "file": "layout/dialog_code_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_code_view.vue",
+    "note": ""
+  },
+  {
+    "index": 50,
+    "file": "layout/dialog_content_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_content_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 51,
+    "file": "layout/dialog_cover_rule_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_cover_rule_config.vue",
+    "note": ""
+  },
+  {
+    "index": 52,
+    "file": "layout/dialog_custom_group.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_custom_group.vue",
+    "note": ""
+  },
+  {
+    "index": 53,
+    "file": "layout/dialog_dict_rule_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_dict_rule_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 54,
+    "file": "layout/dialog_dict.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_dict.vue",
+    "note": ""
+  },
+  {
+    "index": 55,
+    "file": "layout/dialog_direct_link_upload_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_direct_link_upload_config.vue",
+    "note": ""
+  },
+  {
+    "index": 56,
+    "file": "layout/dialog_download_choice.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_download_choice.vue",
+    "note": ""
+  },
+  {
+    "index": 57,
+    "file": "layout/dialog_edit_text.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_edit_text.vue",
+    "note": ""
+  },
+  {
+    "index": 58,
+    "file": "layout/dialog_file_chooser.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_file_chooser.vue",
+    "note": ""
+  },
+  {
+    "index": 59,
+    "file": "layout/dialog_font_select.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_font_select.vue",
+    "note": ""
+  },
+  {
+    "index": 60,
+    "file": "layout/dialog_http_tts_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_http_tts_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 61,
+    "file": "layout/dialog_image_blurring.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_image_blurring.vue",
+    "note": ""
+  },
+  {
+    "index": 62,
+    "file": "layout/dialog_login.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_login.vue",
+    "note": ""
+  },
+  {
+    "index": 63,
+    "file": "layout/dialog_manga_color_filter.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_manga_color_filter.vue",
+    "note": ""
+  },
+  {
+    "index": 64,
+    "file": "layout/dialog_manga_epaper.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_manga_epaper.vue",
+    "note": ""
+  },
+  {
+    "index": 65,
+    "file": "layout/dialog_manga_footer_setting.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_manga_footer_setting.vue",
+    "note": ""
+  },
+  {
+    "index": 66,
+    "file": "layout/dialog_multiple_edit_text.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_multiple_edit_text.vue",
+    "note": ""
+  },
+  {
+    "index": 67,
+    "file": "layout/dialog_number_picker.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_number_picker.vue",
+    "note": ""
+  },
+  {
+    "index": 68,
+    "file": "layout/dialog_open_url_confirm.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_open_url_confirm.vue",
+    "note": ""
+  },
+  {
+    "index": 69,
+    "file": "layout/dialog_page_key.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_page_key.vue",
+    "note": ""
+  },
+  {
+    "index": 70,
+    "file": "layout/dialog_photo_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_photo_view.vue",
+    "note": ""
+  },
+  {
+    "index": 71,
+    "file": "layout/dialog_progressbar_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_progressbar_view.vue",
+    "note": ""
+  },
+  {
+    "index": 72,
+    "file": "layout/dialog_read_aloud.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_read_aloud.vue",
+    "note": ""
+  },
+  {
+    "index": 73,
+    "file": "layout/dialog_read_bg_text.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_read_bg_text.vue",
+    "note": ""
+  },
+  {
+    "index": 74,
+    "file": "layout/dialog_read_book_style.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_read_book_style.vue",
+    "note": ""
+  },
+  {
+    "index": 75,
+    "file": "layout/dialog_read_padding.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_read_padding.vue",
+    "note": ""
+  },
+  {
+    "index": 76,
+    "file": "layout/dialog_recycler_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_recycler_view.vue",
+    "note": ""
+  },
+  {
+    "index": 77,
+    "file": "layout/dialog_rss_favorite_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_rss_favorite_config.vue",
+    "note": ""
+  },
+  {
+    "index": 78,
+    "file": "layout/dialog_rule_sub_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_rule_sub_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 79,
+    "file": "layout/dialog_search_scope.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_search_scope.vue",
+    "note": ""
+  },
+  {
+    "index": 80,
+    "file": "layout/dialog_select_section_export.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_select_section_export.vue",
+    "note": ""
+  },
+  {
+    "index": 81,
+    "file": "layout/dialog_simulated_reading.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_simulated_reading.vue",
+    "note": ""
+  },
+  {
+    "index": 82,
+    "file": "layout/dialog_source_picker.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_source_picker.vue",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 83,
+    "file": "layout/dialog_text_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_text_view.vue",
+    "note": ""
+  },
+  {
+    "index": 84,
+    "file": "layout/dialog_tip_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_tip_config.vue",
+    "note": ""
+  },
+  {
+    "index": 85,
+    "file": "layout/dialog_toc_regex_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_toc_regex_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 86,
+    "file": "layout/dialog_toc_regex.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_toc_regex.vue",
+    "note": ""
+  },
+  {
+    "index": 87,
+    "file": "layout/dialog_update.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_update.vue",
+    "note": ""
+  },
+  {
+    "index": 88,
+    "file": "layout/dialog_url_option_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_url_option_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 89,
+    "file": "layout/dialog_variable.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_variable.vue",
+    "note": ""
+  },
+  {
+    "index": 90,
+    "file": "layout/dialog_verification_code_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_verification_code_view.vue",
+    "note": ""
+  },
+  {
+    "index": 91,
+    "file": "layout/dialog_wait.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_wait.vue",
+    "note": ""
+  },
+  {
+    "index": 92,
+    "file": "layout/dialog_webdav_server.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/dialog_webdav_server.vue",
+    "note": ""
+  },
+  {
+    "index": 93,
+    "file": "layout/fragment_bookmark.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_bookmark.vue",
+    "note": ""
+  },
+  {
+    "index": 94,
+    "file": "layout/fragment_books.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_books.vue",
+    "note": ""
+  },
+  {
+    "index": 95,
+    "file": "layout/fragment_bookshelf1.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_bookshelf1.vue",
+    "note": "TitleBar contentLayout 展开 Tab 栏"
+  },
+  {
+    "index": 96,
+    "file": "layout/fragment_bookshelf2.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_bookshelf2.vue",
+    "note": ""
+  },
+  {
+    "index": 97,
+    "file": "layout/fragment_chapter_list.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_chapter_list.vue",
+    "note": ""
+  },
+  {
+    "index": 98,
+    "file": "layout/fragment_explore.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_explore.vue",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 99,
+    "file": "layout/fragment_my_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_my_config.vue",
+    "note": ""
+  },
+  {
+    "index": 100,
+    "file": "layout/fragment_rss_articles.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_rss_articles.vue",
+    "note": ""
+  },
+  {
+    "index": 101,
+    "file": "layout/fragment_rss.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_rss.vue",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  {
+    "index": 102,
+    "file": "layout/fragment_web_view_login.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/fragment_web_view_login.vue",
+    "note": ""
+  },
+  {
+    "index": 103,
+    "file": "layout/item_1line_text_and_del.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_1line_text_and_del.vue",
+    "note": ""
+  },
+  {
+    "index": 104,
+    "file": "layout/item_1line_text.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_1line_text.vue",
+    "note": ""
+  },
+  {
+    "index": 105,
+    "file": "layout/item_app_log.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_app_log.vue",
+    "note": ""
+  },
+  {
+    "index": 106,
+    "file": "layout/item_arrange_book.xml",
+    "status": "已完成",
+    "target": "views/bookshelf/ArrangeBooksView.vue",
+    "note": ""
+  },
+  {
+    "index": 107,
+    "file": "layout/item_bg_image.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_bg_image.vue",
+    "note": ""
+  },
+  {
+    "index": 108,
+    "file": "layout/item_book_file_import.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_book_file_import.vue",
+    "note": ""
+  },
+  {
+    "index": 109,
+    "file": "layout/item_book_group_manage.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_book_group_manage.vue",
+    "note": ""
+  },
+  {
+    "index": 110,
+    "file": "layout/item_book_manga_edge.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_book_manga_edge.vue",
+    "note": ""
+  },
+  {
+    "index": 111,
+    "file": "layout/item_book_manga_page.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_book_manga_page.vue",
+    "note": ""
+  },
+  {
+    "index": 112,
+    "file": "layout/item_book_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_book_source.vue",
+    "note": ""
+  },
+  {
+    "index": 113,
+    "file": "layout/item_bookmark.xml",
+    "status": "已完成",
+    "target": "views/config/BookmarksView.vue",
+    "note": ""
+  },
+  {
+    "index": 114,
+    "file": "layout/item_bookshelf_grid_group.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_bookshelf_grid_group.vue",
+    "note": ""
+  },
+  {
+    "index": 115,
+    "file": "layout/item_bookshelf_grid.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_bookshelf_grid.vue",
+    "note": ""
+  },
+  {
+    "index": 116,
+    "file": "layout/item_bookshelf_list_group.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_bookshelf_list_group.vue",
+    "note": ""
+  },
+  {
+    "index": 117,
+    "file": "layout/item_bookshelf_list.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_bookshelf_list.vue",
+    "note": ""
+  },
+  {
+    "index": 118,
+    "file": "layout/item_change_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_change_source.vue",
+    "note": ""
+  },
+  {
+    "index": 119,
+    "file": "layout/item_chapter_list.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_chapter_list.vue",
+    "note": ""
+  },
+  {
+    "index": 120,
+    "file": "layout/item_check_box.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_check_box.vue",
+    "note": ""
+  },
+  {
+    "index": 121,
+    "file": "layout/item_cover.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_cover.vue",
+    "note": ""
+  },
+  {
+    "index": 122,
+    "file": "layout/item_dict_rule.xml",
+    "status": "进行中",
+    "target": "components/android/RuleRow.vue",
+    "note": ""
+  },
+  {
+    "index": 123,
+    "file": "layout/item_download.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_download.vue",
+    "note": ""
+  },
+  {
+    "index": 124,
+    "file": "layout/item_file_picker.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_file_picker.vue",
+    "note": ""
+  },
+  {
+    "index": 125,
+    "file": "layout/item_file.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_file.vue",
+    "note": ""
+  },
+  {
+    "index": 126,
+    "file": "layout/item_fillet_text.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_fillet_text.vue",
+    "note": ""
+  },
+  {
+    "index": 127,
+    "file": "layout/item_find_book.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_find_book.vue",
+    "note": ""
+  },
+  {
+    "index": 128,
+    "file": "layout/item_font.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_font.vue",
+    "note": ""
+  },
+  {
+    "index": 129,
+    "file": "layout/item_group_manage.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_group_manage.vue",
+    "note": ""
+  },
+  {
+    "index": 130,
+    "file": "layout/item_group_select.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_group_select.vue",
+    "note": ""
+  },
+  {
+    "index": 131,
+    "file": "layout/item_http_tts.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_http_tts.vue",
+    "note": ""
+  },
+  {
+    "index": 132,
+    "file": "layout/item_icon_preference.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_icon_preference.vue",
+    "note": ""
+  },
+  {
+    "index": 133,
+    "file": "layout/item_import_book.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_import_book.vue",
+    "note": ""
+  },
+  {
+    "index": 134,
+    "file": "layout/item_log.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_log.vue",
+    "note": ""
+  },
+  {
+    "index": 135,
+    "file": "layout/item_path_picker.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_path_picker.vue",
+    "note": ""
+  },
+  {
+    "index": 136,
+    "file": "layout/item_radio_button.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_radio_button.vue",
+    "note": ""
+  },
+  {
+    "index": 137,
+    "file": "layout/item_read_record.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_read_record.vue",
+    "note": ""
+  },
+  {
+    "index": 138,
+    "file": "layout/item_read_style.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_read_style.vue",
+    "note": ""
+  },
+  {
+    "index": 139,
+    "file": "layout/item_replace_rule.xml",
+    "status": "进行中",
+    "target": "components/android/RuleRow.vue",
+    "note": ""
+  },
+  {
+    "index": 140,
+    "file": "layout/item_rss_article_1.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_rss_article_1.vue",
+    "note": ""
+  },
+  {
+    "index": 141,
+    "file": "layout/item_rss_article_2.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_rss_article_2.vue",
+    "note": ""
+  },
+  {
+    "index": 142,
+    "file": "layout/item_rss_article.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_rss_article.vue",
+    "note": ""
+  },
+  {
+    "index": 143,
+    "file": "layout/item_rss_read_record.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_rss_read_record.vue",
+    "note": ""
+  },
+  {
+    "index": 144,
+    "file": "layout/item_rss_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_rss_source.vue",
+    "note": ""
+  },
+  {
+    "index": 145,
+    "file": "layout/item_rss.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_rss.vue",
+    "note": ""
+  },
+  {
+    "index": 146,
+    "file": "layout/item_rule_sub.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_rule_sub.vue",
+    "note": ""
+  },
+  {
+    "index": 147,
+    "file": "layout/item_search_list.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_search_list.vue",
+    "note": ""
+  },
+  {
+    "index": 148,
+    "file": "layout/item_search.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_search.vue",
+    "note": ""
+  },
+  {
+    "index": 149,
+    "file": "layout/item_server_select.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_server_select.vue",
+    "note": ""
+  },
+  {
+    "index": 150,
+    "file": "layout/item_source_edit_check_box.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_source_edit_check_box.vue",
+    "note": ""
+  },
+  {
+    "index": 151,
+    "file": "layout/item_source_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_source_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 152,
+    "file": "layout/item_source_import.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_source_import.vue",
+    "note": ""
+  },
+  {
+    "index": 153,
+    "file": "layout/item_text.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_text.vue",
+    "note": ""
+  },
+  {
+    "index": 154,
+    "file": "layout/item_theme_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_theme_config.vue",
+    "note": ""
+  },
+  {
+    "index": 155,
+    "file": "layout/item_toc_regex.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/item_toc_regex.vue",
+    "note": ""
+  },
+  {
+    "index": 156,
+    "file": "layout/item_txt_toc_rule.xml",
+    "status": "进行中",
+    "target": "components/android/RuleRow.vue",
+    "note": ""
+  },
+  {
+    "index": 157,
+    "file": "layout/popup_action_menu.xml",
+    "status": "已完成",
+    "target": "components/android/PopupMenu.vue",
+    "note": ""
+  },
+  {
+    "index": 158,
+    "file": "layout/popup_action.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/popup_action.vue",
+    "note": ""
+  },
+  {
+    "index": 159,
+    "file": "layout/popup_keyboard_tool.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/popup_keyboard_tool.vue",
+    "note": ""
+  },
+  {
+    "index": 160,
+    "file": "layout/popup_seek_bar.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/popup_seek_bar.vue",
+    "note": ""
+  },
+  {
+    "index": 161,
+    "file": "layout/view_action_button.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_action_button.vue",
+    "note": ""
+  },
+  {
+    "index": 162,
+    "file": "layout/view_book_page.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_book_page.vue",
+    "note": ""
+  },
+  {
+    "index": 163,
+    "file": "layout/view_detail_seek_bar.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_detail_seek_bar.vue",
+    "note": ""
+  },
+  {
+    "index": 164,
+    "file": "layout/view_dynamic.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_dynamic.vue",
+    "note": ""
+  },
+  {
+    "index": 165,
+    "file": "layout/view_error.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_error.vue",
+    "note": ""
+  },
+  {
+    "index": 166,
+    "file": "layout/view_fastscroller.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_fastscroller.vue",
+    "note": ""
+  },
+  {
+    "index": 167,
+    "file": "layout/view_icon.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_icon.vue",
+    "note": ""
+  },
+  {
+    "index": 168,
+    "file": "layout/view_load_more.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_load_more.vue",
+    "note": ""
+  },
+  {
+    "index": 169,
+    "file": "layout/view_loading.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_loading.vue",
+    "note": ""
+  },
+  {
+    "index": 170,
+    "file": "layout/view_manga_menu.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_manga_menu.vue",
+    "note": ""
+  },
+  {
+    "index": 171,
+    "file": "layout/view_navigation_badge.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_navigation_badge.vue",
+    "note": ""
+  },
+  {
+    "index": 172,
+    "file": "layout/view_preference_category.xml",
+    "status": "已完成",
+    "target": "components/android/PreferenceCategory.vue",
+    "note": ""
+  },
+  {
+    "index": 173,
+    "file": "layout/view_preference.xml",
+    "status": "已完成",
+    "target": "components/android/PreferenceRow.vue",
+    "note": ""
+  },
+  {
+    "index": 174,
+    "file": "layout/view_read_menu.xml",
+    "status": "进行中",
+    "target": "views/reader/ReaderView.vue",
+    "note": ""
+  },
+  {
+    "index": 175,
+    "file": "layout/view_refresh_recycler.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_refresh_recycler.vue",
+    "note": ""
+  },
+  {
+    "index": 176,
+    "file": "layout/view_search_menu.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_search_menu.vue",
+    "note": ""
+  },
+  {
+    "index": 177,
+    "file": "layout/view_search.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_search.vue",
+    "note": ""
+  },
+  {
+    "index": 178,
+    "file": "layout/view_select_action_bar.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_select_action_bar.vue",
+    "note": ""
+  },
+  {
+    "index": 179,
+    "file": "layout/view_tab_layout_min.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_tab_layout_min.vue",
+    "note": ""
+  },
+  {
+    "index": 180,
+    "file": "layout/view_tab_layout.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_tab_layout.vue",
+    "note": ""
+  },
+  {
+    "index": 181,
+    "file": "layout/view_title_bar_dark.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_title_bar_dark.vue",
+    "note": ""
+  },
+  {
+    "index": 182,
+    "file": "layout/view_title_bar.xml",
+    "status": "已完成",
+    "target": "components/android/TitleBar.vue",
+    "note": ""
+  },
+  {
+    "index": 183,
+    "file": "layout/view_toast.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout/view_toast.vue",
+    "note": ""
+  },
+  {
+    "index": 184,
+    "file": "layout-land/activity_book_info.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/layout-land/activity_book_info.vue",
+    "note": ""
+  },
+  {
+    "index": 185,
+    "file": "menu/about.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/about.vue",
+    "note": ""
+  },
+  {
+    "index": 186,
+    "file": "menu/app_log.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/app_log.vue",
+    "note": ""
+  },
+  {
+    "index": 187,
+    "file": "menu/app_update.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/app_update.vue",
+    "note": ""
+  },
+  {
+    "index": 188,
+    "file": "menu/audio_play.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/audio_play.vue",
+    "note": ""
+  },
+  {
+    "index": 189,
+    "file": "menu/backup_restore.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/backup_restore.vue",
+    "note": ""
+  },
+  {
+    "index": 190,
+    "file": "menu/book_cache_download.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_cache_download.vue",
+    "note": ""
+  },
+  {
+    "index": 191,
+    "file": "menu/book_cache.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_cache.vue",
+    "note": ""
+  },
+  {
+    "index": 192,
+    "file": "menu/book_group_manage.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_group_manage.vue",
+    "note": ""
+  },
+  {
+    "index": 193,
+    "file": "menu/book_info_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_info_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 194,
+    "file": "menu/book_info.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_info.vue",
+    "note": ""
+  },
+  {
+    "index": 195,
+    "file": "menu/book_manga.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_manga.vue",
+    "note": ""
+  },
+  {
+    "index": 196,
+    "file": "menu/book_read_change_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_read_change_source.vue",
+    "note": ""
+  },
+  {
+    "index": 197,
+    "file": "menu/book_read_record.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_read_record.vue",
+    "note": ""
+  },
+  {
+    "index": 198,
+    "file": "menu/book_read_refresh.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_read_refresh.vue",
+    "note": ""
+  },
+  {
+    "index": 199,
+    "file": "menu/book_read_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_read_source.vue",
+    "note": ""
+  },
+  {
+    "index": 200,
+    "file": "menu/book_read.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_read.vue",
+    "note": ""
+  },
+  {
+    "index": 201,
+    "file": "menu/book_remote.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_remote.vue",
+    "note": ""
+  },
+  {
+    "index": 202,
+    "file": "menu/book_search_scope.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_search_scope.vue",
+    "note": ""
+  },
+  {
+    "index": 203,
+    "file": "menu/book_search.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_search.vue",
+    "note": ""
+  },
+  {
+    "index": 204,
+    "file": "menu/book_source_debug.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_source_debug.vue",
+    "note": ""
+  },
+  {
+    "index": 205,
+    "file": "menu/book_source_item.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_source_item.vue",
+    "note": ""
+  },
+  {
+    "index": 206,
+    "file": "menu/book_source_sel.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_source_sel.vue",
+    "note": ""
+  },
+  {
+    "index": 207,
+    "file": "menu/book_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_source.vue",
+    "note": ""
+  },
+  {
+    "index": 208,
+    "file": "menu/book_toc.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/book_toc.vue",
+    "note": ""
+  },
+  {
+    "index": 209,
+    "file": "menu/bookmark.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/bookmark.vue",
+    "note": ""
+  },
+  {
+    "index": 210,
+    "file": "menu/bookshelf_manage.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/bookshelf_manage.vue",
+    "note": ""
+  },
+  {
+    "index": 211,
+    "file": "menu/bookshelf_menage_sel.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/bookshelf_menage_sel.vue",
+    "note": ""
+  },
+  {
+    "index": 212,
+    "file": "menu/change_cover.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/change_cover.vue",
+    "note": ""
+  },
+  {
+    "index": 213,
+    "file": "menu/change_source_item.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/change_source_item.vue",
+    "note": ""
+  },
+  {
+    "index": 214,
+    "file": "menu/change_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/change_source.vue",
+    "note": ""
+  },
+  {
+    "index": 215,
+    "file": "menu/code_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/code_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 216,
+    "file": "menu/content_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/content_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 217,
+    "file": "menu/content_search.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/content_search.vue",
+    "note": ""
+  },
+  {
+    "index": 218,
+    "file": "menu/content_select_action.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/content_select_action.vue",
+    "note": ""
+  },
+  {
+    "index": 219,
+    "file": "menu/crash_log.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/crash_log.vue",
+    "note": ""
+  },
+  {
+    "index": 220,
+    "file": "menu/dialog_text.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/dialog_text.vue",
+    "note": ""
+  },
+  {
+    "index": 221,
+    "file": "menu/dict_rule_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/dict_rule_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 222,
+    "file": "menu/dict_rule_sel.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/dict_rule_sel.vue",
+    "note": ""
+  },
+  {
+    "index": 223,
+    "file": "menu/dict_rule.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/dict_rule.vue",
+    "note": ""
+  },
+  {
+    "index": 224,
+    "file": "menu/direct_link_upload_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/direct_link_upload_config.vue",
+    "note": ""
+  },
+  {
+    "index": 225,
+    "file": "menu/explore_item.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/explore_item.vue",
+    "note": ""
+  },
+  {
+    "index": 226,
+    "file": "menu/file_chooser.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/file_chooser.vue",
+    "note": ""
+  },
+  {
+    "index": 227,
+    "file": "menu/file_long_click.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/file_long_click.vue",
+    "note": ""
+  },
+  {
+    "index": 228,
+    "file": "menu/font_select.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/font_select.vue",
+    "note": ""
+  },
+  {
+    "index": 229,
+    "file": "menu/group_manage.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/group_manage.vue",
+    "note": ""
+  },
+  {
+    "index": 230,
+    "file": "menu/import_book_sel.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/import_book_sel.vue",
+    "note": ""
+  },
+  {
+    "index": 231,
+    "file": "menu/import_book.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/import_book.vue",
+    "note": ""
+  },
+  {
+    "index": 232,
+    "file": "menu/import_replace.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/import_replace.vue",
+    "note": ""
+  },
+  {
+    "index": 233,
+    "file": "menu/import_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/import_source.vue",
+    "note": ""
+  },
+  {
+    "index": 234,
+    "file": "menu/keyboard_assists_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/keyboard_assists_config.vue",
+    "note": ""
+  },
+  {
+    "index": 235,
+    "file": "menu/main_bnv.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/main_bnv.vue",
+    "note": ""
+  },
+  {
+    "index": 236,
+    "file": "menu/main_bookshelf.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/main_bookshelf.vue",
+    "note": ""
+  },
+  {
+    "index": 237,
+    "file": "menu/main_explore.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/main_explore.vue",
+    "note": ""
+  },
+  {
+    "index": 238,
+    "file": "menu/main_my.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/main_my.vue",
+    "note": ""
+  },
+  {
+    "index": 239,
+    "file": "menu/main_rss.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/main_rss.vue",
+    "note": ""
+  },
+  {
+    "index": 240,
+    "file": "menu/open_url_confirm.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/open_url_confirm.vue",
+    "note": ""
+  },
+  {
+    "index": 241,
+    "file": "menu/qr_code_scan.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/qr_code_scan.vue",
+    "note": ""
+  },
+  {
+    "index": 242,
+    "file": "menu/replace_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/replace_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 243,
+    "file": "menu/replace_rule_item.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/replace_rule_item.vue",
+    "note": ""
+  },
+  {
+    "index": 244,
+    "file": "menu/replace_rule_sel.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/replace_rule_sel.vue",
+    "note": ""
+  },
+  {
+    "index": 245,
+    "file": "menu/replace_rule.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/replace_rule.vue",
+    "note": ""
+  },
+  {
+    "index": 246,
+    "file": "menu/rss_articles.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_articles.vue",
+    "note": ""
+  },
+  {
+    "index": 247,
+    "file": "menu/rss_favorites.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_favorites.vue",
+    "note": ""
+  },
+  {
+    "index": 248,
+    "file": "menu/rss_main_item.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_main_item.vue",
+    "note": ""
+  },
+  {
+    "index": 249,
+    "file": "menu/rss_read_record.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_read_record.vue",
+    "note": ""
+  },
+  {
+    "index": 250,
+    "file": "menu/rss_read.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_read.vue",
+    "note": ""
+  },
+  {
+    "index": 251,
+    "file": "menu/rss_source_debug.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_source_debug.vue",
+    "note": ""
+  },
+  {
+    "index": 252,
+    "file": "menu/rss_source_item.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_source_item.vue",
+    "note": ""
+  },
+  {
+    "index": 253,
+    "file": "menu/rss_source_sel.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_source_sel.vue",
+    "note": ""
+  },
+  {
+    "index": 254,
+    "file": "menu/rss_source.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/rss_source.vue",
+    "note": ""
+  },
+  {
+    "index": 255,
+    "file": "menu/save.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/save.vue",
+    "note": ""
+  },
+  {
+    "index": 256,
+    "file": "menu/search_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/search_view.vue",
+    "note": ""
+  },
+  {
+    "index": 257,
+    "file": "menu/server_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/server_config.vue",
+    "note": ""
+  },
+  {
+    "index": 258,
+    "file": "menu/servers.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/servers.vue",
+    "note": ""
+  },
+  {
+    "index": 259,
+    "file": "menu/source_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/source_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 260,
+    "file": "menu/source_login.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/source_login.vue",
+    "note": ""
+  },
+  {
+    "index": 261,
+    "file": "menu/source_picker.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/source_picker.vue",
+    "note": ""
+  },
+  {
+    "index": 262,
+    "file": "menu/source_sub_item.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/source_sub_item.vue",
+    "note": ""
+  },
+  {
+    "index": 263,
+    "file": "menu/source_subscription.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/source_subscription.vue",
+    "note": ""
+  },
+  {
+    "index": 264,
+    "file": "menu/source_webview_login.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/source_webview_login.vue",
+    "note": ""
+  },
+  {
+    "index": 265,
+    "file": "menu/speak_engine_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/speak_engine_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 266,
+    "file": "menu/speak_engine.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/speak_engine.vue",
+    "note": ""
+  },
+  {
+    "index": 267,
+    "file": "menu/theme_config.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/theme_config.vue",
+    "note": ""
+  },
+  {
+    "index": 268,
+    "file": "menu/theme_list.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/theme_list.vue",
+    "note": ""
+  },
+  {
+    "index": 269,
+    "file": "menu/txt_toc_rule_edit.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/txt_toc_rule_edit.vue",
+    "note": ""
+  },
+  {
+    "index": 270,
+    "file": "menu/txt_toc_rule_item.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/txt_toc_rule_item.vue",
+    "note": ""
+  },
+  {
+    "index": 271,
+    "file": "menu/txt_toc_rule_sel.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/txt_toc_rule_sel.vue",
+    "note": ""
+  },
+  {
+    "index": 272,
+    "file": "menu/txt_toc_rule.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/txt_toc_rule.vue",
+    "note": ""
+  },
+  {
+    "index": 273,
+    "file": "menu/verification_code.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/verification_code.vue",
+    "note": ""
+  },
+  {
+    "index": 274,
+    "file": "menu/web_view.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/menu/web_view.vue",
+    "note": ""
+  },
+  {
+    "index": 275,
+    "file": "xml/about.xml",
+    "status": "已完成",
+    "target": "views/config/AboutView.vue",
+    "note": ""
+  },
+  {
+    "index": 276,
+    "file": "xml/file_paths.xml",
+    "status": "不适用",
+    "target": "",
+    "note": ""
+  },
+  {
+    "index": 277,
+    "file": "xml/network_security_config.xml",
+    "status": "不适用",
+    "target": "",
+    "note": ""
+  },
+  {
+    "index": 278,
+    "file": "xml/pref_config_aloud.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/xml/pref_config_aloud.vue",
+    "note": ""
+  },
+  {
+    "index": 279,
+    "file": "xml/pref_config_backup.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/xml/pref_config_backup.vue",
+    "note": ""
+  },
+  {
+    "index": 280,
+    "file": "xml/pref_config_cover.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/xml/pref_config_cover.vue",
+    "note": ""
+  },
+  {
+    "index": 281,
+    "file": "xml/pref_config_other.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/xml/pref_config_other.vue",
+    "note": ""
+  },
+  {
+    "index": 282,
+    "file": "xml/pref_config_read.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/xml/pref_config_read.vue",
+    "note": ""
+  },
+  {
+    "index": 283,
+    "file": "xml/pref_config_theme.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/xml/pref_config_theme.vue",
+    "note": ""
+  },
+  {
+    "index": 284,
+    "file": "xml/pref_config_welcome.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/xml/pref_config_welcome.vue",
+    "note": ""
+  },
+  {
+    "index": 285,
+    "file": "xml/pref_main.xml",
+    "status": "壳子已生成",
+    "target": "design/generated/xml/pref_main.vue",
+    "note": ""
+  },
+  {
+    "index": 286,
+    "file": "xml/spen_remote_actions.xml",
+    "status": "不适用",
+    "target": "",
+    "note": ""
+  }
+]

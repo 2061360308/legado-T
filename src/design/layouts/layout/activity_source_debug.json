@@ -1,0 +1,258 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "id": "ll_content",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "TitleBar",
+      "attrs": {
+        "id": "title_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_constraintTop_toTopOf": "parent",
+        "title": "调试源"
+      },
+      "children": []
+    },
+    {
+      "tag": "RecyclerView",
+      "attrs": {
+        "id": "recycler_view",
+        "layout_width": "match_parent",
+        "layout_height": 0,
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintTop_toBottomOf": "@+id/title_bar"
+      },
+      "children": []
+    },
+    {
+      "tag": "RotateLoading",
+      "attrs": {
+        "id": "rotate_loading",
+        "layout_width": 36,
+        "layout_height": 36,
+        "layout_margin": 6,
+        "visibility": "gone",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toBottomOf": "@+id/title_bar"
+      },
+      "children": []
+    },
+    {
+      "tag": "NoChildScrollNestedScrollView",
+      "attrs": {
+        "id": "help",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "visibility": "gone",
+        "layout_constraintTop_toBottomOf": "@+id/title_bar"
+      },
+      "children": [
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "background": "@color/background",
+            "orientation": "vertical",
+            "padding": 16
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "调试搜索>>输入关键字，如：",
+                "textColor": "#8a000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "text_fx_title",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "调试发现>>输入发现URL，如：",
+                "textColor": "#8a000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "text_fx",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_margin": 3,
+                "background": "selector_fillet_btn_bg",
+                "ellipsize": "end",
+                "gravity": "center",
+                "maxLines": "1",
+                "paddingLeft": 12,
+                "paddingTop": 4,
+                "paddingRight": 12,
+                "paddingBottom": 4,
+                "text": "系统::http://xxx",
+                "textColor": "#de000000",
+                "textSize": 14
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "调试详情页>>输入详情页URL，如：",
+                "textColor": "#8a000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "text_info",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_margin": 3,
+                "background": "selector_fillet_btn_bg",
+                "ellipsize": "end",
+                "gravity": "center",
+                "maxLines": "1",
+                "paddingLeft": 12,
+                "paddingTop": 4,
+                "paddingRight": 12,
+                "paddingBottom": 4,
+                "text": "https://m.qidian.com/book/1015609210",
+                "textColor": "#de000000",
+                "textSize": 14
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "调试目录页>>输入目录页URL，如：",
+                "textColor": "#8a000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "text_toc",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_margin": 3,
+                "background": "selector_fillet_btn_bg",
+                "ellipsize": "end",
+                "gravity": "center",
+                "maxLines": "1",
+                "paddingLeft": 12,
+                "paddingTop": 4,
+                "paddingRight": 12,
+                "paddingBottom": 4,
+                "text": "++https://www.zhaishuyuan.com/read/30394",
+                "textColor": "#de000000",
+                "textSize": 14
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "调试正文页>>输入正文页URL，如：",
+                "textColor": "#8a000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "text_content",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_margin": 3,
+                "background": "selector_fillet_btn_bg",
+                "ellipsize": "end",
+                "gravity": "center",
+                "maxLines": "1",
+                "paddingLeft": 12,
+                "paddingTop": 4,
+                "paddingRight": 12,
+                "paddingBottom": 4,
+                "text": "--https://www.zhaishuyuan.com/chapter/30394/20940996",
+                "textColor": "#de000000",
+                "textSize": 14
+              },
+              "children": []
+            },
+            {
+              "tag": "LinearLayout",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "orientation": "horizontal"
+              },
+              "children": [
+                {
+                  "tag": "TextView",
+                  "attrs": {
+                    "id": "text_my",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_margin": 3,
+                    "background": "selector_fillet_btn_bg",
+                    "ellipsize": "end",
+                    "gravity": "center",
+                    "maxLines": "1",
+                    "paddingLeft": 12,
+                    "paddingTop": 4,
+                    "paddingRight": 12,
+                    "paddingBottom": 4,
+                    "text": "我的",
+                    "textColor": "#de000000",
+                    "textSize": 14
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "TextView",
+                  "attrs": {
+                    "id": "text_xt",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_margin": 3,
+                    "background": "selector_fillet_btn_bg",
+                    "ellipsize": "end",
+                    "gravity": "center",
+                    "maxLines": "1",
+                    "paddingLeft": 12,
+                    "paddingTop": 4,
+                    "paddingRight": 12,
+                    "paddingBottom": 4,
+                    "text": "系统",
+                    "textColor": "#de000000",
+                    "textSize": 14
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

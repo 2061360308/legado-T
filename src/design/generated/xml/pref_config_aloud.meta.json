@@ -1,0 +1,339 @@
+{
+  "source": "xml/pref_config_aloud.xml",
+  "hash": "1e0a12655aa39be20069c73a98b3dda9cfcb9d25",
+  "nodeCount": 11,
+  "attrCount": 47,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "title",
+      "raw": "@string/aloud_config",
+      "value": "朗读设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "ignoreAudioFocus",
+      "value": "ignoreAudioFocus",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/ignore_audio_focus_summary",
+      "value": "允许与其他应用同时播放音频",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/ignore_audio_focus_title",
+      "value": "忽略音频焦点",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "pauseReadAloudWhilePhoneCalls",
+      "value": "pauseReadAloudWhilePhoneCalls",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/pause_read_aloud_while_phone_calls_summary",
+      "value": "在通话期间暂停朗读，需要读取手机状态权限",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/pause_read_aloud_while_phone_calls_title",
+      "value": "来电期间暂停朗读",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/read_aloud_wake_lock",
+      "value": "朗读服务唤醒锁",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/read_aloud_wake_lock_summary",
+      "value": "开启朗读的时候启用唤醒锁,有些手机开启唤醒锁会被杀后台",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "readAloudWakeLock",
+      "value": "readAloudWakeLock",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/system_media_control_compatibility_change",
+      "value": "系统媒体控件兼容性更改",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/system_media_control_compatibility_change_summary",
+      "value": "当锁屏不显示系统媒体控件时可以尝试开启，比如oneui7.0或vivo等",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "systemMediaControlCompatibilityChange",
+      "value": "systemMediaControlCompatibilityChange",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/pref_media_button_per_next",
+      "value": "媒体按钮•上一首|下一首",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/pref_media_button_per_next_summary",
+      "value": "上一段|下一段/上一章|下一章",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "mediaButtonPerNext",
+      "value": "mediaButtonPerNext",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/read_aloud_by_page",
+      "value": "按页朗读",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/read_aloud_by_page_summary",
+      "value": "及时翻页，翻页时会停顿一下",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "readAloudByPage",
+      "value": "readAloudByPage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/stream_read_aloud_audio",
+      "value": "流式播放音频",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/stream_read_aloud_audio_summary",
+      "value": "即边下边播，网络不好时播放会断断续续，仅TTS源有效",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "streamReadAloudAudio",
+      "value": "streamReadAloudAudio",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/speak_engine",
+      "value": "朗读引擎",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "TTS",
+      "value": "TTS",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "appTtsEngine",
+      "value": "appTtsEngine",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/sys_tts_config",
+      "value": "系统 TTS 设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/sys_tts_config_summary",
+      "value": "打开系统 TTS 设置界面",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "sysTtsConfig",
+      "value": "sysTtsConfig",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

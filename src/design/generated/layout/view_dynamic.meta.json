@@ -1,0 +1,102 @@
+{
+  "source": "layout/view_dynamic.xml",
+  "hash": "ae5bc2bcd098800420eb363ae857920e7ea10dea",
+  "nodeCount": 3,
+  "attrCount": 13,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/error_view_stub",
+      "value": "@+id/error_view_stub",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout",
+      "raw": "@layout/view_error",
+      "value": "@layout/view_error",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/progress_view_stub",
+      "value": "@+id/progress_view_stub",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout",
+      "raw": "@layout/view_loading",
+      "value": "@layout/view_loading",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

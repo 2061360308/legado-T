@@ -1,0 +1,130 @@
+{
+  "source": "menu/source_login.xml",
+  "hash": "ece12ff7cccbb4a436e9d07bde0e66166ed297ac",
+  "nodeCount": 5,
+  "attrCount": 17,
+  "meta": [
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "AlwaysShowAction",
+      "value": "AlwaysShowAction",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_ok",
+      "value": "@+id/menu_ok",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_check",
+      "value": "ic_check",
+      "status": "mapped",
+      "drawable": "ic_check",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/ok",
+      "value": "确认",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_show_login_header",
+      "value": "@+id/menu_show_login_header",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/show_login_header",
+      "value": "查看登录头",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_del_login_header",
+      "value": "@+id/menu_del_login_header",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/del_login_header",
+      "value": "删除登录头",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_log",
+      "value": "@+id/menu_log",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/log",
+      "value": "日志",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,701 @@
+{
+  "source": "menu/book_read.xml",
+  "hash": "2dde55ed0652972b7d9be952fb2aa77666b178cd",
+  "nodeCount": 28,
+  "attrCount": 98,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:context",
+      "raw": ".ui.main.MainActivity",
+      "value": ".ui.main.MainActivity",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "AlwaysShowAction",
+      "value": "AlwaysShowAction",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_group_on_line",
+      "value": "@+id/menu_group_on_line",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_change_source",
+      "value": "@+id/menu_change_source",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_exchange",
+      "value": "ic_exchange",
+      "status": "mapped",
+      "drawable": "ic_exchange",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/change_origin",
+      "value": "换源",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_refresh",
+      "value": "@+id/menu_refresh",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_refresh_black_24dp",
+      "value": "ic_refresh_black_24dp",
+      "status": "mapped",
+      "drawable": "ic_refresh_black_24dp",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/refresh",
+      "value": "刷新",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_download",
+      "value": "@+id/menu_download",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_download_line",
+      "value": "ic_download_line",
+      "status": "mapped",
+      "drawable": "ic_download_line",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/offline_cache",
+      "value": "离线缓存",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_group_text",
+      "value": "@+id/menu_group_text",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_toc_regex",
+      "value": "@+id/menu_toc_regex",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_exchange",
+      "value": "ic_exchange",
+      "status": "mapped",
+      "drawable": "ic_exchange",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/txt_toc_rule",
+      "value": "TXT 目录规则",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "visible",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_group_local",
+      "value": "@+id/menu_group_local",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_set_charset",
+      "value": "@+id/menu_set_charset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_translate",
+      "value": "ic_translate",
+      "status": "mapped",
+      "drawable": "ic_translate",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/set_charset",
+      "value": "设置编码",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_group_epub",
+      "value": "@+id/menu_group_epub",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_del_ruby_tag",
+      "value": "@+id/menu_del_ruby_tag",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/del_ruby_tag",
+      "value": "删除ruby标签",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_del_h_tag",
+      "value": "@+id/menu_del_h_tag",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/del_h_tag",
+      "value": "删除h标签",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_add_bookmark",
+      "value": "@+id/menu_add_bookmark",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/bookmark_add",
+      "value": "添加书签",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_edit_content",
+      "value": "@+id/menu_edit_content",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/edit_content",
+      "value": "编辑内容",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_page_anim",
+      "value": "@+id/menu_page_anim",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/book_page_anim",
+      "value": "翻页动画（本书）",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_get_progress",
+      "value": "@+id/menu_get_progress",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/get_book_progress",
+      "value": "拉取云端进度",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "visible",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_cover_progress",
+      "value": "@+id/menu_cover_progress",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/cover_book_progress",
+      "value": "覆盖云端进度",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "visible",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_reverse_content",
+      "value": "@+id/menu_reverse_content",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/reverse_content",
+      "value": "反转内容",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_simulated_reading",
+      "value": "@+id/menu_simulated_reading",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/simulated_reading",
+      "value": "模拟追读",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_enable_replace",
+      "value": "@+id/menu_enable_replace",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/replace_rule_title",
+      "value": "替换净化",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_same_title_removed",
+      "value": "@+id/menu_same_title_removed",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/same_title_removed",
+      "value": "移除重复标题",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_re_segment",
+      "value": "@+id/menu_re_segment",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/re_segment",
+      "value": "重新分段",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_enable_review",
+      "value": "@+id/menu_enable_review",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/review",
+      "value": "段评",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "visible",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_image_style",
+      "value": "@+id/menu_image_style",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/image_style",
+      "value": "图片样式",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_update_toc",
+      "value": "@+id/menu_update_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/update_toc",
+      "value": "更新目录",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_effective_replaces",
+      "value": "@+id/menu_effective_replaces",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/effective_replaces",
+      "value": "起效的替换",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_log",
+      "value": "@+id/menu_log",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/log",
+      "value": "日志",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_help",
+      "value": "@+id/menu_help",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/help",
+      "value": "帮助",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

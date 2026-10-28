@@ -1,0 +1,32 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "gravity": "center_vertical",
+    "orientation": "horizontal",
+    "padding": 5,
+    "background": "?attr/selectableItemBackground"
+  },
+  "children": [
+    {
+      "tag": "ImageView",
+      "attrs": {
+        "id": "image_view",
+        "layout_width": 24,
+        "layout_height": 24
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "text_view",
+        "layout_width": "wrap_content",
+        "layout_height": "match_parent",
+        "gravity": "center_vertical"
+      },
+      "children": []
+    }
+  ]
+}

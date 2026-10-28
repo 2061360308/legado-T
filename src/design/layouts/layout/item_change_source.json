@@ -1,0 +1,141 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "background": "?android:attr/selectableItemBackground"
+  },
+  "children": [
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_good",
+        "layout_width": 30,
+        "layout_height": 0,
+        "layout_marginTop": 5,
+        "padding": 5,
+        "src": "ic_praise",
+        "contentDescription": "赞",
+        "layout_constraintBottom_toTopOf": "@+id/iv_bad",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toTopOf": "parent",
+        "tint": "#FF5252"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_bad",
+        "layout_width": 30,
+        "layout_height": 0,
+        "layout_marginBottom": 5,
+        "padding": 5,
+        "src": "ic_praise",
+        "contentDescription": "踩",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toBottomOf": "@+id/iv_good",
+        "tint": "#448AFF"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_checked",
+        "layout_width": 40,
+        "layout_height": 40,
+        "layout_marginTop": 10,
+        "layout_marginBottom": 10,
+        "padding": 8,
+        "src": "ic_check",
+        "visibility": "invisible",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "parent",
+        "tint": "#de000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_origin",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_marginLeft": 30,
+        "layout_marginTop": 10,
+        "singleLine": "true",
+        "textColor": "#de000000",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/tv_author",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_author",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_marginTop": 10,
+        "singleLine": "true",
+        "textColor": "#8a000000",
+        "layout_constraintRight_toLeftOf": "@+id/iv_checked",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_last",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_marginLeft": 30,
+        "layout_marginBottom": 10,
+        "singleLine": "true",
+        "textColor": "#8a000000",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/iv_checked",
+        "layout_constraintTop_toBottomOf": "@+id/tv_origin"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_current_chapter_word_count",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_marginLeft": 30,
+        "layout_marginBottom": 10,
+        "singleLine": "false",
+        "textColor": "#8a000000",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/iv_checked",
+        "layout_constraintTop_toBottomOf": "@+id/tv_last"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_respond_time",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_marginLeft": 30,
+        "layout_marginBottom": 10,
+        "singleLine": "false",
+        "textColor": "#8a000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/iv_checked",
+        "layout_constraintTop_toBottomOf": "@+id/tv_current_chapter_word_count"
+      },
+      "children": []
+    }
+  ]
+}

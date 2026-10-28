@@ -1,0 +1,903 @@
+{
+  "source": "layout/dialog_click_action_config.xml",
+  "hash": "9e5f98b588c6b215cc807f13a8c336159cd125ce",
+  "nodeCount": 16,
+  "attrCount": 126,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "3dp",
+      "path": "$",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "@color/translucent",
+      "path": "$",
+      "value": "#34343499",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/root_view",
+      "value": "@+id/root_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "NestedWeights",
+      "value": "NestedWeights",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/0",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "6dp",
+      "path": "$/0",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "6dp",
+      "path": "$/0",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "16dp",
+      "path": "$/0",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "16dp",
+      "path": "$/0",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/0",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UseCompoundDrawables",
+      "value": "UseCompoundDrawables",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/0/0",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/click_regional_config",
+      "value": "@string/click_regional_config",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_close",
+      "value": "@+id/iv_close",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/close",
+      "value": "@string/close",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_baseline_close",
+      "value": "@drawable/ic_baseline_close",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/white",
+      "value": "@color/white",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/1/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/1/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/1/0",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/1/0",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/1/0",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_top_left",
+      "value": "@+id/tv_top_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:text",
+      "raw": "上一页",
+      "value": "上一页",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/1/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/1/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/1/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/1/1",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/1/1",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_top_center",
+      "value": "@+id/tv_top_center",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:text",
+      "raw": "上一页",
+      "value": "上一页",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/1/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/1/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/1/2",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/1/2",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/1/2",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_top_right",
+      "value": "@+id/tv_top_right",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:text",
+      "raw": "下一页",
+      "value": "下一页",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/2/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/2/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/2/0",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/2/0",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/2/0",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_middle_left",
+      "value": "@+id/tv_middle_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:text",
+      "raw": "上一页",
+      "value": "上一页",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/2/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/2/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/2/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/2/1",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/2/1",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_middle_center",
+      "value": "@+id/tv_middle_center",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/menu",
+      "value": "@string/menu",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/2/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/2/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/2/2",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/2/2",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/2/2",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_middle_right",
+      "value": "@+id/tv_middle_right",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:text",
+      "raw": "下一页",
+      "value": "下一页",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/3",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/3/0",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/3/0",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/3/0",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_bottom_left",
+      "value": "@+id/tv_bottom_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "NestedWeights",
+      "value": "NestedWeights",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:text",
+      "raw": "上一页",
+      "value": "上一页",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/3/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/3/1",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/3/1",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_bottom_center",
+      "value": "@+id/tv_bottom_center",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:text",
+      "raw": "下一页",
+      "value": "下一页",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "3dp",
+      "path": "$/3/2",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/shape_translucent_card",
+      "path": "$/3/2",
+      "value": "shape_translucent_card",
+      "status": "mapped",
+      "drawable": "shape_translucent_card"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/white",
+      "path": "$/3/2",
+      "value": "#ffffff",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_bottom_right",
+      "value": "@+id/tv_bottom_right",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:text",
+      "raw": "下一页",
+      "value": "下一页",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

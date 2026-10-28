@@ -1,0 +1,2576 @@
+[
+  {
+    "source": "layout/activity_about.xml",
+    "kind": "layout",
+    "name": "activity_about",
+    "component": "@/design/generated/layout/activity_about.vue",
+    "nodeCount": 6,
+    "attrCount": 31,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_all_bookmark.xml",
+    "kind": "layout",
+    "name": "activity_all_bookmark",
+    "component": "@/design/generated/layout/activity_all_bookmark.vue",
+    "nodeCount": 3,
+    "attrCount": 16,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_arrange_book.xml",
+    "kind": "layout",
+    "name": "activity_arrange_book",
+    "component": "@/design/generated/layout/activity_arrange_book.vue",
+    "nodeCount": 4,
+    "attrCount": 22,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_audio_play.xml",
+    "kind": "layout",
+    "name": "activity_audio_play",
+    "component": "@/design/generated/layout/activity_audio_play.vue",
+    "nodeCount": 27,
+    "attrCount": 206,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_book_info.xml",
+    "kind": "layout",
+    "name": "activity_book_info",
+    "component": "@/design/generated/layout/activity_book_info.vue",
+    "nodeCount": 41,
+    "attrCount": 307,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_book_info_edit.xml",
+    "kind": "layout",
+    "name": "activity_book_info_edit",
+    "component": "@/design/generated/layout/activity_book_info_edit.vue",
+    "nodeCount": 22,
+    "attrCount": 100,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_book_read.xml",
+    "kind": "layout",
+    "name": "activity_book_read",
+    "component": "@/design/generated/layout/activity_book_read.vue",
+    "nodeCount": 8,
+    "attrCount": 36,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_book_search.xml",
+    "kind": "layout",
+    "name": "activity_book_search",
+    "component": "@/design/generated/layout/activity_book_search.vue",
+    "nodeCount": 13,
+    "attrCount": 75,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_book_source.xml",
+    "kind": "layout",
+    "name": "activity_book_source",
+    "component": "@/design/generated/layout/activity_book_source.vue",
+    "nodeCount": 5,
+    "attrCount": 22,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_book_source_edit.xml",
+    "kind": "layout",
+    "name": "activity_book_source_edit",
+    "component": "@/design/generated/layout/activity_book_source_edit.vue",
+    "nodeCount": 12,
+    "attrCount": 63,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_cache_book.xml",
+    "kind": "layout",
+    "name": "activity_cache_book",
+    "component": "@/design/generated/layout/activity_cache_book.vue",
+    "nodeCount": 3,
+    "attrCount": 13,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_chapter_list.xml",
+    "kind": "layout",
+    "name": "activity_chapter_list",
+    "component": "@/design/generated/layout/activity_chapter_list.vue",
+    "nodeCount": 3,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_config.xml",
+    "kind": "layout",
+    "name": "activity_config",
+    "component": "@/design/generated/layout/activity_config.vue",
+    "nodeCount": 3,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_dict_rule.xml",
+    "kind": "layout",
+    "name": "activity_dict_rule",
+    "component": "@/design/generated/layout/activity_dict_rule.vue",
+    "nodeCount": 5,
+    "attrCount": 21,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_donate.xml",
+    "kind": "layout",
+    "name": "activity_donate",
+    "component": "@/design/generated/layout/activity_donate.vue",
+    "nodeCount": 3,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_explore_show.xml",
+    "kind": "layout",
+    "name": "activity_explore_show",
+    "component": "@/design/generated/layout/activity_explore_show.vue",
+    "nodeCount": 4,
+    "attrCount": 23,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_file_manage.xml",
+    "kind": "layout",
+    "name": "activity_file_manage",
+    "component": "@/design/generated/layout/activity_file_manage.vue",
+    "nodeCount": 6,
+    "attrCount": 38,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_import_book.xml",
+    "kind": "layout",
+    "name": "activity_import_book",
+    "component": "@/design/generated/layout/activity_import_book.vue",
+    "nodeCount": 10,
+    "attrCount": 70,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_main.xml",
+    "kind": "layout",
+    "name": "activity_main",
+    "component": "@/design/generated/layout/activity_main.vue",
+    "nodeCount": 3,
+    "attrCount": 19,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_manga.xml",
+    "kind": "layout",
+    "name": "activity_manga",
+    "component": "@/design/generated/layout/activity_manga.vue",
+    "nodeCount": 12,
+    "attrCount": 67,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_qrcode_capture.xml",
+    "kind": "layout",
+    "name": "activity_qrcode_capture",
+    "component": "@/design/generated/layout/activity_qrcode_capture.vue",
+    "nodeCount": 3,
+    "attrCount": 12,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_read_record.xml",
+    "kind": "layout",
+    "name": "activity_read_record",
+    "component": "@/design/generated/layout/activity_read_record.vue",
+    "nodeCount": 7,
+    "attrCount": 51,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_replace_edit.xml",
+    "kind": "layout",
+    "name": "activity_replace_edit",
+    "component": "@/design/generated/layout/activity_replace_edit.vue",
+    "nodeCount": 24,
+    "attrCount": 108,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_replace_rule.xml",
+    "kind": "layout",
+    "name": "activity_replace_rule",
+    "component": "@/design/generated/layout/activity_replace_rule.vue",
+    "nodeCount": 5,
+    "attrCount": 23,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_rss_artivles.xml",
+    "kind": "layout",
+    "name": "activity_rss_artivles",
+    "component": "@/design/generated/layout/activity_rss_artivles.vue",
+    "nodeCount": 4,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_rss_favorites.xml",
+    "kind": "layout",
+    "name": "activity_rss_favorites",
+    "component": "@/design/generated/layout/activity_rss_favorites.vue",
+    "nodeCount": 4,
+    "attrCount": 18,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_rss_read.xml",
+    "kind": "layout",
+    "name": "activity_rss_read",
+    "component": "@/design/generated/layout/activity_rss_read.vue",
+    "nodeCount": 6,
+    "attrCount": 26,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_rss_source.xml",
+    "kind": "layout",
+    "name": "activity_rss_source",
+    "component": "@/design/generated/layout/activity_rss_source.vue",
+    "nodeCount": 5,
+    "attrCount": 22,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_rss_source_edit.xml",
+    "kind": "layout",
+    "name": "activity_rss_source_edit",
+    "component": "@/design/generated/layout/activity_rss_source_edit.vue",
+    "nodeCount": 9,
+    "attrCount": 51,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_rule_sub.xml",
+    "kind": "layout",
+    "name": "activity_rule_sub",
+    "component": "@/design/generated/layout/activity_rule_sub.vue",
+    "nodeCount": 5,
+    "attrCount": 31,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_search_content.xml",
+    "kind": "layout",
+    "name": "activity_search_content",
+    "component": "@/design/generated/layout/activity_search_content.vue",
+    "nodeCount": 10,
+    "attrCount": 74,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_source_debug.xml",
+    "kind": "layout",
+    "name": "activity_source_debug",
+    "component": "@/design/generated/layout/activity_source_debug.vue",
+    "nodeCount": 18,
+    "attrCount": 165,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_source_login.xml",
+    "kind": "layout",
+    "name": "activity_source_login",
+    "component": "@/design/generated/layout/activity_source_login.vue",
+    "nodeCount": 1,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_translucence.xml",
+    "kind": "layout",
+    "name": "activity_translucence",
+    "component": "@/design/generated/layout/activity_translucence.vue",
+    "nodeCount": 2,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_txt_toc_rule.xml",
+    "kind": "layout",
+    "name": "activity_txt_toc_rule",
+    "component": "@/design/generated/layout/activity_txt_toc_rule.vue",
+    "nodeCount": 5,
+    "attrCount": 19,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_web_view.xml",
+    "kind": "layout",
+    "name": "activity_web_view",
+    "component": "@/design/generated/layout/activity_web_view.vue",
+    "nodeCount": 6,
+    "attrCount": 26,
+    "status": "generated"
+  },
+  {
+    "source": "layout/activity_welcome.xml",
+    "kind": "layout",
+    "name": "activity_welcome",
+    "component": "@/design/generated/layout/activity_welcome.vue",
+    "nodeCount": 7,
+    "attrCount": 64,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_add_to_bookshelf.xml",
+    "kind": "layout",
+    "name": "dialog_add_to_bookshelf",
+    "component": "@/design/generated/layout/dialog_add_to_bookshelf.vue",
+    "nodeCount": 12,
+    "attrCount": 96,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_auto_read.xml",
+    "kind": "layout",
+    "name": "dialog_auto_read",
+    "component": "@/design/generated/layout/dialog_auto_read.vue",
+    "nodeCount": 22,
+    "attrCount": 157,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_book_change_source.xml",
+    "kind": "layout",
+    "name": "dialog_book_change_source",
+    "component": "@/design/generated/layout/dialog_book_change_source.vue",
+    "nodeCount": 8,
+    "attrCount": 67,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_book_group_edit.xml",
+    "kind": "layout",
+    "name": "dialog_book_group_edit",
+    "component": "@/design/generated/layout/dialog_book_group_edit.vue",
+    "nodeCount": 14,
+    "attrCount": 97,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_book_group_picker.xml",
+    "kind": "layout",
+    "name": "dialog_book_group_picker",
+    "component": "@/design/generated/layout/dialog_book_group_picker.vue",
+    "nodeCount": 7,
+    "attrCount": 35,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_bookmark.xml",
+    "kind": "layout",
+    "name": "dialog_bookmark",
+    "component": "@/design/generated/layout/dialog_bookmark.vue",
+    "nodeCount": 15,
+    "attrCount": 78,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_bookshelf_config.xml",
+    "kind": "layout",
+    "name": "dialog_bookshelf_config",
+    "component": "@/design/generated/layout/dialog_bookshelf_config.vue",
+    "nodeCount": 25,
+    "attrCount": 127,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_change_cover.xml",
+    "kind": "layout",
+    "name": "dialog_change_cover",
+    "component": "@/design/generated/layout/dialog_change_cover.vue",
+    "nodeCount": 4,
+    "attrCount": 20,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_chapter_change_source.xml",
+    "kind": "layout",
+    "name": "dialog_chapter_change_source",
+    "component": "@/design/generated/layout/dialog_chapter_change_source.vue",
+    "nodeCount": 13,
+    "attrCount": 99,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_check_source_config.xml",
+    "kind": "layout",
+    "name": "dialog_check_source_config",
+    "component": "@/design/generated/layout/dialog_check_source_config.vue",
+    "nodeCount": 14,
+    "attrCount": 71,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_click_action_config.xml",
+    "kind": "layout",
+    "name": "dialog_click_action_config",
+    "component": "@/design/generated/layout/dialog_click_action_config.vue",
+    "nodeCount": 16,
+    "attrCount": 126,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_code_view.xml",
+    "kind": "layout",
+    "name": "dialog_code_view",
+    "component": "@/design/generated/layout/dialog_code_view.vue",
+    "nodeCount": 3,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_content_edit.xml",
+    "kind": "layout",
+    "name": "dialog_content_edit",
+    "component": "@/design/generated/layout/dialog_content_edit.vue",
+    "nodeCount": 4,
+    "attrCount": 29,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_cover_rule_config.xml",
+    "kind": "layout",
+    "name": "dialog_cover_rule_config",
+    "component": "@/design/generated/layout/dialog_cover_rule_config.vue",
+    "nodeCount": 14,
+    "attrCount": 68,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_custom_group.xml",
+    "kind": "layout",
+    "name": "dialog_custom_group",
+    "component": "@/design/generated/layout/dialog_custom_group.vue",
+    "nodeCount": 8,
+    "attrCount": 49,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_dict.xml",
+    "kind": "layout",
+    "name": "dialog_dict",
+    "component": "@/design/generated/layout/dialog_dict.vue",
+    "nodeCount": 4,
+    "attrCount": 25,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_dict_rule_edit.xml",
+    "kind": "layout",
+    "name": "dialog_dict_rule_edit",
+    "component": "@/design/generated/layout/dialog_dict_rule_edit.vue",
+    "nodeCount": 11,
+    "attrCount": 51,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_direct_link_upload_config.xml",
+    "kind": "layout",
+    "name": "dialog_direct_link_upload_config",
+    "component": "@/design/generated/layout/dialog_direct_link_upload_config.vue",
+    "nodeCount": 16,
+    "attrCount": 76,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_download_choice.xml",
+    "kind": "layout",
+    "name": "dialog_download_choice",
+    "component": "@/design/generated/layout/dialog_download_choice.vue",
+    "nodeCount": 7,
+    "attrCount": 68,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_edit_text.xml",
+    "kind": "layout",
+    "name": "dialog_edit_text",
+    "component": "@/design/generated/layout/dialog_edit_text.vue",
+    "nodeCount": 2,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_file_chooser.xml",
+    "kind": "layout",
+    "name": "dialog_file_chooser",
+    "component": "@/design/generated/layout/dialog_file_chooser.vue",
+    "nodeCount": 7,
+    "attrCount": 38,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_font_select.xml",
+    "kind": "layout",
+    "name": "dialog_font_select",
+    "component": "@/design/generated/layout/dialog_font_select.vue",
+    "nodeCount": 3,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_http_tts_edit.xml",
+    "kind": "layout",
+    "name": "dialog_http_tts_edit",
+    "component": "@/design/generated/layout/dialog_http_tts_edit.vue",
+    "nodeCount": 21,
+    "attrCount": 89,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_image_blurring.xml",
+    "kind": "layout",
+    "name": "dialog_image_blurring",
+    "component": "@/design/generated/layout/dialog_image_blurring.vue",
+    "nodeCount": 4,
+    "attrCount": 21,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_login.xml",
+    "kind": "layout",
+    "name": "dialog_login",
+    "component": "@/design/generated/layout/dialog_login.vue",
+    "nodeCount": 5,
+    "attrCount": 37,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_manga_color_filter.xml",
+    "kind": "layout",
+    "name": "dialog_manga_color_filter",
+    "component": "@/design/generated/layout/dialog_manga_color_filter.vue",
+    "nodeCount": 8,
+    "attrCount": 38,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_manga_epaper.xml",
+    "kind": "layout",
+    "name": "dialog_manga_epaper",
+    "component": "@/design/generated/layout/dialog_manga_epaper.vue",
+    "nodeCount": 4,
+    "attrCount": 18,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_manga_footer_setting.xml",
+    "kind": "layout",
+    "name": "dialog_manga_footer_setting",
+    "component": "@/design/generated/layout/dialog_manga_footer_setting.vue",
+    "nodeCount": 23,
+    "attrCount": 120,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_multiple_edit_text.xml",
+    "kind": "layout",
+    "name": "dialog_multiple_edit_text",
+    "component": "@/design/generated/layout/dialog_multiple_edit_text.vue",
+    "nodeCount": 6,
+    "attrCount": 24,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_number_picker.xml",
+    "kind": "layout",
+    "name": "dialog_number_picker",
+    "component": "@/design/generated/layout/dialog_number_picker.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_open_url_confirm.xml",
+    "kind": "layout",
+    "name": "dialog_open_url_confirm",
+    "component": "@/design/generated/layout/dialog_open_url_confirm.vue",
+    "nodeCount": 6,
+    "attrCount": 34,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_page_key.xml",
+    "kind": "layout",
+    "name": "dialog_page_key",
+    "component": "@/design/generated/layout/dialog_page_key.vue",
+    "nodeCount": 11,
+    "attrCount": 65,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_photo_view.xml",
+    "kind": "layout",
+    "name": "dialog_photo_view",
+    "component": "@/design/generated/layout/dialog_photo_view.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_progressbar_view.xml",
+    "kind": "layout",
+    "name": "dialog_progressbar_view",
+    "component": "@/design/generated/layout/dialog_progressbar_view.vue",
+    "nodeCount": 4,
+    "attrCount": 28,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_read_aloud.xml",
+    "kind": "layout",
+    "name": "dialog_read_aloud",
+    "component": "@/design/generated/layout/dialog_read_aloud.vue",
+    "nodeCount": 40,
+    "attrCount": 311,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_read_bg_text.xml",
+    "kind": "layout",
+    "name": "dialog_read_bg_text",
+    "component": "@/design/generated/layout/dialog_read_bg_text.vue",
+    "nodeCount": 19,
+    "attrCount": 142,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_read_book_style.xml",
+    "kind": "layout",
+    "name": "dialog_read_book_style",
+    "component": "@/design/generated/layout/dialog_read_book_style.vue",
+    "nodeCount": 31,
+    "attrCount": 240,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_read_padding.xml",
+    "kind": "layout",
+    "name": "dialog_read_padding",
+    "component": "@/design/generated/layout/dialog_read_padding.vue",
+    "nodeCount": 24,
+    "attrCount": 115,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_recycler_view.xml",
+    "kind": "layout",
+    "name": "dialog_recycler_view",
+    "component": "@/design/generated/layout/dialog_recycler_view.vue",
+    "nodeCount": 12,
+    "attrCount": 66,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_rss_favorite_config.xml",
+    "kind": "layout",
+    "name": "dialog_rss_favorite_config",
+    "component": "@/design/generated/layout/dialog_rss_favorite_config.vue",
+    "nodeCount": 14,
+    "attrCount": 71,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_rule_sub_edit.xml",
+    "kind": "layout",
+    "name": "dialog_rule_sub_edit",
+    "component": "@/design/generated/layout/dialog_rule_sub_edit.vue",
+    "nodeCount": 8,
+    "attrCount": 35,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_search_scope.xml",
+    "kind": "layout",
+    "name": "dialog_search_scope",
+    "component": "@/design/generated/layout/dialog_search_scope.vue",
+    "nodeCount": 11,
+    "attrCount": 86,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_select_section_export.xml",
+    "kind": "layout",
+    "name": "dialog_select_section_export",
+    "component": "@/design/generated/layout/dialog_select_section_export.vue",
+    "nodeCount": 14,
+    "attrCount": 73,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_simulated_reading.xml",
+    "kind": "layout",
+    "name": "dialog_simulated_reading",
+    "component": "@/design/generated/layout/dialog_simulated_reading.vue",
+    "nodeCount": 19,
+    "attrCount": 136,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_source_picker.xml",
+    "kind": "layout",
+    "name": "dialog_source_picker",
+    "component": "@/design/generated/layout/dialog_source_picker.vue",
+    "nodeCount": 12,
+    "attrCount": 69,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_text_view.xml",
+    "kind": "layout",
+    "name": "dialog_text_view",
+    "component": "@/design/generated/layout/dialog_text_view.vue",
+    "nodeCount": 4,
+    "attrCount": 28,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_tip_config.xml",
+    "kind": "layout",
+    "name": "dialog_tip_config",
+    "component": "@/design/generated/layout/dialog_tip_config.vue",
+    "nodeCount": 43,
+    "attrCount": 243,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_toc_regex.xml",
+    "kind": "layout",
+    "name": "dialog_toc_regex",
+    "component": "@/design/generated/layout/dialog_toc_regex.vue",
+    "nodeCount": 7,
+    "attrCount": 37,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_toc_regex_edit.xml",
+    "kind": "layout",
+    "name": "dialog_toc_regex_edit",
+    "component": "@/design/generated/layout/dialog_toc_regex_edit.vue",
+    "nodeCount": 11,
+    "attrCount": 51,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_update.xml",
+    "kind": "layout",
+    "name": "dialog_update",
+    "component": "@/design/generated/layout/dialog_update.vue",
+    "nodeCount": 3,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_url_option_edit.xml",
+    "kind": "layout",
+    "name": "dialog_url_option_edit",
+    "component": "@/design/generated/layout/dialog_url_option_edit.vue",
+    "nodeCount": 25,
+    "attrCount": 108,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_variable.xml",
+    "kind": "layout",
+    "name": "dialog_variable",
+    "component": "@/design/generated/layout/dialog_variable.vue",
+    "nodeCount": 9,
+    "attrCount": 48,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_verification_code_view.xml",
+    "kind": "layout",
+    "name": "dialog_verification_code_view",
+    "component": "@/design/generated/layout/dialog_verification_code_view.vue",
+    "nodeCount": 5,
+    "attrCount": 30,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_wait.xml",
+    "kind": "layout",
+    "name": "dialog_wait",
+    "component": "@/design/generated/layout/dialog_wait.vue",
+    "nodeCount": 3,
+    "attrCount": 19,
+    "status": "generated"
+  },
+  {
+    "source": "layout/dialog_webdav_server.xml",
+    "kind": "layout",
+    "name": "dialog_webdav_server",
+    "component": "@/design/generated/layout/dialog_webdav_server.vue",
+    "nodeCount": 10,
+    "attrCount": 62,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_bookmark.xml",
+    "kind": "layout",
+    "name": "fragment_bookmark",
+    "component": "@/design/generated/layout/fragment_bookmark.vue",
+    "nodeCount": 2,
+    "attrCount": 9,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_books.xml",
+    "kind": "layout",
+    "name": "fragment_books",
+    "component": "@/design/generated/layout/fragment_books.vue",
+    "nodeCount": 4,
+    "attrCount": 20,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_bookshelf1.xml",
+    "kind": "layout",
+    "name": "fragment_bookshelf1",
+    "component": "@/design/generated/layout/fragment_bookshelf1.vue",
+    "nodeCount": 3,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_bookshelf2.xml",
+    "kind": "layout",
+    "name": "fragment_bookshelf2",
+    "component": "@/design/generated/layout/fragment_bookshelf2.vue",
+    "nodeCount": 5,
+    "attrCount": 34,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_chapter_list.xml",
+    "kind": "layout",
+    "name": "fragment_chapter_list",
+    "component": "@/design/generated/layout/fragment_chapter_list.vue",
+    "nodeCount": 6,
+    "attrCount": 52,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_explore.xml",
+    "kind": "layout",
+    "name": "fragment_explore",
+    "component": "@/design/generated/layout/fragment_explore.vue",
+    "nodeCount": 4,
+    "attrCount": 31,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_my_config.xml",
+    "kind": "layout",
+    "name": "fragment_my_config",
+    "component": "@/design/generated/layout/fragment_my_config.vue",
+    "nodeCount": 3,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_rss.xml",
+    "kind": "layout",
+    "name": "fragment_rss",
+    "component": "@/design/generated/layout/fragment_rss.vue",
+    "nodeCount": 4,
+    "attrCount": 33,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_rss_articles.xml",
+    "kind": "layout",
+    "name": "fragment_rss_articles",
+    "component": "@/design/generated/layout/fragment_rss_articles.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "layout/fragment_web_view_login.xml",
+    "kind": "layout",
+    "name": "fragment_web_view_login",
+    "component": "@/design/generated/layout/fragment_web_view_login.vue",
+    "nodeCount": 4,
+    "attrCount": 21,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_1line_text.xml",
+    "kind": "layout",
+    "name": "item_1line_text",
+    "component": "@/design/generated/layout/item_1line_text.vue",
+    "nodeCount": 2,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_1line_text_and_del.xml",
+    "kind": "layout",
+    "name": "item_1line_text_and_del",
+    "component": "@/design/generated/layout/item_1line_text_and_del.vue",
+    "nodeCount": 3,
+    "attrCount": 22,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_app_log.xml",
+    "kind": "layout",
+    "name": "item_app_log",
+    "component": "@/design/generated/layout/item_app_log.vue",
+    "nodeCount": 3,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_arrange_book.xml",
+    "kind": "layout",
+    "name": "item_arrange_book",
+    "component": "@/design/generated/layout/item_arrange_book.vue",
+    "nodeCount": 8,
+    "attrCount": 85,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_bg_image.xml",
+    "kind": "layout",
+    "name": "item_bg_image",
+    "component": "@/design/generated/layout/item_bg_image.vue",
+    "nodeCount": 3,
+    "attrCount": 18,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_book_file_import.xml",
+    "kind": "layout",
+    "name": "item_book_file_import",
+    "component": "@/design/generated/layout/item_book_file_import.vue",
+    "nodeCount": 2,
+    "attrCount": 18,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_book_group_manage.xml",
+    "kind": "layout",
+    "name": "item_book_group_manage",
+    "component": "@/design/generated/layout/item_book_group_manage.vue",
+    "nodeCount": 4,
+    "attrCount": 26,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_book_manga_edge.xml",
+    "kind": "layout",
+    "name": "item_book_manga_edge",
+    "component": "@/design/generated/layout/item_book_manga_edge.vue",
+    "nodeCount": 2,
+    "attrCount": 12,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_book_manga_page.xml",
+    "kind": "layout",
+    "name": "item_book_manga_page",
+    "component": "@/design/generated/layout/item_book_manga_page.vue",
+    "nodeCount": 6,
+    "attrCount": 49,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_book_source.xml",
+    "kind": "layout",
+    "name": "item_book_source",
+    "component": "@/design/generated/layout/item_book_source.vue",
+    "nodeCount": 10,
+    "attrCount": 111,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_bookmark.xml",
+    "kind": "layout",
+    "name": "item_bookmark",
+    "component": "@/design/generated/layout/item_bookmark.vue",
+    "nodeCount": 4,
+    "attrCount": 23,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_bookshelf_grid.xml",
+    "kind": "layout",
+    "name": "item_bookshelf_grid",
+    "component": "@/design/generated/layout/item_bookshelf_grid.vue",
+    "nodeCount": 8,
+    "attrCount": 74,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_bookshelf_grid_group.xml",
+    "kind": "layout",
+    "name": "item_bookshelf_grid_group",
+    "component": "@/design/generated/layout/item_bookshelf_grid_group.vue",
+    "nodeCount": 8,
+    "attrCount": 65,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_bookshelf_list.xml",
+    "kind": "layout",
+    "name": "item_bookshelf_list",
+    "component": "@/design/generated/layout/item_bookshelf_list.vue",
+    "nodeCount": 14,
+    "attrCount": 174,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_bookshelf_list_group.xml",
+    "kind": "layout",
+    "name": "item_bookshelf_list_group",
+    "component": "@/design/generated/layout/item_bookshelf_list_group.vue",
+    "nodeCount": 13,
+    "attrCount": 144,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_change_source.xml",
+    "kind": "layout",
+    "name": "item_change_source",
+    "component": "@/design/generated/layout/item_change_source.vue",
+    "nodeCount": 9,
+    "attrCount": 98,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_chapter_list.xml",
+    "kind": "layout",
+    "name": "item_chapter_list",
+    "component": "@/design/generated/layout/item_chapter_list.vue",
+    "nodeCount": 7,
+    "attrCount": 64,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_check_box.xml",
+    "kind": "layout",
+    "name": "item_check_box",
+    "component": "@/design/generated/layout/item_check_box.vue",
+    "nodeCount": 2,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_cover.xml",
+    "kind": "layout",
+    "name": "item_cover",
+    "component": "@/design/generated/layout/item_cover.vue",
+    "nodeCount": 3,
+    "attrCount": 25,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_dict_rule.xml",
+    "kind": "layout",
+    "name": "item_dict_rule",
+    "component": "@/design/generated/layout/item_dict_rule.vue",
+    "nodeCount": 5,
+    "attrCount": 37,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_download.xml",
+    "kind": "layout",
+    "name": "item_download",
+    "component": "@/design/generated/layout/item_download.vue",
+    "nodeCount": 8,
+    "attrCount": 66,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_file.xml",
+    "kind": "layout",
+    "name": "item_file",
+    "component": "@/design/generated/layout/item_file.vue",
+    "nodeCount": 3,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_file_picker.xml",
+    "kind": "layout",
+    "name": "item_file_picker",
+    "component": "@/design/generated/layout/item_file_picker.vue",
+    "nodeCount": 4,
+    "attrCount": 19,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_fillet_text.xml",
+    "kind": "layout",
+    "name": "item_fillet_text",
+    "component": "@/design/generated/layout/item_fillet_text.vue",
+    "nodeCount": 1,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_find_book.xml",
+    "kind": "layout",
+    "name": "item_find_book",
+    "component": "@/design/generated/layout/item_find_book.vue",
+    "nodeCount": 7,
+    "attrCount": 56,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_font.xml",
+    "kind": "layout",
+    "name": "item_font",
+    "component": "@/design/generated/layout/item_font.vue",
+    "nodeCount": 3,
+    "attrCount": 20,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_group_manage.xml",
+    "kind": "layout",
+    "name": "item_group_manage",
+    "component": "@/design/generated/layout/item_group_manage.vue",
+    "nodeCount": 4,
+    "attrCount": 27,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_group_select.xml",
+    "kind": "layout",
+    "name": "item_group_select",
+    "component": "@/design/generated/layout/item_group_select.vue",
+    "nodeCount": 3,
+    "attrCount": 20,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_http_tts.xml",
+    "kind": "layout",
+    "name": "item_http_tts",
+    "component": "@/design/generated/layout/item_http_tts.vue",
+    "nodeCount": 5,
+    "attrCount": 47,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_icon_preference.xml",
+    "kind": "layout",
+    "name": "item_icon_preference",
+    "component": "@/design/generated/layout/item_icon_preference.vue",
+    "nodeCount": 3,
+    "attrCount": 27,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_import_book.xml",
+    "kind": "layout",
+    "name": "item_import_book",
+    "component": "@/design/generated/layout/item_import_book.vue",
+    "nodeCount": 10,
+    "attrCount": 66,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_log.xml",
+    "kind": "layout",
+    "name": "item_log",
+    "component": "@/design/generated/layout/item_log.vue",
+    "nodeCount": 1,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_path_picker.xml",
+    "kind": "layout",
+    "name": "item_path_picker",
+    "component": "@/design/generated/layout/item_path_picker.vue",
+    "nodeCount": 3,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_radio_button.xml",
+    "kind": "layout",
+    "name": "item_radio_button",
+    "component": "@/design/generated/layout/item_radio_button.vue",
+    "nodeCount": 2,
+    "attrCount": 9,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_read_record.xml",
+    "kind": "layout",
+    "name": "item_read_record",
+    "component": "@/design/generated/layout/item_read_record.vue",
+    "nodeCount": 7,
+    "attrCount": 67,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_read_style.xml",
+    "kind": "layout",
+    "name": "item_read_style",
+    "component": "@/design/generated/layout/item_read_style.vue",
+    "nodeCount": 1,
+    "attrCount": 12,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_replace_rule.xml",
+    "kind": "layout",
+    "name": "item_replace_rule",
+    "component": "@/design/generated/layout/item_replace_rule.vue",
+    "nodeCount": 5,
+    "attrCount": 54,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_rss.xml",
+    "kind": "layout",
+    "name": "item_rss",
+    "component": "@/design/generated/layout/item_rss.vue",
+    "nodeCount": 3,
+    "attrCount": 33,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_rss_article.xml",
+    "kind": "layout",
+    "name": "item_rss_article",
+    "component": "@/design/generated/layout/item_rss_article.vue",
+    "nodeCount": 4,
+    "attrCount": 42,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_rss_article_1.xml",
+    "kind": "layout",
+    "name": "item_rss_article_1",
+    "component": "@/design/generated/layout/item_rss_article_1.vue",
+    "nodeCount": 5,
+    "attrCount": 52,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_rss_article_2.xml",
+    "kind": "layout",
+    "name": "item_rss_article_2",
+    "component": "@/design/generated/layout/item_rss_article_2.vue",
+    "nodeCount": 4,
+    "attrCount": 45,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_rss_read_record.xml",
+    "kind": "layout",
+    "name": "item_rss_read_record",
+    "component": "@/design/generated/layout/item_rss_read_record.vue",
+    "nodeCount": 5,
+    "attrCount": 25,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_rss_source.xml",
+    "kind": "layout",
+    "name": "item_rss_source",
+    "component": "@/design/generated/layout/item_rss_source.vue",
+    "nodeCount": 5,
+    "attrCount": 40,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_rule_sub.xml",
+    "kind": "layout",
+    "name": "item_rule_sub",
+    "component": "@/design/generated/layout/item_rule_sub.vue",
+    "nodeCount": 6,
+    "attrCount": 61,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_search.xml",
+    "kind": "layout",
+    "name": "item_search",
+    "component": "@/design/generated/layout/item_search.vue",
+    "nodeCount": 10,
+    "attrCount": 89,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_search_list.xml",
+    "kind": "layout",
+    "name": "item_search_list",
+    "component": "@/design/generated/layout/item_search_list.vue",
+    "nodeCount": 2,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_server_select.xml",
+    "kind": "layout",
+    "name": "item_server_select",
+    "component": "@/design/generated/layout/item_server_select.vue",
+    "nodeCount": 4,
+    "attrCount": 33,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_source_edit.xml",
+    "kind": "layout",
+    "name": "item_source_edit",
+    "component": "@/design/generated/layout/item_source_edit.vue",
+    "nodeCount": 2,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_source_edit_check_box.xml",
+    "kind": "layout",
+    "name": "item_source_edit_check_box",
+    "component": "@/design/generated/layout/item_source_edit_check_box.vue",
+    "nodeCount": 3,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_source_import.xml",
+    "kind": "layout",
+    "name": "item_source_import",
+    "component": "@/design/generated/layout/item_source_import.vue",
+    "nodeCount": 4,
+    "attrCount": 41,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_text.xml",
+    "kind": "layout",
+    "name": "item_text",
+    "component": "@/design/generated/layout/item_text.vue",
+    "nodeCount": 1,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_theme_config.xml",
+    "kind": "layout",
+    "name": "item_theme_config",
+    "component": "@/design/generated/layout/item_theme_config.vue",
+    "nodeCount": 4,
+    "attrCount": 35,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_toc_regex.xml",
+    "kind": "layout",
+    "name": "item_toc_regex",
+    "component": "@/design/generated/layout/item_toc_regex.vue",
+    "nodeCount": 6,
+    "attrCount": 54,
+    "status": "generated"
+  },
+  {
+    "source": "layout/item_txt_toc_rule.xml",
+    "kind": "layout",
+    "name": "item_txt_toc_rule",
+    "component": "@/design/generated/layout/item_txt_toc_rule.vue",
+    "nodeCount": 6,
+    "attrCount": 58,
+    "status": "generated"
+  },
+  {
+    "source": "layout/popup_action.xml",
+    "kind": "layout",
+    "name": "popup_action",
+    "component": "@/design/generated/layout/popup_action.vue",
+    "nodeCount": 2,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "layout/popup_action_menu.xml",
+    "kind": "layout",
+    "name": "popup_action_menu",
+    "component": "@/design/generated/layout/popup_action_menu.vue",
+    "nodeCount": 5,
+    "attrCount": 34,
+    "status": "generated"
+  },
+  {
+    "source": "layout/popup_keyboard_tool.xml",
+    "kind": "layout",
+    "name": "popup_keyboard_tool",
+    "component": "@/design/generated/layout/popup_keyboard_tool.vue",
+    "nodeCount": 1,
+    "attrCount": 10,
+    "status": "generated"
+  },
+  {
+    "source": "layout/popup_seek_bar.xml",
+    "kind": "layout",
+    "name": "popup_seek_bar",
+    "component": "@/design/generated/layout/popup_seek_bar.vue",
+    "nodeCount": 3,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_action_button.xml",
+    "kind": "layout",
+    "name": "view_action_button",
+    "component": "@/design/generated/layout/view_action_button.vue",
+    "nodeCount": 1,
+    "attrCount": 7,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_book_page.xml",
+    "kind": "layout",
+    "name": "view_book_page",
+    "component": "@/design/generated/layout/view_book_page.vue",
+    "nodeCount": 14,
+    "attrCount": 110,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_detail_seek_bar.xml",
+    "kind": "layout",
+    "name": "view_detail_seek_bar",
+    "component": "@/design/generated/layout/view_detail_seek_bar.vue",
+    "nodeCount": 6,
+    "attrCount": 41,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_dynamic.xml",
+    "kind": "layout",
+    "name": "view_dynamic",
+    "component": "@/design/generated/layout/view_dynamic.vue",
+    "nodeCount": 3,
+    "attrCount": 13,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_error.xml",
+    "kind": "layout",
+    "name": "view_error",
+    "component": "@/design/generated/layout/view_error.vue",
+    "nodeCount": 4,
+    "attrCount": 18,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_fastscroller.xml",
+    "kind": "layout",
+    "name": "view_fastscroller",
+    "component": "@/design/generated/layout/view_fastscroller.vue",
+    "nodeCount": 5,
+    "attrCount": 33,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_icon.xml",
+    "kind": "layout",
+    "name": "view_icon",
+    "component": "@/design/generated/layout/view_icon.vue",
+    "nodeCount": 1,
+    "attrCount": 4,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_load_more.xml",
+    "kind": "layout",
+    "name": "view_load_more",
+    "component": "@/design/generated/layout/view_load_more.vue",
+    "nodeCount": 3,
+    "attrCount": 25,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_loading.xml",
+    "kind": "layout",
+    "name": "view_loading",
+    "component": "@/design/generated/layout/view_loading.vue",
+    "nodeCount": 3,
+    "attrCount": 13,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_manga_menu.xml",
+    "kind": "layout",
+    "name": "view_manga_menu",
+    "component": "@/design/generated/layout/view_manga_menu.vue",
+    "nodeCount": 12,
+    "attrCount": 101,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_navigation_badge.xml",
+    "kind": "layout",
+    "name": "view_navigation_badge",
+    "component": "@/design/generated/layout/view_navigation_badge.vue",
+    "nodeCount": 2,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_preference.xml",
+    "kind": "layout",
+    "name": "view_preference",
+    "component": "@/design/generated/layout/view_preference.vue",
+    "nodeCount": 6,
+    "attrCount": 51,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_preference_category.xml",
+    "kind": "layout",
+    "name": "view_preference_category",
+    "component": "@/design/generated/layout/view_preference_category.vue",
+    "nodeCount": 4,
+    "attrCount": 21,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_read_menu.xml",
+    "kind": "layout",
+    "name": "view_read_menu",
+    "component": "@/design/generated/layout/view_read_menu.vue",
+    "nodeCount": 44,
+    "attrCount": 355,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_refresh_recycler.xml",
+    "kind": "layout",
+    "name": "view_refresh_recycler",
+    "component": "@/design/generated/layout/view_refresh_recycler.vue",
+    "nodeCount": 3,
+    "attrCount": 9,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_search.xml",
+    "kind": "layout",
+    "name": "view_search",
+    "component": "@/design/generated/layout/view_search.vue",
+    "nodeCount": 1,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_search_menu.xml",
+    "kind": "layout",
+    "name": "view_search_menu",
+    "component": "@/design/generated/layout/view_search_menu.vue",
+    "nodeCount": 23,
+    "attrCount": 192,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_select_action_bar.xml",
+    "kind": "layout",
+    "name": "view_select_action_bar",
+    "component": "@/design/generated/layout/view_select_action_bar.vue",
+    "nodeCount": 5,
+    "attrCount": 49,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_tab_layout.xml",
+    "kind": "layout",
+    "name": "view_tab_layout",
+    "component": "@/design/generated/layout/view_tab_layout.vue",
+    "nodeCount": 1,
+    "attrCount": 9,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_tab_layout_min.xml",
+    "kind": "layout",
+    "name": "view_tab_layout_min",
+    "component": "@/design/generated/layout/view_tab_layout_min.vue",
+    "nodeCount": 1,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_title_bar.xml",
+    "kind": "layout",
+    "name": "view_title_bar",
+    "component": "@/design/generated/layout/view_title_bar.vue",
+    "nodeCount": 1,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_title_bar_dark.xml",
+    "kind": "layout",
+    "name": "view_title_bar_dark",
+    "component": "@/design/generated/layout/view_title_bar_dark.vue",
+    "nodeCount": 1,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "layout/view_toast.xml",
+    "kind": "layout",
+    "name": "view_toast",
+    "component": "@/design/generated/layout/view_toast.vue",
+    "nodeCount": 3,
+    "attrCount": 18,
+    "status": "generated"
+  },
+  {
+    "source": "layout-land/activity_book_info.xml",
+    "kind": "layout-land",
+    "name": "activity_book_info",
+    "component": "@/design/generated/layout-land/activity_book_info.vue",
+    "nodeCount": 39,
+    "attrCount": 311,
+    "status": "generated"
+  },
+  {
+    "source": "menu/about.xml",
+    "kind": "menu",
+    "name": "about",
+    "component": "@/design/generated/menu/about.vue",
+    "nodeCount": 3,
+    "attrCount": 12,
+    "status": "generated"
+  },
+  {
+    "source": "menu/app_log.xml",
+    "kind": "menu",
+    "name": "app_log",
+    "component": "@/design/generated/menu/app_log.vue",
+    "nodeCount": 2,
+    "attrCount": 7,
+    "status": "generated"
+  },
+  {
+    "source": "menu/app_update.xml",
+    "kind": "menu",
+    "name": "app_update",
+    "component": "@/design/generated/menu/app_update.vue",
+    "nodeCount": 2,
+    "attrCount": 5,
+    "status": "generated"
+  },
+  {
+    "source": "menu/audio_play.xml",
+    "kind": "menu",
+    "name": "audio_play",
+    "component": "@/design/generated/menu/audio_play.vue",
+    "nodeCount": 7,
+    "attrCount": 24,
+    "status": "generated"
+  },
+  {
+    "source": "menu/backup_restore.xml",
+    "kind": "menu",
+    "name": "backup_restore",
+    "component": "@/design/generated/menu/backup_restore.vue",
+    "nodeCount": 3,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_cache.xml",
+    "kind": "menu",
+    "name": "book_cache",
+    "component": "@/design/generated/menu/book_cache.vue",
+    "nodeCount": 15,
+    "attrCount": 54,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_cache_download.xml",
+    "kind": "menu",
+    "name": "book_cache_download",
+    "component": "@/design/generated/menu/book_cache_download.vue",
+    "nodeCount": 3,
+    "attrCount": 10,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_group_manage.xml",
+    "kind": "menu",
+    "name": "book_group_manage",
+    "component": "@/design/generated/menu/book_group_manage.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_info.xml",
+    "kind": "menu",
+    "name": "book_info",
+    "component": "@/design/generated/menu/book_info.vue",
+    "nodeCount": 16,
+    "attrCount": 52,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_info_edit.xml",
+    "kind": "menu",
+    "name": "book_info_edit",
+    "component": "@/design/generated/menu/book_info_edit.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_manga.xml",
+    "kind": "menu",
+    "name": "book_manga",
+    "component": "@/design/generated/menu/book_manga.vue",
+    "nodeCount": 20,
+    "attrCount": 86,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_read.xml",
+    "kind": "menu",
+    "name": "book_read",
+    "component": "@/design/generated/menu/book_read.vue",
+    "nodeCount": 28,
+    "attrCount": 98,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_read_change_source.xml",
+    "kind": "menu",
+    "name": "book_read_change_source",
+    "component": "@/design/generated/menu/book_read_change_source.vue",
+    "nodeCount": 3,
+    "attrCount": 10,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_read_record.xml",
+    "kind": "menu",
+    "name": "book_read_record",
+    "component": "@/design/generated/menu/book_read_record.vue",
+    "nodeCount": 8,
+    "attrCount": 23,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_read_refresh.xml",
+    "kind": "menu",
+    "name": "book_read_refresh",
+    "component": "@/design/generated/menu/book_read_refresh.vue",
+    "nodeCount": 4,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_read_source.xml",
+    "kind": "menu",
+    "name": "book_read_source",
+    "component": "@/design/generated/menu/book_read_source.vue",
+    "nodeCount": 5,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_remote.xml",
+    "kind": "menu",
+    "name": "book_remote",
+    "component": "@/design/generated/menu/book_remote.vue",
+    "nodeCount": 10,
+    "attrCount": 33,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_search.xml",
+    "kind": "menu",
+    "name": "book_search",
+    "component": "@/design/generated/menu/book_search.vue",
+    "nodeCount": 5,
+    "attrCount": 18,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_search_scope.xml",
+    "kind": "menu",
+    "name": "book_search_scope",
+    "component": "@/design/generated/menu/book_search_scope.vue",
+    "nodeCount": 2,
+    "attrCount": 10,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_source.xml",
+    "kind": "menu",
+    "name": "book_source",
+    "component": "@/design/generated/menu/book_source.vue",
+    "nodeCount": 28,
+    "attrCount": 79,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_source_debug.xml",
+    "kind": "menu",
+    "name": "book_source_debug",
+    "component": "@/design/generated/menu/book_source_debug.vue",
+    "nodeCount": 8,
+    "attrCount": 26,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_source_item.xml",
+    "kind": "menu",
+    "name": "book_source_item",
+    "component": "@/design/generated/menu/book_source_item.vue",
+    "nodeCount": 8,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_source_sel.xml",
+    "kind": "menu",
+    "name": "book_source_sel",
+    "component": "@/design/generated/menu/book_source_sel.vue",
+    "nodeCount": 13,
+    "attrCount": 39,
+    "status": "generated"
+  },
+  {
+    "source": "menu/book_toc.xml",
+    "kind": "menu",
+    "name": "book_toc",
+    "component": "@/design/generated/menu/book_toc.vue",
+    "nodeCount": 13,
+    "attrCount": 41,
+    "status": "generated"
+  },
+  {
+    "source": "menu/bookmark.xml",
+    "kind": "menu",
+    "name": "bookmark",
+    "component": "@/design/generated/menu/bookmark.vue",
+    "nodeCount": 3,
+    "attrCount": 5,
+    "status": "generated"
+  },
+  {
+    "source": "menu/bookshelf_manage.xml",
+    "kind": "menu",
+    "name": "bookshelf_manage",
+    "component": "@/design/generated/menu/bookshelf_manage.vue",
+    "nodeCount": 6,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "menu/bookshelf_menage_sel.xml",
+    "kind": "menu",
+    "name": "bookshelf_menage_sel",
+    "component": "@/design/generated/menu/bookshelf_menage_sel.vue",
+    "nodeCount": 8,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "menu/change_cover.xml",
+    "kind": "menu",
+    "name": "change_cover",
+    "component": "@/design/generated/menu/change_cover.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "menu/change_source.xml",
+    "kind": "menu",
+    "name": "change_source",
+    "component": "@/design/generated/menu/change_source.vue",
+    "nodeCount": 13,
+    "attrCount": 43,
+    "status": "generated"
+  },
+  {
+    "source": "menu/change_source_item.xml",
+    "kind": "menu",
+    "name": "change_source_item",
+    "component": "@/design/generated/menu/change_source_item.vue",
+    "nodeCount": 6,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "menu/code_edit.xml",
+    "kind": "menu",
+    "name": "code_edit",
+    "component": "@/design/generated/menu/code_edit.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "menu/content_edit.xml",
+    "kind": "menu",
+    "name": "content_edit",
+    "component": "@/design/generated/menu/content_edit.vue",
+    "nodeCount": 4,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "menu/content_search.xml",
+    "kind": "menu",
+    "name": "content_search",
+    "component": "@/design/generated/menu/content_search.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "menu/content_select_action.xml",
+    "kind": "menu",
+    "name": "content_select_action",
+    "component": "@/design/generated/menu/content_select_action.vue",
+    "nodeCount": 9,
+    "attrCount": 21,
+    "status": "generated"
+  },
+  {
+    "source": "menu/crash_log.xml",
+    "kind": "menu",
+    "name": "crash_log",
+    "component": "@/design/generated/menu/crash_log.vue",
+    "nodeCount": 2,
+    "attrCount": 7,
+    "status": "generated"
+  },
+  {
+    "source": "menu/dialog_text.xml",
+    "kind": "menu",
+    "name": "dialog_text",
+    "component": "@/design/generated/menu/dialog_text.vue",
+    "nodeCount": 2,
+    "attrCount": 5,
+    "status": "generated"
+  },
+  {
+    "source": "menu/dict_rule.xml",
+    "kind": "menu",
+    "name": "dict_rule",
+    "component": "@/design/generated/menu/dict_rule.vue",
+    "nodeCount": 7,
+    "attrCount": 28,
+    "status": "generated"
+  },
+  {
+    "source": "menu/dict_rule_edit.xml",
+    "kind": "menu",
+    "name": "dict_rule_edit",
+    "component": "@/design/generated/menu/dict_rule_edit.vue",
+    "nodeCount": 4,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "menu/dict_rule_sel.xml",
+    "kind": "menu",
+    "name": "dict_rule_sel",
+    "component": "@/design/generated/menu/dict_rule_sel.vue",
+    "nodeCount": 4,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "menu/direct_link_upload_config.xml",
+    "kind": "menu",
+    "name": "direct_link_upload_config",
+    "component": "@/design/generated/menu/direct_link_upload_config.vue",
+    "nodeCount": 4,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "menu/explore_item.xml",
+    "kind": "menu",
+    "name": "explore_item",
+    "component": "@/design/generated/menu/explore_item.vue",
+    "nodeCount": 7,
+    "attrCount": 13,
+    "status": "generated"
+  },
+  {
+    "source": "menu/file_chooser.xml",
+    "kind": "menu",
+    "name": "file_chooser",
+    "component": "@/design/generated/menu/file_chooser.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/file_long_click.xml",
+    "kind": "menu",
+    "name": "file_long_click",
+    "component": "@/design/generated/menu/file_long_click.vue",
+    "nodeCount": 2,
+    "attrCount": 3,
+    "status": "generated"
+  },
+  {
+    "source": "menu/font_select.xml",
+    "kind": "menu",
+    "name": "font_select",
+    "component": "@/design/generated/menu/font_select.vue",
+    "nodeCount": 3,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "menu/group_manage.xml",
+    "kind": "menu",
+    "name": "group_manage",
+    "component": "@/design/generated/menu/group_manage.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/import_book.xml",
+    "kind": "menu",
+    "name": "import_book",
+    "component": "@/design/generated/menu/import_book.vue",
+    "nodeCount": 9,
+    "attrCount": 30,
+    "status": "generated"
+  },
+  {
+    "source": "menu/import_book_sel.xml",
+    "kind": "menu",
+    "name": "import_book_sel",
+    "component": "@/design/generated/menu/import_book_sel.vue",
+    "nodeCount": 2,
+    "attrCount": 3,
+    "status": "generated"
+  },
+  {
+    "source": "menu/import_replace.xml",
+    "kind": "menu",
+    "name": "import_replace",
+    "component": "@/design/generated/menu/import_replace.vue",
+    "nodeCount": 2,
+    "attrCount": 7,
+    "status": "generated"
+  },
+  {
+    "source": "menu/import_source.xml",
+    "kind": "menu",
+    "name": "import_source",
+    "component": "@/design/generated/menu/import_source.vue",
+    "nodeCount": 7,
+    "attrCount": 25,
+    "status": "generated"
+  },
+  {
+    "source": "menu/keyboard_assists_config.xml",
+    "kind": "menu",
+    "name": "keyboard_assists_config",
+    "component": "@/design/generated/menu/keyboard_assists_config.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/main_bnv.xml",
+    "kind": "menu",
+    "name": "main_bnv",
+    "component": "@/design/generated/menu/main_bnv.vue",
+    "nodeCount": 5,
+    "attrCount": 15,
+    "status": "generated"
+  },
+  {
+    "source": "menu/main_bookshelf.xml",
+    "kind": "menu",
+    "name": "main_bookshelf",
+    "component": "@/design/generated/menu/main_bookshelf.vue",
+    "nodeCount": 13,
+    "attrCount": 52,
+    "status": "generated"
+  },
+  {
+    "source": "menu/main_explore.xml",
+    "kind": "menu",
+    "name": "main_explore",
+    "component": "@/design/generated/menu/main_explore.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/main_my.xml",
+    "kind": "menu",
+    "name": "main_my",
+    "component": "@/design/generated/menu/main_my.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "menu/main_rss.xml",
+    "kind": "menu",
+    "name": "main_rss",
+    "component": "@/design/generated/menu/main_rss.vue",
+    "nodeCount": 4,
+    "attrCount": 16,
+    "status": "generated"
+  },
+  {
+    "source": "menu/open_url_confirm.xml",
+    "kind": "menu",
+    "name": "open_url_confirm",
+    "component": "@/design/generated/menu/open_url_confirm.vue",
+    "nodeCount": 3,
+    "attrCount": 10,
+    "status": "generated"
+  },
+  {
+    "source": "menu/qr_code_scan.xml",
+    "kind": "menu",
+    "name": "qr_code_scan",
+    "component": "@/design/generated/menu/qr_code_scan.vue",
+    "nodeCount": 2,
+    "attrCount": 5,
+    "status": "generated"
+  },
+  {
+    "source": "menu/replace_edit.xml",
+    "kind": "menu",
+    "name": "replace_edit",
+    "component": "@/design/generated/menu/replace_edit.vue",
+    "nodeCount": 4,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "menu/replace_rule.xml",
+    "kind": "menu",
+    "name": "replace_rule",
+    "component": "@/design/generated/menu/replace_rule.vue",
+    "nodeCount": 11,
+    "attrCount": 33,
+    "status": "generated"
+  },
+  {
+    "source": "menu/replace_rule_item.xml",
+    "kind": "menu",
+    "name": "replace_rule_item",
+    "component": "@/design/generated/menu/replace_rule_item.vue",
+    "nodeCount": 4,
+    "attrCount": 7,
+    "status": "generated"
+  },
+  {
+    "source": "menu/replace_rule_sel.xml",
+    "kind": "menu",
+    "name": "replace_rule_sel",
+    "component": "@/design/generated/menu/replace_rule_sel.vue",
+    "nodeCount": 6,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_articles.xml",
+    "kind": "menu",
+    "name": "rss_articles",
+    "component": "@/design/generated/menu/rss_articles.vue",
+    "nodeCount": 8,
+    "attrCount": 23,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_favorites.xml",
+    "kind": "menu",
+    "name": "rss_favorites",
+    "component": "@/design/generated/menu/rss_favorites.vue",
+    "nodeCount": 4,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_main_item.xml",
+    "kind": "menu",
+    "name": "rss_main_item",
+    "component": "@/design/generated/menu/rss_main_item.vue",
+    "nodeCount": 5,
+    "attrCount": 9,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_read.xml",
+    "kind": "menu",
+    "name": "rss_read",
+    "component": "@/design/generated/menu/rss_read.vue",
+    "nodeCount": 7,
+    "attrCount": 24,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_read_record.xml",
+    "kind": "menu",
+    "name": "rss_read_record",
+    "component": "@/design/generated/menu/rss_read_record.vue",
+    "nodeCount": 2,
+    "attrCount": 7,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_source.xml",
+    "kind": "menu",
+    "name": "rss_source",
+    "component": "@/design/generated/menu/rss_source.vue",
+    "nodeCount": 15,
+    "attrCount": 43,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_source_debug.xml",
+    "kind": "menu",
+    "name": "rss_source_debug",
+    "component": "@/design/generated/menu/rss_source_debug.vue",
+    "nodeCount": 3,
+    "attrCount": 10,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_source_item.xml",
+    "kind": "menu",
+    "name": "rss_source_item",
+    "component": "@/design/generated/menu/rss_source_item.vue",
+    "nodeCount": 4,
+    "attrCount": 7,
+    "status": "generated"
+  },
+  {
+    "source": "menu/rss_source_sel.xml",
+    "kind": "menu",
+    "name": "rss_source_sel",
+    "component": "@/design/generated/menu/rss_source_sel.vue",
+    "nodeCount": 10,
+    "attrCount": 29,
+    "status": "generated"
+  },
+  {
+    "source": "menu/save.xml",
+    "kind": "menu",
+    "name": "save",
+    "component": "@/design/generated/menu/save.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "menu/search_view.xml",
+    "kind": "menu",
+    "name": "search_view",
+    "component": "@/design/generated/menu/search_view.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/server_config.xml",
+    "kind": "menu",
+    "name": "server_config",
+    "component": "@/design/generated/menu/server_config.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/servers.xml",
+    "kind": "menu",
+    "name": "servers",
+    "component": "@/design/generated/menu/servers.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/source_edit.xml",
+    "kind": "menu",
+    "name": "source_edit",
+    "component": "@/design/generated/menu/source_edit.vue",
+    "nodeCount": 14,
+    "attrCount": 46,
+    "status": "generated"
+  },
+  {
+    "source": "menu/source_login.xml",
+    "kind": "menu",
+    "name": "source_login",
+    "component": "@/design/generated/menu/source_login.vue",
+    "nodeCount": 5,
+    "attrCount": 17,
+    "status": "generated"
+  },
+  {
+    "source": "menu/source_picker.xml",
+    "kind": "menu",
+    "name": "source_picker",
+    "component": "@/design/generated/menu/source_picker.vue",
+    "nodeCount": 2,
+    "attrCount": 3,
+    "status": "generated"
+  },
+  {
+    "source": "menu/source_sub_item.xml",
+    "kind": "menu",
+    "name": "source_sub_item",
+    "component": "@/design/generated/menu/source_sub_item.vue",
+    "nodeCount": 2,
+    "attrCount": 3,
+    "status": "generated"
+  },
+  {
+    "source": "menu/source_subscription.xml",
+    "kind": "menu",
+    "name": "source_subscription",
+    "component": "@/design/generated/menu/source_subscription.vue",
+    "nodeCount": 2,
+    "attrCount": 6,
+    "status": "generated"
+  },
+  {
+    "source": "menu/source_webview_login.xml",
+    "kind": "menu",
+    "name": "source_webview_login",
+    "component": "@/design/generated/menu/source_webview_login.vue",
+    "nodeCount": 2,
+    "attrCount": 8,
+    "status": "generated"
+  },
+  {
+    "source": "menu/speak_engine.xml",
+    "kind": "menu",
+    "name": "speak_engine",
+    "component": "@/design/generated/menu/speak_engine.vue",
+    "nodeCount": 6,
+    "attrCount": 20,
+    "status": "generated"
+  },
+  {
+    "source": "menu/speak_engine_edit.xml",
+    "kind": "menu",
+    "name": "speak_engine_edit",
+    "component": "@/design/generated/menu/speak_engine_edit.vue",
+    "nodeCount": 9,
+    "attrCount": 29,
+    "status": "generated"
+  },
+  {
+    "source": "menu/theme_config.xml",
+    "kind": "menu",
+    "name": "theme_config",
+    "component": "@/design/generated/menu/theme_config.vue",
+    "nodeCount": 2,
+    "attrCount": 5,
+    "status": "generated"
+  },
+  {
+    "source": "menu/theme_list.xml",
+    "kind": "menu",
+    "name": "theme_list",
+    "component": "@/design/generated/menu/theme_list.vue",
+    "nodeCount": 2,
+    "attrCount": 5,
+    "status": "generated"
+  },
+  {
+    "source": "menu/txt_toc_rule.xml",
+    "kind": "menu",
+    "name": "txt_toc_rule",
+    "component": "@/design/generated/menu/txt_toc_rule.vue",
+    "nodeCount": 7,
+    "attrCount": 28,
+    "status": "generated"
+  },
+  {
+    "source": "menu/txt_toc_rule_edit.xml",
+    "kind": "menu",
+    "name": "txt_toc_rule_edit",
+    "component": "@/design/generated/menu/txt_toc_rule_edit.vue",
+    "nodeCount": 4,
+    "attrCount": 10,
+    "status": "generated"
+  },
+  {
+    "source": "menu/txt_toc_rule_item.xml",
+    "kind": "menu",
+    "name": "txt_toc_rule_item",
+    "component": "@/design/generated/menu/txt_toc_rule_item.vue",
+    "nodeCount": 4,
+    "attrCount": 7,
+    "status": "generated"
+  },
+  {
+    "source": "menu/txt_toc_rule_sel.xml",
+    "kind": "menu",
+    "name": "txt_toc_rule_sel",
+    "component": "@/design/generated/menu/txt_toc_rule_sel.vue",
+    "nodeCount": 4,
+    "attrCount": 11,
+    "status": "generated"
+  },
+  {
+    "source": "menu/verification_code.xml",
+    "kind": "menu",
+    "name": "verification_code",
+    "component": "@/design/generated/menu/verification_code.vue",
+    "nodeCount": 4,
+    "attrCount": 14,
+    "status": "generated"
+  },
+  {
+    "source": "menu/web_view.xml",
+    "kind": "menu",
+    "name": "web_view",
+    "component": "@/design/generated/menu/web_view.vue",
+    "nodeCount": 7,
+    "attrCount": 23,
+    "status": "generated"
+  },
+  {
+    "source": "xml/about.xml",
+    "kind": "xml",
+    "name": "about",
+    "component": "@/design/generated/xml/about.vue",
+    "nodeCount": 11,
+    "attrCount": 39,
+    "status": "generated"
+  },
+  {
+    "source": "xml/file_paths.xml",
+    "kind": "xml",
+    "name": "file_paths",
+    "component": "",
+    "nodeCount": 0,
+    "attrCount": 0,
+    "status": "not-applicable"
+  },
+  {
+    "source": "xml/network_security_config.xml",
+    "kind": "xml",
+    "name": "network_security_config",
+    "component": "",
+    "nodeCount": 0,
+    "attrCount": 0,
+    "status": "not-applicable"
+  },
+  {
+    "source": "xml/pref_config_aloud.xml",
+    "kind": "xml",
+    "name": "pref_config_aloud",
+    "component": "@/design/generated/xml/pref_config_aloud.vue",
+    "nodeCount": 11,
+    "attrCount": 47,
+    "status": "generated"
+  },
+  {
+    "source": "xml/pref_config_backup.xml",
+    "kind": "xml",
+    "name": "pref_config_backup",
+    "component": "@/design/generated/xml/pref_config_backup.vue",
+    "nodeCount": 17,
+    "attrCount": 80,
+    "status": "generated"
+  },
+  {
+    "source": "xml/pref_config_cover.xml",
+    "kind": "xml",
+    "name": "pref_config_cover",
+    "component": "@/design/generated/xml/pref_config_cover.vue",
+    "nodeCount": 12,
+    "attrCount": 69,
+    "status": "generated"
+  },
+  {
+    "source": "xml/pref_config_other.xml",
+    "kind": "xml",
+    "name": "pref_config_other",
+    "component": "@/design/generated/xml/pref_config_other.vue",
+    "nodeCount": 37,
+    "attrCount": 149,
+    "status": "generated"
+  },
+  {
+    "source": "xml/pref_config_read.xml",
+    "kind": "xml",
+    "name": "pref_config_read",
+    "component": "@/design/generated/xml/pref_config_read.vue",
+    "nodeCount": 29,
+    "attrCount": 144,
+    "status": "generated"
+  },
+  {
+    "source": "xml/pref_config_theme.xml",
+    "kind": "xml",
+    "name": "pref_config_theme",
+    "component": "@/design/generated/xml/pref_config_theme.vue",
+    "nodeCount": 23,
+    "attrCount": 121,
+    "status": "generated"
+  },
+  {
+    "source": "xml/pref_config_welcome.xml",
+    "kind": "xml",
+    "name": "pref_config_welcome",
+    "component": "@/design/generated/xml/pref_config_welcome.vue",
+    "nodeCount": 10,
+    "attrCount": 59,
+    "status": "generated"
+  },
+  {
+    "source": "xml/pref_main.xml",
+    "kind": "xml",
+    "name": "pref_main",
+    "component": "@/design/generated/xml/pref_main.vue",
+    "nodeCount": 17,
+    "attrCount": 88,
+    "status": "generated"
+  },
+  {
+    "source": "xml/spen_remote_actions.xml",
+    "kind": "xml",
+    "name": "spen_remote_actions",
+    "component": "",
+    "nodeCount": 0,
+    "attrCount": 0,
+    "status": "not-applicable"
+  }
+]

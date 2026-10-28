@@ -1,0 +1,129 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "padding": 6
+  },
+  "children": [
+    {
+      "tag": "ThemeCheckBox",
+      "attrs": {
+        "id": "checkbox",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_margin": 10,
+        "gravity": "center",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintStart_toStartOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_name",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "padding": 3,
+        "singleLine": "true",
+        "text": "书名",
+        "textColor": "#de000000",
+        "textSize": 15,
+        "layout_constraintBottom_toTopOf": "@id/tv_group_s",
+        "layout_constraintLeft_toRightOf": "@id/checkbox",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_author",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "paddingLeft": 12,
+        "paddingRight": 8,
+        "singleLine": "true",
+        "text": "作者",
+        "textColor": "#8A2C2C2C",
+        "textSize": 12,
+        "layout_constraintBottom_toBottomOf": "@+id/tv_name",
+        "layout_constraintLeft_toRightOf": "@+id/tv_name",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "@+id/tv_name"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_origin",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_marginTop": 8,
+        "padding": 3,
+        "textColor": "#8A2C2C2C",
+        "textSize": 12,
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toRightOf": "@+id/checkbox",
+        "layout_constraintTop_toBottomOf": "@id/tv_author"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_group_s",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_marginTop": 8,
+        "hint": "未分组",
+        "padding": 3,
+        "singleLine": "true",
+        "textColor": "#8a000000",
+        "textSize": 12,
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toRightOf": "@+id/tv_origin",
+        "layout_constraintRight_toLeftOf": "@+id/tv_group",
+        "layout_constraintTop_toBottomOf": "@id/tv_author"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_group",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "background": "?attr/selectableItemBackgroundBorderless",
+        "padding": 10,
+        "text": "分组",
+        "textColor": "#8a000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/tv_delete",
+        "layout_constraintTop_toBottomOf": "@id/tv_author"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_delete",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "background": "?attr/selectableItemBackgroundBorderless",
+        "padding": 10,
+        "text": "删除",
+        "textColor": "#8a000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toBottomOf": "@id/tv_author"
+      },
+      "children": []
+    }
+  ]
+}

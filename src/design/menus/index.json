@@ -1,0 +1,362 @@
+[
+  {
+    "name": "about",
+    "file": "menu/about.xml"
+  },
+  {
+    "name": "app_log",
+    "file": "menu/app_log.xml"
+  },
+  {
+    "name": "app_update",
+    "file": "menu/app_update.xml"
+  },
+  {
+    "name": "audio_play",
+    "file": "menu/audio_play.xml"
+  },
+  {
+    "name": "backup_restore",
+    "file": "menu/backup_restore.xml"
+  },
+  {
+    "name": "book_cache_download",
+    "file": "menu/book_cache_download.xml"
+  },
+  {
+    "name": "book_cache",
+    "file": "menu/book_cache.xml"
+  },
+  {
+    "name": "book_group_manage",
+    "file": "menu/book_group_manage.xml"
+  },
+  {
+    "name": "book_info_edit",
+    "file": "menu/book_info_edit.xml"
+  },
+  {
+    "name": "book_info",
+    "file": "menu/book_info.xml"
+  },
+  {
+    "name": "book_manga",
+    "file": "menu/book_manga.xml"
+  },
+  {
+    "name": "book_read_change_source",
+    "file": "menu/book_read_change_source.xml"
+  },
+  {
+    "name": "book_read_record",
+    "file": "menu/book_read_record.xml"
+  },
+  {
+    "name": "book_read_refresh",
+    "file": "menu/book_read_refresh.xml"
+  },
+  {
+    "name": "book_read_source",
+    "file": "menu/book_read_source.xml"
+  },
+  {
+    "name": "book_read",
+    "file": "menu/book_read.xml"
+  },
+  {
+    "name": "book_remote",
+    "file": "menu/book_remote.xml"
+  },
+  {
+    "name": "book_search_scope",
+    "file": "menu/book_search_scope.xml"
+  },
+  {
+    "name": "book_search",
+    "file": "menu/book_search.xml"
+  },
+  {
+    "name": "book_source_debug",
+    "file": "menu/book_source_debug.xml"
+  },
+  {
+    "name": "book_source_item",
+    "file": "menu/book_source_item.xml"
+  },
+  {
+    "name": "book_source_sel",
+    "file": "menu/book_source_sel.xml"
+  },
+  {
+    "name": "book_source",
+    "file": "menu/book_source.xml"
+  },
+  {
+    "name": "book_toc",
+    "file": "menu/book_toc.xml"
+  },
+  {
+    "name": "bookmark",
+    "file": "menu/bookmark.xml"
+  },
+  {
+    "name": "bookshelf_manage",
+    "file": "menu/bookshelf_manage.xml"
+  },
+  {
+    "name": "bookshelf_menage_sel",
+    "file": "menu/bookshelf_menage_sel.xml"
+  },
+  {
+    "name": "change_cover",
+    "file": "menu/change_cover.xml"
+  },
+  {
+    "name": "change_source_item",
+    "file": "menu/change_source_item.xml"
+  },
+  {
+    "name": "change_source",
+    "file": "menu/change_source.xml"
+  },
+  {
+    "name": "code_edit",
+    "file": "menu/code_edit.xml"
+  },
+  {
+    "name": "content_edit",
+    "file": "menu/content_edit.xml"
+  },
+  {
+    "name": "content_search",
+    "file": "menu/content_search.xml"
+  },
+  {
+    "name": "content_select_action",
+    "file": "menu/content_select_action.xml"
+  },
+  {
+    "name": "crash_log",
+    "file": "menu/crash_log.xml"
+  },
+  {
+    "name": "dialog_text",
+    "file": "menu/dialog_text.xml"
+  },
+  {
+    "name": "dict_rule_edit",
+    "file": "menu/dict_rule_edit.xml"
+  },
+  {
+    "name": "dict_rule_sel",
+    "file": "menu/dict_rule_sel.xml"
+  },
+  {
+    "name": "dict_rule",
+    "file": "menu/dict_rule.xml"
+  },
+  {
+    "name": "direct_link_upload_config",
+    "file": "menu/direct_link_upload_config.xml"
+  },
+  {
+    "name": "explore_item",
+    "file": "menu/explore_item.xml"
+  },
+  {
+    "name": "file_chooser",
+    "file": "menu/file_chooser.xml"
+  },
+  {
+    "name": "file_long_click",
+    "file": "menu/file_long_click.xml"
+  },
+  {
+    "name": "font_select",
+    "file": "menu/font_select.xml"
+  },
+  {
+    "name": "group_manage",
+    "file": "menu/group_manage.xml"
+  },
+  {
+    "name": "import_book_sel",
+    "file": "menu/import_book_sel.xml"
+  },
+  {
+    "name": "import_book",
+    "file": "menu/import_book.xml"
+  },
+  {
+    "name": "import_replace",
+    "file": "menu/import_replace.xml"
+  },
+  {
+    "name": "import_source",
+    "file": "menu/import_source.xml"
+  },
+  {
+    "name": "keyboard_assists_config",
+    "file": "menu/keyboard_assists_config.xml"
+  },
+  {
+    "name": "main_bnv",
+    "file": "menu/main_bnv.xml"
+  },
+  {
+    "name": "main_bookshelf",
+    "file": "menu/main_bookshelf.xml"
+  },
+  {
+    "name": "main_explore",
+    "file": "menu/main_explore.xml"
+  },
+  {
+    "name": "main_my",
+    "file": "menu/main_my.xml"
+  },
+  {
+    "name": "main_rss",
+    "file": "menu/main_rss.xml"
+  },
+  {
+    "name": "open_url_confirm",
+    "file": "menu/open_url_confirm.xml"
+  },
+  {
+    "name": "qr_code_scan",
+    "file": "menu/qr_code_scan.xml"
+  },
+  {
+    "name": "replace_edit",
+    "file": "menu/replace_edit.xml"
+  },
+  {
+    "name": "replace_rule_item",
+    "file": "menu/replace_rule_item.xml"
+  },
+  {
+    "name": "replace_rule_sel",
+    "file": "menu/replace_rule_sel.xml"
+  },
+  {
+    "name": "replace_rule",
+    "file": "menu/replace_rule.xml"
+  },
+  {
+    "name": "rss_articles",
+    "file": "menu/rss_articles.xml"
+  },
+  {
+    "name": "rss_favorites",
+    "file": "menu/rss_favorites.xml"
+  },
+  {
+    "name": "rss_main_item",
+    "file": "menu/rss_main_item.xml"
+  },
+  {
+    "name": "rss_read_record",
+    "file": "menu/rss_read_record.xml"
+  },
+  {
+    "name": "rss_read",
+    "file": "menu/rss_read.xml"
+  },
+  {
+    "name": "rss_source_debug",
+    "file": "menu/rss_source_debug.xml"
+  },
+  {
+    "name": "rss_source_item",
+    "file": "menu/rss_source_item.xml"
+  },
+  {
+    "name": "rss_source_sel",
+    "file": "menu/rss_source_sel.xml"
+  },
+  {
+    "name": "rss_source",
+    "file": "menu/rss_source.xml"
+  },
+  {
+    "name": "save",
+    "file": "menu/save.xml"
+  },
+  {
+    "name": "search_view",
+    "file": "menu/search_view.xml"
+  },
+  {
+    "name": "server_config",
+    "file": "menu/server_config.xml"
+  },
+  {
+    "name": "servers",
+    "file": "menu/servers.xml"
+  },
+  {
+    "name": "source_edit",
+    "file": "menu/source_edit.xml"
+  },
+  {
+    "name": "source_login",
+    "file": "menu/source_login.xml"
+  },
+  {
+    "name": "source_picker",
+    "file": "menu/source_picker.xml"
+  },
+  {
+    "name": "source_sub_item",
+    "file": "menu/source_sub_item.xml"
+  },
+  {
+    "name": "source_subscription",
+    "file": "menu/source_subscription.xml"
+  },
+  {
+    "name": "source_webview_login",
+    "file": "menu/source_webview_login.xml"
+  },
+  {
+    "name": "speak_engine_edit",
+    "file": "menu/speak_engine_edit.xml"
+  },
+  {
+    "name": "speak_engine",
+    "file": "menu/speak_engine.xml"
+  },
+  {
+    "name": "theme_config",
+    "file": "menu/theme_config.xml"
+  },
+  {
+    "name": "theme_list",
+    "file": "menu/theme_list.xml"
+  },
+  {
+    "name": "txt_toc_rule_edit",
+    "file": "menu/txt_toc_rule_edit.xml"
+  },
+  {
+    "name": "txt_toc_rule_item",
+    "file": "menu/txt_toc_rule_item.xml"
+  },
+  {
+    "name": "txt_toc_rule_sel",
+    "file": "menu/txt_toc_rule_sel.xml"
+  },
+  {
+    "name": "txt_toc_rule",
+    "file": "menu/txt_toc_rule.xml"
+  },
+  {
+    "name": "verification_code",
+    "file": "menu/verification_code.xml"
+  },
+  {
+    "name": "web_view",
+    "file": "menu/web_view.xml"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "tag": "TextInputLayout",
+  "attrs": {
+    "id": "textInputLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "paddingTop": 3
+  },
+  "children": [
+    {
+      "tag": "CodeView",
+      "attrs": {
+        "id": "editText",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content"
+      },
+      "children": []
+    }
+  ]
+}

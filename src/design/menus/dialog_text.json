@@ -1,0 +1,18 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:android": "http://schemas.android.com/apk/res/android"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_close",
+        "title": "关闭",
+        "showAsAction": "always"
+      },
+      "children": []
+    }
+  ]
+}

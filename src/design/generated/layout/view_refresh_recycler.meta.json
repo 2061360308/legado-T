@@ -1,0 +1,74 @@
+{
+  "source": "layout/view_refresh_recycler.xml",
+  "hash": "97f185283308dc1675828d27323f7b0e3d2b586a",
+  "nodeCount": 3,
+  "attrCount": 9,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "2dp",
+      "path": "$/0",
+      "value": "2px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/refresh_progress_bar",
+      "value": "@+id/refresh_progress_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@id/title_bar",
+      "value": "@id/title_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/recycler_view",
+      "value": "@+id/recycler_view",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

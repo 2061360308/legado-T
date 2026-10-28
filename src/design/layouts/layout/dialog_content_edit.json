@@ -1,0 +1,48 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "background": "@color/background",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "Toolbar",
+      "attrs": {
+        "id": "tool_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "title": "edit",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "ThemeEditText",
+      "attrs": {
+        "id": "content_view",
+        "layout_width": "match_parent",
+        "layout_height": 0,
+        "padding": 12,
+        "layout_constraintTop_toBottomOf": "@+id/tool_bar",
+        "layout_constraintBottom_toBottomOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "RotateLoading",
+      "attrs": {
+        "id": "rl_loading",
+        "layout_width": 60,
+        "layout_height": 60,
+        "visibility": "invisible",
+        "layout_constraintTop_toBottomOf": "@+id/tool_bar",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toRightOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

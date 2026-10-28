@@ -1,0 +1,657 @@
+{
+  "source": "layout/activity_book_search.xml",
+  "hash": "d0a251afe70ba2dc80ced8b39b7336177bccc48c",
+  "nodeCount": 13,
+  "attrCount": 75,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:context",
+      "raw": ".ui.book.search.SearchActivity",
+      "value": ".ui.book.search.SearchActivity",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/title_bar",
+      "value": "@+id/title_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:contentInsetStartWithNavigation",
+      "raw": "0dp",
+      "value": "0dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:contentLayout",
+      "raw": "@layout/view_search",
+      "value": "@layout/view_search",
+      "status": "mapped",
+      "target": "expanded child layout"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "搜索",
+      "value": "搜索",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "2dp",
+      "path": "$/1",
+      "value": "2px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/refresh_progress_bar",
+      "value": "@+id/refresh_progress_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@id/title_bar",
+      "value": "@id/title_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/content_view",
+      "value": "@+id/content_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@id/refresh_progress_bar",
+      "value": "@id/refresh_progress_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/2/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/recycler_view",
+      "value": "@+id/recycler_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clipToPadding",
+      "raw": "false",
+      "value": "false",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:listitem",
+      "raw": "@layout/item_search",
+      "value": "@layout/item_search",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/3",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background",
+      "path": "$/3",
+      "value": "#FAFAFA",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "gone",
+      "value": "gone",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_input_help",
+      "value": "@+id/ll_input_help",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@id/title_bar",
+      "value": "@id/title_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "6dp",
+      "path": "$/3/0",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "gone",
+      "value": "gone",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_book_show",
+      "value": "@+id/tv_book_show",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/bookshelf",
+      "value": "@string/bookshelf",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "gone",
+      "value": "gone",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rv_bookshelf_search",
+      "value": "@+id/rv_bookshelf_search",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rv_history_key",
+      "value": "@+id/rv_history_key",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3/3/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/3/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "6dp",
+      "path": "$/3/3/0",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_history",
+      "value": "@+id/tv_history",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/searchHistory",
+      "value": "@string/searchHistory",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/3/3/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/3/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "6dp",
+      "path": "$/3/3/1",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?attr/selectableItemBackground",
+      "path": "$/3/3/1",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_clear_history",
+      "value": "@+id/tv_clear_history",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/clear",
+      "value": "@string/clear",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "16dp",
+      "path": "$/4",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "invisible",
+      "value": "invisible",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/fb_start_stop",
+      "value": "@+id/fb_start_stop",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/stop",
+      "value": "@string/stop",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_stop_black_24dp",
+      "value": "@drawable/ic_stop_black_24dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:fabSize",
+      "raw": "mini",
+      "value": "mini",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0@view_search",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "30dp",
+      "path": "$/0@view_search",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "10dp",
+      "path": "$/0@view_search",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginBottom",
+      "raw": "10dp",
+      "path": "$/0@view_search",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/bg_searchview",
+      "path": "$/0@view_search",
+      "value": "bg_searchview",
+      "status": "mapped",
+      "drawable": "bg_searchview"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/search_view",
+      "value": "@+id/search_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "theme",
+      "raw": "?attr/actionBarStyle",
+      "value": "?attr/actionBarStyle",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "imeOptions",
+      "raw": "actionSearch",
+      "value": "actionSearch",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "focusable",
+      "raw": "false",
+      "value": "false",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:searchIcon",
+      "raw": "@null",
+      "value": "@null",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:queryBackground",
+      "raw": "@null",
+      "value": "@null",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:submitBackground",
+      "raw": "@null",
+      "value": "@null",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:searchHintIcon",
+      "raw": "@drawable/ic_search_hint",
+      "value": "@drawable/ic_search_hint",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconifiedByDefault",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:defaultQueryHint",
+      "raw": "搜索",
+      "value": "搜索",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

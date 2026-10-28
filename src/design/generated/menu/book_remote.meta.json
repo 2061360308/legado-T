@@ -1,0 +1,246 @@
+{
+  "source": "menu/book_remote.xml",
+  "hash": "3df1dd40d77e39316a0d094ad62b6a57e9daf01f",
+  "nodeCount": 10,
+  "attrCount": 33,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "AlwaysShowAction",
+      "value": "AlwaysShowAction",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_refresh",
+      "value": "@+id/menu_refresh",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_refresh_black_24dp",
+      "value": "ic_refresh_black_24dp",
+      "status": "mapped",
+      "drawable": "ic_refresh_black_24dp",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/refresh",
+      "value": "刷新",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_sort",
+      "value": "@+id/menu_sort",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_baseline_sort_24",
+      "value": "ic_baseline_sort_24",
+      "status": "mapped",
+      "drawable": "ic_baseline_sort_24",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/sort",
+      "value": "排序",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "AlwaysShowAction",
+      "value": "AlwaysShowAction",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_group_sort",
+      "value": "@+id/menu_group_sort",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkableBehavior",
+      "raw": "single",
+      "value": "single",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_sort_name",
+      "value": "@+id/menu_sort_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/sort_by_name",
+      "value": "名称排序",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_sort_time",
+      "value": "@+id/menu_sort_time",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/sort_by_lastUpdateTime",
+      "value": "更新时间排序",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_server_config",
+      "value": "@+id/menu_server_config",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_other",
+      "value": "ic_cfg_other",
+      "status": "mapped",
+      "drawable": "ic_cfg_other",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/server_config",
+      "value": "服务器配置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_help",
+      "value": "@+id/menu_help",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_help",
+      "value": "ic_help",
+      "status": "mapped",
+      "drawable": "ic_help",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/help",
+      "value": "帮助",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_log",
+      "value": "@+id/menu_log",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_about",
+      "value": "ic_cfg_about",
+      "status": "mapped",
+      "drawable": "ic_cfg_about",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/log",
+      "value": "日志",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

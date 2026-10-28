@@ -1,0 +1,81 @@
+{
+  "tag": "NestedScrollView",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "padding": 16
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "vertical"
+      },
+      "children": [
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "paddingBottom": 8,
+            "text": "滤镜",
+            "textSize": 18
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_brightness",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "title": "亮度"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_r",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "title": "R"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_g",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "title": "G"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_b",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "title": "B"
+          },
+          "children": []
+        },
+        {
+          "tag": "DetailSeekBar",
+          "attrs": {
+            "id": "dsb_a",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "title": "A"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

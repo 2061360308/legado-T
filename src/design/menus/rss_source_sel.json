@@ -1,0 +1,90 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_enable_selection",
+        "title": "启用所选",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_disable_selection",
+        "title": "禁用所选",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_add_group",
+        "title": "添加分组",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_remove_group",
+        "title": "移除分组",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_top_sel",
+        "title": "置顶所选",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_bottom_sel",
+        "title": "置底所选",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_export_selection",
+        "title": "导出所选",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_share_source",
+        "title": "分享选中源",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_check_selected_interval",
+        "title": "选中所选区间",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

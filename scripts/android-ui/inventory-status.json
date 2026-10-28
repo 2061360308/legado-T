@@ -1,0 +1,153 @@
+{
+  "layout/activity_about.xml": {
+    "target": "views/config/AboutView.vue",
+    "status": "已完成"
+  },
+  "layout/activity_audio_play.xml": {
+    "target": "views/audio/AudioPlayView.vue",
+    "status": "视觉禁用"
+  },
+  "layout/activity_book_search.xml": {
+    "target": "views/search/BookSearchView.vue",
+    "status": "已完成",
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_book_source.xml": {
+    "target": "views/source/BookSourceView.vue",
+    "status": "已完成",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_book_source_edit.xml": {
+    "target": "views/source/BookSourceEditView.vue",
+    "status": "已完成"
+  },
+  "layout/activity_cache_book.xml": {
+    "target": "views/source/CacheBookView.vue",
+    "status": "已完成"
+  },
+  "layout/activity_chapter_list.xml": {
+    "target": "views/toc/TocView.vue",
+    "status": "已完成",
+    "note": "TitleBar contentLayout 展开 Tab 栏"
+  },
+  "layout/activity_all_bookmark.xml": {
+    "target": "views/config/BookmarksView.vue",
+    "status": "已完成"
+  },
+  "layout/activity_arrange_book.xml": {
+    "target": "views/bookshelf/ArrangeBooksView.vue",
+    "status": "已完成",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_book_info.xml": {
+    "target": "views/bookshelf/BookInfoView.vue",
+    "status": "已完成"
+  },
+  "layout/activity_book_info_edit.xml": {
+    "target": "views/bookshelf/BookInfoEditView.vue",
+    "status": "已完成"
+  },
+  "layout/activity_book_read.xml": {
+    "target": "views/reader/ReaderView.vue",
+    "status": "进行中"
+  },
+  "layout/activity_config.xml": {
+    "target": "views/config/ConfigView.vue",
+    "status": "进行中"
+  },
+  "layout/activity_import_book.xml": {
+    "target": "views/import/ImportView.vue",
+    "status": "进行中",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_main.xml": {
+    "target": "App.vue + BottomNav",
+    "status": "进行中"
+  },
+  "layout/activity_txt_toc_rule.xml": {
+    "target": "views/toc/TocRulesView.vue",
+    "status": "进行中",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构"
+  },
+  "layout/activity_replace_rule.xml": {
+    "target": "views/replace/ReplaceView.vue",
+    "status": "进行中",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_dict_rule.xml": {
+    "target": "views/dict/DictRulesView.vue",
+    "status": "进行中",
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构"
+  },
+  "layout/view_title_bar.xml": {
+    "target": "components/android/TitleBar.vue",
+    "status": "已完成"
+  },
+  "layout/view_read_menu.xml": {
+    "target": "views/reader/ReaderView.vue",
+    "status": "进行中"
+  },
+  "layout/view_preference.xml": {
+    "target": "components/android/PreferenceRow.vue",
+    "status": "已完成"
+  },
+  "layout/view_preference_category.xml": {
+    "target": "components/android/PreferenceCategory.vue",
+    "status": "已完成"
+  },
+  "layout/popup_action_menu.xml": {
+    "target": "components/android/PopupMenu.vue",
+    "status": "已完成"
+  },
+  "layout/item_txt_toc_rule.xml": {
+    "target": "components/android/RuleRow.vue",
+    "status": "进行中"
+  },
+  "layout/item_replace_rule.xml": {
+    "target": "components/android/RuleRow.vue",
+    "status": "进行中"
+  },
+  "layout/item_dict_rule.xml": {
+    "target": "components/android/RuleRow.vue",
+    "status": "进行中"
+  },
+  "layout/item_bookmark.xml": {
+    "target": "views/config/BookmarksView.vue",
+    "status": "已完成"
+  },
+  "layout/item_arrange_book.xml": {
+    "target": "views/bookshelf/ArrangeBooksView.vue",
+    "status": "已完成"
+  },
+  "xml/about.xml": {
+    "target": "views/config/AboutView.vue",
+    "status": "已完成"
+  },
+  "layout/activity_file_manage.xml": {
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_read_record.xml": {
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_rss_source.xml": {
+    "note": "SelectActionBar 展开为 view_select_action_bar 结构；TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_search_content.xml": {
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  "layout/activity_source_debug.xml": {
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  "layout/dialog_source_picker.xml": {
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  "layout/fragment_bookshelf1.xml": {
+    "note": "TitleBar contentLayout 展开 Tab 栏"
+  },
+  "layout/fragment_explore.xml": {
+    "note": "TitleBar contentLayout 展开搜索框"
+  },
+  "layout/fragment_rss.xml": {
+    "note": "TitleBar contentLayout 展开搜索框"
+  }
+}

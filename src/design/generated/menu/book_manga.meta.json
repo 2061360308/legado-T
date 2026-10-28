@@ -1,0 +1,615 @@
+{
+  "source": "menu/book_manga.xml",
+  "hash": "ca10505b4c4bd9867d6fce68d67fd978c9bddda5",
+  "nodeCount": 20,
+  "attrCount": 86,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:context",
+      "raw": ".ui.main.MainActivity",
+      "value": ".ui.main.MainActivity",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "AlwaysShowAction",
+      "value": "AlwaysShowAction",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_group_on_line",
+      "value": "@+id/menu_group_on_line",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_change_source",
+      "value": "@+id/menu_change_source",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_exchange",
+      "value": "ic_exchange",
+      "status": "mapped",
+      "drawable": "ic_exchange",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/change_origin",
+      "value": "换源",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_refresh",
+      "value": "@+id/menu_refresh",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_refresh_black_24dp",
+      "value": "ic_refresh_black_24dp",
+      "status": "mapped",
+      "drawable": "ic_refresh_black_24dp",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/refresh",
+      "value": "刷新",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_catalog",
+      "value": "@+id/menu_catalog",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_toc",
+      "value": "ic_toc",
+      "status": "mapped",
+      "drawable": "ic_toc",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/chapter_list",
+      "value": "目录",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_pre_manga_number",
+      "value": "@+id/menu_pre_manga_number",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/pre_download",
+      "value": "预下载",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_disable_manga_scale",
+      "value": "@+id/menu_disable_manga_scale",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/disable_manga_scale",
+      "value": "禁用漫画缩放",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_disable_click_scroll",
+      "value": "@+id/menu_disable_click_scroll",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/disable_manga_click_scroll",
+      "value": "禁用点击翻页",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_enable_auto_page",
+      "value": "@+id/menu_enable_auto_page",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/enable_auto_page_scroll",
+      "value": "开启自动翻页",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_enable_auto_scroll",
+      "value": "@+id/menu_enable_auto_scroll",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/enable_auto_scroll",
+      "value": "开启滚动",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_manga_auto_page_speed",
+      "value": "@+id/menu_manga_auto_page_speed",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/manga_auto_page_speed",
+      "value": "翻页速度 %s",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "visible",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_enable_horizontal_scroll",
+      "value": "@+id/menu_enable_horizontal_scroll",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/enable_manga_horizontal_scroll",
+      "value": "水平滚动",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_disable_horizontal_page_snap",
+      "value": "@+id/menu_disable_horizontal_page_snap",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "visible",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/disable_horizontal_page_snap",
+      "value": "禁用水平翻页效果",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_disable_manga_page_anim",
+      "value": "@+id/menu_disable_manga_page_anim",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/disable_manga_page_anim",
+      "value": "禁用翻页动画",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_manga_footer_config",
+      "value": "@+id/menu_manga_footer_config",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/manga_footer_config",
+      "value": "页脚配置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_manga_color_filter",
+      "value": "@+id/menu_manga_color_filter",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/manga_color_filter",
+      "value": "滤镜",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_hide_manga_title",
+      "value": "@+id/menu_hide_manga_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/hide_manga_title",
+      "value": "隐藏漫画列表标题",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_epaper_manga",
+      "value": "@+id/menu_epaper_manga",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/manga_epaper",
+      "value": "墨水屏",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_epaper_manga_setting",
+      "value": "@+id/menu_epaper_manga_setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/manga_epaper_stting",
+      "value": "墨水屏设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "visible",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_gray_manga",
+      "value": "@+id/menu_gray_manga",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checkable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "checked",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/enable_manga_gray",
+      "value": "开启图片灰色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "never",
+      "value": "never",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

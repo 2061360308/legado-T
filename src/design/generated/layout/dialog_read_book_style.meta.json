@@ -1,0 +1,1691 @@
+{
+  "source": "layout/dialog_read_book_style.xml",
+  "hash": "f4c0176c77eabc844aa33c8b05a75d33a1b02865",
+  "nodeCount": 31,
+  "attrCount": 240,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background",
+      "path": "$",
+      "value": "#FAFAFA",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tool",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/root_view",
+      "value": "@+id/root_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "16dp",
+      "path": "$/0",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingHorizontal",
+      "raw": "16dp",
+      "path": "$/0",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "4dp",
+      "path": "$/0/0",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "4dp",
+      "path": "$/0/0",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "6dp",
+      "path": "$/0/0",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "6dp",
+      "path": "$/0/0",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/0",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/text_font_weight_converter",
+      "value": "@+id/text_font_weight_converter",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:radius",
+      "raw": "3dp",
+      "value": "3dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/3",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/4",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/5",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/5",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/6",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/6",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "4dp",
+      "path": "$/0/6",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "4dp",
+      "path": "$/0/6",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "6dp",
+      "path": "$/0/6",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "6dp",
+      "path": "$/0/6",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/6",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_text_font",
+      "value": "@+id/tv_text_font",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/text_font",
+      "value": "@string/text_font",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:radius",
+      "raw": "3dp",
+      "value": "3dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/7",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/7",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "4dp",
+      "path": "$/0/7",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "4dp",
+      "path": "$/0/7",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "6dp",
+      "path": "$/0/7",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "6dp",
+      "path": "$/0/7",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/7",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_text_indent",
+      "value": "@+id/tv_text_indent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/text_indent",
+      "value": "@string/text_indent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:radius",
+      "raw": "3dp",
+      "value": "3dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/8",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/8",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "4dp",
+      "path": "$/0/8",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "4dp",
+      "path": "$/0/8",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "6dp",
+      "path": "$/0/8",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "6dp",
+      "path": "$/0/8",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/8",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_padding",
+      "value": "@+id/tv_padding",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/padding",
+      "value": "@string/padding",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:radius",
+      "raw": "3dp",
+      "value": "3dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/9",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/9",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "4dp",
+      "path": "$/0/9",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "4dp",
+      "path": "$/0/9",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "6dp",
+      "path": "$/0/9",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "6dp",
+      "path": "$/0/9",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/9",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_tip",
+      "value": "@+id/tv_tip",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/information",
+      "value": "@string/information",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:radius",
+      "raw": "3dp",
+      "value": "3dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/10",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/10",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "4dp",
+      "path": "$/0/10",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "4dp",
+      "path": "$/0/10",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "6dp",
+      "path": "$/0/10",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "6dp",
+      "path": "$/0/10",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/10",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/chinese_converter",
+      "value": "@+id/chinese_converter",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:radius",
+      "raw": "3dp",
+      "value": "3dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/1/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "16dp",
+      "path": "$/1/0",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/1/0",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "alpha",
+      "raw": "0.75",
+      "value": "0.75",
+      "status": "mapped",
+      "target": "opacity"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_bg_ts",
+      "value": "@+id/tv_bg_ts",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/text_bg_style",
+      "value": "@string/text_bg_style",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_share_layout",
+      "value": "@+id/tv_share_layout",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/share_layout",
+      "value": "@string/share_layout",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "20dp",
+      "path": "$/1/2",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "20dp",
+      "path": "$/1/2",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "6dp",
+      "path": "$/1/2",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginEnd",
+      "raw": "16dp",
+      "path": "$/1/2",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_share_layout",
+      "value": "@+id/cb_share_layout",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/2",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginHorizontal",
+      "raw": "16dp",
+      "path": "$/2",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_text_size",
+      "value": "@+id/dsb_text_size",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "45",
+      "value": "45",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/text_size",
+      "value": "@string/text_size",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginHorizontal",
+      "raw": "16dp",
+      "path": "$/3",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_text_letter_spacing",
+      "value": "@+id/dsb_text_letter_spacing",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/text_letter_spacing",
+      "value": "@string/text_letter_spacing",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginHorizontal",
+      "raw": "16dp",
+      "path": "$/4",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_line_size",
+      "value": "@+id/dsb_line_size",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "20",
+      "value": "20",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/line_size",
+      "value": "@string/line_size",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/5",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/5",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginHorizontal",
+      "raw": "16dp",
+      "path": "$/5",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_paragraph_spacing",
+      "value": "@+id/dsb_paragraph_spacing",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "20",
+      "value": "20",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/paragraph_size",
+      "value": "@string/paragraph_size",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/6",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0.8dp",
+      "path": "$/6",
+      "value": "0.8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginHorizontal",
+      "raw": "16dp",
+      "path": "$/6",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginVertical",
+      "raw": "8dp",
+      "path": "$/6",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@color/btn_bg_press",
+      "path": "$/6",
+      "value": "#ACACAC63",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/vw_bg_fg",
+      "value": "@+id/vw_bg_fg",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/7",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0.8dp",
+      "path": "$/7",
+      "value": "0.8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginHorizontal",
+      "raw": "16dp",
+      "path": "$/7",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginVertical",
+      "raw": "8dp",
+      "path": "$/7",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@color/btn_bg_press",
+      "path": "$/7",
+      "value": "#ACACAC63",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/vw_bg_fg1",
+      "value": "@+id/vw_bg_fg1",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/8",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/8",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginBottom",
+      "raw": "4dp",
+      "path": "$/8",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginHorizontal",
+      "raw": "16dp",
+      "path": "$/8",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/8",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "alpha",
+      "raw": "0.75",
+      "value": "0.75",
+      "status": "mapped",
+      "target": "opacity"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_page_anim",
+      "value": "@+id/tv_page_anim",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/page_anim",
+      "value": "@string/page_anim",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/9",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/9",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginHorizontal",
+      "raw": "11dp",
+      "path": "$/9",
+      "value": "11px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rg_page_anim",
+      "value": "@+id/rg_page_anim",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/9/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/9/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "4dp",
+      "path": "$/9/0",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "5dp",
+      "path": "$/9/0",
+      "value": "5px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_anim0",
+      "value": "@+id/rb_anim0",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "button",
+      "raw": "@null",
+      "value": "@null",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/page_anim_cover",
+      "value": "@string/page_anim_cover",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/9/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/9/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "4dp",
+      "path": "$/9/1",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "5dp",
+      "path": "$/9/1",
+      "value": "5px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_anim1",
+      "value": "@+id/rb_anim1",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "button",
+      "raw": "@null",
+      "value": "@null",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/page_anim_slide",
+      "value": "@string/page_anim_slide",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/9/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/9/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "4dp",
+      "path": "$/9/2",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "5dp",
+      "path": "$/9/2",
+      "value": "5px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_simulation_anim",
+      "value": "@+id/rb_simulation_anim",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "button",
+      "raw": "@null",
+      "value": "@null",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/page_anim_simulation",
+      "value": "@string/page_anim_simulation",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/9/3",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/9/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "4dp",
+      "path": "$/9/3",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "5dp",
+      "path": "$/9/3",
+      "value": "5px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_scroll_anim",
+      "value": "@+id/rb_scroll_anim",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "button",
+      "raw": "@null",
+      "value": "@null",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/page_anim_scroll",
+      "value": "@string/page_anim_scroll",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/9/4",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/9/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "4dp",
+      "path": "$/9/4",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "5dp",
+      "path": "$/9/4",
+      "value": "5px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_no_anim",
+      "value": "@+id/rb_no_anim",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "button",
+      "raw": "@null",
+      "value": "@null",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/page_anim_none",
+      "value": "@string/page_anim_none",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:isBottomBackground",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/10",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/10",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/10",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginBottom",
+      "raw": "16dp",
+      "path": "$/10",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingHorizontal",
+      "raw": "12dp",
+      "path": "$/10",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rv_style",
+      "value": "@+id/rv_style",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clipToPadding",
+      "raw": "false",
+      "value": "false",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layoutManager",
+      "raw": "androidx.recyclerview.widget.LinearLayoutManager",
+      "value": "androidx.recyclerview.widget.LinearLayoutManager",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tool:listitem",
+      "raw": "@layout/item_read_style",
+      "value": "@layout/item_read_style",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,652 @@
+{
+  "source": "xml/pref_main.xml",
+  "hash": "9ddfc52b5e32648a5d66983d989592916af1f1c4",
+  "nodeCount": 17,
+  "attrCount": 88,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "divider",
+      "raw": "@color/transparent",
+      "value": "#00000000",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_source",
+      "value": "ic_cfg_source",
+      "status": "mapped",
+      "drawable": "ic_cfg_source",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "bookSourceManage",
+      "value": "bookSourceManage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/book_source_manage_desc",
+      "value": "新建、导入、编辑或管理书源",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/book_source_manage",
+      "value": "书源管理",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_source",
+      "value": "ic_cfg_source",
+      "status": "mapped",
+      "drawable": "ic_cfg_source",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "txtTocRuleManage",
+      "value": "txtTocRuleManage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/config_txt_toc_rule",
+      "value": "配置 TXT 目录规则",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/txt_toc_rule",
+      "value": "TXT 目录规则",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_replace",
+      "value": "ic_cfg_replace",
+      "status": "mapped",
+      "drawable": "ic_cfg_replace",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "replaceManage",
+      "value": "replaceManage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/replace_purify_desc",
+      "value": "配置替换净化规则",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/replace_purify",
+      "value": "替换净化",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_translate",
+      "value": "ic_translate",
+      "status": "mapped",
+      "drawable": "ic_translate",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "dictRuleManage",
+      "value": "dictRuleManage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/config_dict_rule",
+      "value": "配置字典规则",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/dict_rule",
+      "value": "字典规则",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "0",
+      "value": "0px",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "entries",
+      "raw": "@array/theme_mode",
+      "value": [
+        "Follow system",
+        "Bright mode",
+        "Dark mode",
+        "E-Ink mode"
+      ],
+      "status": "mapped",
+      "array": true,
+      "target": "component prop"
+    },
+    {
+      "name": "entryValues",
+      "raw": "@array/theme_mode_v",
+      "value": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "status": "mapped",
+      "array": true,
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_theme",
+      "value": "ic_cfg_theme",
+      "status": "mapped",
+      "drawable": "ic_cfg_theme",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "themeMode",
+      "value": "themeMode",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/theme_mode_desc",
+      "value": "选择主题模式",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/theme_mode",
+      "value": "主题模式",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_web",
+      "value": "ic_cfg_web",
+      "status": "mapped",
+      "drawable": "ic_cfg_web",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "webService",
+      "value": "webService",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/web_service_desc",
+      "value": "用浏览器写源或看书",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/web_service",
+      "value": "Web 服务",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/setting",
+      "value": "设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_backup",
+      "value": "ic_cfg_backup",
+      "status": "mapped",
+      "drawable": "ic_cfg_backup",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "web_dav_setting",
+      "value": "web_dav_setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/web_dav_set_import_old",
+      "value": "WebDav 设置/导入旧版本数据",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/backup_restore",
+      "value": "备份与恢复",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_theme",
+      "value": "ic_cfg_theme",
+      "status": "mapped",
+      "drawable": "ic_cfg_theme",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "theme_setting",
+      "value": "theme_setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/theme_setting_s",
+      "value": "与界面/颜色相关的一些设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/theme_setting",
+      "value": "主题设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_other",
+      "value": "ic_cfg_other",
+      "status": "mapped",
+      "drawable": "ic_cfg_other",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "setting",
+      "value": "setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/other_setting_s",
+      "value": "与功能相关的一些设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/other_setting",
+      "value": "其它设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "aboutCategory",
+      "value": "aboutCategory",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/other",
+      "value": "其它",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout",
+      "raw": "@layout/view_preference_category",
+      "value": "@layout/view_preference_category",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_bookmark",
+      "value": "ic_bookmark",
+      "status": "mapped",
+      "drawable": "ic_bookmark",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "bookmark",
+      "value": "bookmark",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/all_bookmark",
+      "value": "所有书签",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/bookmark",
+      "value": "书签",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_history",
+      "value": "ic_history",
+      "status": "mapped",
+      "drawable": "ic_history",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "readRecord",
+      "value": "readRecord",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/read_record_summary",
+      "value": "阅读时间记录",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/read_record",
+      "value": "阅读记录",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_folder_outline",
+      "value": "ic_folder_outline",
+      "status": "mapped",
+      "drawable": "ic_folder_outline",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "fileManage",
+      "value": "fileManage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/file_manage_summary",
+      "value": "管理私有文件夹的文件",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/file_manage",
+      "value": "文件管理",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_cfg_about",
+      "value": "ic_cfg_about",
+      "status": "mapped",
+      "drawable": "ic_cfg_about",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "about",
+      "value": "about",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/about",
+      "value": "关于",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_exit",
+      "value": "ic_exit",
+      "status": "mapped",
+      "drawable": "ic_exit",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "exit",
+      "value": "exit",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/exit",
+      "value": "退出",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

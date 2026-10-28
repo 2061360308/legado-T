@@ -1,0 +1,73 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "horizontal",
+    "gravity": "center"
+  },
+  "children": [
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_seek_title",
+        "layout_width": 60,
+        "layout_height": "wrap_content",
+        "singleLine": "true",
+        "text": "seek",
+        "textColor": "#de000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_seek_value",
+        "layout_width": 60,
+        "layout_height": "wrap_content",
+        "gravity": "right",
+        "singleLine": "true",
+        "text": "0",
+        "textColor": "#de000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_seek_reduce",
+        "layout_width": 24,
+        "layout_height": 24,
+        "contentDescription": "减",
+        "src": "ic_reduce",
+        "background": "?android:attr/selectableItemBackgroundBorderless",
+        "tint": "#de000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_seek_plus",
+        "layout_width": 24,
+        "layout_height": 24,
+        "contentDescription": "加",
+        "src": "ic_add",
+        "background": "?android:attr/selectableItemBackgroundBorderless",
+        "tint": "#de000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "ThemeSeekBar",
+      "attrs": {
+        "id": "seek_bar",
+        "layout_width": 0,
+        "layout_height": 25,
+        "layout_gravity": "center_vertical",
+        "layout_weight": "4"
+      },
+      "children": []
+    }
+  ]
+}

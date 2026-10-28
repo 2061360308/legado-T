@@ -1,0 +1,53 @@
+{
+  "source": "layout/item_log.xml",
+  "hash": "6059163b909b162706a3479064027e26135c7fc8",
+  "nodeCount": 1,
+  "attrCount": 6,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/text_view",
+      "value": "@+id/text_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "textIsSelectable",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "autoLink",
+      "raw": "web",
+      "value": "web",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

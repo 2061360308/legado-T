@@ -1,0 +1,851 @@
+{
+  "source": "layout/dialog_manga_footer_setting.xml",
+  "hash": "57e6d88c683028bc70d8bb5b3997c8d5af503f9f",
+  "nodeCount": 23,
+  "attrCount": 120,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "16dp",
+      "path": "$",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "18sp",
+      "path": "$/0/0",
+      "value": "18px",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_footer_config",
+      "value": "@string/manga_footer_config",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "16dp",
+      "path": "$/0/1",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/1",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_header_chapter",
+      "value": "@string/manga_header_chapter",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "16dp",
+      "path": "$/0/2",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0/2",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/2",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_header_page",
+      "value": "@string/manga_header_page",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "16dp",
+      "path": "$/0/3",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0/3",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/3",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_header_progress",
+      "value": "@string/manga_header_progress",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "16dp",
+      "path": "$/0/4",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0/4",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/4",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_header_footer",
+      "value": "@string/manga_header_footer",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/5",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/5",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/0/5",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "16dp",
+      "path": "$/0/5",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/5/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/5/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_chapter_label",
+      "value": "@+id/cb_chapter_label",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_check_chapter_label",
+      "value": "@string/manga_check_chapter_label",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/5/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/5/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "10dp",
+      "path": "$/0/5/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_chapter",
+      "value": "@+id/cb_chapter",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_check_chapter",
+      "value": "@string/manga_check_chapter",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/5/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/5/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "10dp",
+      "path": "$/0/5/2",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_chapter_name",
+      "value": "@+id/cb_chapter_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_check_chapter_name",
+      "value": "@string/manga_check_chapter_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/6",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/6",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/0/6",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "16dp",
+      "path": "$/0/6",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/6/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/6/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_page_number_label",
+      "value": "@+id/cb_page_number_label",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_check_page_label",
+      "value": "@string/manga_check_page_label",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/6/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/6/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "10dp",
+      "path": "$/0/6/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_page_number",
+      "value": "@+id/cb_page_number",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_check_page_number",
+      "value": "@string/manga_check_page_number",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/7",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/7",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/0/7",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "16dp",
+      "path": "$/0/7",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/7/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/7/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_progress_ratio_label",
+      "value": "@+id/cb_progress_ratio_label",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_check_progress_label",
+      "value": "@string/manga_check_progress_label",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/7/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/7/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "10dp",
+      "path": "$/0/7/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_progress_ratio",
+      "value": "@+id/cb_progress_ratio",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_check_progress",
+      "value": "@string/manga_check_progress",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/8",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/8",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/0/8",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "16dp",
+      "path": "$/0/8",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rg_footer",
+      "value": "@+id/rg_footer",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/8/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/8/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_show",
+      "value": "@+id/rb_show",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/show",
+      "value": "@string/show",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/8/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/8/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "10dp",
+      "path": "$/0/8/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_hide",
+      "value": "@+id/rb_hide",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/hide",
+      "value": "@string/hide",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/9",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/9",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/0/9",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "16dp",
+      "path": "$/0/9",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rg_footer_orientation",
+      "value": "@+id/rg_footer_orientation",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/9/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/9/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_left",
+      "value": "@+id/rb_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_radio_left",
+      "value": "@string/manga_radio_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/9/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/9/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "10dp",
+      "path": "$/0/9/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rb_center",
+      "value": "@+id/rb_center",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/manga_radio_center",
+      "value": "@string/manga_radio_center",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

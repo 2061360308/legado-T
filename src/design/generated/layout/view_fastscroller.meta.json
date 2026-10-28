@@ -1,0 +1,242 @@
+{
+  "source": "layout/view_fastscroller.xml",
+  "hash": "0f7206fa24fa9a54be6626247d19ddbd69c033b9",
+  "nodeCount": 5,
+  "attrCount": 33,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textSize",
+      "raw": "@dimen/fastscroll_bubble_textsize",
+      "path": "$/0",
+      "value": "48px",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "gone",
+      "value": "gone",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "maxLines",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "line-clamp"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/fastscroll_bubble",
+      "value": "@+id/fastscroll_bubble",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "end",
+      "value": "end",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "tools:background",
+      "raw": "@drawable/fastscroll_bubble",
+      "value": "@drawable/fastscroll_bubble",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:text",
+      "raw": "A",
+      "value": "A",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:textColor",
+      "raw": "#ffffff",
+      "value": "#ffffff",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:visibility",
+      "raw": "visible",
+      "value": "visible",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "gone",
+      "value": "gone",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/fastscroll_scrollbar",
+      "value": "@+id/fastscroll_scrollbar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:visibility",
+      "raw": "visible",
+      "value": "visible",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/1/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/1/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/fastscroll_track",
+      "value": "@+id/fastscroll_track",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "ContentDescription",
+      "value": "ContentDescription",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:src",
+      "raw": "@drawable/fastscroll_track",
+      "value": "@drawable/fastscroll_track",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingStart",
+      "raw": "@dimen/fastscroll_scrollbar_padding_start",
+      "path": "$/1/1",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingEnd",
+      "raw": "@dimen/fastscroll_scrollbar_padding_end",
+      "path": "$/1/1",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/fastscroll_handle",
+      "value": "@+id/fastscroll_handle",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "ContentDescription",
+      "value": "ContentDescription",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:src",
+      "raw": "@drawable/fastscroll_handle",
+      "value": "@drawable/fastscroll_handle",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

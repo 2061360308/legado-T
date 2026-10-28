@@ -1,0 +1,180 @@
+{
+  "source": "layout/activity_chapter_list.xml",
+  "hash": "3b427300914eda0cfaef0ca9df224b6178e2c806",
+  "nodeCount": 3,
+  "attrCount": 15,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/title_bar",
+      "value": "@+id/title_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:contentInsetStartWithNavigation",
+      "raw": "0dp",
+      "value": "0dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:contentLayout",
+      "raw": "@layout/view_tab_layout",
+      "value": "@layout/view_tab_layout",
+      "status": "mapped",
+      "target": "expanded child layout"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/view_pager",
+      "value": "@+id/view_pager",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "SpeakableTextPresentCheck",
+      "value": "SpeakableTextPresentCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0@view_tab_layout",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/0@view_tab_layout",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@android:color/transparent",
+      "path": "$/0@view_tab_layout",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tab_layout",
+      "value": "@+id/tab_layout",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tabBackground",
+      "raw": "@android:color/transparent",
+      "value": "@android:color/transparent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tabRippleColor",
+      "raw": "@android:color/transparent",
+      "value": "@android:color/transparent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "theme",
+      "raw": "?attr/actionBarStyle",
+      "value": "?attr/actionBarStyle",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

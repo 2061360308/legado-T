@@ -1,0 +1,77 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "gravity": "center",
+    "orientation": "horizontal",
+    "padding": 8,
+    "paddingStart": 16,
+    "paddingEnd": 16
+  },
+  "children": [
+    {
+      "tag": "ThemeCheckBox",
+      "attrs": {
+        "id": "cb_name",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "singleLine": "true",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/swt_enabled",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "ThemeSwitch",
+      "attrs": {
+        "id": "swt_enabled",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_marginLeft": 6,
+        "layout_marginRight": 6,
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toLeftOf": "@id/iv_edit",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_edit",
+        "layout_width": 36,
+        "layout_height": 36,
+        "layout_gravity": "center",
+        "background": "?android:attr/selectableItemBackgroundBorderless",
+        "contentDescription": "编辑",
+        "padding": 6,
+        "src": "ic_edit",
+        "tint": "#de000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toLeftOf": "@id/iv_menu_more",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_menu_more",
+        "layout_width": 36,
+        "layout_height": 36,
+        "background": "?attr/selectableItemBackgroundBorderless",
+        "contentDescription": "更多菜单",
+        "padding": 6,
+        "src": "ic_more_vert",
+        "tint": "#de000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

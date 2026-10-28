@@ -1,0 +1,24 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_export",
+        "title": "导出"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_export_md",
+        "title": "导出(MD)"
+      },
+      "children": []
+    }
+  ]
+}

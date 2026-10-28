@@ -1,0 +1,2190 @@
+{
+  "generatedAt": "2026-10-28T15:34:32.801Z",
+  "layouts": [
+    {
+      "group": "layout",
+      "name": "activity_about",
+      "nodeCount": 6,
+      "attrCount": 31,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_all_bookmark",
+      "nodeCount": 3,
+      "attrCount": 16,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_arrange_book",
+      "nodeCount": 4,
+      "attrCount": 22,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_audio_play",
+      "nodeCount": 27,
+      "attrCount": 206,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_book_info",
+      "nodeCount": 41,
+      "attrCount": 307,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_book_info_edit",
+      "nodeCount": 22,
+      "attrCount": 100,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_book_read",
+      "nodeCount": 8,
+      "attrCount": 36,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_book_search",
+      "nodeCount": 13,
+      "attrCount": 75,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_book_source",
+      "nodeCount": 5,
+      "attrCount": 22,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_book_source_edit",
+      "nodeCount": 12,
+      "attrCount": 63,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_cache_book",
+      "nodeCount": 3,
+      "attrCount": 13,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_chapter_list",
+      "nodeCount": 3,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_config",
+      "nodeCount": 3,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_dict_rule",
+      "nodeCount": 5,
+      "attrCount": 21,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_donate",
+      "nodeCount": 3,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_explore_show",
+      "nodeCount": 4,
+      "attrCount": 23,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_file_manage",
+      "nodeCount": 6,
+      "attrCount": 38,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_import_book",
+      "nodeCount": 10,
+      "attrCount": 70,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_main",
+      "nodeCount": 3,
+      "attrCount": 19,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_manga",
+      "nodeCount": 12,
+      "attrCount": 67,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_qrcode_capture",
+      "nodeCount": 3,
+      "attrCount": 12,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_read_record",
+      "nodeCount": 7,
+      "attrCount": 51,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_replace_edit",
+      "nodeCount": 24,
+      "attrCount": 108,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_replace_rule",
+      "nodeCount": 5,
+      "attrCount": 23,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_rss_artivles",
+      "nodeCount": 4,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_rss_favorites",
+      "nodeCount": 4,
+      "attrCount": 18,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_rss_read",
+      "nodeCount": 6,
+      "attrCount": 26,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_rss_source",
+      "nodeCount": 5,
+      "attrCount": 22,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_rss_source_edit",
+      "nodeCount": 9,
+      "attrCount": 51,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_rule_sub",
+      "nodeCount": 5,
+      "attrCount": 31,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_search_content",
+      "nodeCount": 10,
+      "attrCount": 74,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_source_debug",
+      "nodeCount": 18,
+      "attrCount": 165,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_source_login",
+      "nodeCount": 1,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_translucence",
+      "nodeCount": 2,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_txt_toc_rule",
+      "nodeCount": 5,
+      "attrCount": 19,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_web_view",
+      "nodeCount": 6,
+      "attrCount": 26,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "activity_welcome",
+      "nodeCount": 7,
+      "attrCount": 64,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_add_to_bookshelf",
+      "nodeCount": 12,
+      "attrCount": 96,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_auto_read",
+      "nodeCount": 22,
+      "attrCount": 157,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_book_change_source",
+      "nodeCount": 8,
+      "attrCount": 67,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_book_group_edit",
+      "nodeCount": 14,
+      "attrCount": 97,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_book_group_picker",
+      "nodeCount": 7,
+      "attrCount": 35,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_bookmark",
+      "nodeCount": 15,
+      "attrCount": 78,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_bookshelf_config",
+      "nodeCount": 25,
+      "attrCount": 127,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_change_cover",
+      "nodeCount": 4,
+      "attrCount": 20,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_chapter_change_source",
+      "nodeCount": 13,
+      "attrCount": 99,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_check_source_config",
+      "nodeCount": 14,
+      "attrCount": 71,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_click_action_config",
+      "nodeCount": 16,
+      "attrCount": 126,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_code_view",
+      "nodeCount": 3,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_content_edit",
+      "nodeCount": 4,
+      "attrCount": 29,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_cover_rule_config",
+      "nodeCount": 14,
+      "attrCount": 68,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_custom_group",
+      "nodeCount": 8,
+      "attrCount": 49,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_dict",
+      "nodeCount": 4,
+      "attrCount": 25,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_dict_rule_edit",
+      "nodeCount": 11,
+      "attrCount": 51,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_direct_link_upload_config",
+      "nodeCount": 16,
+      "attrCount": 76,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_download_choice",
+      "nodeCount": 7,
+      "attrCount": 68,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_edit_text",
+      "nodeCount": 2,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_file_chooser",
+      "nodeCount": 7,
+      "attrCount": 38,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_font_select",
+      "nodeCount": 3,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_http_tts_edit",
+      "nodeCount": 21,
+      "attrCount": 89,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_image_blurring",
+      "nodeCount": 4,
+      "attrCount": 21,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_login",
+      "nodeCount": 5,
+      "attrCount": 37,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_manga_color_filter",
+      "nodeCount": 8,
+      "attrCount": 38,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_manga_epaper",
+      "nodeCount": 4,
+      "attrCount": 18,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_manga_footer_setting",
+      "nodeCount": 23,
+      "attrCount": 120,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_multiple_edit_text",
+      "nodeCount": 6,
+      "attrCount": 24,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_number_picker",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_open_url_confirm",
+      "nodeCount": 6,
+      "attrCount": 34,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_page_key",
+      "nodeCount": 11,
+      "attrCount": 65,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_photo_view",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_progressbar_view",
+      "nodeCount": 4,
+      "attrCount": 28,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_read_aloud",
+      "nodeCount": 40,
+      "attrCount": 311,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_read_bg_text",
+      "nodeCount": 19,
+      "attrCount": 142,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_read_book_style",
+      "nodeCount": 31,
+      "attrCount": 240,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_read_padding",
+      "nodeCount": 24,
+      "attrCount": 115,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_recycler_view",
+      "nodeCount": 12,
+      "attrCount": 66,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_rss_favorite_config",
+      "nodeCount": 14,
+      "attrCount": 71,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_rule_sub_edit",
+      "nodeCount": 8,
+      "attrCount": 35,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_search_scope",
+      "nodeCount": 11,
+      "attrCount": 86,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_select_section_export",
+      "nodeCount": 14,
+      "attrCount": 73,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_simulated_reading",
+      "nodeCount": 19,
+      "attrCount": 136,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_source_picker",
+      "nodeCount": 12,
+      "attrCount": 69,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_text_view",
+      "nodeCount": 4,
+      "attrCount": 28,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_tip_config",
+      "nodeCount": 43,
+      "attrCount": 243,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_toc_regex",
+      "nodeCount": 7,
+      "attrCount": 37,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_toc_regex_edit",
+      "nodeCount": 11,
+      "attrCount": 51,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_update",
+      "nodeCount": 3,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_url_option_edit",
+      "nodeCount": 25,
+      "attrCount": 108,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_variable",
+      "nodeCount": 9,
+      "attrCount": 48,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_verification_code_view",
+      "nodeCount": 5,
+      "attrCount": 30,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_wait",
+      "nodeCount": 3,
+      "attrCount": 19,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "dialog_webdav_server",
+      "nodeCount": 10,
+      "attrCount": 62,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_bookmark",
+      "nodeCount": 2,
+      "attrCount": 9,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_books",
+      "nodeCount": 4,
+      "attrCount": 20,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_bookshelf1",
+      "nodeCount": 3,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_bookshelf2",
+      "nodeCount": 5,
+      "attrCount": 34,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_chapter_list",
+      "nodeCount": 6,
+      "attrCount": 52,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_explore",
+      "nodeCount": 4,
+      "attrCount": 31,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_my_config",
+      "nodeCount": 3,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_rss",
+      "nodeCount": 4,
+      "attrCount": 33,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_rss_articles",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "fragment_web_view_login",
+      "nodeCount": 4,
+      "attrCount": 21,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_1line_text",
+      "nodeCount": 2,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_1line_text_and_del",
+      "nodeCount": 3,
+      "attrCount": 22,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_app_log",
+      "nodeCount": 3,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_arrange_book",
+      "nodeCount": 8,
+      "attrCount": 85,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_bg_image",
+      "nodeCount": 3,
+      "attrCount": 18,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_book_file_import",
+      "nodeCount": 2,
+      "attrCount": 18,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_book_group_manage",
+      "nodeCount": 4,
+      "attrCount": 26,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_book_manga_edge",
+      "nodeCount": 2,
+      "attrCount": 12,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_book_manga_page",
+      "nodeCount": 6,
+      "attrCount": 49,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_book_source",
+      "nodeCount": 10,
+      "attrCount": 111,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_bookmark",
+      "nodeCount": 4,
+      "attrCount": 23,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_bookshelf_grid",
+      "nodeCount": 8,
+      "attrCount": 74,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_bookshelf_grid_group",
+      "nodeCount": 8,
+      "attrCount": 65,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_bookshelf_list",
+      "nodeCount": 14,
+      "attrCount": 174,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_bookshelf_list_group",
+      "nodeCount": 13,
+      "attrCount": 144,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_change_source",
+      "nodeCount": 9,
+      "attrCount": 98,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_chapter_list",
+      "nodeCount": 7,
+      "attrCount": 64,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_check_box",
+      "nodeCount": 2,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_cover",
+      "nodeCount": 3,
+      "attrCount": 25,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_dict_rule",
+      "nodeCount": 5,
+      "attrCount": 37,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_download",
+      "nodeCount": 8,
+      "attrCount": 66,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_file",
+      "nodeCount": 3,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_file_picker",
+      "nodeCount": 4,
+      "attrCount": 19,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_fillet_text",
+      "nodeCount": 1,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_find_book",
+      "nodeCount": 7,
+      "attrCount": 56,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_font",
+      "nodeCount": 3,
+      "attrCount": 20,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_group_manage",
+      "nodeCount": 4,
+      "attrCount": 27,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_group_select",
+      "nodeCount": 3,
+      "attrCount": 20,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_http_tts",
+      "nodeCount": 5,
+      "attrCount": 47,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_icon_preference",
+      "nodeCount": 3,
+      "attrCount": 27,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_import_book",
+      "nodeCount": 10,
+      "attrCount": 66,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_log",
+      "nodeCount": 1,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_path_picker",
+      "nodeCount": 3,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_radio_button",
+      "nodeCount": 2,
+      "attrCount": 9,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_read_record",
+      "nodeCount": 7,
+      "attrCount": 67,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_read_style",
+      "nodeCount": 1,
+      "attrCount": 12,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_replace_rule",
+      "nodeCount": 5,
+      "attrCount": 54,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_rss",
+      "nodeCount": 3,
+      "attrCount": 33,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_rss_article",
+      "nodeCount": 4,
+      "attrCount": 42,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_rss_article_1",
+      "nodeCount": 5,
+      "attrCount": 52,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_rss_article_2",
+      "nodeCount": 4,
+      "attrCount": 45,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_rss_read_record",
+      "nodeCount": 5,
+      "attrCount": 25,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_rss_source",
+      "nodeCount": 5,
+      "attrCount": 40,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_rule_sub",
+      "nodeCount": 6,
+      "attrCount": 61,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_search",
+      "nodeCount": 10,
+      "attrCount": 89,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_search_list",
+      "nodeCount": 2,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_server_select",
+      "nodeCount": 4,
+      "attrCount": 33,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_source_edit",
+      "nodeCount": 2,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_source_edit_check_box",
+      "nodeCount": 3,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_source_import",
+      "nodeCount": 4,
+      "attrCount": 41,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_text",
+      "nodeCount": 1,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_theme_config",
+      "nodeCount": 4,
+      "attrCount": 35,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_toc_regex",
+      "nodeCount": 6,
+      "attrCount": 54,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "item_txt_toc_rule",
+      "nodeCount": 6,
+      "attrCount": 58,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "popup_action",
+      "nodeCount": 2,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "popup_action_menu",
+      "nodeCount": 5,
+      "attrCount": 34,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "popup_keyboard_tool",
+      "nodeCount": 1,
+      "attrCount": 10,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "popup_seek_bar",
+      "nodeCount": 3,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_action_button",
+      "nodeCount": 1,
+      "attrCount": 7,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_book_page",
+      "nodeCount": 14,
+      "attrCount": 110,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_detail_seek_bar",
+      "nodeCount": 6,
+      "attrCount": 41,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_dynamic",
+      "nodeCount": 3,
+      "attrCount": 13,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_error",
+      "nodeCount": 4,
+      "attrCount": 18,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_fastscroller",
+      "nodeCount": 5,
+      "attrCount": 33,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_icon",
+      "nodeCount": 1,
+      "attrCount": 4,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_load_more",
+      "nodeCount": 3,
+      "attrCount": 25,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_loading",
+      "nodeCount": 3,
+      "attrCount": 13,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_manga_menu",
+      "nodeCount": 12,
+      "attrCount": 101,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_navigation_badge",
+      "nodeCount": 2,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_preference",
+      "nodeCount": 6,
+      "attrCount": 51,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_preference_category",
+      "nodeCount": 4,
+      "attrCount": 21,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_read_menu",
+      "nodeCount": 44,
+      "attrCount": 355,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_refresh_recycler",
+      "nodeCount": 3,
+      "attrCount": 9,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_search",
+      "nodeCount": 1,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_search_menu",
+      "nodeCount": 23,
+      "attrCount": 192,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_select_action_bar",
+      "nodeCount": 5,
+      "attrCount": 49,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_tab_layout",
+      "nodeCount": 1,
+      "attrCount": 9,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_tab_layout_min",
+      "nodeCount": 1,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_title_bar",
+      "nodeCount": 1,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_title_bar_dark",
+      "nodeCount": 1,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout",
+      "name": "view_toast",
+      "nodeCount": 3,
+      "attrCount": 18,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "group": "layout-land",
+      "name": "activity_book_info",
+      "nodeCount": 39,
+      "attrCount": 311,
+      "unresolved": 0,
+      "unsupported": 0
+    }
+  ],
+  "menus": [
+    {
+      "name": "about",
+      "nodeCount": 3,
+      "attrCount": 12,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "app_log",
+      "nodeCount": 2,
+      "attrCount": 7,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "app_update",
+      "nodeCount": 2,
+      "attrCount": 5,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "audio_play",
+      "nodeCount": 7,
+      "attrCount": 24,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "backup_restore",
+      "nodeCount": 3,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_cache",
+      "nodeCount": 15,
+      "attrCount": 54,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_cache_download",
+      "nodeCount": 3,
+      "attrCount": 10,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_group_manage",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_info",
+      "nodeCount": 16,
+      "attrCount": 52,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_info_edit",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_manga",
+      "nodeCount": 20,
+      "attrCount": 86,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_read",
+      "nodeCount": 28,
+      "attrCount": 98,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_read_change_source",
+      "nodeCount": 3,
+      "attrCount": 10,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_read_record",
+      "nodeCount": 8,
+      "attrCount": 23,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_read_refresh",
+      "nodeCount": 4,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_read_source",
+      "nodeCount": 5,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_remote",
+      "nodeCount": 10,
+      "attrCount": 33,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_search",
+      "nodeCount": 5,
+      "attrCount": 18,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_search_scope",
+      "nodeCount": 2,
+      "attrCount": 10,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_source",
+      "nodeCount": 28,
+      "attrCount": 79,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_source_debug",
+      "nodeCount": 8,
+      "attrCount": 26,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_source_item",
+      "nodeCount": 8,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_source_sel",
+      "nodeCount": 13,
+      "attrCount": 39,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "book_toc",
+      "nodeCount": 13,
+      "attrCount": 41,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "bookmark",
+      "nodeCount": 3,
+      "attrCount": 5,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "bookshelf_manage",
+      "nodeCount": 6,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "bookshelf_menage_sel",
+      "nodeCount": 8,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "change_cover",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "change_source",
+      "nodeCount": 13,
+      "attrCount": 43,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "change_source_item",
+      "nodeCount": 6,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "code_edit",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "content_edit",
+      "nodeCount": 4,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "content_search",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "content_select_action",
+      "nodeCount": 9,
+      "attrCount": 21,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "crash_log",
+      "nodeCount": 2,
+      "attrCount": 7,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "dialog_text",
+      "nodeCount": 2,
+      "attrCount": 5,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "dict_rule",
+      "nodeCount": 7,
+      "attrCount": 28,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "dict_rule_edit",
+      "nodeCount": 4,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "dict_rule_sel",
+      "nodeCount": 4,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "direct_link_upload_config",
+      "nodeCount": 4,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "explore_item",
+      "nodeCount": 7,
+      "attrCount": 13,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "file_chooser",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "file_long_click",
+      "nodeCount": 2,
+      "attrCount": 3,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "font_select",
+      "nodeCount": 3,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "group_manage",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "import_book",
+      "nodeCount": 9,
+      "attrCount": 30,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "import_book_sel",
+      "nodeCount": 2,
+      "attrCount": 3,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "import_replace",
+      "nodeCount": 2,
+      "attrCount": 7,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "import_source",
+      "nodeCount": 7,
+      "attrCount": 25,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "keyboard_assists_config",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "main_bnv",
+      "nodeCount": 5,
+      "attrCount": 15,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "main_bookshelf",
+      "nodeCount": 13,
+      "attrCount": 52,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "main_explore",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "main_my",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "main_rss",
+      "nodeCount": 4,
+      "attrCount": 16,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "open_url_confirm",
+      "nodeCount": 3,
+      "attrCount": 10,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "qr_code_scan",
+      "nodeCount": 2,
+      "attrCount": 5,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "replace_edit",
+      "nodeCount": 4,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "replace_rule",
+      "nodeCount": 11,
+      "attrCount": 33,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "replace_rule_item",
+      "nodeCount": 4,
+      "attrCount": 7,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "replace_rule_sel",
+      "nodeCount": 6,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_articles",
+      "nodeCount": 8,
+      "attrCount": 23,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_favorites",
+      "nodeCount": 4,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_main_item",
+      "nodeCount": 5,
+      "attrCount": 9,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_read",
+      "nodeCount": 7,
+      "attrCount": 24,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_read_record",
+      "nodeCount": 2,
+      "attrCount": 7,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_source",
+      "nodeCount": 15,
+      "attrCount": 43,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_source_debug",
+      "nodeCount": 3,
+      "attrCount": 10,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_source_item",
+      "nodeCount": 4,
+      "attrCount": 7,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "rss_source_sel",
+      "nodeCount": 10,
+      "attrCount": 29,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "save",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "search_view",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "server_config",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "servers",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "source_edit",
+      "nodeCount": 14,
+      "attrCount": 46,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "source_login",
+      "nodeCount": 5,
+      "attrCount": 17,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "source_picker",
+      "nodeCount": 2,
+      "attrCount": 3,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "source_sub_item",
+      "nodeCount": 2,
+      "attrCount": 3,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "source_subscription",
+      "nodeCount": 2,
+      "attrCount": 6,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "source_webview_login",
+      "nodeCount": 2,
+      "attrCount": 8,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "speak_engine",
+      "nodeCount": 6,
+      "attrCount": 20,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "speak_engine_edit",
+      "nodeCount": 9,
+      "attrCount": 29,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "theme_config",
+      "nodeCount": 2,
+      "attrCount": 5,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "theme_list",
+      "nodeCount": 2,
+      "attrCount": 5,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "txt_toc_rule",
+      "nodeCount": 7,
+      "attrCount": 28,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "txt_toc_rule_edit",
+      "nodeCount": 4,
+      "attrCount": 10,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "txt_toc_rule_item",
+      "nodeCount": 4,
+      "attrCount": 7,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "txt_toc_rule_sel",
+      "nodeCount": 4,
+      "attrCount": 11,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "verification_code",
+      "nodeCount": 4,
+      "attrCount": 14,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "web_view",
+      "nodeCount": 7,
+      "attrCount": 23,
+      "unresolved": 0,
+      "unsupported": 0
+    }
+  ],
+  "prefs": [
+    {
+      "name": "about",
+      "nodeCount": 11,
+      "attrCount": 39,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "pref_config_aloud",
+      "nodeCount": 11,
+      "attrCount": 47,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "pref_config_backup",
+      "nodeCount": 17,
+      "attrCount": 80,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "pref_config_cover",
+      "nodeCount": 12,
+      "attrCount": 69,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "pref_config_other",
+      "nodeCount": 37,
+      "attrCount": 149,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "pref_config_read",
+      "nodeCount": 29,
+      "attrCount": 144,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "pref_config_theme",
+      "nodeCount": 23,
+      "attrCount": 121,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "pref_config_welcome",
+      "nodeCount": 10,
+      "attrCount": 59,
+      "unresolved": 0,
+      "unsupported": 0
+    },
+    {
+      "name": "pref_main",
+      "nodeCount": 17,
+      "attrCount": 88,
+      "unresolved": 0,
+      "unsupported": 0
+    }
+  ],
+  "skipped": [
+    {
+      "source": "xml/file_paths.xml",
+      "reason": "闈炶瑙夐厤缃?XML"
+    },
+    {
+      "source": "xml/network_security_config.xml",
+      "reason": "闈炶瑙夐厤缃?XML"
+    },
+    {
+      "source": "xml/spen_remote_actions.xml",
+      "reason": "闈炶瑙夐厤缃?XML"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

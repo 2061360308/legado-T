@@ -1,0 +1,53 @@
+{
+  "source": "menu/file_chooser.xml",
+  "hash": "f17a275b058ad3d0d49779003a817734dfb2db54",
+  "nodeCount": 2,
+  "attrCount": 6,
+  "meta": [
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_create",
+      "value": "@+id/menu_create",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/create_folder",
+      "value": "创建文件夹",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_create_folder_outline",
+      "value": "ic_create_folder_outline",
+      "status": "mapped",
+      "drawable": "ic_create_folder_outline",
+      "target": "component prop"
+    },
+    {
+      "name": "app:showAsAction",
+      "raw": "always",
+      "value": "always",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

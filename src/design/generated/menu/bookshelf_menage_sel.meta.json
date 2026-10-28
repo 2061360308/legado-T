@@ -1,0 +1,115 @@
+{
+  "source": "menu/bookshelf_menage_sel.xml",
+  "hash": "d021c7b68b1adfc1f648a65738e9c95a15b7bc54",
+  "nodeCount": 8,
+  "attrCount": 15,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_del_selection",
+      "value": "@+id/menu_del_selection",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/delete",
+      "value": "删除",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_update_enable",
+      "value": "@+id/menu_update_enable",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/allow_update",
+      "value": "允许更新",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_update_disable",
+      "value": "@+id/menu_update_disable",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/disable_update",
+      "value": "禁止更新",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_add_to_group",
+      "value": "@+id/menu_add_to_group",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/add_to_group",
+      "value": "加入分组",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_change_source",
+      "value": "@+id/menu_change_source",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/change_source_batch",
+      "value": "批量换源",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_clear_cache",
+      "value": "@+id/menu_clear_cache",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/clear_cache",
+      "value": "清理缓存",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_check_selected_interval",
+      "value": "@+id/menu_check_selected_interval",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/check_selected_interval",
+      "value": "选中所选区间",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

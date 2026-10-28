@@ -1,0 +1,147 @@
+{
+  "tag": "PreferenceScreen",
+  "title": "",
+  "summary": "",
+  "icon": "",
+  "key": "",
+  "defaultValue": "",
+  "dependency": "",
+  "entries": [],
+  "entryValues": [],
+  "children": [
+    {
+      "tag": "SwitchPreference",
+      "title": "仅 WiFi",
+      "summary": "仅在 WiFi 下加载网络封面",
+      "icon": "",
+      "key": "loadCoverOnlyWifi",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "总是使用默认封面",
+      "summary": "总是显示默认封面（不显示网络封面）",
+      "icon": "",
+      "key": "useDefaultCover",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "封面规则",
+      "summary": "进入详情页时使用封面规则重新获取封面",
+      "icon": "",
+      "key": "coverRule",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "PreferenceCategory",
+      "title": "白天",
+      "summary": "",
+      "icon": "",
+      "key": "dayThemeCategory",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "Preference",
+          "title": "默认封面",
+          "summary": "",
+          "icon": "",
+          "key": "defaultCover",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "显示书名",
+          "summary": "封面上显示书名",
+          "icon": "",
+          "key": "coverShowName",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "显示作者",
+          "summary": "封面上显示作者",
+          "icon": "",
+          "key": "coverShowAuthor",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "PreferenceCategory",
+      "title": "夜间",
+      "summary": "",
+      "icon": "",
+      "key": "nightThemeCategory",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "Preference",
+          "title": "默认封面",
+          "summary": "",
+          "icon": "",
+          "key": "defaultCoverDark",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "显示书名",
+          "summary": "封面上显示书名",
+          "icon": "",
+          "key": "coverShowNameN",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "显示作者",
+          "summary": "封面上显示作者",
+          "icon": "",
+          "key": "coverShowAuthorN",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

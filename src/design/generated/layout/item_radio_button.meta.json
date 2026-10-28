@@ -1,0 +1,74 @@
+{
+  "source": "layout/item_radio_button.xml",
+  "hash": "1898ecc75bd98473259dae4aaa7620099c65b855",
+  "nodeCount": 2,
+  "attrCount": 9,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingHorizontal",
+      "raw": "16dp",
+      "path": "$",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingVertical",
+      "raw": "8dp",
+      "path": "$",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/radio_button",
+      "value": "@+id/radio_button",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,369 @@
+{
+  "source": "layout/view_preference.xml",
+  "hash": "fe3ddced45075f0be48055508891a6550571a356",
+  "nodeCount": 6,
+  "attrCount": 51,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "10dp",
+      "path": "$",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "10dp",
+      "path": "$",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "16dp",
+      "path": "$",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "16dp",
+      "path": "$",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/bg_prefs_color",
+      "path": "$",
+      "value": "bg_prefs_color",
+      "status": "mapped",
+      "drawable": "bg_prefs_color"
+    },
+    {
+      "name": "minHeight",
+      "raw": "60dp",
+      "path": "$",
+      "value": "60px",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "24dp",
+      "path": "$/0",
+      "value": "24px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "24dp",
+      "path": "$/0",
+      "value": "24px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginRight",
+      "raw": "16dp",
+      "path": "$/0",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "1dp",
+      "path": "$/0",
+      "value": "1px",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "visible",
+      "value": "visible",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "scaleType",
+      "raw": "fitCenter",
+      "value": "fitCenter",
+      "status": "mapped",
+      "target": "object-fit"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/preference_icon",
+      "value": "@+id/preference_icon",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "ContentDescription,RtlHardcoded",
+      "value": "ContentDescription,RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1.0",
+      "value": "1.0",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/1/0",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "16sp",
+      "path": "$/1/0",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/preference_title",
+      "value": "@+id/preference_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/title",
+      "value": "@string/title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/1/1",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/tv_text_summary",
+      "path": "$/1/1",
+      "value": "#2C2C2C8A",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/1/1",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/preference_desc",
+      "value": "@+id/preference_desc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/default1",
+      "value": "@string/default1",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/2",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginBottom",
+      "raw": "8dp",
+      "path": "$/2",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginLeft",
+      "raw": "8dp",
+      "path": "$/2",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "right|center_vertical",
+      "value": "right|center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "visibility",
+      "raw": "gone",
+      "value": "gone",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/preference_widget",
+      "value": "@+id/preference_widget",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded",
+      "value": "RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,42 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "TitleBar",
+      "attrs": {
+        "id": "title_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_constraintTop_toTopOf": "parent",
+        "title": "书架管理"
+      },
+      "children": []
+    },
+    {
+      "tag": "FastScrollRecyclerView",
+      "attrs": {
+        "id": "recycler_view",
+        "layout_width": "match_parent",
+        "layout_height": 0,
+        "layout_constraintBottom_toTopOf": "@id/select_action_bar",
+        "layout_constraintTop_toBottomOf": "@id/title_bar"
+      },
+      "children": []
+    },
+    {
+      "tag": "SelectActionBar",
+      "attrs": {
+        "id": "select_action_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_constraintBottom_toBottomOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

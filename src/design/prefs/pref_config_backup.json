@@ -1,0 +1,207 @@
+{
+  "tag": "PreferenceScreen",
+  "title": "",
+  "summary": "",
+  "icon": "",
+  "key": "",
+  "defaultValue": "",
+  "dependency": "",
+  "entries": [],
+  "entryValues": [],
+  "children": [
+    {
+      "tag": "PreferenceCategory",
+      "title": "WebDav 设置",
+      "summary": "",
+      "icon": "",
+      "key": "",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "EditTextPreference",
+          "title": "WebDav 服务器地址",
+          "summary": "输入你的服务器地址",
+          "icon": "",
+          "key": "web_dav_url",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "EditTextPreference",
+          "title": "WebDav 账号",
+          "summary": "输入你的 WebDav 账号",
+          "icon": "",
+          "key": "web_dav_account",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "EditTextPreference",
+          "title": "WebDav 密码",
+          "summary": "输入你的 WebDav 授权密码",
+          "icon": "",
+          "key": "web_dav_password",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "EditTextPreference",
+          "title": "子文件夹",
+          "summary": "",
+          "icon": "",
+          "key": "webDavDir",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "EditTextPreference",
+          "title": "设备名称",
+          "summary": "",
+          "icon": "",
+          "key": "webDavDeviceName",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "同步阅读进度",
+          "summary": "进入退出阅读界面时同步阅读进度",
+          "icon": "",
+          "key": "syncBookProgress",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "同步增强",
+          "summary": "重新进入页面（息屏、后台返回等）或者网络变为可用时同步云端进度，同步新进度会询问",
+          "icon": "",
+          "key": "syncBookProgressPlus",
+          "defaultValue": "false",
+          "dependency": "syncBookProgress",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "PreferenceCategory",
+      "title": "备份与恢复",
+      "summary": "",
+      "icon": "",
+      "key": "",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "Preference",
+          "title": "备份路径",
+          "summary": "请选择备份路径",
+          "icon": "",
+          "key": "backupUri",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "备份",
+          "summary": "本地和 WebDav 一起备份",
+          "icon": "",
+          "key": "web_dav_backup",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "恢复",
+          "summary": "优先从 WebDav 恢复，长按从本地恢复",
+          "icon": "",
+          "key": "web_dav_restore",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "恢复忽略列表",
+          "summary": "恢复时忽略一些内容不恢复，方便不同手机配置不同",
+          "icon": "",
+          "key": "restoreIgnore",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "导入旧版数据",
+          "summary": "选择旧版备份文件夹",
+          "icon": "",
+          "key": "import_old",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "仅保留最新备份",
+          "summary": "本地备份仅保留最新备份文件",
+          "icon": "",
+          "key": "onlyLatestBackup",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "自动检查新备份",
+          "summary": "打开软件时检查是否有新备份，有新备份时提示是否更新",
+          "icon": "",
+          "key": "autoCheckNewBackup",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

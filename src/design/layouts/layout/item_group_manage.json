@@ -1,0 +1,51 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "background": "@color/background",
+    "gravity": "center_vertical",
+    "orientation": "horizontal",
+    "padding": 8
+  },
+  "children": [
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_group",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_weight": "1",
+        "textColor": "#de000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_edit",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "background": "?attr/selectableItemBackground",
+        "padding": 8,
+        "text": "编辑",
+        "textColor": "#de000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_del",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_marginEnd": 12,
+        "background": "?attr/selectableItemBackground",
+        "padding": 8,
+        "text": "删除",
+        "textColor": "#de000000"
+      },
+      "children": []
+    }
+  ]
+}

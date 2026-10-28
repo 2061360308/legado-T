@@ -1,0 +1,262 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "padding": 16
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "id": "ll_group_style",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "horizontal",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "layout_weight": "1",
+            "padding": 6,
+            "text": "分组样式",
+            "textColor": "#de000000"
+          },
+          "children": []
+        },
+        {
+          "tag": "AppCompatSpinner",
+          "attrs": {
+            "id": "sp_group_style",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "id": "ll_layout",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "orientation": "vertical",
+        "layout_constraintRight_toLeftOf": "@+id/ll_sort",
+        "layout_constraintTop_toBottomOf": "@+id/sw_show_bookshelf_fast_scroller",
+        "layout_constraintLeft_toLeftOf": "parent"
+      },
+      "children": [
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "layout_width": "match_parent",
+            "layout_height": "match_parent",
+            "padding": 6,
+            "text": "视图",
+            "textSize": 16
+          },
+          "children": []
+        },
+        {
+          "tag": "RadioGroup",
+          "attrs": {
+            "id": "rg_layout",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "vertical"
+          },
+          "children": [
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "列表"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "网格三列"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "网格四列"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "网格五列"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "网格六列"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "id": "ll_sort",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "orientation": "vertical",
+        "layout_constraintLeft_toRightOf": "@+id/ll_layout",
+        "layout_constraintTop_toBottomOf": "@id/sw_show_bookshelf_fast_scroller",
+        "layout_constraintRight_toRightOf": "parent"
+      },
+      "children": [
+        {
+          "tag": "AccentTextView",
+          "attrs": {
+            "layout_width": "match_parent",
+            "layout_height": "match_parent",
+            "padding": 6,
+            "text": "排序",
+            "textSize": 16
+          },
+          "children": []
+        },
+        {
+          "tag": "RadioGroup",
+          "attrs": {
+            "id": "rg_sort",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "vertical"
+          },
+          "children": [
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "按阅读时间"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "按更新时间"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "按书名"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "手动排序"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "综合排序"
+              },
+              "children": []
+            },
+            {
+              "tag": "RadioButton",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "按作者"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "ThemeSwitch",
+      "attrs": {
+        "id": "sw_show_unread",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "text": "显示未读标志",
+        "layout_constraintTop_toBottomOf": "@+id/ll_group_style"
+      },
+      "children": []
+    },
+    {
+      "tag": "ThemeSwitch",
+      "attrs": {
+        "id": "sw_show_last_update_time",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "text": "显示上次更新时间",
+        "layout_constraintTop_toBottomOf": "@+id/sw_show_unread"
+      },
+      "children": []
+    },
+    {
+      "tag": "ThemeSwitch",
+      "attrs": {
+        "id": "sw_show_wait_up_books",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "text": "显示等待更新数量",
+        "layout_constraintTop_toBottomOf": "@+id/sw_show_last_update_time"
+      },
+      "children": []
+    },
+    {
+      "tag": "ThemeSwitch",
+      "attrs": {
+        "id": "sw_show_bookshelf_fast_scroller",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "text": "显示快速滚动条",
+        "layout_constraintTop_toBottomOf": "@+id/sw_show_wait_up_books"
+      },
+      "children": []
+    }
+  ]
+}

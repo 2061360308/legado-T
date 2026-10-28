@@ -1,0 +1,38 @@
+{
+  "tag": "merge",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content"
+  },
+  "children": [
+    {
+      "tag": "RotateLoading",
+      "attrs": {
+        "id": "rotate_loading",
+        "layout_width": 36,
+        "layout_height": 36,
+        "layout_margin": 6,
+        "layout_gravity": "center",
+        "visibility": "invisible"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_text",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 10,
+        "layout_gravity": "center",
+        "gravity": "center",
+        "textColor": "?android:attr/textColorSecondary",
+        "textSize": 14,
+        "background": "?attr/selectableItemBackground",
+        "visibility": "invisible",
+        "singleLine": "true"
+      },
+      "children": []
+    }
+  ]
+}

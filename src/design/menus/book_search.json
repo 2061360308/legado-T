@@ -1,0 +1,49 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "tools:ignore": "AlwaysShowAction"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_precision_search",
+        "checkable": "true",
+        "title": "精准搜索",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_source_manage",
+        "title": "书源管理",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_search_scope",
+        "title": "多分组/书源",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_log",
+        "title": "日志",
+        "orderInCategory": "9999",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "tag": "FrameLayout",
+  "attrs": {
+    "id": "rootView",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "background": "@color/book_ant_10",
+    "contentDescription": "@null"
+  },
+  "children": [
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "image",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "scaleType": "fitXY"
+      },
+      "children": []
+    },
+    {
+      "tag": "FrameLayout",
+      "attrs": {
+        "id": "fl_progress",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "background": "@color/book_ant_10"
+      },
+      "children": [
+        {
+          "tag": "ProgressBar",
+          "attrs": {
+            "id": "loading",
+            "style": "@style/Widget.Material3.CircularProgressIndicator.Small",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center"
+          },
+          "children": []
+        },
+        {
+          "tag": "Button",
+          "attrs": {
+            "id": "retry",
+            "style": "@style/Widget.Material3.Button.TonalButton",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center",
+            "text": "重新加载",
+            "textColor": "#ffffff",
+            "textSize": 18,
+            "visibility": "gone"
+          },
+          "children": []
+        },
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "progress",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center",
+            "text": "0%",
+            "textColor": "#ffffff",
+            "visibility": "gone"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "id": "content_view",
+    "orientation": "vertical",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "background": "#FAFAFA",
+    "padding": 16
+  },
+  "children": [
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_title",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_margin": 5,
+        "textSize": 18,
+        "textStyle": "bold",
+        "text": "自定义翻页按键"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_margin": 5,
+        "textColor": "#8a000000",
+        "text": "将焦点放到输入框按下物理按键会自动录入键值，多个按键会自动用英文逗号隔开。"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextInputLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_margin": 5,
+        "hint": "上一页按键"
+      },
+      "children": [
+        {
+          "tag": "ThemeEditText",
+          "attrs": {
+            "id": "et_prev",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "singleLine": "true"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "TextInputLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_margin": 5,
+        "hint": "下一页按键"
+      },
+      "children": [
+        {
+          "tag": "ThemeEditText",
+          "attrs": {
+            "id": "et_next",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "singleLine": "true"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_margin": 5,
+        "orientation": "horizontal"
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_reset",
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "layout_weight": "1",
+            "background": "@drawable/selector_fillet_btn_bg",
+            "gravity": "center",
+            "paddingTop": 5,
+            "paddingBottom": 5,
+            "text": "重置",
+            "textColor": "#de000000"
+          },
+          "children": []
+        },
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_ok",
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "layout_weight": "1",
+            "background": "@drawable/selector_fillet_btn_bg",
+            "gravity": "center",
+            "paddingTop": 5,
+            "paddingBottom": 5,
+            "text": "确认",
+            "textColor": "#de000000"
+          },
+          "children": []
+        },
+        {
+          "tag": "Space",
+          "attrs": {
+            "layout_width": 3,
+            "layout_height": "wrap_content"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "local-reader",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "legado 本地 TXT 阅读器复刻（Tauri 2.x + Vue 3）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "android:resources": "node scripts/android-ui/parse-resources.mjs",
+    "android:prefs": "node scripts/android-ui/parse-prefs.mjs",
+    "android:menus": "node scripts/android-ui/parse-menu.mjs",
+    "android:drawables": "node scripts/android-ui/convert-drawables.mjs",
+    "android:layouts": "node scripts/android-ui/parse-layout.mjs",
+    "android:generate": "node scripts/android-ui/generate-vue.mjs",
+    "android:navigation": "node scripts/android-ui/extract-navigation.mjs",
+    "android:binding": "node scripts/android-ui/extract-binding-usage.mjs",
+    "android:validate": "node scripts/android-ui/validate-generated.mjs",
+    "android:contract": "node scripts/android-ui/validate-ui-contract.mjs",
+    "android:ui": "npm run android:resources && npm run android:prefs && npm run android:drawables && npm run android:layouts && npm run android:menus && npm run android:generate && npm run android:navigation && npm run android:binding && npm run android:validate && npm run android:contract"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@tauri-apps/plugin-dialog": "^2.0.0",
+    "@tauri-apps/plugin-fs": "^2.0.0",
+    "@tauri-apps/plugin-http": "^2.0.0",
+    "pinia": "^2.2.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.4.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "@types/node": "^20.14.0",
+    "@vitejs/plugin-vue": "^5.1.0",
+    "fast-xml-parser": "^5.11.2",
+    "typescript": "^5.5.0",
+    "vite": "^5.4.0",
+    "vue-tsc": "^2.1.0"
+  }
+}

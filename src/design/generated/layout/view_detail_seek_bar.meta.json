@@ -1,0 +1,298 @@
+{
+  "source": "layout/view_detail_seek_bar.xml",
+  "hash": "a703ad6c9468093413b37582f43bf39ea00f08c9",
+  "nodeCount": 6,
+  "attrCount": 41,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "60dp",
+      "path": "$/0",
+      "value": "60px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_seek_title",
+      "value": "@+id/tv_seek_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "seek",
+      "value": "seek",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "HardcodedText",
+      "value": "HardcodedText",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "60dp",
+      "path": "$/1",
+      "value": "60px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "right",
+      "value": "right",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_seek_value",
+      "value": "@+id/tv_seek_value",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "0",
+      "value": "0",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "HardcodedText,RtlHardcoded",
+      "value": "HardcodedText,RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "24dp",
+      "path": "$/2",
+      "value": "24px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "24dp",
+      "path": "$/2",
+      "value": "24px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/2",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_seek_reduce",
+      "value": "@+id/iv_seek_reduce",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/reduce",
+      "value": "@string/reduce",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_reduce",
+      "value": "@drawable/ic_reduce",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "24dp",
+      "path": "$/3",
+      "value": "24px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "24dp",
+      "path": "$/3",
+      "value": "24px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/3",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_seek_plus",
+      "value": "@+id/iv_seek_plus",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/plus",
+      "value": "@string/plus",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_add",
+      "value": "@drawable/ic_add",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/4",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "25dp",
+      "path": "$/4",
+      "value": "25px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "4",
+      "value": "4",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/seek_bar",
+      "value": "@+id/seek_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "max",
+      "raw": "10",
+      "value": "10px",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

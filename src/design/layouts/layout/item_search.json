@@ -1,0 +1,136 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content"
+  },
+  "children": [
+    {
+      "tag": "CoverImageView",
+      "attrs": {
+        "id": "iv_cover",
+        "layout_width": 80,
+        "layout_height": 110,
+        "layout_margin": 8,
+        "contentDescription": "封面",
+        "scaleType": "centerCrop",
+        "src": "image_cover_default",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "CircleImageView",
+      "attrs": {
+        "id": "iv_in_bookshelf",
+        "layout_width": 8,
+        "layout_height": 8,
+        "layout_margin": 8,
+        "scaleType": "centerCrop",
+        "src": "@color/md_green_600",
+        "visibility": "invisible",
+        "layout_constraintLeft_toRightOf": "@id/iv_cover",
+        "layout_constraintTop_toTopOf": "@id/tv_name"
+      },
+      "children": []
+    },
+    {
+      "tag": "BadgeView",
+      "attrs": {
+        "id": "bv_originCount",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_margin": 8,
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_name",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_margin": 8,
+        "singleLine": "true",
+        "text": "阅读",
+        "textColor": "#de000000",
+        "textSize": 16,
+        "layout_constraintEnd_toStartOf": "@id/bv_originCount",
+        "layout_constraintStart_toEndOf": "@+id/iv_in_bookshelf",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": 0,
+        "layout_height": 0,
+        "layout_marginStart": 8,
+        "layout_marginTop": 3,
+        "orientation": "vertical",
+        "layout_constraintBottom_toBottomOf": "@id/iv_cover",
+        "layout_constraintLeft_toRightOf": "@+id/iv_cover",
+        "layout_constraintRight_toRightOf": "@id/tv_name",
+        "layout_constraintTop_toBottomOf": "@+id/tv_name"
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_author",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "ellipsize": "end",
+            "lines": "1",
+            "text": "作者",
+            "textColor": "#de000000",
+            "textSize": 12
+          },
+          "children": []
+        },
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_lasted",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "ellipsize": "end",
+            "lines": "1",
+            "text": "最后阅读",
+            "textColor": "#de000000",
+            "textSize": 12
+          },
+          "children": []
+        },
+        {
+          "tag": "LabelsBar",
+          "attrs": {
+            "id": "ll_kind",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "horizontal"
+          },
+          "children": []
+        },
+        {
+          "tag": "MultilineTextView",
+          "attrs": {
+            "id": "tv_introduce",
+            "layout_width": "match_parent",
+            "layout_height": "match_parent",
+            "ellipsize": "end",
+            "text": "内容简介",
+            "textColor": "#de000000",
+            "textSize": 12
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

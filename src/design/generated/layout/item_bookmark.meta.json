@@ -1,0 +1,172 @@
+{
+  "source": "layout/item_bookmark.xml",
+  "hash": "d6dd5341e662c81a5f6dd3db04016dd7d7cd8cb8",
+  "nodeCount": 4,
+  "attrCount": 23,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "8dp",
+      "path": "$",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackground",
+      "path": "$",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "4dp",
+      "path": "$/0",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_chapter_name",
+      "value": "@+id/tv_chapter_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "4dp",
+      "path": "$/1",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_book_text",
+      "value": "@+id/tv_book_text",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "4dp",
+      "path": "$/2",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/2",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_content",
+      "value": "@+id/tv_content",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

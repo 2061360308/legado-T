@@ -1,0 +1,135 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:tools": "http://schemas.android.com/tools"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_group",
+        "icon": "ic_groups",
+        "title": "分组",
+        "showAsAction": "always",
+        "tools:ignore": "AlwaysShowAction"
+      },
+      "children": [
+        {
+          "tag": "menu",
+          "attrs": {},
+          "children": [
+            {
+              "tag": "item",
+              "attrs": {
+                "id": "menu_group_manage",
+                "title": "分组管理"
+              },
+              "children": []
+            },
+            {
+              "tag": "item",
+              "attrs": {
+                "id": "menu_enabled_group",
+                "title": "已启用"
+              },
+              "children": []
+            },
+            {
+              "tag": "item",
+              "attrs": {
+                "id": "menu_disabled_group",
+                "title": "已禁用"
+              },
+              "children": []
+            },
+            {
+              "tag": "item",
+              "attrs": {
+                "id": "menu_group_login",
+                "title": "需要登录"
+              },
+              "children": []
+            },
+            {
+              "tag": "item",
+              "attrs": {
+                "id": "menu_group_null",
+                "title": "未分组"
+              },
+              "children": []
+            },
+            {
+              "tag": "group",
+              "attrs": {
+                "id": "source_group"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_add",
+        "icon": "ic_add",
+        "title": "新建订阅源",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_import_local",
+        "icon": "ic_import",
+        "title": "本地导入",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_import_onLine",
+        "icon": "ic_import",
+        "title": "网络导入",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_import_qr",
+        "icon": "ic_import",
+        "title": "二维码导入",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_import_default",
+        "icon": "ic_import",
+        "title": "导入默认规则",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_help",
+        "icon": "ic_help",
+        "title": "帮助",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

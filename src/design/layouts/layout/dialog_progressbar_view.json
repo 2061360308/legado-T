@@ -1,0 +1,49 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "orientation": "vertical",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent"
+  },
+  "children": [
+    {
+      "tag": "ThemeProgressBar",
+      "attrs": {
+        "id": "ck_progress",
+        "style": "?android:attr/progressBarStyleHorizontal",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 20,
+        "layout_marginRight": 60,
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatTextView",
+      "attrs": {
+        "id": "ck_progress_text",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_marginRight": 20,
+        "layout_constraintBottom_toBottomOf": "@+id/ck_progress",
+        "layout_constraintEnd_toEndOf": "@+id/ck_progress"
+      },
+      "children": []
+    },
+    {
+      "tag": "AccentTextView",
+      "attrs": {
+        "id": "tv_footer_left",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "padding": 12,
+        "text": "取消",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintStart_toEndOf": "@id/ck_progress",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

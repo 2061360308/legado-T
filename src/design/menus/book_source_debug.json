@@ -1,0 +1,75 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "tools:ignore": "AlwaysShowAction"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_scan",
+        "icon": "ic_scan",
+        "title": "扫描二维码",
+        "showAsAction": "always"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_search_src",
+        "title": "搜索源码",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_book_src",
+        "title": "书籍源码",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_toc_src",
+        "title": "目录源码",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_content_src",
+        "title": "正文源码",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_refresh_explore",
+        "title": "刷新发现",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_help",
+        "title": "帮助",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

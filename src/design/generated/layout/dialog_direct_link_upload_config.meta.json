@@ -1,0 +1,543 @@
+{
+  "source": "layout/dialog_direct_link_upload_config.xml",
+  "hash": "f6587b897be21c9f553fa0763831cc7e749155da",
+  "nodeCount": 16,
+  "attrCount": 76,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tool_bar",
+      "value": "@+id/tool_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "theme",
+      "raw": "?attr/actionBarStyle",
+      "value": "?attr/actionBarStyle",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/direct_link_upload_config",
+      "value": "@string/direct_link_upload_config",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:popupTheme",
+      "raw": "@style/AppTheme.PopupOverlay",
+      "value": "@style/AppTheme.PopupOverlay",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:titleTextAppearance",
+      "raw": "@style/ToolbarTitle",
+      "value": "@style/ToolbarTitle",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "16dp",
+      "path": "$/1/0",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "3dp",
+      "path": "$/1/0/0",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0/0/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/edit_upload_url",
+      "value": "@+id/edit_upload_url",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "hint",
+      "raw": "@string/upload_url",
+      "value": "@string/upload_url",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "SpeakableTextPresentCheck,TouchTargetSizeCheck",
+      "value": "SpeakableTextPresentCheck,TouchTargetSizeCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "3dp",
+      "path": "$/1/0/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0/1/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0/1/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/edit_download_url_rule",
+      "value": "@+id/edit_download_url_rule",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "hint",
+      "raw": "@string/download_url_rule",
+      "value": "@string/download_url_rule",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "SpeakableTextPresentCheck,TouchTargetSizeCheck",
+      "value": "SpeakableTextPresentCheck,TouchTargetSizeCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "3dp",
+      "path": "$/1/0/2",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0/2/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0/2/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/edit_summary",
+      "value": "@+id/edit_summary",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "hint",
+      "raw": "@string/summary",
+      "value": "@string/summary",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "SpeakableTextPresentCheck,TouchTargetSizeCheck",
+      "value": "SpeakableTextPresentCheck,TouchTargetSizeCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1/0/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/0/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "minHeight",
+      "raw": "48dp",
+      "path": "$/1/0/3",
+      "value": "48px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_compress",
+      "value": "@+id/cb_compress",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/is_compress",
+      "value": "@string/is_compress",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "12dp",
+      "path": "$/2",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "12dp",
+      "path": "$/2",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "app:flexWrap",
+      "raw": "wrap",
+      "value": "wrap",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:justifyContent",
+      "raw": "space_between",
+      "value": "space_between",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "12dp",
+      "path": "$/2/0",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_footer_left",
+      "value": "@+id/tv_footer_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/test",
+      "value": "@string/test",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded",
+      "value": "RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2/1/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/1/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "12dp",
+      "path": "$/2/1/0",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_cancel",
+      "value": "@+id/tv_cancel",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/cancel",
+      "value": "@string/cancel",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded",
+      "value": "RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "12dp",
+      "path": "$/2/1/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_ok",
+      "value": "@+id/tv_ok",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/ok",
+      "value": "@string/ok",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded",
+      "value": "RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

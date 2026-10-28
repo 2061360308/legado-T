@@ -1,0 +1,283 @@
+{
+  "source": "xml/about.xml",
+  "hash": "12745035dd80ab8d834168b3d600c32f0ce5de19",
+  "nodeCount": 11,
+  "attrCount": 39,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "key",
+      "raw": "contributors",
+      "value": "contributors",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/contributors_summary",
+      "value": "gedoor、Invinciblelee 和 Xwite 等，详情请在 GitHub 中查看",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/contributors",
+      "value": "开发人员",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "update_log",
+      "value": "update_log",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/update_log",
+      "value": "更新日志",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "check_update",
+      "value": "check_update",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/check_update",
+      "value": "检查更新",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/other",
+      "value": "其它",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout",
+      "raw": "@layout/view_preference_category",
+      "value": "@layout/view_preference_category",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "crashLog",
+      "value": "crashLog",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/crash_log",
+      "value": "崩溃日志",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "saveLog",
+      "value": "saveLog",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/save_log",
+      "value": "保存日志",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "createHeapDump",
+      "value": "createHeapDump",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/create_heap_dump",
+      "value": "创建堆转储",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "privacyPolicy",
+      "value": "privacyPolicy",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/privacy_policy",
+      "value": "用户隐私与协议",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "license",
+      "value": "license",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/license",
+      "value": "开源许可",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "disclaimer",
+      "value": "disclaimer",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/disclaimer",
+      "value": "免责声明",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

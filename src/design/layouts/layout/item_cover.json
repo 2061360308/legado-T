@@ -1,0 +1,37 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "padding": 12,
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "CoverImageView",
+      "attrs": {
+        "id": "iv_cover",
+        "layout_width": "match_parent",
+        "layout_height": 100,
+        "contentDescription": "封面",
+        "scaleType": "centerCrop"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_source",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_marginTop": 8,
+        "gravity": "center",
+        "singleLine": "true",
+        "text": "书源",
+        "textColor": "#de000000",
+        "textSize": 16
+      },
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,389 @@
+{
+  "tag": "PreferenceScreen",
+  "title": "",
+  "summary": "",
+  "icon": "",
+  "key": "",
+  "defaultValue": "",
+  "dependency": "",
+  "entries": [],
+  "entryValues": [],
+  "children": [
+    {
+      "tag": "NameListPreference",
+      "title": "屏幕方向",
+      "summary": "",
+      "icon": "",
+      "key": "screenOrientation",
+      "defaultValue": "0",
+      "dependency": "",
+      "entries": [
+        "跟随系统",
+        "竖向",
+        "横向",
+        "跟随传感器",
+        "反向竖屏"
+      ],
+      "entryValues": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "children": []
+    },
+    {
+      "tag": "NameListPreference",
+      "title": "屏幕超时",
+      "summary": "",
+      "icon": "",
+      "key": "keep_light",
+      "defaultValue": "0",
+      "dependency": "",
+      "entries": [
+        "默认",
+        "1分钟",
+        "5分钟",
+        "10分钟",
+        "常亮"
+      ],
+      "entryValues": [
+        "0",
+        "60",
+        "300",
+        "600",
+        "-1"
+      ],
+      "children": []
+    },
+    {
+      "tag": "NameListPreference",
+      "title": "平板/横屏双页",
+      "summary": "",
+      "icon": "",
+      "key": "doubleHorizontalPage",
+      "defaultValue": "0",
+      "dependency": "",
+      "entries": [
+        "全局单页",
+        "全局双页",
+        "横屏双页",
+        "平板/横屏双页"
+      ],
+      "entryValues": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "children": []
+    },
+    {
+      "tag": "NameListPreference",
+      "title": "进度条行为",
+      "summary": "",
+      "icon": "",
+      "key": "progressBarBehavior",
+      "defaultValue": "page",
+      "dependency": "",
+      "entries": [
+        "调整本章页数",
+        "调整章节位置"
+      ],
+      "entryValues": [
+        "page",
+        "chapter"
+      ],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "隐藏状态栏",
+      "summary": "",
+      "icon": "",
+      "key": "hideStatusBar",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "隐藏导航栏",
+      "summary": "",
+      "icon": "",
+      "key": "hideNavigationBar",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "扩展到刘海",
+      "summary": "",
+      "icon": "",
+      "key": "readBodyToLh",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "填充刘海区域",
+      "summary": "",
+      "icon": "",
+      "key": "paddingDisplayCutouts",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "使用自定义中文分行",
+      "summary": "",
+      "icon": "",
+      "key": "useZhLayout",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "文字两端对齐",
+      "summary": "",
+      "icon": "",
+      "key": "textFullJustify",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "文字底部对齐",
+      "summary": "",
+      "icon": "",
+      "key": "textBottomJustify",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "鼠标滚轮翻页",
+      "summary": "",
+      "icon": "",
+      "key": "mouseWheelPage",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "音量键翻页",
+      "summary": "",
+      "icon": "",
+      "key": "volumeKeyPage",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "朗读时音量键翻页",
+      "summary": "",
+      "icon": "",
+      "key": "volumeKeyPageOnPlay",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "按键长按翻页",
+      "summary": "",
+      "icon": "",
+      "key": "keyPageOnLongPress",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "自动换源",
+      "summary": "",
+      "icon": "",
+      "key": "autoChangeSource",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "长按选择文本",
+      "summary": "",
+      "icon": "",
+      "key": "selectText",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "显示亮度调节控件",
+      "summary": "",
+      "icon": "",
+      "key": "showBrightnessView",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "禁用滚动点击动画",
+      "summary": "",
+      "icon": "",
+      "key": "noAnimScrollPage",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "点击预览图片",
+      "summary": "",
+      "icon": "",
+      "key": "previewImageByClick",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "启用绘制优化",
+      "summary": "",
+      "icon": "",
+      "key": "optimizeRender",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "禁用返回键",
+      "summary": "",
+      "icon": "",
+      "key": "disableReturnKey",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "展开文本选择菜单",
+      "summary": "",
+      "icon": "",
+      "key": "expandTextMenu",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "展示顶部工具栏附加区域",
+      "summary": "",
+      "icon": "",
+      "key": "showReadTitleAddition",
+      "defaultValue": "true",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "工具栏样式跟随页面",
+      "summary": "",
+      "icon": "",
+      "key": "readBarStyleFollowPage",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "滑动翻页阈值",
+      "summary": "滑动多长距离才会触发滑动翻页（系统默认值 %s px）",
+      "icon": "",
+      "key": "pageTouchSlop",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "点击区域设置",
+      "summary": "",
+      "icon": "",
+      "key": "clickRegionalConfig",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "自定义翻页按键",
+      "summary": "",
+      "icon": "",
+      "key": "customPageKey",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_screen",
+        "title": "筛选",
+        "icon": "ic_screen",
+        "visible": "false",
+        "actionViewClass": "androidx.appcompat.widget.SearchView",
+        "showAsAction": "always",
+        "tools:ignore": "AlwaysShowAction"
+      },
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "gravity": "center",
+    "padding": 8
+  },
+  "children": [
+    {
+      "tag": "ThemeRadioButton",
+      "attrs": {
+        "id": "cb_name",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toLeftOf": "@id/iv_edit",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_edit",
+        "layout_width": 36,
+        "layout_height": 36,
+        "layout_gravity": "center",
+        "background": "?android:attr/selectableItemBackgroundBorderless",
+        "contentDescription": "编辑",
+        "padding": 6,
+        "src": "ic_edit",
+        "tint": "#de000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/iv_menu_delete",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "iv_menu_delete",
+        "layout_width": 36,
+        "layout_height": 36,
+        "background": "?attr/selectableItemBackgroundBorderless",
+        "padding": 6,
+        "src": "ic_clear_all",
+        "tint": "#de000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "parent",
+        "layout_constraintVertical_bias": "1.0"
+      },
+      "children": []
+    },
+    {
+      "tag": "BevelLabelView",
+      "attrs": {
+        "id": "label_sys",
+        "layout_width": 36,
+        "layout_height": 36,
+        "visibility": "gone",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

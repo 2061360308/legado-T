@@ -1,0 +1,39 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "tools:ignore": "AlwaysShowAction"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_save",
+        "icon": "ic_save",
+        "title": "保存",
+        "showAsAction": "always"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_copy_rule",
+        "title": "拷贝规则",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_paste_rule",
+        "title": "粘贴规则",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

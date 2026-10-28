@@ -1,0 +1,49 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "TitleBar",
+      "attrs": {
+        "id": "title_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_constraintTop_toTopOf": "parent",
+        "title": "订阅"
+      },
+      "children": []
+    },
+    {
+      "tag": "RecyclerViewAtPager2",
+      "attrs": {
+        "id": "recycler_view",
+        "layout_width": "match_parent",
+        "layout_height": 0,
+        "layout_constraintTop_toBottomOf": "@id/title_bar",
+        "layout_constraintBottom_toBottomOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_empty_msg",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_margin": 16,
+        "gravity": "center",
+        "visibility": "gone",
+        "text": "RSS 源目前为空！",
+        "layout_constraintTop_toBottomOf": "@+id/title_bar",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toRightOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

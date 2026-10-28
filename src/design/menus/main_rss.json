@@ -1,0 +1,47 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_rss_star",
+        "title": "收藏",
+        "icon": "ic_star",
+        "showAsAction": "always"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_group",
+        "title": "分组",
+        "icon": "ic_groups",
+        "showAsAction": "always"
+      },
+      "children": [
+        {
+          "tag": "menu",
+          "attrs": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_rss_config",
+        "title": "设置",
+        "icon": "ic_settings",
+        "showAsAction": "always",
+        "tools:ignore": "AlwaysShowAction"
+      },
+      "children": []
+    }
+  ]
+}

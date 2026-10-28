@@ -1,0 +1,25 @@
+{
+  "tag": "merge",
+  "attrs": {},
+  "children": [
+    {
+      "tag": "RefreshProgressBar",
+      "attrs": {
+        "id": "refresh_progress_bar",
+        "layout_width": "match_parent",
+        "layout_height": 2,
+        "layout_constraintTop_toBottomOf": "@id/title_bar"
+      },
+      "children": []
+    },
+    {
+      "tag": "RecyclerView",
+      "attrs": {
+        "id": "recycler_view",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent"
+      },
+      "children": []
+    }
+  ]
+}

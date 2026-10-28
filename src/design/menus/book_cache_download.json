@@ -1,0 +1,29 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_download_after",
+        "icon": "ic_bubble_chart",
+        "title": "下载之后章节",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_download_all",
+        "icon": "ic_bubble_chart",
+        "title": "下载全部章节",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "tools:ignore": "AlwaysShowAction"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_search",
+        "icon": "ic_search",
+        "title": "搜索",
+        "showAsAction": "always"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_update_toc",
+        "icon": "ic_refresh_black_24dp",
+        "title": "更新目录",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_add_local",
+        "icon": "ic_add",
+        "title": "添加本地",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_remote",
+        "icon": "ic_add",
+        "title": "远程书籍",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_add_url",
+        "icon": "ic_add_online",
+        "title": "添加网址",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_bookshelf_manage",
+        "icon": "ic_arrange",
+        "title": "书架管理",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_download",
+        "icon": "ic_download_line",
+        "title": "缓存/导出",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_group_manage",
+        "icon": "ic_groups",
+        "title": "分组管理",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_bookshelf_layout",
+        "icon": "ic_view_quilt",
+        "title": "书架布局",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_export_bookshelf",
+        "icon": "ic_export",
+        "title": "导出书单",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_import_bookshelf",
+        "icon": "ic_import",
+        "title": "导入书单",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_log",
+        "icon": "ic_cfg_about",
+        "title": "日志",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

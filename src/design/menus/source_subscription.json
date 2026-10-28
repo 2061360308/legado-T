@@ -1,0 +1,19 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_add",
+        "icon": "ic_add",
+        "title": "添加",
+        "showAsAction": "always"
+      },
+      "children": []
+    }
+  ]
+}

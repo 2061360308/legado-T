@@ -1,0 +1,65 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "paddingLeft": 4,
+    "paddingTop": 8,
+    "paddingBottom": 6,
+    "paddingRight": 4,
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content"
+  },
+  "children": [
+    {
+      "tag": "ImageView",
+      "attrs": {
+        "id": "image_view",
+        "layout_width": 0,
+        "layout_height": 272,
+        "contentDescription": "加载中…",
+        "visibility": "visible",
+        "scaleType": "centerCrop",
+        "background": "bg_img_border",
+        "layout_constraintTop_toTopOf": "parent",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toRightOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_title",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "maxLines": "2",
+        "ellipsize": "end",
+        "text": "阅读",
+        "textColor": "#de000000",
+        "textSize": 13,
+        "paddingTop": 10,
+        "layout_constraintTop_toBottomOf": "@+id/image_view",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toRightOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_pub_date",
+        "layout_width": 0,
+        "layout_height": "wrap_content",
+        "layout_gravity": "center",
+        "text": "阅读",
+        "textSize": 11,
+        "maxLines": "1",
+        "paddingTop": 8,
+        "paddingBottom": 2,
+        "layout_constraintTop_toBottomOf": "@+id/tv_title",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toRightOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

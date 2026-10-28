@@ -1,0 +1,31 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "background": "@color/background",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "Toolbar",
+      "attrs": {
+        "id": "tool_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "title": "code edit"
+      },
+      "children": []
+    },
+    {
+      "tag": "CodeView",
+      "attrs": {
+        "id": "code_view",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "padding": 12
+      },
+      "children": []
+    }
+  ]
+}

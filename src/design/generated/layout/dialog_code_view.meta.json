@@ -1,0 +1,130 @@
+{
+  "source": "layout/dialog_code_view.xml",
+  "hash": "3a5513cdfcad4df5f4798f389c855c002d4456b5",
+  "nodeCount": 3,
+  "attrCount": 17,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background",
+      "path": "$",
+      "value": "#FAFAFA",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tool_bar",
+      "value": "@+id/tool_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "theme",
+      "raw": "?attr/actionBarStyle",
+      "value": "?attr/actionBarStyle",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:title",
+      "raw": "code edit",
+      "value": "code edit",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:popupTheme",
+      "raw": "@style/AppTheme.PopupOverlay",
+      "value": "@style/AppTheme.PopupOverlay",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:titleTextAppearance",
+      "raw": "@style/ToolbarTitle",
+      "value": "@style/ToolbarTitle",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "12dp",
+      "path": "$/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/code_view",
+      "value": "@+id/code_view",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

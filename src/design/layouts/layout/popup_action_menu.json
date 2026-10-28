@@ -1,0 +1,60 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "wrap_content",
+    "layout_height": "wrap_content",
+    "background": "shape_card_view",
+    "orientation": "vertical",
+    "padding": 5
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "gravity": "center_vertical",
+        "orientation": "horizontal"
+      },
+      "children": [
+        {
+          "tag": "RecyclerView",
+          "attrs": {
+            "id": "recycler_view",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center",
+            "orientation": "horizontal"
+          },
+          "children": []
+        },
+        {
+          "tag": "AppCompatImageView",
+          "attrs": {
+            "id": "iv_menu_more",
+            "layout_width": 24,
+            "layout_height": 24,
+            "background": "?attr/selectableItemBackgroundBorderless",
+            "contentDescription": "更多菜单",
+            "src": "ic_more_vert",
+            "tint": "#de000000",
+            "visibility": "gone"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "RecyclerView",
+      "attrs": {
+        "id": "recycler_view_more",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_gravity": "center",
+        "orientation": "vertical",
+        "visibility": "gone"
+      },
+      "children": []
+    }
+  ]
+}

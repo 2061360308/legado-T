@@ -1,0 +1,134 @@
+{
+  "tag": "PreferenceScreen",
+  "title": "",
+  "summary": "",
+  "icon": "",
+  "key": "",
+  "defaultValue": "",
+  "dependency": "",
+  "entries": [],
+  "entryValues": [],
+  "children": [
+    {
+      "tag": "Preference",
+      "title": "开发人员",
+      "summary": "gedoor、Invinciblelee 和 Xwite 等，详情请在 GitHub 中查看",
+      "icon": "",
+      "key": "contributors",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "更新日志",
+      "summary": "",
+      "icon": "",
+      "key": "update_log",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "检查更新",
+      "summary": "",
+      "icon": "",
+      "key": "check_update",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "PreferenceCategory",
+      "title": "其它",
+      "summary": "",
+      "icon": "",
+      "key": "",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "Preference",
+          "title": "崩溃日志",
+          "summary": "",
+          "icon": "",
+          "key": "crashLog",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "保存日志",
+          "summary": "",
+          "icon": "",
+          "key": "saveLog",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "创建堆转储",
+          "summary": "",
+          "icon": "",
+          "key": "createHeapDump",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "用户隐私与协议",
+          "summary": "",
+          "icon": "",
+          "key": "privacyPolicy",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "开源许可",
+          "summary": "",
+          "icon": "",
+          "key": "license",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "免责声明",
+          "summary": "",
+          "icon": "",
+          "key": "disclaimer",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

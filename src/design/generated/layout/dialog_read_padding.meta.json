@@ -1,0 +1,816 @@
+{
+  "source": "layout/dialog_read_padding.xml",
+  "hash": "fbc84b1a9114a2cc4374330ec50917c4366a8040",
+  "nodeCount": 24,
+  "attrCount": 115,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "10dp",
+      "path": "$/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_header_padding",
+      "value": "@+id/ll_header_padding",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/0/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "10dp",
+      "path": "$/0/0/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/0/0/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "textSize",
+      "raw": "18sp",
+      "path": "$/0/0/0/0",
+      "value": "18px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_header_padding",
+      "value": "@+id/tv_header_padding",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/header",
+      "value": "@string/header",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/0/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/showLine",
+      "value": "@string/showLine",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "20dp",
+      "path": "$/0/0/0/2",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "20dp",
+      "path": "$/0/0/0/2",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "6dp",
+      "path": "$/0/0/0/2",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_show_top_line",
+      "value": "@+id/cb_show_top_line",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/0/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_header_padding_top",
+      "value": "@+id/dsb_header_padding_top",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_top",
+      "value": "@string/padding_top",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/0/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_header_padding_bottom",
+      "value": "@+id/dsb_header_padding_bottom",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_bottom",
+      "value": "@string/padding_bottom",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/0/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_header_padding_left",
+      "value": "@+id/dsb_header_padding_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_left",
+      "value": "@string/padding_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/0/4",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_header_padding_right",
+      "value": "@+id/dsb_header_padding_right",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_right",
+      "value": "@string/padding_right",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/1/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "10dp",
+      "path": "$/0/1/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "10dp",
+      "path": "$/0/1/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "textSize",
+      "raw": "18sp",
+      "path": "$/0/1/0",
+      "value": "18px",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/footer",
+      "value": "@string/footer",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "text",
+      "raw": "@string/showLine",
+      "value": "@string/showLine",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "20dp",
+      "path": "$/0/1/2",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "20dp",
+      "path": "$/0/1/2",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "6dp",
+      "path": "$/0/1/2",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_show_bottom_line",
+      "value": "@+id/cb_show_bottom_line",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "10dp",
+      "path": "$/0/2",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "10dp",
+      "path": "$/0/2",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "18sp",
+      "path": "$/0/2",
+      "value": "18px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_body_padding",
+      "value": "@+id/tv_body_padding",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/main_body",
+      "value": "@string/main_body",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_padding_top",
+      "value": "@+id/dsb_padding_top",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "200",
+      "value": "200",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_top",
+      "value": "@string/padding_top",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/4",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/4",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_padding_bottom",
+      "value": "@+id/dsb_padding_bottom",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_bottom",
+      "value": "@string/padding_bottom",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/5",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/5",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_padding_left",
+      "value": "@+id/dsb_padding_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_left",
+      "value": "@string/padding_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/6",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/6",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_padding_right",
+      "value": "@+id/dsb_padding_right",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_right",
+      "value": "@string/padding_right",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/7",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/7",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_footer_padding_top",
+      "value": "@+id/dsb_footer_padding_top",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_top",
+      "value": "@string/padding_top",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/8",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/8",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_footer_padding_bottom",
+      "value": "@+id/dsb_footer_padding_bottom",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_bottom",
+      "value": "@string/padding_bottom",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/9",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/9",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_footer_padding_left",
+      "value": "@+id/dsb_footer_padding_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_left",
+      "value": "@string/padding_left",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/10",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/10",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/dsb_footer_padding_right",
+      "value": "@+id/dsb_footer_padding_right",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:max",
+      "raw": "100",
+      "value": "100",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:title",
+      "raw": "@string/padding_right",
+      "value": "@string/padding_right",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

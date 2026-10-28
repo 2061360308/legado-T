@@ -1,0 +1,116 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": 60,
+    "background": "?attr/selectableItemBackground",
+    "orientation": "horizontal"
+  },
+  "children": [
+    {
+      "tag": "FrameLayout",
+      "attrs": {
+        "layout_width": 60,
+        "layout_height": "match_parent"
+      },
+      "children": [
+        {
+          "tag": "ThemeCheckBox",
+          "attrs": {
+            "id": "cb_select",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center"
+          },
+          "children": []
+        },
+        {
+          "tag": "AppCompatImageView",
+          "attrs": {
+            "id": "iv_icon",
+            "layout_width": "match_parent",
+            "layout_height": "match_parent",
+            "scaleType": "center",
+            "visibility": "invisible",
+            "src": "@drawable/ic_folder",
+            "tint": "#de000000"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": 0,
+        "layout_height": "match_parent",
+        "layout_weight": "1",
+        "paddingTop": 5,
+        "paddingBottom": 5,
+        "orientation": "vertical"
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_name",
+            "layout_width": "wrap_content",
+            "layout_height": 0,
+            "layout_weight": "1",
+            "singleLine": "true",
+            "text": "阅读",
+            "textSize": 16,
+            "gravity": "center_vertical"
+          },
+          "children": []
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_brief",
+            "layout_width": "match_parent",
+            "layout_height": 0,
+            "layout_weight": "1",
+            "gravity": "center_vertical",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "AccentBgTextView",
+              "attrs": {
+                "id": "tv_tag",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginRight": 15,
+                "paddingStart": 5,
+                "paddingEnd": 5,
+                "text": "TXT",
+                "maxLines": "1"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_size",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginRight": 15
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_date",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

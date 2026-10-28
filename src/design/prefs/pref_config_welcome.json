@@ -1,0 +1,123 @@
+{
+  "tag": "PreferenceScreen",
+  "title": "",
+  "summary": "",
+  "icon": "",
+  "key": "",
+  "defaultValue": "",
+  "dependency": "",
+  "entries": [],
+  "entryValues": [],
+  "children": [
+    {
+      "tag": "SwitchPreference",
+      "title": "自定义欢迎页",
+      "summary": "是否使用自定义欢迎页",
+      "icon": "",
+      "key": "customWelcome",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "PreferenceCategory",
+      "title": "白天",
+      "summary": "",
+      "icon": "",
+      "key": "dayThemeCategory",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "Preference",
+          "title": "背景图片",
+          "summary": "",
+          "icon": "",
+          "key": "welcomeImagePath",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "显示文字",
+          "summary": "阅读|享受美好时光",
+          "icon": "",
+          "key": "welcomeShowText",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "显示图标",
+          "summary": "显示默认书籍图标",
+          "icon": "",
+          "key": "welcomeShowIcon",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "PreferenceCategory",
+      "title": "夜间",
+      "summary": "",
+      "icon": "",
+      "key": "nightThemeCategory",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "Preference",
+          "title": "背景图片",
+          "summary": "",
+          "icon": "",
+          "key": "welcomeImagePathDark",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "显示文字",
+          "summary": "阅读|享受美好时光",
+          "icon": "",
+          "key": "welcomeShowTextDark",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "显示图标",
+          "summary": "显示默认书籍图标",
+          "icon": "",
+          "key": "welcomeShowIconDark",
+          "defaultValue": "true",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

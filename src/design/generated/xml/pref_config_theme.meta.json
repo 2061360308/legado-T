@@ -1,0 +1,884 @@
+{
+  "source": "xml/pref_config_theme.xml",
+  "hash": "9b92242d68ddde27cd122aa04aba8b0efe027baf",
+  "nodeCount": 23,
+  "attrCount": 121,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "ic_launcher",
+      "value": "ic_launcher",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "entries",
+      "raw": "@array/icon_names",
+      "value": [
+        "iconMain",
+        "icon1",
+        "icon2",
+        "icon3",
+        "icon4",
+        "icon5",
+        "icon6"
+      ],
+      "status": "mapped",
+      "array": true,
+      "target": "component prop"
+    },
+    {
+      "name": "entryValues",
+      "raw": "@array/icons",
+      "value": [
+        "ic_launcher",
+        "launcher1",
+        "launcher2",
+        "launcher3",
+        "launcher4",
+        "launcher5",
+        "launcher6"
+      ],
+      "status": "mapped",
+      "array": true,
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "launcherIcon",
+      "value": "launcherIcon",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/change_icon_summary",
+      "value": "切换软件显示在桌面的图标",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/change_icon",
+      "value": "切换图标",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:icons",
+      "raw": "@array/icons",
+      "value": [
+        "ic_launcher",
+        "launcher1",
+        "launcher2",
+        "launcher3",
+        "launcher4",
+        "launcher5",
+        "launcher6"
+      ],
+      "status": "mapped",
+      "array": true,
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "welcomeStyle",
+      "value": "welcomeStyle",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/welcome_style",
+      "value": "启动界面样式",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/welcome_style_summary",
+      "value": "启动界面图片和是否显示文字等",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "barElevation",
+      "value": "barElevation",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/bar_elevation_s",
+      "value": "当前阴影大小（elevation）：%s",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/bar_elevation",
+      "value": "导航栏阴影",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "fontScale",
+      "value": "fontScale",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/font_scale_summary",
+      "value": "当前字体大小：%.1f",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/font_scale",
+      "value": "字体大小",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "coverConfig",
+      "value": "coverConfig",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/cover_config",
+      "value": "封面设置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/cover_config_summary",
+      "value": "通用封面规则及默认封面样式",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "themeList",
+      "value": "themeList",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/theme_list_summary",
+      "value": "使用、保存、导入或分享主题",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/theme_list",
+      "value": "主题列表",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "transparentStatusBar",
+      "value": "transparentStatusBar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/status_bar_immersion",
+      "value": "状态栏颜色透明",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/immersion_status_bar",
+      "value": "沉浸式状态栏",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "immNavigationBar",
+      "value": "immNavigationBar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/imm_navigation_bar_s",
+      "value": "导航栏颜色透明",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/imm_navigation_bar",
+      "value": "沉浸式导航栏",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "dayThemeCategory",
+      "value": "dayThemeCategory",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/day",
+      "value": "白天",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout",
+      "raw": "@layout/view_preference_category",
+      "value": "@layout/view_preference_category",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "@color/md_brown_500",
+      "value": "#795548",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "colorPrimary",
+      "value": "colorPrimary",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/day_color_primary",
+      "value": "白天，主色调",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/primary",
+      "value": "主色调",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:cpv_dialogType",
+      "raw": "preset",
+      "value": "preset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "@color/md_red_600",
+      "value": "#E53935",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "colorAccent",
+      "value": "colorAccent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/day_color_accent",
+      "value": "白天，强调色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/accent",
+      "value": "强调色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:cpv_dialogType",
+      "raw": "preset",
+      "value": "preset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "@color/md_grey_100",
+      "value": "#F5F5F5",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "colorBackground",
+      "value": "colorBackground",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/day_background_color",
+      "value": "白天，背景色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/background_color",
+      "value": "背景色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:cpv_dialogType",
+      "raw": "preset",
+      "value": "preset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "@color/md_grey_200",
+      "value": "#EEEEEE",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "colorBottomBackground",
+      "value": "colorBottomBackground",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/day_navbar_color",
+      "value": "白天，底栏色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/navbar_color",
+      "value": "底部操作栏颜色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:cpv_dialogType",
+      "raw": "preset",
+      "value": "preset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "backgroundImage",
+      "value": "backgroundImage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/background_image",
+      "value": "背景图片",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "saveDayTheme",
+      "value": "saveDayTheme",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/save_day_theme_summary",
+      "value": "保存白天主题配置以供调用和分享",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/save_theme_config",
+      "value": "保存主题配置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "nightThemeCategory",
+      "value": "nightThemeCategory",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/night",
+      "value": "夜间",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout",
+      "raw": "@layout/view_preference_category",
+      "value": "@layout/view_preference_category",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "@color/md_blue_grey_600",
+      "value": "#546E7A",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "colorPrimaryNight",
+      "value": "colorPrimaryNight",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/night_primary",
+      "value": "夜间，主色调",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/primary",
+      "value": "主色调",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:cpv_dialogType",
+      "raw": "preset",
+      "value": "preset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "@color/md_deep_orange_800",
+      "value": "#D84315",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "colorAccentNight",
+      "value": "colorAccentNight",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/night_accent",
+      "value": "夜间，强调色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/accent",
+      "value": "强调色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:cpv_dialogType",
+      "raw": "preset",
+      "value": "preset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "@color/md_grey_900",
+      "value": "#212121",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "colorBackgroundNight",
+      "value": "colorBackgroundNight",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/night_background_color",
+      "value": "夜间，背景色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/background_color",
+      "value": "背景色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:cpv_dialogType",
+      "raw": "preset",
+      "value": "preset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "@color/md_grey_850",
+      "value": "#303030",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "colorBottomBackgroundNight",
+      "value": "colorBottomBackgroundNight",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/night_navbar_color",
+      "value": "夜间，底栏色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/navbar_color",
+      "value": "底部操作栏颜色",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:cpv_dialogType",
+      "raw": "preset",
+      "value": "preset",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "backgroundImageNight",
+      "value": "backgroundImageNight",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/background_image",
+      "value": "背景图片",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "saveNightTheme",
+      "value": "saveNightTheme",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/save_night_theme_summary",
+      "value": "保存夜间主题配置以供调用和分享",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/save_theme_config",
+      "value": "保存主题配置",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,271 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto",
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "tools:context": ".ui.main.MainActivity",
+    "tools:ignore": "AlwaysShowAction"
+  },
+  "children": [
+    {
+      "tag": "group",
+      "attrs": {
+        "id": "menu_group_on_line"
+      },
+      "children": [
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_change_source",
+            "icon": "ic_exchange",
+            "title": "换源",
+            "showAsAction": "always"
+          },
+          "children": []
+        },
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_refresh",
+            "icon": "ic_refresh_black_24dp",
+            "title": "刷新",
+            "showAsAction": "always"
+          },
+          "children": []
+        },
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_download",
+            "icon": "ic_download_line",
+            "title": "离线缓存",
+            "showAsAction": "always"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "group",
+      "attrs": {
+        "id": "menu_group_text"
+      },
+      "children": [
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_toc_regex",
+            "icon": "ic_exchange",
+            "title": "TXT 目录规则",
+            "visible": "false",
+            "showAsAction": "always"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "group",
+      "attrs": {
+        "id": "menu_group_local"
+      },
+      "children": [
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_set_charset",
+            "icon": "ic_translate",
+            "title": "设置编码",
+            "showAsAction": "always"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_add_bookmark",
+        "title": "添加书签",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_edit_content",
+        "title": "编辑内容",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_page_anim",
+        "title": "翻页动画（本书）",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_get_progress",
+        "title": "拉取云端进度",
+        "visible": "false",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_cover_progress",
+        "title": "覆盖云端进度",
+        "visible": "false",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_reverse_content",
+        "title": "反转内容",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_simulated_reading",
+        "title": "模拟追读",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_enable_replace",
+        "checkable": "true",
+        "checked": "true",
+        "title": "替换净化",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_same_title_removed",
+        "checkable": "true",
+        "title": "移除重复标题",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_re_segment",
+        "checkable": "true",
+        "checked": "false",
+        "title": "重新分段",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_enable_review",
+        "checkable": "true",
+        "checked": "false",
+        "title": "段评",
+        "visible": "false",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "group",
+      "attrs": {
+        "id": "menu_group_epub"
+      },
+      "children": [
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_del_ruby_tag",
+            "checkable": "true",
+            "checked": "false",
+            "title": "删除ruby标签",
+            "showAsAction": "never"
+          },
+          "children": []
+        },
+        {
+          "tag": "item",
+          "attrs": {
+            "id": "menu_del_h_tag",
+            "checkable": "true",
+            "checked": "false",
+            "title": "删除h标签",
+            "showAsAction": "never"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_image_style",
+        "title": "图片样式",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_update_toc",
+        "title": "更新目录",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_effective_replaces",
+        "title": "起效的替换",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_log",
+        "title": "日志",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_help",
+        "title": "帮助",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

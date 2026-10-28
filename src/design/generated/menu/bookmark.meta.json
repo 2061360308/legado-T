@@ -1,0 +1,45 @@
+{
+  "source": "menu/bookmark.xml",
+  "hash": "dce7ade87f66b39e9c692e0b67e76d14d61b023d",
+  "nodeCount": 3,
+  "attrCount": 5,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_export",
+      "value": "@+id/menu_export",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/export",
+      "value": "导出",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_export_md",
+      "value": "@+id/menu_export_md",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/export_md",
+      "value": "导出(MD)",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

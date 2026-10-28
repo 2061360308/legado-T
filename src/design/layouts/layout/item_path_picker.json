@@ -1,0 +1,29 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "orientation": "horizontal",
+    "layout_width": "wrap_content",
+    "layout_height": "match_parent"
+  },
+  "children": [
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "text_view",
+        "layout_width": "wrap_content",
+        "layout_height": "match_parent",
+        "gravity": "center_vertical"
+      },
+      "children": []
+    },
+    {
+      "tag": "ImageView",
+      "attrs": {
+        "id": "image_view",
+        "layout_width": 20,
+        "layout_height": "match_parent"
+      },
+      "children": []
+    }
+  ]
+}

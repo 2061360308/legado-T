@@ -1,0 +1,634 @@
+{
+  "source": "layout/item_search.xml",
+  "hash": "b2f0f60ead33c13d244855ab8eb47a222cf461ac",
+  "nodeCount": 10,
+  "attrCount": 89,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "80dp",
+      "path": "$/0",
+      "value": "80px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "110dp",
+      "path": "$/0",
+      "value": "110px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "8dp",
+      "path": "$/0",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "scaleType",
+      "raw": "centerCrop",
+      "value": "centerCrop",
+      "status": "mapped",
+      "target": "object-fit"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_cover",
+      "value": "@+id/iv_cover",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/img_cover",
+      "value": "@string/img_cover",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/image_cover_default",
+      "value": "@drawable/image_cover_default",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "transitionName",
+      "raw": "img_cover",
+      "value": "img_cover",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "8dp",
+      "path": "$/1",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "8dp",
+      "path": "$/1",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "8dp",
+      "path": "$/1",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "invisible",
+      "value": "invisible",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "scaleType",
+      "raw": "centerCrop",
+      "value": "centerCrop",
+      "status": "mapped",
+      "target": "object-fit"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_in_bookshelf",
+      "value": "@+id/iv_in_bookshelf",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "src",
+      "raw": "@color/md_green_600",
+      "value": "@color/md_green_600",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toRightOf",
+      "raw": "@id/iv_cover",
+      "value": "@id/iv_cover",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "@id/tv_name",
+      "value": "@id/tv_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "8dp",
+      "path": "$/2",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/bv_originCount",
+      "value": "@+id/bv_originCount",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "8dp",
+      "path": "$/3",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/3",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "16sp",
+      "path": "$/3",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_name",
+      "value": "@+id/tv_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/app_name",
+      "value": "@string/app_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintEnd_toStartOf",
+      "raw": "@id/bv_originCount",
+      "value": "@id/bv_originCount",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintStart_toEndOf",
+      "raw": "@+id/iv_in_bookshelf",
+      "value": "@+id/iv_in_bookshelf",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/4",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/4",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "3dp",
+      "path": "$/4",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "8dp",
+      "path": "$/4",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "@id/iv_cover",
+      "value": "@id/iv_cover",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toRightOf",
+      "raw": "@+id/iv_cover",
+      "value": "@+id/iv_cover",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "@id/tv_name",
+      "value": "@id/tv_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@+id/tv_name",
+      "value": "@+id/tv_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/4/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/4/0",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/4/0",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "end",
+      "value": "end",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_author",
+      "value": "@+id/tv_author",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "lines",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "text",
+      "raw": "@string/author",
+      "value": "@string/author",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/4/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/4/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/4/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "end",
+      "value": "end",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_lasted",
+      "value": "@+id/tv_lasted",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "lines",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "text",
+      "raw": "@string/last_read",
+      "value": "@string/last_read",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/4/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_kind",
+      "value": "@+id/ll_kind",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/4/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/4/3",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/4/3",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "end",
+      "value": "end",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_introduce",
+      "value": "@+id/tv_introduce",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "text",
+      "raw": "@string/book_intro",
+      "value": "@string/book_intro",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,423 @@
+{
+  "source": "xml/pref_config_welcome.xml",
+  "hash": "3b81bb4f88bb7ea0eadabfd2973e87ed32423d2c",
+  "nodeCount": 10,
+  "attrCount": 59,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "customWelcome",
+      "value": "customWelcome",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/custom_welcome_summary",
+      "value": "是否使用自定义欢迎页",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/custom_welcome",
+      "value": "自定义欢迎页",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "dayThemeCategory",
+      "value": "dayThemeCategory",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/day",
+      "value": "白天",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout",
+      "raw": "@layout/view_preference_category",
+      "value": "@layout/view_preference_category",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "welcomeImagePath",
+      "value": "welcomeImagePath",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/background_image",
+      "value": "背景图片",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "welcomeShowText",
+      "value": "welcomeShowText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/welcome_text",
+      "value": "阅读|享受美好时光",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/show_welcome_text",
+      "value": "显示文字",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "welcomeShowIcon",
+      "value": "welcomeShowIcon",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/show_default_book_icon",
+      "value": "显示默认书籍图标",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/show_icon",
+      "value": "显示图标",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "nightThemeCategory",
+      "value": "nightThemeCategory",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/night",
+      "value": "夜间",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout",
+      "raw": "@layout/view_preference_category",
+      "value": "@layout/view_preference_category",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "welcomeImagePathDark",
+      "value": "welcomeImagePathDark",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/background_image",
+      "value": "背景图片",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "welcomeShowTextDark",
+      "value": "welcomeShowTextDark",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/welcome_text",
+      "value": "阅读|享受美好时光",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/show_welcome_text",
+      "value": "显示文字",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "defaultValue",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "key",
+      "raw": "welcomeShowIconDark",
+      "value": "welcomeShowIconDark",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "summary",
+      "raw": "@string/show_default_book_icon",
+      "value": "显示默认书籍图标",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/show_icon",
+      "value": "显示图标",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerAbove",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:allowDividerBelow",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:iconSpaceReserved",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

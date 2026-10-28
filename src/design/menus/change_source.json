@@ -1,0 +1,123 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:tools": "http://schemas.android.com/tools",
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_screen",
+        "title": "筛选",
+        "icon": "ic_screen",
+        "actionViewClass": "androidx.appcompat.widget.SearchView",
+        "showAsAction": "always",
+        "tools:ignore": "AlwaysShowAction"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_start_stop",
+        "title": "停止",
+        "icon": "ic_refresh_white_24dp",
+        "showAsAction": "always",
+        "tools:ignore": "AlwaysShowAction"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_source_manage",
+        "title": "书源管理",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_refresh_list",
+        "title": "刷新列表",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_check_author",
+        "title": "校验作者",
+        "checkable": "true",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_load_word_count",
+        "title": "加载字数",
+        "checkable": "true",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_load_info",
+        "title": "加载详情页",
+        "checkable": "true",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_load_toc",
+        "title": "加载目录",
+        "checkable": "true",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_group",
+        "title": "分组"
+      },
+      "children": [
+        {
+          "tag": "menu",
+          "attrs": {},
+          "children": [
+            {
+              "tag": "group",
+              "attrs": {
+                "id": "source_group",
+                "checkableBehavior": "single"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_close",
+        "title": "关闭",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

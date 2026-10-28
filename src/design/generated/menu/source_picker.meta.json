@@ -1,0 +1,31 @@
+{
+  "source": "menu/source_picker.xml",
+  "hash": "c75bb682b425c04e0219317c2fc7d34643eabceb",
+  "nodeCount": 2,
+  "attrCount": 3,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_change_source_delay",
+      "value": "@+id/menu_change_source_delay",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/change_source_delay",
+      "value": "换源间隔",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

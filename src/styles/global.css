@@ -1,0 +1,50 @@
+@import "../design/tokens.css";
+
+:root {
+  --lr-color-primary: var(--ac-primary);
+  --lr-color-background: var(--ac-background);
+  --lr-color-surface: var(--ac-background-card);
+  --lr-color-on-background: var(--ac-primary-text);
+  --lr-color-on-surface: var(--ac-secondary-text);
+  --lr-padding: 8px;
+  --lr-radius: 2px;
+  --lr-font-size-body: 14px;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Roboto", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei",
+    system-ui, sans-serif;
+  background: var(--ac-background);
+  color: var(--ac-primary-text);
+}
+
+html.eink-mode,
+html.eink-mode * {
+  animation: none !important;
+  transition: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ac-divider);
+  border-radius: 3px;
+}

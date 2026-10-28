@@ -1,0 +1,67 @@
+{
+  "tag": "menu",
+  "attrs": {
+    "xmlns:android": "http://schemas.android.com/apk/res/android",
+    "xmlns:app": "http://schemas.android.com/apk/res-auto"
+  },
+  "children": [
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_rss_refresh",
+        "title": "刷新",
+        "icon": "ic_refresh_black_24dp",
+        "showAsAction": "always"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_rss_star",
+        "title": "收藏",
+        "icon": "ic_star_border",
+        "showAsAction": "always"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_share_it",
+        "title": "分享",
+        "icon": "ic_share",
+        "showAsAction": "ifRoom"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_aloud",
+        "title": "朗读",
+        "icon": "ic_volume_up",
+        "showAsAction": "ifRoom"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_login",
+        "title": "登录",
+        "showAsAction": "never"
+      },
+      "children": []
+    },
+    {
+      "tag": "item",
+      "attrs": {
+        "id": "menu_browser_open",
+        "title": "浏览器打开",
+        "showAsAction": "never"
+      },
+      "children": []
+    }
+  ]
+}

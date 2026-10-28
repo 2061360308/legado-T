@@ -1,0 +1,19 @@
+{
+  "tag": "FrameLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent"
+  },
+  "children": [
+    {
+      "tag": "NumberPicker",
+      "attrs": {
+        "id": "number_picker",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_gravity": "center"
+      },
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-10-28T15:34:35.318Z",
+  "sourceXmlCount": 286,
+  "manifestCount": 286,
+  "generatedCount": 283,
+  "notApplicableCount": 3,
+  "generatedVueCount": 283,
+  "navigation": {
+    "nodes": 81,
+    "edges": 160,
+    "start": "activity_welcome",
+    "activitiesWithoutLayout": 8,
+    "edgesWithoutTarget": 2
+  },
+  "prefs": {
+    "files": 12,
+    "screens": 9,
+    "empty": 0
+  },
+  "unresolvedCount": 0,
+  "failureCount": 0,
+  "warningCount": 0,
+  "failures": [],
+  "warnings": []
+}

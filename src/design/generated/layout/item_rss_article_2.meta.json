@@ -1,0 +1,327 @@
+{
+  "source": "layout/item_rss_article_2.xml",
+  "hash": "297639ccbdeb91eea79c0f39031ca39e5077754a",
+  "nodeCount": 4,
+  "attrCount": 45,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "8dp",
+      "path": "$",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "6dp",
+      "path": "$",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "4dp",
+      "path": "$",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "4dp",
+      "path": "$",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "272dp",
+      "path": "$/0",
+      "value": "272px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/bg_img_border",
+      "path": "$/0",
+      "value": "bg_img_border",
+      "status": "mapped",
+      "drawable": "bg_img_border"
+    },
+    {
+      "name": "visibility",
+      "raw": "visible",
+      "value": "visible",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "scaleType",
+      "raw": "centerCrop",
+      "value": "centerCrop",
+      "status": "mapped",
+      "target": "object-fit"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/image_view",
+      "value": "@+id/image_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/loading",
+      "value": "@string/loading",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded,RtlSymmetry",
+      "value": "RtlHardcoded,RtlSymmetry",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "10dp",
+      "path": "$/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "13sp",
+      "path": "$/1",
+      "value": "13px",
+      "status": "mapped"
+    },
+    {
+      "name": "maxLines",
+      "raw": "2",
+      "value": "2",
+      "status": "mapped",
+      "target": "line-clamp"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "end",
+      "value": "end",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_title",
+      "value": "@+id/tv_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/app_name",
+      "value": "@string/app_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@+id/image_view",
+      "value": "@+id/image_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "8dp",
+      "path": "$/2",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "2dp",
+      "path": "$/2",
+      "value": "2px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textSize",
+      "raw": "11sp",
+      "path": "$/2",
+      "value": "11px",
+      "status": "mapped"
+    },
+    {
+      "name": "maxLines",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "line-clamp"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_pub_date",
+      "value": "@+id/tv_pub_date",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/app_name",
+      "value": "@string/app_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@+id/tv_title",
+      "value": "@+id/tv_title",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "SmallSp",
+      "value": "SmallSp",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

@@ -1,0 +1,217 @@
+{
+  "tag": "PreferenceScreen",
+  "title": "",
+  "summary": "",
+  "icon": "",
+  "key": "",
+  "defaultValue": "",
+  "dependency": "",
+  "entries": [],
+  "entryValues": [],
+  "children": [
+    {
+      "tag": "Preference",
+      "title": "书源管理",
+      "summary": "新建、导入、编辑或管理书源",
+      "icon": "ic_cfg_source",
+      "key": "bookSourceManage",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "TXT 目录规则",
+      "summary": "配置 TXT 目录规则",
+      "icon": "ic_cfg_source",
+      "key": "txtTocRuleManage",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "替换净化",
+      "summary": "配置替换净化规则",
+      "icon": "ic_cfg_replace",
+      "key": "replaceManage",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "Preference",
+      "title": "字典规则",
+      "summary": "配置字典规则",
+      "icon": "ic_translate",
+      "key": "dictRuleManage",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "NameListPreference",
+      "title": "主题模式",
+      "summary": "选择主题模式",
+      "icon": "ic_cfg_theme",
+      "key": "themeMode",
+      "defaultValue": "0",
+      "dependency": "",
+      "entries": [
+        "跟随系统",
+        "亮色主题",
+        "暗色主题",
+        "E-Ink(墨水屏)"
+      ],
+      "entryValues": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "children": []
+    },
+    {
+      "tag": "SwitchPreference",
+      "title": "Web 服务",
+      "summary": "用浏览器写源或看书",
+      "icon": "ic_cfg_web",
+      "key": "webService",
+      "defaultValue": "false",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": []
+    },
+    {
+      "tag": "PreferenceCategory",
+      "title": "设置",
+      "summary": "",
+      "icon": "",
+      "key": "",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "Preference",
+          "title": "备份与恢复",
+          "summary": "WebDav 设置/导入旧版本数据",
+          "icon": "ic_cfg_backup",
+          "key": "web_dav_setting",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "主题设置",
+          "summary": "与界面/颜色相关的一些设置",
+          "icon": "ic_cfg_theme",
+          "key": "theme_setting",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "其它设置",
+          "summary": "与功能相关的一些设置",
+          "icon": "ic_cfg_other",
+          "key": "setting",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "PreferenceCategory",
+      "title": "其它",
+      "summary": "",
+      "icon": "",
+      "key": "aboutCategory",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "Preference",
+          "title": "书签",
+          "summary": "所有书签",
+          "icon": "ic_bookmark",
+          "key": "bookmark",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "阅读记录",
+          "summary": "阅读时间记录",
+          "icon": "ic_history",
+          "key": "readRecord",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "文件管理",
+          "summary": "管理私有文件夹的文件",
+          "icon": "ic_folder_outline",
+          "key": "fileManage",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "关于",
+          "summary": "",
+          "icon": "ic_cfg_about",
+          "key": "about",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "退出",
+          "summary": "",
+          "icon": "ic_exit",
+          "key": "exit",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2188 @@
+{
+  "source": "layout/dialog_read_aloud.xml",
+  "hash": "b82ae62eabb943e2e1f943e92de264719f655918",
+  "nodeCount": 40,
+  "attrCount": 311,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "6dp",
+      "path": "$",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "6dp",
+      "path": "$",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "16dp",
+      "path": "$",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "16dp",
+      "path": "$",
+      "value": "16px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background_menu",
+      "path": "$",
+      "value": "#EEEEEE",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/root_view",
+      "value": "@+id/root_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "10dp",
+      "path": "$/0/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginEnd",
+      "raw": "10dp",
+      "path": "$/0/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "10dp",
+      "path": "$/0/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "10dp",
+      "path": "$/0/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/0/0",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0/0",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/0",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_pre",
+      "value": "@+id/tv_pre",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "text",
+      "raw": "@string/previous_chapter",
+      "value": "@string/previous_chapter",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "TouchTargetSizeCheck",
+      "value": "TouchTargetSizeCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginStart",
+      "raw": "10dp",
+      "path": "$/0/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginEnd",
+      "raw": "10dp",
+      "path": "$/0/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "10dp",
+      "path": "$/0/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "10dp",
+      "path": "$/0/1",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/0/1",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/0/1",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_next",
+      "value": "@+id/tv_next",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "text",
+      "raw": "@string/next_chapter",
+      "value": "@string/next_chapter",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "TouchTargetSizeCheck",
+      "value": "TouchTargetSizeCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "1dp",
+      "path": "$/0/2",
+      "value": "1px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/0/3",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "1dp",
+      "path": "$/0/3",
+      "value": "1px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "30dp",
+      "path": "$/0/4",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "30dp",
+      "path": "$/0/4",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginLeft",
+      "raw": "8dp",
+      "path": "$/0/4",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginRight",
+      "raw": "8dp",
+      "path": "$/0/4",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/0/4",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_play_prev",
+      "value": "@+id/iv_play_prev",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/prev_sentence",
+      "value": "@string/prev_sentence",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_skip_previous",
+      "value": "@drawable/ic_skip_previous",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/prev_sentence",
+      "value": "@string/prev_sentence",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "30dp",
+      "path": "$/0/5",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "30dp",
+      "path": "$/0/5",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginLeft",
+      "raw": "8dp",
+      "path": "$/0/5",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginRight",
+      "raw": "8dp",
+      "path": "$/0/5",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/0/5",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_play_pause",
+      "value": "@+id/iv_play_pause",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/audio_play",
+      "value": "@string/audio_play",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_play_24dp",
+      "value": "@drawable/ic_play_24dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/audio_play",
+      "value": "@string/audio_play",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "30dp",
+      "path": "$/0/6",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "30dp",
+      "path": "$/0/6",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginLeft",
+      "raw": "8dp",
+      "path": "$/0/6",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginRight",
+      "raw": "8dp",
+      "path": "$/0/6",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/0/6",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_stop",
+      "value": "@+id/iv_stop",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/stop",
+      "value": "@string/stop",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_stop_black_24dp",
+      "value": "@drawable/ic_stop_black_24dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/stop",
+      "value": "@string/stop",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "30dp",
+      "path": "$/0/7",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "30dp",
+      "path": "$/0/7",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginLeft",
+      "raw": "8dp",
+      "path": "$/0/7",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginRight",
+      "raw": "8dp",
+      "path": "$/0/7",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/0/7",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_play_next",
+      "value": "@+id/iv_play_next",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/next_sentence",
+      "value": "@string/next_sentence",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_skip_next",
+      "value": "@drawable/ic_skip_next",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/next_sentence",
+      "value": "@string/next_sentence",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "6dp",
+      "path": "$/1",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "layout_width",
+      "raw": "30dp",
+      "path": "$/1/0",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "30dp",
+      "path": "$/1/0",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/1/0",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_timer",
+      "value": "@+id/iv_timer",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/set_timer",
+      "value": "@string/set_timer",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_time_add_24dp",
+      "value": "@drawable/ic_time_add_24dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/set_timer",
+      "value": "@string/set_timer",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/1/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/seek_timer",
+      "value": "@+id/seek_timer",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "max",
+      "raw": "180",
+      "value": "180px",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/1/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/1/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/1/2",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/1/2",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_timer",
+      "value": "@+id/tv_timer",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/timer_m",
+      "value": "@string/timer_m",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "padding",
+      "raw": "8dp",
+      "path": "$/2/0",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_tts_SpeechRate",
+      "value": "@+id/ll_tts_SpeechRate",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/2/0/0",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/2/0/0",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_tts_speed",
+      "value": "@+id/tv_tts_speed",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/read_aloud_speed",
+      "value": "@string/read_aloud_speed",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingHorizontal",
+      "raw": "3dp",
+      "path": "$/2/0/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/2/0/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "14sp",
+      "path": "$/2/0/1",
+      "value": "14px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_tts_speed_value",
+      "value": "@+id/tv_tts_speed_value",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/2/0/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "1dp",
+      "path": "$/2/0/2",
+      "value": "1px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/2/0/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/0/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cb_tts_follow_sys",
+      "value": "@+id/cb_tts_follow_sys",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/flow_sys",
+      "value": "@string/flow_sys",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/flow_sys",
+      "value": "@string/flow_sys",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded,TouchTargetSizeCheck",
+      "value": "RtlHardcoded,TouchTargetSizeCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "6dp",
+      "path": "$/2/1",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "6dp",
+      "path": "$/2/1",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center",
+      "value": "center",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "layout_width",
+      "raw": "30dp",
+      "path": "$/2/1/0",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "30dp",
+      "path": "$/2/1/0",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_tts_speech_reduce",
+      "value": "@+id/iv_tts_speech_reduce",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/tts_speech_reduce",
+      "value": "@string/tts_speech_reduce",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_reduce",
+      "value": "@drawable/ic_reduce",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/tts_speech_reduce",
+      "value": "@string/tts_speech_reduce",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "30dp",
+      "path": "$/2/1/1",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "30dp",
+      "path": "$/2/1/1",
+      "value": "30px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_tts_speech_add",
+      "value": "@+id/iv_tts_speech_add",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/tts_speech_add",
+      "value": "@string/tts_speech_add",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_add",
+      "value": "@drawable/ic_add",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/tts_speech_add",
+      "value": "@string/tts_speech_add",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/2/1/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/2/1/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/seek_tts_speechRate",
+      "value": "@+id/seek_tts_speechRate",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "max",
+      "raw": "45",
+      "value": "45px",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "8dp",
+      "path": "$/3",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "baselineAligned",
+      "raw": "false",
+      "value": "false",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "layout_width",
+      "raw": "60dp",
+      "path": "$/3/0",
+      "value": "60px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "7dp",
+      "path": "$/3/0",
+      "value": "7px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/3/0",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_catalog",
+      "value": "@+id/ll_catalog",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/chapter_list",
+      "value": "@string/chapter_list",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3/0/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/3/0/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "maxHeight",
+      "raw": "20dp",
+      "path": "$/3/0/0",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_catalog",
+      "value": "@+id/iv_catalog",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "adjustViewBounds",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/chapter_list",
+      "value": "@string/chapter_list",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_toc",
+      "value": "@drawable/ic_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "NestedWeights",
+      "value": "NestedWeights",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/3/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "3dp",
+      "path": "$/3/0/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/3/0/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/3/0/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "middle",
+      "value": "middle",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_catalog",
+      "value": "@+id/tv_catalog",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/chapter_list",
+      "value": "@string/chapter_list",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "60dp",
+      "path": "$/3/1",
+      "value": "60px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "7dp",
+      "path": "$/3/1",
+      "value": "7px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/3/1",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_main_menu",
+      "value": "@+id/ll_main_menu",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/main_menu",
+      "value": "@string/main_menu",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "TextSizeCheck",
+      "value": "TextSizeCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3/1/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/3/1/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "maxHeight",
+      "raw": "20dp",
+      "path": "$/3/1/0",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_main_menu",
+      "value": "@+id/iv_main_menu",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "adjustViewBounds",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/main_menu",
+      "value": "@string/main_menu",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_menu",
+      "value": "@drawable/ic_menu",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "NestedWeights",
+      "value": "NestedWeights",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/3/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/1/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "3dp",
+      "path": "$/3/1/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/3/1/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/3/1/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "middle",
+      "value": "middle",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_main_menu",
+      "value": "@+id/tv_main_menu",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/main_menu",
+      "value": "@string/main_menu",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "60dp",
+      "path": "$/3/2",
+      "value": "60px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/2",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "7dp",
+      "path": "$/3/2",
+      "value": "7px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/3/2",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_to_backstage",
+      "value": "@+id/ll_to_backstage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/to_backstage",
+      "value": "@string/to_backstage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3/2/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/3/2/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "maxHeight",
+      "raw": "20dp",
+      "path": "$/3/2/0",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_to_backstage",
+      "value": "@+id/iv_to_backstage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "adjustViewBounds",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/to_backstage",
+      "value": "@string/to_backstage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_visibility_off",
+      "value": "@drawable/ic_visibility_off",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "NestedWeights",
+      "value": "NestedWeights",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/3/2/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/2/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "3dp",
+      "path": "$/3/2/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/3/2/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/3/2/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "middle",
+      "value": "middle",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_to_backstage",
+      "value": "@+id/tv_to_backstage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/to_backstage",
+      "value": "@string/to_backstage",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "60dp",
+      "path": "$/3/3",
+      "value": "60px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/3",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingBottom",
+      "raw": "7dp",
+      "path": "$/3/3",
+      "value": "7px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/3/3",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_setting",
+      "value": "@+id/ll_setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/setting",
+      "value": "@string/setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3/3/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/3/3/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "maxHeight",
+      "raw": "20dp",
+      "path": "$/3/3/0",
+      "value": "20px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_setting",
+      "value": "@+id/iv_setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "adjustViewBounds",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "no direct CSS mapping"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/setting",
+      "value": "@string/setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_settings",
+      "value": "@drawable/ic_settings",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "NestedWeights",
+      "value": "NestedWeights",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/3/3/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/3/3/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "3dp",
+      "path": "$/3/3/1",
+      "value": "3px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "center_horizontal",
+      "value": "center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/3/3/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/3/3/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "middle",
+      "value": "middle",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_setting",
+      "value": "@+id/tv_setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "text",
+      "raw": "@string/setting",
+      "value": "@string/setting",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3/4",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/4",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "2",
+      "value": "2",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3/5",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/5",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "2",
+      "value": "2",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3/6",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/6",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "2",
+      "value": "2",
+      "status": "mapped",
+      "target": "flex"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

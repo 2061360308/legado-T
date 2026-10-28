@@ -1,0 +1,344 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "background": "@color/background",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "ImageView",
+      "attrs": {
+        "id": "iv_bg",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "scaleType": "centerCrop"
+      },
+      "children": []
+    },
+    {
+      "tag": "View",
+      "attrs": {
+        "id": "vw_bg",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "background": "#50000000"
+      },
+      "children": []
+    },
+    {
+      "tag": "TitleBar",
+      "attrs": {
+        "id": "title_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_timer",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_margin": 16,
+        "background": "shape_fillet_btn_press",
+        "paddingLeft": 6,
+        "paddingRight": 6,
+        "textColor": "#FFFFFF",
+        "visibility": "invisible",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintTop_toBottomOf": "@id/title_bar"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_speed",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_margin": 16,
+        "background": "shape_fillet_btn_press",
+        "paddingLeft": 6,
+        "paddingRight": 6,
+        "textColor": "#FFFFFF",
+        "visibility": "invisible",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toBottomOf": "@id/title_bar"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_sub_title",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "center",
+        "paddingStart": 16,
+        "paddingTop": 6,
+        "paddingEnd": 16,
+        "paddingBottom": 6,
+        "textColor": "#FFFFFF",
+        "layout_constraintBottom_toTopOf": "@+id/ll_player_progress"
+      },
+      "children": []
+    },
+    {
+      "tag": "CircleImageView",
+      "attrs": {
+        "id": "iv_cover",
+        "layout_width": 260,
+        "layout_height": 260,
+        "contentDescription": "封面",
+        "scaleType": "centerCrop",
+        "layout_constraintBottom_toTopOf": "@+id/ll_player_progress",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toBottomOf": "@+id/title_bar"
+      },
+      "children": []
+    },
+    {
+      "tag": "ImageButton",
+      "attrs": {
+        "id": "iv_play_mode",
+        "layout_width": 46,
+        "layout_height": 46,
+        "background": "selector_circle_btn_bg",
+        "contentDescription": "播放模式",
+        "padding": 5,
+        "src": "ic_play_mode_list_end_stop",
+        "layout_marginStart": 16,
+        "tint": "#FFFFFF",
+        "layout_constraintBottom_toTopOf": "@+id/tv_sub_title",
+        "layout_constraintStart_toStartOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "id": "ll_player_progress",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "center_vertical",
+        "orientation": "horizontal",
+        "paddingStart": 16,
+        "paddingEnd": 16,
+        "layout_constraintBottom_toTopOf": "@+id/ll_play_menu"
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_dur_time",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "00:00",
+            "textColor": "#FFFFFF"
+          },
+          "children": []
+        },
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_all_time",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "00:00",
+            "textColor": "#FFFFFF"
+          },
+          "children": []
+        },
+        {
+          "tag": "ThemeSeekBar",
+          "attrs": {
+            "id": "player_progress",
+            "layout_width": 0,
+            "layout_height": 25,
+            "layout_gravity": "center_vertical",
+            "layout_weight": "1"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "id": "ll_play_menu",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "center_vertical",
+        "orientation": "horizontal",
+        "layout_constraintBottom_toBottomOf": "parent"
+      },
+      "children": [
+        {
+          "tag": "ImageButton",
+          "attrs": {
+            "id": "iv_timer",
+            "layout_width": 46,
+            "layout_height": 46,
+            "background": "selector_circle_btn_bg",
+            "contentDescription": "定时",
+            "padding": 5,
+            "src": "ic_timer_black_24dp",
+            "tint": "#FFFFFF"
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageButton",
+          "attrs": {
+            "id": "iv_fast_rewind",
+            "layout_width": 46,
+            "layout_height": 46,
+            "background": "selector_circle_btn_bg",
+            "contentDescription": "上一个",
+            "padding": 5,
+            "src": "ic_fast_rewind",
+            "tint": "#FFFFFF"
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageButton",
+          "attrs": {
+            "id": "iv_skip_previous",
+            "layout_width": 46,
+            "layout_height": 46,
+            "background": "selector_circle_btn_bg",
+            "contentDescription": "上一个",
+            "padding": 5,
+            "src": "ic_skip_previous",
+            "tint": "#FFFFFF"
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageButton",
+          "attrs": {
+            "id": "iv_skip_next",
+            "layout_width": 46,
+            "layout_height": 46,
+            "background": "selector_circle_btn_bg",
+            "contentDescription": "下一个",
+            "padding": 5,
+            "src": "ic_skip_next",
+            "tint": "#FFFFFF"
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageButton",
+          "attrs": {
+            "id": "iv_fast_forward",
+            "layout_width": 46,
+            "layout_height": 46,
+            "background": "selector_circle_btn_bg",
+            "contentDescription": "下一个",
+            "padding": 5,
+            "src": "ic_fast_forward",
+            "tint": "#FFFFFF"
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageButton",
+          "attrs": {
+            "id": "iv_chapter",
+            "layout_width": 46,
+            "layout_height": 46,
+            "background": "selector_circle_btn_bg",
+            "contentDescription": "目录",
+            "padding": 5,
+            "src": "ic_chapter_list",
+            "tint": "#FFFFFF"
+          },
+          "children": []
+        },
+        {
+          "tag": "View",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": 1,
+            "layout_weight": "1"
+          },
+          "children": []
+        },
+        {
+          "tag": "View",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": 1,
+            "layout_weight": "1"
+          },
+          "children": []
+        },
+        {
+          "tag": "View",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": 1,
+            "layout_weight": "1"
+          },
+          "children": []
+        },
+        {
+          "tag": "View",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": 1,
+            "layout_weight": "1"
+          },
+          "children": []
+        },
+        {
+          "tag": "ConstraintLayout",
+          "attrs": {
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content"
+          },
+          "children": [
+            {
+              "tag": "FloatingActionButton",
+              "attrs": {
+                "id": "fab_play_stop",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_margin": 10,
+                "contentDescription": "播放",
+                "src": "ic_play_24dp",
+                "tint": "#000000",
+                "layout_constraintStart_toStartOf": "parent",
+                "layout_constraintEnd_toEndOf": "parent",
+                "layout_constraintBottom_toBottomOf": "parent",
+                "layout_constraintTop_toTopOf": "parent"
+              },
+              "children": []
+            },
+            {
+              "tag": "ThemeProgressBar",
+              "attrs": {
+                "id": "progress_loading",
+                "layout_width": 0,
+                "layout_height": 0,
+                "visibility": "invisible",
+                "layout_constraintBottom_toBottomOf": "parent",
+                "layout_constraintEnd_toEndOf": "parent",
+                "layout_constraintStart_toStartOf": "parent",
+                "layout_constraintTop_toTopOf": "parent"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

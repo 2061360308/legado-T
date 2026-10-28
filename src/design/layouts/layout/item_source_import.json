@@ -1,0 +1,59 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "padding": 8
+  },
+  "children": [
+    {
+      "tag": "ThemeCheckBox",
+      "attrs": {
+        "id": "cb_source_name",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "maxLines": "1",
+        "singleLine": "true",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintHorizontal_bias": "0",
+        "layout_constraintLeft_toLeftOf": "parent",
+        "layout_constraintRight_toLeftOf": "@+id/tv_source_state",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_source_state",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "padding": 8,
+        "singleLine": "true",
+        "textColor": "#8a000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintLeft_toRightOf": "@id/cb_source_name",
+        "layout_constraintRight_toLeftOf": "@id/tv_open",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_open",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_marginEnd": 12,
+        "background": "?attr/selectableItemBackground",
+        "padding": 8,
+        "text": "打开",
+        "textColor": "#8a000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintRight_toRightOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    }
+  ]
+}

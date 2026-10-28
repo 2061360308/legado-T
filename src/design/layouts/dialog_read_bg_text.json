@@ -1,0 +1,239 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "id": "root_view",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "background": "#FAFAFA",
+    "orientation": "vertical",
+    "padding": 10
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "center_vertical",
+        "padding": 6
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_name_title",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "样式名称：",
+            "textColor": "#de000000",
+            "textSize": 16
+          },
+          "children": []
+        },
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_name",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "paddingLeft": 6,
+            "paddingRight": 6,
+            "textColor": "#8a000000"
+          },
+          "children": []
+        },
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_restore",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "恢复",
+            "textColor": "#de000000"
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageView",
+          "attrs": {
+            "id": "iv_edit",
+            "layout_width": 20,
+            "layout_height": 20,
+            "contentDescription": "编辑",
+            "src": "@drawable/ic_edit",
+            "tint": "#8a000000"
+          },
+          "children": []
+        },
+        {
+          "tag": "Space",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "layout_weight": "1"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "center_vertical",
+        "orientation": "horizontal",
+        "padding": 6
+      },
+      "children": [
+        {
+          "tag": "StrokeTextView",
+          "attrs": {
+            "id": "tv_text_color",
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "layout_gravity": "center",
+            "layout_marginLeft": 6,
+            "layout_marginRight": 6,
+            "layout_weight": "5",
+            "background": "?attr/selectableItemBackground",
+            "gravity": "center",
+            "padding": 6,
+            "singleLine": "true",
+            "text": "文字颜色",
+            "textSize": 14
+          },
+          "children": []
+        },
+        {
+          "tag": "StrokeTextView",
+          "attrs": {
+            "id": "tv_bg_color",
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "layout_gravity": "center",
+            "layout_marginLeft": 6,
+            "layout_marginRight": 6,
+            "layout_weight": "5",
+            "background": "?attr/selectableItemBackground",
+            "gravity": "center",
+            "padding": 6,
+            "singleLine": "true",
+            "text": "背景颜色",
+            "textSize": 14
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageView",
+          "attrs": {
+            "id": "iv_import",
+            "layout_width": 36,
+            "layout_height": 36,
+            "layout_marginLeft": 6,
+            "layout_marginRight": 6,
+            "background": "?attr/selectableItemBackground",
+            "contentDescription": "导入",
+            "src": "@drawable/ic_import"
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageView",
+          "attrs": {
+            "id": "iv_export",
+            "layout_width": 36,
+            "layout_height": 36,
+            "layout_marginLeft": 6,
+            "layout_marginRight": 6,
+            "background": "?attr/selectableItemBackground",
+            "contentDescription": "导入",
+            "src": "@drawable/ic_export"
+          },
+          "children": []
+        },
+        {
+          "tag": "ImageView",
+          "attrs": {
+            "id": "iv_delete",
+            "layout_width": 36,
+            "layout_height": 36,
+            "layout_marginLeft": 6,
+            "layout_marginRight": 6,
+            "background": "?attr/selectableItemBackground",
+            "contentDescription": "删除",
+            "src": "@drawable/ic_clear_all"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "ThemeSwitch",
+      "attrs": {
+        "id": "sw_dark_status_icon",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "text": "深色状态栏图标"
+      },
+      "children": []
+    },
+    {
+      "tag": "ThemeSwitch",
+      "attrs": {
+        "id": "sw_underline",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "text": "文字下划线"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_bg_alpha",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "paddingLeft": 6,
+        "paddingRight": 6,
+        "text": "背景透明度"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_bg_image",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "paddingLeft": 6,
+        "paddingRight": 6,
+        "text": "背景图片"
+      },
+      "children": []
+    },
+    {
+      "tag": "ThemeSeekBar",
+      "attrs": {
+        "id": "sb_bg_alpha",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6
+      },
+      "children": []
+    },
+    {
+      "tag": "RecyclerView",
+      "attrs": {
+        "id": "recycler_view",
+        "layout_width": "match_parent",
+        "layout_height": 100,
+        "orientation": "horizontal",
+        "padding": 6
+      },
+      "children": []
+    }
+  ]
+}

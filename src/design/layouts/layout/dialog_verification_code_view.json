@@ -1,0 +1,53 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "Toolbar",
+      "attrs": {
+        "id": "tool_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "background": "@color/background_menu",
+        "title": "输入验证码"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatImageView",
+      "attrs": {
+        "id": "verification_code_image_view",
+        "layout_width": "match_parent",
+        "layout_height": 100,
+        "background": "?android:attr/selectableItemBackgroundBorderless",
+        "scaleType": "fitCenter"
+      },
+      "children": []
+    },
+    {
+      "tag": "TextInputLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_marginTop": 8,
+        "padding": 3
+      },
+      "children": [
+        {
+          "tag": "ThemeEditText",
+          "attrs": {
+            "id": "verification_code",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "hint": "验证码"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

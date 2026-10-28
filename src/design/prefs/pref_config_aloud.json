@@ -1,0 +1,134 @@
+{
+  "tag": "PreferenceScreen",
+  "title": "",
+  "summary": "",
+  "icon": "",
+  "key": "",
+  "defaultValue": "",
+  "dependency": "",
+  "entries": [],
+  "entryValues": [],
+  "children": [
+    {
+      "tag": "PreferenceCategory",
+      "title": "朗读设置",
+      "summary": "",
+      "icon": "",
+      "key": "",
+      "defaultValue": "",
+      "dependency": "",
+      "entries": [],
+      "entryValues": [],
+      "children": [
+        {
+          "tag": "SwitchPreference",
+          "title": "忽略音频焦点",
+          "summary": "允许与其他应用同时播放音频",
+          "icon": "",
+          "key": "ignoreAudioFocus",
+          "defaultValue": "false",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "来电期间暂停朗读",
+          "summary": "在通话期间暂停朗读，需要读取手机状态权限",
+          "icon": "",
+          "key": "pauseReadAloudWhilePhoneCalls",
+          "defaultValue": "false",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "朗读服务唤醒锁",
+          "summary": "开启朗读的时候启用唤醒锁,有些手机开启唤醒锁会被杀后台",
+          "icon": "",
+          "key": "readAloudWakeLock",
+          "defaultValue": "false",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "系统媒体控件兼容性更改",
+          "summary": "当锁屏不显示系统媒体控件时可以尝试开启，比如oneui7.0或vivo等",
+          "icon": "",
+          "key": "systemMediaControlCompatibilityChange",
+          "defaultValue": "false",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "媒体按钮•上一首|下一首",
+          "summary": "上一段|下一段/上一章|下一章",
+          "icon": "",
+          "key": "mediaButtonPerNext",
+          "defaultValue": "false",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "按页朗读",
+          "summary": "及时翻页，翻页时会停顿一下",
+          "icon": "",
+          "key": "readAloudByPage",
+          "defaultValue": "false",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "SwitchPreference",
+          "title": "流式播放音频",
+          "summary": "即边下边播，网络不好时播放会断断续续，仅TTS源有效",
+          "icon": "",
+          "key": "streamReadAloudAudio",
+          "defaultValue": "false",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "朗读引擎",
+          "summary": "TTS",
+          "icon": "",
+          "key": "appTtsEngine",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        },
+        {
+          "tag": "Preference",
+          "title": "系统 TTS 设置",
+          "summary": "打开系统 TTS 设置界面",
+          "icon": "",
+          "key": "sysTtsConfig",
+          "defaultValue": "",
+          "dependency": "",
+          "entries": [],
+          "entryValues": [],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

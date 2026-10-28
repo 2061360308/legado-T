@@ -1,0 +1,233 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "id": "ll_content",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "gravity": "center",
+    "padding": 20,
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": 60,
+        "gravity": "center",
+        "orientation": "horizontal",
+        "padding": 16
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center_vertical",
+            "layout_marginRight": 2,
+            "text": "开关",
+            "textColor": "#de000000",
+            "textSize": 16
+          },
+          "children": []
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "orientation": "horizontal",
+            "layout_width": 53,
+            "layout_height": "match_parent",
+            "gravity": "center_vertical"
+          },
+          "children": [
+            {
+              "tag": "SwitchCompat",
+              "attrs": {
+                "layout_height": "wrap_content",
+                "id": "sr_enabled",
+                "layout_weight": "1",
+                "gravity": "start|center_vertical",
+                "style": "@style/Widget.AppCompat.CompoundButton.Switch",
+                "layout_width": "match_parent"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "View",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": 0,
+            "layout_weight": "1"
+          },
+          "children": []
+        },
+        {
+          "tag": "View",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": 0,
+            "layout_weight": "1"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": 65,
+        "orientation": "horizontal",
+        "padding": 16,
+        "gravity": "start|center_vertical"
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center_vertical",
+            "text": "开始日期",
+            "textColor": "#de000000",
+            "textSize": 16,
+            "gravity": "center_vertical"
+          },
+          "children": []
+        },
+        {
+          "tag": "View",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": 0,
+            "layout_weight": "1"
+          },
+          "children": []
+        },
+        {
+          "tag": "View",
+          "attrs": {
+            "layout_width": 0,
+            "layout_height": 0,
+            "layout_weight": "1"
+          },
+          "children": []
+        },
+        {
+          "tag": "EditText",
+          "attrs": {
+            "layout_width": "match_parent",
+            "layout_height": 49,
+            "id": "start_date",
+            "hint": "Select date",
+            "layout_weight": "1",
+            "textSize": 16,
+            "layout_marginRight": 68
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "orientation": "horizontal",
+        "layout_width": "match_parent",
+        "layout_height": 63,
+        "gravity": "center_horizontal|left",
+        "padding": 16
+      },
+      "children": [
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "orientation": "horizontal",
+            "layout_width": 100,
+            "layout_height": "match_parent"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_gravity": "center_vertical",
+                "layout_marginRight": 2,
+                "text": "起始章节",
+                "textColor": "#de000000",
+                "textSize": 16
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "orientation": "horizontal",
+            "layout_width": "match_parent",
+            "layout_height": "match_parent",
+            "gravity": "end"
+          },
+          "children": [
+            {
+              "tag": "TextView",
+              "attrs": {
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_gravity": "center_vertical",
+                "layout_marginLeft": 25,
+                "layout_marginRight": 5,
+                "text": "日更章数",
+                "textColor": "#de000000",
+                "textSize": 16
+              },
+              "children": []
+            },
+            {
+              "tag": "EditText",
+              "attrs": {
+                "id": "edit_num",
+                "layout_width": 42,
+                "layout_height": "wrap_content",
+                "layout_gravity": "center",
+                "background": "bg_edit",
+                "hint": "3",
+                "lines": "1",
+                "paddingLeft": 5,
+                "paddingTop": 4,
+                "paddingRight": 5,
+                "paddingBottom": 4,
+                "textColor": "#de000000",
+                "textSize": 14
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "EditText",
+          "attrs": {
+            "id": "edit_start",
+            "layout_width": 47,
+            "layout_height": "wrap_content",
+            "layout_gravity": "center",
+            "background": "bg_edit",
+            "hint": "开始",
+            "lines": "1",
+            "paddingLeft": 5,
+            "paddingTop": 4,
+            "paddingRight": 5,
+            "paddingBottom": 4,
+            "textColor": "#de000000",
+            "textSize": 14
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

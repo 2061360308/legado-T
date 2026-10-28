@@ -1,0 +1,190 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "id": "vw_root",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "background": "@color/background",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "FrameLayout",
+      "attrs": {
+        "id": "vw_status_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "FrameLayout",
+      "attrs": {
+        "id": "vw_navigation_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_constraintBottom_toBottomOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "ConstraintLayout",
+      "attrs": {
+        "id": "ll_header",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "center_vertical",
+        "layout_constraintTop_toBottomOf": "@id/vw_status_bar"
+      },
+      "children": [
+        {
+          "tag": "BatteryView",
+          "attrs": {
+            "id": "tv_header_left",
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "ellipsize": "end",
+            "singleLine": "true",
+            "textSize": 12,
+            "layout_constraintBottom_toBottomOf": "parent",
+            "layout_constraintLeft_toLeftOf": "parent",
+            "layout_constraintRight_toLeftOf": "@+id/tv_header_right",
+            "layout_constraintTop_toTopOf": "parent"
+          },
+          "children": []
+        },
+        {
+          "tag": "BatteryView",
+          "attrs": {
+            "id": "tv_header_middle",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "ellipsize": "end",
+            "singleLine": "true",
+            "textSize": 12,
+            "visibility": "gone",
+            "layout_constraintBottom_toBottomOf": "parent",
+            "layout_constraintLeft_toLeftOf": "parent",
+            "layout_constraintRight_toRightOf": "parent",
+            "layout_constraintTop_toTopOf": "parent"
+          },
+          "children": []
+        },
+        {
+          "tag": "BatteryView",
+          "attrs": {
+            "id": "tv_header_right",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_marginLeft": 3,
+            "ellipsize": "end",
+            "singleLine": "true",
+            "textSize": 12,
+            "layout_constraintBottom_toBottomOf": "parent",
+            "layout_constraintRight_toRightOf": "parent",
+            "layout_constraintTop_toTopOf": "parent"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "ConstraintLayout",
+      "attrs": {
+        "id": "ll_footer",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "center_vertical",
+        "layout_constraintBottom_toTopOf": "@id/vw_navigation_bar"
+      },
+      "children": [
+        {
+          "tag": "BatteryView",
+          "attrs": {
+            "id": "tv_footer_left",
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "ellipsize": "end",
+            "singleLine": "true",
+            "textSize": 12,
+            "layout_constraintBottom_toBottomOf": "parent",
+            "layout_constraintLeft_toLeftOf": "parent",
+            "layout_constraintRight_toLeftOf": "@+id/tv_footer_right",
+            "layout_constraintTop_toTopOf": "parent"
+          },
+          "children": []
+        },
+        {
+          "tag": "BatteryView",
+          "attrs": {
+            "id": "tv_footer_middle",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "ellipsize": "end",
+            "singleLine": "true",
+            "textSize": 12,
+            "visibility": "gone",
+            "layout_constraintBottom_toBottomOf": "parent",
+            "layout_constraintLeft_toLeftOf": "parent",
+            "layout_constraintRight_toRightOf": "parent",
+            "layout_constraintTop_toTopOf": "parent"
+          },
+          "children": []
+        },
+        {
+          "tag": "BatteryView",
+          "attrs": {
+            "id": "tv_footer_right",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_marginLeft": 3,
+            "ellipsize": "end",
+            "singleLine": "true",
+            "textSize": 12,
+            "layout_constraintBottom_toBottomOf": "parent",
+            "layout_constraintRight_toRightOf": "parent",
+            "layout_constraintTop_toTopOf": "parent"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "View",
+      "attrs": {
+        "id": "vw_top_divider",
+        "layout_width": "match_parent",
+        "layout_height": 0.5,
+        "background": "@color/divider",
+        "visibility": "invisible",
+        "layout_constraintTop_toBottomOf": "@id/ll_header"
+      },
+      "children": []
+    },
+    {
+      "tag": "View",
+      "attrs": {
+        "id": "vw_bottom_divider",
+        "layout_width": "match_parent",
+        "layout_height": 0.5,
+        "background": "@color/divider",
+        "visibility": "invisible",
+        "layout_constraintBottom_toTopOf": "@id/ll_footer"
+      },
+      "children": []
+    },
+    {
+      "tag": "ContentTextView",
+      "attrs": {
+        "id": "content_text_view",
+        "layout_width": "match_parent",
+        "layout_height": 0,
+        "layout_weight": "1",
+        "layout_constraintBottom_toTopOf": "@id/vw_bottom_divider",
+        "layout_constraintTop_toBottomOf": "@id/vw_top_divider"
+      },
+      "children": []
+    }
+  ]
+}

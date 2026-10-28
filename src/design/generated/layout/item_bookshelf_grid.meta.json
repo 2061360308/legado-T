@@ -1,0 +1,530 @@
+{
+  "source": "layout/item_bookshelf_grid.xml",
+  "hash": "9644a674075a3ec65e4a68895d53ddb9fa140ab4",
+  "nodeCount": 8,
+  "attrCount": 74,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@drawable/bg_item_focused_on_tv",
+      "path": "$",
+      "value": "bg_item_focused_on_tv",
+      "status": "mapped",
+      "drawable": "bg_item_focused_on_tv"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cv_content",
+      "value": "@+id/cv_content",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "clickable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "focusable",
+      "raw": "true",
+      "value": "true",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingTop",
+      "raw": "8dp",
+      "path": "$/0",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "8dp",
+      "path": "$/0",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "8dp",
+      "path": "$/0",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "vertical",
+      "value": "vertical",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/0/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_margin",
+      "raw": "8dp",
+      "path": "$/0/0/0",
+      "value": "8px",
+      "status": "mapped"
+    },
+    {
+      "name": "scaleType",
+      "raw": "centerCrop",
+      "value": "centerCrop",
+      "status": "mapped",
+      "target": "object-fit"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_cover",
+      "value": "@+id/iv_cover",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/image_cover_default",
+      "value": "@drawable/image_cover_default",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "transitionName",
+      "raw": "img_cover",
+      "value": "img_cover",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute,ImageContrastCheck",
+      "value": "UnusedAttribute,ImageContrastCheck",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:layout_editor_absoluteX",
+      "raw": "8dp",
+      "value": "8dp",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "wrap_content",
+      "path": "$/0/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "right",
+      "value": "right",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/bv_unread",
+      "value": "@+id/bv_unread",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "includeFontPadding",
+      "raw": "false",
+      "value": "false",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded",
+      "value": "RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "22dp",
+      "path": "$/0/0/2",
+      "value": "22px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "22dp",
+      "path": "$/0/0/2",
+      "value": "22px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_gravity",
+      "raw": "right",
+      "value": "right",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "visibility",
+      "raw": "invisible",
+      "value": "invisible",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/rl_loading",
+      "value": "@+id/rl_loading",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:loading_width",
+      "raw": "2dp",
+      "value": "2dp",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded",
+      "value": "RtlHardcoded",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0/1",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_marginTop",
+      "raw": "6dp",
+      "path": "$/0/1",
+      "value": "6px",
+      "status": "mapped"
+    },
+    {
+      "name": "gravity",
+      "raw": "top|center_horizontal",
+      "value": "top|center_horizontal",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/0/1",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/0/1",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "end",
+      "value": "end",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_name",
+      "value": "@+id/tv_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "includeFontPadding",
+      "raw": "false",
+      "value": "false",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "lines",
+      "raw": "2",
+      "value": "2",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "text",
+      "raw": "@string/book_name",
+      "value": "@string/book_name",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "RtlHardcoded,RtlSymmetry",
+      "value": "RtlHardcoded,RtlSymmetry",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackground",
+      "path": "$/1",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/vw_foreground",
+      "value": "@+id/vw_foreground",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "scrollbars",
+      "raw": "none",
+      "value": "none",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintVertical_bias",
+      "raw": "0.0",
+      "value": "0.0",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:layout_editor_absoluteX",
+      "raw": "0dp",
+      "value": "0dp",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

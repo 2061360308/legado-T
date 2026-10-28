@@ -1,0 +1,86 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "TitleBar",
+      "attrs": {
+        "id": "title_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "title": "阅读记录"
+      },
+      "children": []
+    },
+    {
+      "tag": "ConstraintLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "paddingLeft": 10,
+        "paddingRight": 10
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_book_name",
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "padding": 6,
+            "singleLine": "true",
+            "textColor": "#de000000",
+            "layout_constraintLeft_toLeftOf": "parent",
+            "layout_constraintRight_toLeftOf": "@+id/tv_remove",
+            "layout_constraintTop_toTopOf": "parent"
+          },
+          "children": []
+        },
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_reading_time",
+            "layout_width": 0,
+            "layout_height": "wrap_content",
+            "padding": 6,
+            "singleLine": "true",
+            "textColor": "#8a000000",
+            "layout_constraintLeft_toLeftOf": "parent",
+            "layout_constraintRight_toLeftOf": "@+id/tv_remove",
+            "layout_constraintTop_toBottomOf": "@id/tv_book_name"
+          },
+          "children": []
+        },
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "tv_remove",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "background": "?attr/selectableItemBackground",
+            "padding": 6,
+            "text": "清除",
+            "textColor": "#de000000",
+            "layout_constraintBottom_toBottomOf": "parent",
+            "layout_constraintRight_toRightOf": "parent",
+            "layout_constraintTop_toTopOf": "parent"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "RecyclerView",
+      "attrs": {
+        "id": "recycler_view",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent"
+      },
+      "children": []
+    }
+  ]
+}

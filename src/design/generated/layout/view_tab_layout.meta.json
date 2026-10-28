@@ -1,0 +1,74 @@
+{
+  "source": "layout/view_tab_layout.xml",
+  "hash": "2ae8e3469fe7d24ab3406e63b2c8da69db1d7a7b",
+  "nodeCount": 1,
+  "attrCount": 9,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@android:color/transparent",
+      "path": "$",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tab_layout",
+      "value": "@+id/tab_layout",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tabBackground",
+      "raw": "@android:color/transparent",
+      "value": "@android:color/transparent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tabRippleColor",
+      "raw": "@android:color/transparent",
+      "value": "@android:color/transparent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "theme",
+      "raw": "?attr/actionBarStyle",
+      "value": "?attr/actionBarStyle",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

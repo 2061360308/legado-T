@@ -1,0 +1,54 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "padding": 6,
+    "background": "?android:attr/selectableItemBackground",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "HorizontalScrollView",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "match_parent"
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "text_title",
+            "text": "标题",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "singleLine": "true",
+            "ellipsize": "none"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "tag": "HorizontalScrollView",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "match_parent"
+      },
+      "children": [
+        {
+          "tag": "TextView",
+          "attrs": {
+            "id": "text_record",
+            "text": "阅读记录",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "singleLine": "true",
+            "ellipsize": "none"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "tag": "ImageButton",
+  "attrs": {
+    "id": "item",
+    "style": "?android:attr/actionButtonStyle",
+    "layout_width": "wrap_content",
+    "layout_height": "wrap_content"
+  },
+  "children": []
+}

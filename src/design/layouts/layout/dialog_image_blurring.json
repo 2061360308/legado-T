@@ -1,0 +1,44 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "orientation": "vertical",
+    "padding": 10
+  },
+  "children": [
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "text_view_value",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "layout_gravity": "center_horizontal",
+        "textColor": "#de000000",
+        "textSize": 17
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "text": "0 为停用，启用范围 1~25\\n半径数值越大，虚化效果越高"
+      },
+      "children": []
+    },
+    {
+      "tag": "AppCompatSeekBar",
+      "attrs": {
+        "id": "seek_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 6
+      },
+      "children": []
+    }
+  ]
+}

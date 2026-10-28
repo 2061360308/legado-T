@@ -1,0 +1,235 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "orientation": "vertical",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent"
+  },
+  "children": [
+    {
+      "tag": "TitleBar",
+      "attrs": {
+        "id": "title_bar",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "title": "书籍信息编辑"
+      },
+      "children": []
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "horizontal",
+        "padding": 5
+      },
+      "children": [
+        {
+          "tag": "CoverImageView",
+          "attrs": {
+            "id": "iv_cover",
+            "layout_width": 90,
+            "layout_height": 130,
+            "contentDescription": "封面",
+            "scaleType": "centerCrop",
+            "src": "image_cover_default"
+          },
+          "children": []
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "vertical",
+            "padding": 5
+          },
+          "children": [
+            {
+              "tag": "TextInputLayout",
+              "attrs": {
+                "id": "til_book_name",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "hint": "书名"
+              },
+              "children": [
+                {
+                  "tag": "ThemeEditText",
+                  "attrs": {
+                    "id": "tie_book_name",
+                    "layout_width": "match_parent",
+                    "layout_height": "wrap_content",
+                    "singleLine": "true"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "TextInputLayout",
+              "attrs": {
+                "id": "til_book_author",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "hint": "作者"
+              },
+              "children": [
+                {
+                  "tag": "ThemeEditText",
+                  "attrs": {
+                    "id": "tie_book_author",
+                    "layout_width": "match_parent",
+                    "layout_height": "wrap_content",
+                    "singleLine": "true"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "NoChildScrollNestedScrollView",
+      "attrs": {
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content"
+      },
+      "children": [
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "vertical"
+          },
+          "children": [
+            {
+              "tag": "LinearLayout",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "orientation": "horizontal",
+                "layout_gravity": "center_vertical"
+              },
+              "children": [
+                {
+                  "tag": "TextView",
+                  "attrs": {
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "text": "类型：",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 3
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "AppCompatSpinner",
+                  "attrs": {
+                    "id": "sp_type",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "LinearLayout",
+              "attrs": {
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "orientation": "horizontal",
+                "paddingStart": 5,
+                "paddingEnd": 5
+              },
+              "children": [
+                {
+                  "tag": "StrokeTextView",
+                  "attrs": {
+                    "id": "tv_select_cover",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "padding": 5,
+                    "text": "选择本地图片"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "StrokeTextView",
+                  "attrs": {
+                    "id": "tv_change_cover",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 10,
+                    "padding": 5,
+                    "text": "封面换源"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "StrokeTextView",
+                  "attrs": {
+                    "id": "tv_refresh_cover",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 10,
+                    "padding": 5,
+                    "text": "刷新封面"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "TextInputLayout",
+              "attrs": {
+                "id": "til_cover_url",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "layout_marginTop": 5,
+                "hint": "封面地址"
+              },
+              "children": [
+                {
+                  "tag": "ThemeEditText",
+                  "attrs": {
+                    "id": "tie_cover_url",
+                    "layout_width": "match_parent",
+                    "layout_height": "wrap_content"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "TextInputLayout",
+              "attrs": {
+                "id": "til_book_jj",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "layout_marginTop": 10,
+                "hint": "内容简介"
+              },
+              "children": [
+                {
+                  "tag": "ThemeEditText",
+                  "attrs": {
+                    "id": "tie_book_intro",
+                    "layout_width": "match_parent",
+                    "layout_height": "wrap_content"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

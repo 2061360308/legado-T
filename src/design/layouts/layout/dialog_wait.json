@@ -1,0 +1,35 @@
+{
+  "tag": "LinearLayout",
+  "attrs": {
+    "layout_width": "wrap_content",
+    "layout_height": "wrap_content",
+    "background": "@color/background",
+    "gravity": "center",
+    "padding": 20,
+    "orientation": "horizontal"
+  },
+  "children": [
+    {
+      "tag": "ThemeProgressBar",
+      "attrs": {
+        "id": "pb",
+        "layout_width": 30,
+        "layout_height": 30
+      },
+      "children": []
+    },
+    {
+      "tag": "TextView",
+      "attrs": {
+        "id": "tv_msg",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "padding": 6,
+        "gravity": "center",
+        "text": "加载中…",
+        "textColor": "#de000000"
+      },
+      "children": []
+    }
+  ]
+}

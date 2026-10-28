@@ -1,0 +1,119 @@
+{
+  "source": "menu/main_bnv.xml",
+  "hash": "094387ff23ad4fe59311a21485269cfc8d5e791f",
+  "nodeCount": 5,
+  "attrCount": 15,
+  "meta": [
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "tools:showIn",
+      "raw": "bottom_navigation_view",
+      "value": "bottom_navigation_view",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_bookshelf",
+      "value": "@+id/menu_bookshelf",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_bottom_books",
+      "value": "ic_bottom_books",
+      "status": "mapped",
+      "drawable": "ic_bottom_books",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/bookshelf",
+      "value": "书架",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_discovery",
+      "value": "@+id/menu_discovery",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_bottom_explore",
+      "value": "ic_bottom_explore",
+      "status": "mapped",
+      "drawable": "ic_bottom_explore",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/discovery",
+      "value": "发现",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_rss",
+      "value": "@+id/menu_rss",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_bottom_rss_feed",
+      "value": "ic_bottom_rss_feed",
+      "status": "mapped",
+      "drawable": "ic_bottom_rss_feed",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/rss",
+      "value": "订阅",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/menu_my_config",
+      "value": "@+id/menu_my_config",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "icon",
+      "raw": "@drawable/ic_bottom_person",
+      "value": "ic_bottom_person",
+      "status": "mapped",
+      "drawable": "ic_bottom_person",
+      "target": "component prop"
+    },
+    {
+      "name": "title",
+      "raw": "@string/my",
+      "value": "我的",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "unresolved": [],
+  "unsupported": []
+}

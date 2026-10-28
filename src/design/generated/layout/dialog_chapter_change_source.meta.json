@@ -1,0 +1,704 @@
+{
+  "source": "layout/dialog_chapter_change_source.xml",
+  "hash": "a7c072c1eeade2c1d7815c94fc48a04525d36ebf",
+  "nodeCount": 13,
+  "attrCount": 99,
+  "meta": [
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background",
+      "path": "$",
+      "value": "#FAFAFA",
+      "status": "mapped"
+    },
+    {
+      "name": "xmlns:android",
+      "raw": "http://schemas.android.com/apk/res/android",
+      "value": "http://schemas.android.com/apk/res/android",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:app",
+      "raw": "http://schemas.android.com/apk/res-auto",
+      "value": "http://schemas.android.com/apk/res-auto",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "xmlns:tools",
+      "raw": "http://schemas.android.com/tools",
+      "value": "http://schemas.android.com/tools",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background_menu",
+      "path": "$/0",
+      "value": "#EEEEEE",
+      "status": "mapped"
+    },
+    {
+      "name": "elevation",
+      "raw": "5dp",
+      "path": "$/0",
+      "value": "5px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tool_bar",
+      "value": "@+id/tool_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "theme",
+      "raw": "?attr/actionBarStyle",
+      "value": "?attr/actionBarStyle",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:displayHomeAsUp",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:fitStatusBar",
+      "raw": "false",
+      "value": "false",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:popupTheme",
+      "raw": "@style/AppTheme.PopupOverlay",
+      "value": "@style/AppTheme.PopupOverlay",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:titleTextAppearance",
+      "raw": "@style/ToolbarTitle",
+      "value": "@style/ToolbarTitle",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "2dp",
+      "path": "$/1",
+      "value": "2px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/refresh_progress_bar",
+      "value": "@+id/refresh_progress_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@+id/tool_bar",
+      "value": "@+id/tool_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/2",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/recycler_view",
+      "value": "@+id/recycler_view",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layoutManager",
+      "raw": "androidx.recyclerview.widget.LinearLayoutManager",
+      "value": "androidx.recyclerview.widget.LinearLayoutManager",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toTopOf",
+      "raw": "@+id/ll_bottom_bar",
+      "value": "@+id/ll_bottom_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@+id/refresh_progress_bar",
+      "value": "@+id/refresh_progress_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/3",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "36dp",
+      "path": "$/3",
+      "value": "36px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "10dp",
+      "path": "$/3",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "10dp",
+      "path": "$/3",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "orientation",
+      "raw": "horizontal",
+      "value": "horizontal",
+      "status": "mapped",
+      "target": "flex-direction"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background",
+      "path": "$/3",
+      "value": "#FAFAFA",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/ll_bottom_bar",
+      "value": "@+id/ll_bottom_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "0dp",
+      "path": "$/3/0",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingLeft",
+      "raw": "10dp",
+      "path": "$/3/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "paddingRight",
+      "raw": "10dp",
+      "path": "$/3/0",
+      "value": "10px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_weight",
+      "raw": "1",
+      "value": "1",
+      "status": "mapped",
+      "target": "flex"
+    },
+    {
+      "name": "gravity",
+      "raw": "center_vertical",
+      "value": "center_vertical",
+      "status": "mapped",
+      "target": "flex alignment"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/3/0",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "textColor",
+      "raw": "@color/primaryText",
+      "path": "$/3/0",
+      "value": "#000000de",
+      "status": "mapped"
+    },
+    {
+      "name": "textSize",
+      "raw": "12sp",
+      "path": "$/3/0",
+      "value": "12px",
+      "status": "mapped"
+    },
+    {
+      "name": "ellipsize",
+      "raw": "middle",
+      "value": "middle",
+      "status": "mapped",
+      "target": "text-overflow"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/tv_dur",
+      "value": "@+id/tv_dur",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "singleLine",
+      "raw": "true",
+      "value": "true",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "36dp",
+      "path": "$/3/1",
+      "value": "36px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/3/1",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_top",
+      "value": "@+id/iv_top",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/go_to_top",
+      "value": "@string/go_to_top",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_arrow_drop_up",
+      "value": "@drawable/ic_arrow_drop_up",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/go_to_top",
+      "value": "@string/go_to_top",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "36dp",
+      "path": "$/3/2",
+      "value": "36px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "match_parent",
+      "path": "$/3/2",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackgroundBorderless",
+      "path": "$/3/2",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_bottom",
+      "value": "@+id/iv_bottom",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "contentDescription",
+      "raw": "@string/go_to_bottom",
+      "value": "@string/go_to_bottom",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_arrow_drop_down",
+      "value": "@drawable/ic_arrow_drop_down",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tooltipText",
+      "raw": "@string/go_to_bottom",
+      "value": "@string/go_to_bottom",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "tools:ignore",
+      "raw": "UnusedAttribute",
+      "value": "UnusedAttribute",
+      "status": "ignored",
+      "reason": "non-visual/platform attribute"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/4",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background",
+      "path": "$/4",
+      "value": "#FAFAFA",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "gone",
+      "value": "gone",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/cl_toc",
+      "value": "@+id/cl_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@+id/tool_bar",
+      "value": "@+id/tool_bar",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "wrap_content",
+      "path": "$/4/0",
+      "value": "wrap_content",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "@color/background",
+      "path": "$/4/0",
+      "value": "#FAFAFA",
+      "status": "mapped"
+    },
+    {
+      "name": "elevation",
+      "raw": "4dp",
+      "path": "$/4/0",
+      "value": "4px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/fl_hide_toc",
+      "value": "@+id/fl_hide_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4/0/0",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "36dp",
+      "path": "$/4/0/0",
+      "value": "36px",
+      "status": "mapped"
+    },
+    {
+      "name": "background",
+      "raw": "?android:attr/selectableItemBackground",
+      "path": "$/4/0/0",
+      "value": "transparent",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/iv_hide_toc",
+      "value": "@+id/iv_hide_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "src",
+      "raw": "@drawable/ic_arrow_down",
+      "value": "@drawable/ic_arrow_down",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:tint",
+      "raw": "@color/primaryText",
+      "value": "@color/primaryText",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "match_parent",
+      "path": "$/4/1",
+      "value": "match_parent",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "0dp",
+      "path": "$/4/1",
+      "value": "0px",
+      "status": "mapped"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/recycler_view_toc",
+      "value": "@+id/recycler_view_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layoutManager",
+      "raw": "androidx.recyclerview.widget.LinearLayoutManager",
+      "value": "androidx.recyclerview.widget.LinearLayoutManager",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "parent",
+      "value": "parent",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toBottomOf",
+      "raw": "@+id/fl_hide_toc",
+      "value": "@+id/fl_hide_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "layout_width",
+      "raw": "48dp",
+      "path": "$/4/2",
+      "value": "48px",
+      "status": "mapped"
+    },
+    {
+      "name": "layout_height",
+      "raw": "48dp",
+      "path": "$/4/2",
+      "value": "48px",
+      "status": "mapped"
+    },
+    {
+      "name": "visibility",
+      "raw": "gone",
+      "value": "gone",
+      "status": "mapped",
+      "target": "display/visibility"
+    },
+    {
+      "name": "id",
+      "raw": "@+id/loading_toc",
+      "value": "@+id/loading_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintBottom_toBottomOf",
+      "raw": "@+id/recycler_view_toc",
+      "value": "@+id/recycler_view_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintLeft_toLeftOf",
+      "raw": "@+id/recycler_view_toc",
+      "value": "@+id/recycler_view_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintRight_toRightOf",
+      "raw": "@+id/recycler_view_toc",
+      "value": "@+id/recycler_view_toc",
+      "status": "mapped",
+      "target": "component prop"
+    },
+    {
+      "name": "app:layout_constraintTop_toTopOf",
+      "raw": "@+id/recycler_view_toc",
+      "value": "@+id/recycler_view_toc",
+      "status": "mapped",
+      "target": "component prop"
+    }
+  ],
+  "expandedMeta": [],
+  "unresolved": [],
+  "unsupported": []
+}

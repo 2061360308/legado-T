@@ -1,0 +1,296 @@
+{
+  "tag": "ConstraintLayout",
+  "attrs": {
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "orientation": "vertical"
+  },
+  "children": [
+    {
+      "tag": "View",
+      "attrs": {
+        "id": "vw_menu_bg",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "contentDescription": "内容"
+      },
+      "children": []
+    },
+    {
+      "tag": "FloatingActionButton",
+      "attrs": {
+        "id": "fabLeft",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_margin": 16,
+        "contentDescription": "上个结果",
+        "src": "ic_arrow_right",
+        "tint": "#de000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintStart_toStartOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "FloatingActionButton",
+      "attrs": {
+        "id": "fabRight",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "layout_margin": 16,
+        "contentDescription": "下个结果",
+        "src": "ic_arrow_right",
+        "tint": "#de000000",
+        "layout_constraintBottom_toBottomOf": "parent",
+        "layout_constraintEnd_toEndOf": "parent",
+        "layout_constraintTop_toTopOf": "parent"
+      },
+      "children": []
+    },
+    {
+      "tag": "LinearLayout",
+      "attrs": {
+        "id": "ll_bottom_menu",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "vertical",
+        "layout_constraintBottom_toBottomOf": "parent"
+      },
+      "children": [
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_search_base_info",
+            "layout_width": "match_parent",
+            "layout_height": 36,
+            "background": "@color/background_menu",
+            "gravity": "center_vertical",
+            "orientation": "horizontal",
+            "paddingLeft": 10,
+            "paddingRight": 10
+          },
+          "children": [
+            {
+              "tag": "AppCompatImageView",
+              "attrs": {
+                "id": "iv_search_content_up",
+                "layout_width": 36,
+                "layout_height": "match_parent",
+                "background": "?android:attr/selectableItemBackgroundBorderless",
+                "contentDescription": "滚动到顶部",
+                "src": "ic_arrow_drop_up",
+                "tint": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "AppCompatImageView",
+              "attrs": {
+                "id": "iv_search_content_down",
+                "layout_width": 36,
+                "layout_height": "match_parent",
+                "background": "?android:attr/selectableItemBackgroundBorderless",
+                "contentDescription": "滚动到底部",
+                "src": "ic_arrow_drop_down",
+                "tint": "#de000000"
+              },
+              "children": []
+            },
+            {
+              "tag": "TextView",
+              "attrs": {
+                "id": "tv_current_search_info",
+                "layout_width": 0,
+                "layout_height": "match_parent",
+                "layout_weight": "1",
+                "background": "?android:attr/selectableItemBackgroundBorderless",
+                "ellipsize": "middle",
+                "gravity": "center_vertical",
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "singleLine": "true",
+                "textColor": "#de000000",
+                "textSize": 12
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "LinearLayout",
+          "attrs": {
+            "id": "ll_bottom_bg",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "horizontal"
+          },
+          "children": [
+            {
+              "tag": "View",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "match_parent",
+                "layout_weight": "1"
+              },
+              "children": []
+            },
+            {
+              "tag": "View",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "match_parent",
+                "layout_weight": "2"
+              },
+              "children": []
+            },
+            {
+              "tag": "View",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "match_parent",
+                "layout_weight": "2"
+              },
+              "children": []
+            },
+            {
+              "tag": "View",
+              "attrs": {
+                "layout_width": 0,
+                "layout_height": "match_parent",
+                "layout_weight": "1"
+              },
+              "children": []
+            },
+            {
+              "tag": "LinearLayout",
+              "attrs": {
+                "id": "ll_search_results",
+                "layout_width": 60,
+                "layout_height": "wrap_content",
+                "background": "?android:attr/selectableItemBackgroundBorderless",
+                "contentDescription": "结果",
+                "orientation": "vertical",
+                "paddingBottom": 7
+              },
+              "children": [
+                {
+                  "tag": "AppCompatImageView",
+                  "attrs": {
+                    "id": "iv_search_results",
+                    "layout_width": "match_parent",
+                    "layout_height": 0,
+                    "layout_weight": "1",
+                    "contentDescription": "结果",
+                    "src": "ic_toc",
+                    "tint": "#de000000"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "TextView",
+                  "attrs": {
+                    "id": "tv_search_results",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_gravity": "center_horizontal",
+                    "layout_marginTop": 3,
+                    "maxLines": "1",
+                    "text": "结果",
+                    "textColor": "#de000000",
+                    "textSize": 12
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "LinearLayout",
+              "attrs": {
+                "id": "ll_main_menu",
+                "layout_width": 60,
+                "layout_height": "wrap_content",
+                "background": "?android:attr/selectableItemBackgroundBorderless",
+                "contentDescription": "主菜单",
+                "orientation": "vertical",
+                "paddingBottom": 7
+              },
+              "children": [
+                {
+                  "tag": "AppCompatImageView",
+                  "attrs": {
+                    "id": "iv_main_menu",
+                    "layout_width": "match_parent",
+                    "layout_height": 0,
+                    "layout_weight": "1",
+                    "contentDescription": "主菜单",
+                    "src": "ic_menu",
+                    "tint": "#de000000"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "TextView",
+                  "attrs": {
+                    "id": "tv_main_menu",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_gravity": "center_horizontal",
+                    "layout_marginTop": 3,
+                    "maxLines": "1",
+                    "text": "主菜单",
+                    "textColor": "#de000000",
+                    "textSize": 12
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "tag": "LinearLayout",
+              "attrs": {
+                "id": "ll_search_exit",
+                "layout_width": 60,
+                "layout_height": "wrap_content",
+                "background": "?android:attr/selectableItemBackgroundBorderless",
+                "contentDescription": "退出",
+                "orientation": "vertical",
+                "paddingBottom": 7
+              },
+              "children": [
+                {
+                  "tag": "AppCompatImageView",
+                  "attrs": {
+                    "id": "iv_search_exit",
+                    "layout_width": "match_parent",
+                    "layout_height": 0,
+                    "layout_weight": "1",
+                    "contentDescription": "退出",
+                    "src": "ic_auto_page_stop",
+                    "tint": "#de000000"
+                  },
+                  "children": []
+                },
+                {
+                  "tag": "TextView",
+                  "attrs": {
+                    "id": "tv_search_exit",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_gravity": "center_horizontal",
+                    "layout_marginTop": 3,
+                    "maxLines": "1",
+                    "text": "退出",
+                    "textColor": "#de000000",
+                    "textSize": 12
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
