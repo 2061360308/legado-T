@@ -1,10 +1,10 @@
 [package]
 name = "local-reader"
 version = "0.1.0"
-description = "legado 本地 TXT 阅读器复刻（Tauri 2.x）"
+description = "legado local reader clone (Tauri 2.x)"
 authors = ["local-reader"]
 edition = "2021"
-rust-version = "1.77.2"
+rust-version = "1.88.0"
 
 [lib]
 name = "local_reader_lib"
@@ -29,6 +29,8 @@ pinyin = "0.10"
 zip = { version = "0.6", default-features = false, features = ["deflate"] }
 aes = "0.8"
 md-5 = "0.10"
+rbook = { version = "0.7", default-features = false, features = ["threadsafe"] }
+html-escape = "0.2"
 
 [features]
 default = ["custom-protocol"]

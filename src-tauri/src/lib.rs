@@ -63,6 +63,7 @@ pub fn run() {
             commands::bookshelf::book_move_to_top,
             commands::bookshelf::book_set_group,
             commands::bookshelf::import_txt,
+            commands::bookshelf::import_book,
             commands::bookshelf::re_split_book,
             commands::bookshelf::read_chapter,
             commands::reader::reader_open,

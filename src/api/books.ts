@@ -107,6 +107,22 @@ export function importTxt(
   });
 }
 
+export function importBook(
+  path: string,
+  name: string | null,
+  group: number | null,
+  charset: string | null,
+  splitLong: boolean | null,
+): Promise<ImportResult> {
+  return invoke<ImportResult>("import_book", {
+    path,
+    name,
+    group,
+    charset,
+    splitLong,
+  });
+}
+
 export function reSplitBook(
   bookUrl: string,
   rule: string | null,

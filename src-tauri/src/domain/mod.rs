@@ -1,6 +1,7 @@
 pub mod bookshelf;
 pub mod chinese_convert;
 pub mod content_processor;
+pub mod epub_import;
 pub mod import_service;
 pub mod layout_engine;
 pub mod model;

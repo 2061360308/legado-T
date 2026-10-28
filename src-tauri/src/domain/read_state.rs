@@ -7,6 +7,7 @@ use serde::Serialize;
 use crate::data::keyvalue::KeyValue;
 use crate::data::repositories::{BookRepo, ChapterRepo};
 use crate::domain::content_processor;
+use crate::domain::import_service;
 use crate::domain::layout_engine::{self, LayoutPage, LayoutStyle};
 use crate::domain::model::{Book, BookChapter, ReplaceRule};
 use crate::domain::txt_parser;
@@ -96,9 +97,13 @@ fn load_chapter(
     let raw = match KeyValue::get(conn, &override_key)? {
         Some(content) => content,
         None => {
-            let bytes = read_file_range(Path::new(&book.book_url), chapter.start, chapter.end)?;
-            let codec = CharsetCodec::from_label(book.charset.as_deref().unwrap_or("UTF-8"));
-            txt_parser::read_chapter_raw(&bytes, &codec, 0, bytes.len() as i64, &chapter.title)
+            if import_service::is_epub(&book.book_url) {
+                import_service::read_epub_chapter(&book.book_url, chapter.index)?
+            } else {
+                let bytes = read_file_range(Path::new(&book.book_url), chapter.start, chapter.end)?;
+                let codec = CharsetCodec::from_label(book.charset.as_deref().unwrap_or("UTF-8"));
+                txt_parser::read_chapter_raw(&bytes, &codec, 0, bytes.len() as i64, &chapter.title)
+            }
         }
     };
     let processed = content_processor::process(conn, &chapter.title, &raw, book, false)?;

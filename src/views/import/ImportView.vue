@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { open } from "@tauri-apps/plugin-dialog";
-import { importTxt, type ImportResult } from "@/api/books";
+import { importBook, type ImportResult } from "@/api/books";
 import TitleBar from "@/components/android/TitleBar.vue";
 
 const router = useRouter();
@@ -18,7 +18,7 @@ const CHARSETS = ["", "UTF-8", "GBK", "UTF-16LE", "UTF-16BE"];
 async function pickFile() {
   const picked = await open({
     multiple: false,
-    filters: [{ name: "TXT 文本", extensions: ["txt", "TXT"] }],
+    filters: [{ name: "书籍文件", extensions: ["txt", "TXT", "epub", "EPUB"] }],
   });
   if (typeof picked === "string") {
     filePath.value = picked;
@@ -31,13 +31,13 @@ async function pickFile() {
 
 async function doImport() {
   if (!filePath.value) {
-    error.value = "请先选择 TXT 文件";
+    error.value = "请先选择 TXT/EPUB 文件";
     return;
   }
   importing.value = true;
   error.value = "";
   try {
-    result.value = await importTxt(
+    result.value = await importBook(
       filePath.value,
       bookName.value || null,
       null,
@@ -64,7 +64,7 @@ function goBookInfo() {
 
 <template>
   <div class="import">
-    <TitleBar title="导入 TXT" @back="goBookshelf" />
+    <TitleBar title="导入书籍" @back="goBookshelf" />
 
     <section class="form">
       <button @click="pickFile">选择文件</button>

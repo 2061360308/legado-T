@@ -70,6 +70,30 @@ pub fn import_txt(
 }
 
 #[tauri::command]
+pub fn import_book(
+    state: State<AppState>,
+    app: tauri::AppHandle,
+    path: String,
+    name: Option<String>,
+    group: Option<u64>,
+    charset: Option<String>,
+    split_long: Option<bool>,
+) -> CmdResult<import_service::ImportResult> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
+    import_service::import_book(
+        &conn,
+        &path,
+        &data_dir,
+        name.as_deref(),
+        group.unwrap_or(0),
+        charset.as_deref(),
+        split_long.unwrap_or(true),
+    )
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub fn re_split_book(
     state: State<AppState>,
     book_url: String,
