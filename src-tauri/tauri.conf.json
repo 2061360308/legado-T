@@ -21,7 +21,11 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["**"]
+      }
     }
   },
   "bundle": {
@@ -29,7 +33,8 @@
     "targets": "all",
     "icon": ["icons/icon.png"],
     "resources": {
-      "resources/defaultData/*": "defaultData/"
+      "resources/defaultData/*": "defaultData/",
+      "resources/pdfium/*": "pdfium/"
     }
   }
 }

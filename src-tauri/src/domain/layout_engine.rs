@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+use crate::domain::model::ContentBlock;
 use crate::domain::text_measure::char_width;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -25,6 +26,8 @@ pub struct LayoutStyle {
     pub use_zh_layout: bool,
     pub view_width: f32,
     pub view_height: f32,
+    #[serde(default)]
+    pub image_style: String,
 }
 
 impl Default for LayoutStyle {
@@ -50,6 +53,7 @@ impl Default for LayoutStyle {
             use_zh_layout: true,
             view_width: 360.0,
             view_height: 640.0,
+            image_style: "DEFAULT".to_string(),
         }
     }
 }
@@ -100,6 +104,14 @@ pub struct CharPos {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
+pub struct ImageLine {
+    pub src: String,
+    pub width: f32,
+    pub height: f32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct TextLine {
     pub text: String,
     pub x: f32,
@@ -113,6 +125,8 @@ pub struct TextLine {
     pub start_char: i32,
     pub end_char: i32,
     pub chars: Vec<CharPos>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub image: Option<ImageLine>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -151,6 +165,17 @@ struct BuildLine {
     end_char: i32,
     gap_before: f32,
     paragraph_end: bool,
+}
+
+enum BuildItem {
+    Text(BuildLine),
+    Image {
+        src: String,
+        width: f32,
+        height: f32,
+        gap_before: f32,
+        full_page: bool,
+    },
 }
 
 fn is_forbidden_at_line_start(c: char) -> bool {
@@ -320,10 +345,20 @@ fn build_line(
         start_char: broken.start_char as i32,
         end_char: broken.end_char as i32,
         chars: positions,
+        image: None,
     }
 }
 
 pub fn layout(title: &str, paragraphs: &[String], style: &LayoutStyle) -> LayoutResult {
+    let blocks = paragraphs
+        .iter()
+        .cloned()
+        .map(ContentBlock::paragraph)
+        .collect::<Vec<_>>();
+    layout_blocks(title, &blocks, style)
+}
+
+pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) -> LayoutResult {
     let (style, margin_fell_back) = style.clone().normalized();
     let max_width = style.content_width();
     let content_height = style.content_height();
@@ -360,7 +395,7 @@ pub fn layout(title: &str, paragraphs: &[String], style: &LayoutStyle) -> Layout
         }
     }
 
-    if paragraphs.is_empty() {
+    if blocks.is_empty() {
         let total_title_height: f32 = title_lines.iter().map(|l| l.height).sum();
         let offset = if total_title_height < content_height {
             (content_height - total_title_height) / 2.0
@@ -385,49 +420,130 @@ pub fn layout(title: &str, paragraphs: &[String], style: &LayoutStyle) -> Layout
         };
     }
 
-    let mut build_lines: Vec<BuildLine> = Vec::new();
+    let mut items: Vec<BuildItem> = Vec::new();
     let mut paragraph_start = 0usize;
-    let mut first_paragraph = true;
-    for paragraph in paragraphs {
-        let first_indent = if style.paragraph_indent > 0 && !paragraph.trim().is_empty() {
-            style.paragraph_indent as f32 * style.font_size
-        } else {
-            0.0
-        };
-        let broken = break_text(
-            paragraph,
-            max_width,
-            style.font_size,
-            style.use_zh_layout,
-            style.letter_spacing,
-            first_indent,
-        );
-        let para_char_len = paragraph.chars().count();
-        for (i, b) in broken.into_iter().enumerate() {
-            let gap = if i == 0 {
-                if first_paragraph {
+    let mut first_item = true;
+    for block in blocks {
+        match block {
+            ContentBlock::Paragraph { text } => {
+                let first_indent =
+                    if style.paragraph_indent > 0 && !text.trim().is_empty() {
+                        style.paragraph_indent as f32 * style.font_size
+                    } else {
+                        0.0
+                    };
+                let broken = break_text(
+                    text,
+                    max_width,
+                    style.font_size,
+                    style.use_zh_layout,
+                    style.letter_spacing,
+                    first_indent,
+                );
+                let para_char_len = text.chars().count();
+                for (i, b) in broken.into_iter().enumerate() {
+                    let gap = if i == 0 {
+                        if first_item {
+                            10.0 + style.title_bottom_spacing
+                        } else {
+                            style.paragraph_spacing
+                        }
+                    } else {
+                        0.0
+                    };
+                    first_item = false;
+                    items.push(BuildItem::Text(BuildLine {
+                        text: b.text,
+                        width: b.width,
+                        height: line_height,
+                        font_size: style.font_size,
+                        bold: style.text_bold == 1,
+                        indent: if i == 0 { first_indent } else { 0.0 },
+                        start_char: (paragraph_start + b.start_char) as i32,
+                        end_char: (paragraph_start + b.end_char) as i32,
+                        gap_before: gap,
+                        paragraph_end: b.paragraph_end,
+                    }));
+                }
+                paragraph_start += para_char_len + 1;
+            }
+            ContentBlock::Image {
+                src,
+                width,
+                height,
+                ..
+            } => {
+                if *width == 0 || *height == 0 {
+                    continue;
+                }
+                let image_style = if style.image_style.trim().is_empty() {
+                    "DEFAULT"
+                } else {
+                    style.image_style.as_str()
+                };
+                let mut image_width = *width as f32;
+                let mut image_height = *height as f32;
+                let full_page = image_style.eq_ignore_ascii_case("SINGLE");
+                if image_style.eq_ignore_ascii_case("FULL") {
+                    image_width = max_width;
+                    image_height = image_height * max_width / (*width as f32);
+                    if image_height > content_height {
+                        image_height = content_height;
+                        image_width = *width as f32 * content_height / (*height as f32);
+                    }
+                } else if full_page {
+                    let scale = (max_width / image_width).min(content_height / image_height);
+                    image_width *= scale;
+                    image_height *= scale;
+                } else {
+                    let mut scale = (max_width / image_width).min(1.0);
+                    if image_height * scale > content_height {
+                        scale = content_height / image_height;
+                    }
+                    image_width *= scale;
+                    image_height *= scale;
+                }
+                let gap = if first_item {
                     10.0 + style.title_bottom_spacing
                 } else {
                     style.paragraph_spacing
+                };
+                first_item = false;
+                items.push(BuildItem::Image {
+                    src: src.clone(),
+                    width: image_width,
+                    height: image_height,
+                    gap_before: gap,
+                    full_page,
+                });
+            }
+            ContentBlock::ImagePage {
+                src,
+                width,
+                height,
+                ..
+            } => {
+                if *width == 0 || *height == 0 {
+                    continue;
                 }
-            } else {
-                0.0
-            };
-            first_paragraph = false;
-            build_lines.push(BuildLine {
-                text: b.text,
-                width: b.width,
-                height: line_height,
-                font_size: style.font_size,
-                bold: style.text_bold == 1,
-                indent: if i == 0 { first_indent } else { 0.0 },
-                start_char: (paragraph_start + b.start_char) as i32,
-                end_char: (paragraph_start + b.end_char) as i32,
-                gap_before: gap,
-                paragraph_end: b.paragraph_end,
-            });
+                let scale = (max_width / (*width as f32))
+                    .min(content_height / (*height as f32))
+                    .min(1.0);
+                let gap = if first_item {
+                    10.0 + style.title_bottom_spacing
+                } else {
+                    style.paragraph_spacing
+                };
+                first_item = false;
+                items.push(BuildItem::Image {
+                    src: src.clone(),
+                    width: *width as f32 * scale,
+                    height: *height as f32 * scale,
+                    gap_before: gap,
+                    full_page: true,
+                });
+            }
         }
-        paragraph_start += para_char_len + 1;
     }
 
     let mut pages: Vec<LayoutPage> = Vec::new();
@@ -440,53 +556,149 @@ pub fn layout(title: &str, paragraphs: &[String], style: &LayoutStyle) -> Layout
     let mut page_end_char: i32 = 0;
     let mut has_content = false;
 
-    for b in build_lines {
-        let gap = if current_lines.is_empty() {
-            0.0
-        } else {
-            b.gap_before
-        };
-        let projected = cursor_y + gap + b.height;
-        if !current_lines.is_empty() && projected > style.padding_top + content_height {
-            pages.push(LayoutPage {
-                index: pages.len(),
-                lines: std::mem::take(&mut current_lines),
-                start_char: page_start_char,
-                end_char: page_end_char,
-                chapter_title: title.to_string(),
-            });
-            cursor_y = style.padding_top;
-            page_start_char = b.start_char;
-            page_end_char = b.end_char;
-            has_content = true;
-        } else {
-            cursor_y += gap;
-            if !has_content {
-                page_start_char = b.start_char;
+    for item in items {
+        match item {
+            BuildItem::Text(b) => {
+                let gap = if current_lines.is_empty() {
+                    0.0
+                } else {
+                    b.gap_before
+                };
+                let projected = cursor_y + gap + b.height;
+                if !current_lines.is_empty() && projected > style.padding_top + content_height {
+                    pages.push(LayoutPage {
+                        index: pages.len(),
+                        lines: std::mem::take(&mut current_lines),
+                        start_char: page_start_char,
+                        end_char: page_end_char,
+                        chapter_title: title.to_string(),
+                    });
+                    cursor_y = style.padding_top;
+                    page_start_char = b.start_char;
+                    page_end_char = b.end_char;
+                    has_content = true;
+                } else {
+                    cursor_y += gap;
+                    if !has_content {
+                        page_start_char = b.start_char;
+                        has_content = true;
+                    }
+                    page_end_char = b.end_char;
+                }
+                let line = build_line(
+                    BrokenLine {
+                        text: b.text,
+                        width: b.width,
+                        start_char: b.start_char as usize,
+                        end_char: b.end_char as usize,
+                        paragraph_end: b.paragraph_end,
+                    },
+                    style.padding_left + b.indent,
+                    cursor_y,
+                    (max_width - b.indent).max(1.0),
+                    b.font_size,
+                    b.bold,
+                    style.text_bold == 2,
+                    style.full_justify && !b.paragraph_end,
+                    style.letter_spacing,
+                    b.height,
+                );
+                cursor_y += b.height;
+                current_lines.push(line);
+            }
+            BuildItem::Image {
+                src,
+                width,
+                height,
+                gap_before,
+                full_page,
+            } => {
+                if full_page {
+                    if !current_lines.is_empty() {
+                        pages.push(LayoutPage {
+                            index: pages.len(),
+                            lines: std::mem::take(&mut current_lines),
+                            start_char: page_start_char,
+                            end_char: page_end_char,
+                            chapter_title: title.to_string(),
+                        });
+                    }
+                    let y = style.padding_top + (content_height - height).max(0.0) / 2.0;
+                    let x = style.padding_left + (max_width - width).max(0.0) / 2.0;
+                    current_lines.push(TextLine {
+                        text: String::new(),
+                        x,
+                        y,
+                        width,
+                        height,
+                        font_size: 0.0,
+                        bold: false,
+                        light: false,
+                        justified: false,
+                        start_char: page_start_char,
+                        end_char: page_end_char,
+                        chars: Vec::new(),
+                        image: Some(ImageLine {
+                            src,
+                            width,
+                            height,
+                        }),
+                    });
+                    pages.push(LayoutPage {
+                        index: pages.len(),
+                        lines: std::mem::take(&mut current_lines),
+                        start_char: page_start_char,
+                        end_char: page_end_char,
+                        chapter_title: title.to_string(),
+                    });
+                    cursor_y = style.padding_top;
+                    has_content = true;
+                    continue;
+                }
+
+                let gap = if current_lines.is_empty() {
+                    0.0
+                } else {
+                    gap_before
+                };
+                let projected = cursor_y + gap + height;
+                if !current_lines.is_empty() && projected > style.padding_top + content_height {
+                    pages.push(LayoutPage {
+                        index: pages.len(),
+                        lines: std::mem::take(&mut current_lines),
+                        start_char: page_start_char,
+                        end_char: page_end_char,
+                        chapter_title: title.to_string(),
+                    });
+                    cursor_y = style.padding_top;
+                } else {
+                    cursor_y += gap;
+                }
+                let x = style.padding_left + (max_width - width).max(0.0) / 2.0;
+                let y = cursor_y;
+                cursor_y += height;
+                current_lines.push(TextLine {
+                    text: String::new(),
+                    x,
+                    y,
+                    width,
+                    height,
+                    font_size: 0.0,
+                    bold: false,
+                    light: false,
+                    justified: false,
+                    start_char: page_start_char,
+                    end_char: page_end_char,
+                    chars: Vec::new(),
+                    image: Some(ImageLine {
+                        src,
+                        width,
+                        height,
+                    }),
+                });
                 has_content = true;
             }
-            page_end_char = b.end_char;
         }
-        let line = build_line(
-            BrokenLine {
-                text: b.text,
-                width: b.width,
-                start_char: b.start_char as usize,
-                end_char: b.end_char as usize,
-                paragraph_end: b.paragraph_end,
-            },
-            style.padding_left + b.indent,
-            cursor_y,
-            (max_width - b.indent).max(1.0),
-            b.font_size,
-            b.bold,
-            style.text_bold == 2,
-            style.full_justify && !b.paragraph_end,
-            style.letter_spacing,
-            b.height,
-        );
-        cursor_y += b.height;
-        current_lines.push(line);
     }
 
     if !current_lines.is_empty() {

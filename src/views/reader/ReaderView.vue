@@ -321,6 +321,7 @@ function buildStyle() {
     useZhLayout: prefs.useZhLayout,
     viewWidth: viewWidth.value,
     viewHeight: viewHeight.value,
+    imageStyle: "DEFAULT",
   };
 }
 

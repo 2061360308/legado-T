@@ -27,6 +27,22 @@ fn add(zip: &mut ZipWriter<fs::File>, name: &str, content: &str, stored: bool) {
     zip.write_all(content.as_bytes()).unwrap();
 }
 
+fn add_bytes(zip: &mut ZipWriter<fs::File>, name: &str, content: &[u8], stored: bool) {
+    let options = if stored {
+        FileOptions::default().compression_method(CompressionMethod::Stored)
+    } else {
+        FileOptions::default().compression_method(CompressionMethod::Deflated)
+    };
+    zip.start_file(name, options).unwrap();
+    zip.write_all(content).unwrap();
+}
+
+const ONE_PIXEL_GIF: &[u8] = &[
+    0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0xFF, 0xFF, 0xFF, 0x21, 0xF9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2C, 0x00, 0x00,
+    0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3B,
+];
+
 fn write_epub(path: &std::path::Path) {
     let mut zip = ZipWriter::new(fs::File::create(path).unwrap());
     add(&mut zip, "mimetype", "application/epub+zip", true);
@@ -57,6 +73,7 @@ fn write_epub(path: &std::path::Path) {
     <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
     <item id="c1" href="ch1.xhtml" media-type="application/xhtml+xml"/>
     <item id="c2" href="ch2.xhtml" media-type="application/xhtml+xml"/>
+    <item id="pic" href="images/pic.gif" media-type="image/gif"/>
   </manifest>
   <spine>
     <itemref idref="c1"/>
@@ -81,9 +98,10 @@ fn write_epub(path: &std::path::Path) {
         "OEBPS/ch1.xhtml",
         r#"<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml"><head><title>ignored</title><style>p{color:red}</style></head>
-<body><h1>第一章 起点</h1><p>这是第一段正文。</p><p>这是第二段正文。</p><script>ignored()</script></body></html>"#,
+<body><h1>第一章 起点</h1><p>这是第一段正文。</p><img src="images/pic.gif" alt="插图"/><p>这是第二段正文。</p><script>ignored()</script></body></html>"#,
         false,
     );
+    add_bytes(&mut zip, "OEBPS/images/pic.gif", ONE_PIXEL_GIF, false);
     add(
         &mut zip,
         "OEBPS/ch2.xhtml",
@@ -130,6 +148,24 @@ fn imports_epub_text_and_reads_cached_chapters() {
         .chapter_paragraphs
         .join("")
         .contains("这是第一段正文。"));
+
+    let blocks = import_service::read_epub_chapter_blocks(&import.book.book_url, 0).unwrap();
+    let image = blocks
+        .iter()
+        .find_map(|block| match block {
+            local_reader_lib::domain::model::ContentBlock::Image {
+                src, width, height, ..
+            } => Some((src, *width, *height)),
+            _ => None,
+        })
+        .expect("EPUB image block");
+    assert_eq!((image.1, image.2), (1, 1));
+    assert!(std::path::Path::new(image.0).exists());
+    assert!(first
+        .pages
+        .iter()
+        .flat_map(|page| page.lines.iter())
+        .any(|line| line.image.is_some()));
 
     let second = read_state::open(
         &conn,

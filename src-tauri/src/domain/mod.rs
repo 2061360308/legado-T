@@ -5,6 +5,7 @@ pub mod epub_import;
 pub mod import_service;
 pub mod layout_engine;
 pub mod model;
+pub mod pdf_import;
 pub mod pinyin;
 pub mod read_state;
 pub mod regex_guard;

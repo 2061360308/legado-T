@@ -18,7 +18,7 @@ const CHARSETS = ["", "UTF-8", "GBK", "UTF-16LE", "UTF-16BE"];
 async function pickFile() {
   const picked = await open({
     multiple: false,
-    filters: [{ name: "书籍文件", extensions: ["txt", "TXT", "epub", "EPUB"] }],
+    filters: [{ name: "书籍文件", extensions: ["txt", "TXT", "epub", "EPUB", "pdf", "PDF"] }],
   });
   if (typeof picked === "string") {
     filePath.value = picked;
@@ -31,7 +31,7 @@ async function pickFile() {
 
 async function doImport() {
   if (!filePath.value) {
-    error.value = "请先选择 TXT/EPUB 文件";
+    error.value = "请先选择 TXT/EPUB/PDF 文件";
     return;
   }
   importing.value = true;

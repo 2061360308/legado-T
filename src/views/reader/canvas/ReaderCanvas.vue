@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import type { LayoutPage } from "@/api/bindings";
-import { drawPage } from "./drawPage";
+import { drawPage, preloadPageImages } from "./drawPage";
 import type { InfoBarPayload } from "../infoBar";
 
 const props = withDefaults(
@@ -35,6 +35,7 @@ const canvasRef = ref<HTMLCanvasElement | null>(null);
 function draw() {
   const canvas = canvasRef.value;
   if (!canvas) return;
+  preloadPageImages(props.page, draw);
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 

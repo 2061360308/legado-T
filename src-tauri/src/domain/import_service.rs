@@ -12,7 +12,8 @@ use rusqlite::Connection;
 use crate::data::keyvalue::KeyValue;
 use crate::data::repositories::{BookRepo, ChapterRepo, TxtTocRuleRepo};
 use crate::domain::epub_import;
-use crate::domain::model::{book_type, Book, BookChapter};
+use crate::domain::pdf_import;
+use crate::domain::model::{book_type, Book, BookChapter, ContentBlock};
 use crate::domain::txt_parser;
 use crate::platform::charset_codec::CharsetCodec;
 use crate::platform::charset_probe;
@@ -86,6 +87,14 @@ pub fn is_epub(path: &str) -> bool {
         .unwrap_or(false)
 }
 
+pub fn is_pdf(path: &str) -> bool {
+    Path::new(path)
+        .extension()
+        .and_then(|value| value.to_str())
+        .map(|value| value.eq_ignore_ascii_case("pdf"))
+        .unwrap_or(false)
+}
+
 pub fn chapter_cache_path(book_url: &str, index: i32) -> PathBuf {
     let path = Path::new(book_url);
     let name = path
@@ -96,9 +105,51 @@ pub fn chapter_cache_path(book_url: &str, index: i32) -> PathBuf {
         .join(format!("{index}.txt"))
 }
 
+pub fn chapter_blocks_path(book_url: &str, index: i32) -> PathBuf {
+    chapter_cache_path(book_url, index).with_extension("json")
+}
+
+pub fn chapter_image_dir(book_url: &str) -> PathBuf {
+    chapter_cache_path(book_url, 0)
+        .parent()
+        .map(|dir| dir.join("images"))
+        .unwrap_or_else(|| PathBuf::from("images"))
+}
+
 pub fn read_epub_chapter(book_url: &str, index: i32) -> Result<String> {
-    fs::read_to_string(chapter_cache_path(book_url, index))
-        .map_err(|_| Error::Io(format!("EPUB 章节缓存不存在: {book_url}#{index}")))
+    let text_path = chapter_cache_path(book_url, index);
+    if let Ok(text) = fs::read_to_string(&text_path) {
+        return Ok(text);
+    }
+    let blocks = read_epub_chapter_blocks(book_url, index)?;
+    Ok(blocks_text(&blocks))
+}
+
+pub fn read_epub_chapter_blocks(book_url: &str, index: i32) -> Result<Vec<ContentBlock>> {
+    let path = chapter_blocks_path(book_url, index);
+    if let Ok(raw) = fs::read_to_string(&path) {
+        return serde_json::from_str::<Vec<ContentBlock>>(&raw)
+            .map_err(|e| Error::Internal(format!("EPUB chapter blocks parse failed: {e}")));
+    }
+    let text = fs::read_to_string(chapter_cache_path(book_url, index))
+        .map_err(|_| Error::Io(format!("EPUB 章节缓存不存在: {book_url}#{index}")))?;
+    Ok(text
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .map(ContentBlock::paragraph)
+        .collect())
+}
+
+fn blocks_text(blocks: &[ContentBlock]) -> String {
+    blocks
+        .iter()
+        .filter_map(|block| match block {
+            ContentBlock::Paragraph { text } => Some(text.as_str()),
+            _ => None,
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 /// 导入 TXT：复制 → 探测编码 → 分章 → 建书记录。
@@ -187,12 +238,16 @@ pub fn import_epub(
     group: u64,
 ) -> Result<ImportResult> {
     let src = Path::new(src_path);
-    let parsed = epub_import::parse(src)?;
-    let book_name = name
+    let fallback_name = name
         .map(|value| value.trim().to_string())
         .filter(|value| !value.is_empty())
-        .unwrap_or_else(|| parsed.title.clone());
-    let dst = copy_into_private(src, data_dir, &book_name)?;
+        .or_else(|| {
+            src.file_stem()
+                .and_then(|value| value.to_str())
+                .map(str::to_string)
+        })
+        .unwrap_or_else(|| "Untitled".to_string());
+    let dst = copy_into_private(src, data_dir, &fallback_name)?;
     let book_url = dst.to_string_lossy().to_string();
 
     let cache_dir = chapter_cache_path(&book_url, 0)
@@ -203,12 +258,25 @@ pub fn import_epub(
         fs::remove_dir_all(&cache_dir)?;
     }
     fs::create_dir_all(&cache_dir)?;
+    let image_dir = chapter_image_dir(&book_url);
+    fs::create_dir_all(&image_dir)?;
+
+    let parsed = epub_import::parse(&dst, &image_dir)?;
+    let book_name = name
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| parsed.title.clone());
 
     let mut chapters = Vec::with_capacity(parsed.chapters.len());
     for (index, chapter) in parsed.chapters.iter().enumerate() {
+        let text = blocks_text(&chapter.blocks);
         fs::write(
             cache_dir.join(format!("{index}.txt")),
-            chapter.text.as_bytes(),
+            text.as_bytes(),
+        )?;
+        fs::write(
+            cache_dir.join(format!("{index}.json")),
+            serde_json::to_vec(&chapter.blocks)?,
         )?;
         chapters.push(BookChapter {
             url: format!("{book_url}#{index}"),
@@ -222,8 +290,7 @@ pub fn import_epub(
     }
 
     let intro = if parsed.intro.trim().is_empty() {
-        parsed.chapters[0]
-            .text
+        blocks_text(&parsed.chapters[0].blocks)
             .chars()
             .take(500)
             .collect::<String>()
@@ -234,6 +301,113 @@ pub fn import_epub(
         book_url: book_url.clone(),
         name: book_name,
         author: parsed.author,
+        origin: "local".to_string(),
+        origin_name: dst
+            .file_name()
+            .and_then(|value| value.to_str())
+            .unwrap_or_default()
+            .to_string(),
+        charset: Some("UTF-8".to_string()),
+        r#type: book_type::TEXT | book_type::LOCAL,
+        group,
+        intro: if intro.is_empty() {
+            None
+        } else {
+            Some(intro.clone())
+        },
+        total_chapter_num: chapters.len() as i32,
+        can_update: false,
+        sync_time: mtime_secs(&dst),
+        ..Default::default()
+    };
+    let count = chapters.len();
+    BookRepo::upsert(conn, &book)?;
+    ChapterRepo::replace_all(conn, &book_url, &chapters)?;
+
+    Ok(ImportResult {
+        book,
+        chapter_count: count,
+        charset: "UTF-8".to_string(),
+        rule: String::new(),
+        intro,
+    })
+}
+
+pub fn import_pdf(
+    conn: &Connection,
+    src_path: &str,
+    data_dir: &Path,
+    name: Option<&str>,
+    group: u64,
+) -> Result<ImportResult> {
+    const PAGES_PER_CHAPTER: usize = 10;
+    let src = Path::new(src_path);
+    let fallback_name = name
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .or_else(|| {
+            src.file_stem()
+                .and_then(|value| value.to_str())
+                .map(str::to_string)
+        })
+        .unwrap_or_else(|| "Untitled".to_string());
+    let dst = copy_into_private(src, data_dir, &fallback_name)?;
+    let book_url = dst.to_string_lossy().to_string();
+
+    let cache_dir = chapter_cache_path(&book_url, 0)
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_else(|| dst.with_file_name("chapters"));
+    if cache_dir.exists() {
+        fs::remove_dir_all(&cache_dir)?;
+    }
+    fs::create_dir_all(&cache_dir)?;
+    let image_dir = chapter_image_dir(&book_url);
+    fs::create_dir_all(&image_dir)?;
+
+    let parsed = pdf_import::parse(&dst, &image_dir)?;
+    let book_name = name
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| fallback_name.clone());
+
+    let mut chapters = Vec::new();
+    let mut intro = String::new();
+    for (index, pages) in parsed.pages.chunks(PAGES_PER_CHAPTER).enumerate() {
+        let blocks = pages
+            .iter()
+            .flat_map(pdf_import::page_blocks)
+            .collect::<Vec<_>>();
+        let text = blocks_text(&blocks);
+        if intro.is_empty() {
+            intro = text.chars().take(500).collect();
+        }
+        fs::write(cache_dir.join(format!("{index}.txt")), text.as_bytes())?;
+        fs::write(
+            cache_dir.join(format!("{index}.json")),
+            serde_json::to_vec(&blocks)?,
+        )?;
+        let first = pages.first().map(|page| page.page_number).unwrap_or(0);
+        let last = pages.last().map(|page| page.page_number).unwrap_or(first);
+        let title = if first == last {
+            format!("第 {first} 页")
+        } else {
+            format!("第 {first}-{last} 页")
+        };
+        chapters.push(BookChapter {
+            url: format!("{book_url}#{index}"),
+            title,
+            index: index as i32,
+            start: 0,
+            end: 0,
+            ..Default::default()
+        });
+    }
+
+    let book = Book {
+        book_url: book_url.clone(),
+        name: book_name,
+        author: "Unknown".to_string(),
         origin: "local".to_string(),
         origin_name: dst
             .file_name()
@@ -277,6 +451,8 @@ pub fn import_book(
 ) -> Result<ImportResult> {
     if is_epub(src_path) {
         import_epub(conn, src_path, data_dir, name, group)
+    } else if is_pdf(src_path) {
+        import_pdf(conn, src_path, data_dir, name, group)
     } else {
         import_txt(conn, src_path, data_dir, name, group, charset, split_long)
     }
@@ -333,7 +509,7 @@ pub fn read_chapter(conn: &Connection, book_url: &str, index: i32) -> Result<Str
         .iter()
         .find(|c| c.index == index)
         .ok_or_else(|| Error::NotFound(format!("chapter {index}")))?;
-    if is_epub(book_url) {
+    if is_epub(book_url) || is_pdf(book_url) {
         return read_epub_chapter(book_url, index);
     }
     let bytes = read_file_range(Path::new(book_url), ch.start, ch.end)?;

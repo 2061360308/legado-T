@@ -1,5 +1,37 @@
+import { convertFileSrc } from "@tauri-apps/api/core";
 import type { LayoutPage } from "@/api/bindings";
 import { drawInfoBar, type InfoBarPayload } from "../infoBar";
+
+const pageImages = new Map<string, HTMLImageElement>();
+const loadingImages = new Set<string>();
+
+function imageSource(src: string): string {
+  if (/^(https?:|data:|asset:|blob:)/i.test(src)) return src;
+  try {
+    return convertFileSrc(src);
+  } catch {
+    return src;
+  }
+}
+
+export function preloadPageImages(page: LayoutPage | null, onLoad?: () => void): void {
+  if (!page) return;
+  for (const line of page.lines) {
+    const src = line.image?.src;
+    if (!src || pageImages.has(src) || loadingImages.has(src)) continue;
+    loadingImages.add(src);
+    const image = new Image();
+    image.onload = () => {
+      loadingImages.delete(src);
+      pageImages.set(src, image);
+      onLoad?.();
+    };
+    image.onerror = () => {
+      loadingImages.delete(src);
+    };
+    image.src = imageSource(src);
+  }
+}
 
 export interface PageDrawOptions {
   width: number;
@@ -53,6 +85,13 @@ export function drawPage(
     if (index === highlight) {
       ctx.fillStyle = "rgba(255, 213, 79, 0.35)";
       ctx.fillRect(line.x - 2, line.y - 2, line.width + 4, line.height);
+    }
+    if (line.image) {
+      const image = pageImages.get(line.image.src);
+      if (image && image.complete && image.naturalWidth > 0) {
+        ctx.drawImage(image, line.x, line.y, line.width, line.height);
+      }
+      return;
     }
     ctx.fillStyle = options.textColor;
     const weight = line.light ? "300 " : line.bold ? "600 " : "";

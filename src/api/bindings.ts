@@ -145,6 +145,7 @@ export interface LayoutStyle {
   useZhLayout: boolean;
   viewWidth: number;
   viewHeight: number;
+  imageStyle: string;
 }
 
 export interface CharPos {
@@ -152,6 +153,12 @@ export interface CharPos {
   x: number;
   y: number;
   width: number;
+}
+
+export interface ImageLine {
+  src: string;
+  width: number;
+  height: number;
 }
 
 export interface TextLine {
@@ -167,6 +174,7 @@ export interface TextLine {
   startChar: number;
   endChar: number;
   chars: CharPos[];
+  image?: ImageLine;
 }
 
 export interface LayoutPage {

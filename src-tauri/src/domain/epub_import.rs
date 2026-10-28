@@ -1,19 +1,20 @@
-//! EPUB text import (rbook): reads metadata, spine order, TOC labels and plain text.
-//! Images and rich blocks are intentionally left for the next stage.
+//! EPUB import (rbook): metadata, spine order, TOC labels, text and inline images.
 
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use fancy_regex::Regex;
 use html_escape::decode_html_entities;
+use md5::{Digest, Md5};
 use rbook::epub::Epub;
 
+use crate::domain::model::ContentBlock;
 use crate::{Error, Result};
 
 pub struct ParsedChapter {
     pub title: String,
     pub href: String,
-    pub text: String,
+    pub blocks: Vec<ContentBlock>,
 }
 
 pub struct ParsedEpub {
@@ -99,8 +100,150 @@ fn first_heading(html: &str) -> Option<String> {
     }
 }
 
+fn attr(tag: &str, name: &str) -> Option<String> {
+    let pattern = format!(
+        r#"(?is)\b{}\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))"#,
+        fancy_regex::escape(name)
+    );
+    let regex = Regex::new(&pattern).ok()?;
+    let capture = regex.captures(tag).ok()??;
+    let value = capture
+        .get(1)
+        .or_else(|| capture.get(2))
+        .or_else(|| capture.get(3))?
+        .as_str();
+    Some(decode_html_entities(value).trim().to_string())
+}
+
+fn resolve_href(base_href: &str, src: &str) -> Option<String> {
+    let src = src.split('#').next().unwrap_or("").trim();
+    if src.is_empty() || src.contains("://") || src.starts_with("data:") {
+        return None;
+    }
+    if src.starts_with('/') {
+        return Some(normalize_path(src));
+    }
+    let base = base_href
+        .split('#')
+        .next()
+        .unwrap_or("")
+        .split('?')
+        .next()
+        .unwrap_or("");
+    let base_dir = match base.rfind('/') {
+        Some(index) => &base[..index],
+        None => "",
+    };
+    let joined = if base_dir.is_empty() {
+        src.to_string()
+    } else {
+        format!("{base_dir}/{src}")
+    };
+    let mut parts: Vec<&str> = Vec::new();
+    for part in joined.split('/') {
+        match part {
+            "" | "." => {}
+            ".." => {
+                parts.pop();
+            }
+            other => parts.push(other),
+        }
+    }
+    if parts.is_empty() {
+        None
+    } else {
+        Some(parts.join("/"))
+    }
+}
+
+fn image_extension(src: &str) -> String {
+    let ext = src
+        .rsplit('.')
+        .next()
+        .unwrap_or("bin")
+        .split('?')
+        .next()
+        .unwrap_or("bin")
+        .to_ascii_lowercase();
+    if ext.chars().all(|ch| ch.is_ascii_alphanumeric()) && ext.len() <= 5 {
+        ext
+    } else {
+        "bin".to_string()
+    }
+}
+
+fn cache_image(
+    epub: &Epub,
+    base_href: &str,
+    src: &str,
+    image_dir: &Path,
+    alt: Option<String>,
+) -> Option<ContentBlock> {
+    let resolved = resolve_href(base_href, src)?;
+    let entry = epub
+        .manifest()
+        .by_href(&format!("/{resolved}"))
+        .or_else(|| epub.manifest().by_href(&resolved))?;
+    let bytes = entry.read_bytes().ok()?;
+    let size = imagesize::blob_size(&bytes).ok()?;
+    if size.width == 0 || size.height == 0 {
+        return None;
+    }
+    let digest = Md5::digest(&bytes);
+    let file_name = format!("{digest:x}.{}", image_extension(&resolved));
+    let path: PathBuf = image_dir.join(file_name);
+    if !path.exists() {
+        std::fs::create_dir_all(image_dir).ok()?;
+        std::fs::write(&path, &bytes).ok()?;
+    }
+    Some(ContentBlock::Image {
+        src: path.to_string_lossy().to_string(),
+        width: size.width as u32,
+        height: size.height as u32,
+        alt,
+    })
+}
+
+fn html_to_blocks(
+    epub: &Epub,
+    html: &str,
+    href: &str,
+    image_dir: &Path,
+) -> Result<Vec<ContentBlock>> {
+    let image_regex = compile(r"(?is)<img\b[^>]*>")?;
+    let mut blocks = Vec::new();
+    let mut last = 0usize;
+    for found in image_regex.find_iter(html) {
+        let Ok(found) = found else {
+            continue;
+        };
+        let segment = &html[last..found.start()];
+        push_paragraphs(&mut blocks, segment)?;
+        if let Some(src) = attr(found.as_str(), "src") {
+            let alt = attr(found.as_str(), "alt");
+            if let Some(block) = cache_image(epub, href, &src, image_dir, alt) {
+                blocks.push(block);
+            }
+        }
+        last = found.end();
+    }
+    push_paragraphs(&mut blocks, &html[last..])?;
+    Ok(blocks)
+}
+
+fn push_paragraphs(blocks: &mut Vec<ContentBlock>, html: &str) -> Result<()> {
+    let text = strip_html(html)?;
+    for line in text.lines() {
+        let line = line.trim();
+        if !line.is_empty() {
+            blocks.push(ContentBlock::paragraph(line));
+        }
+    }
+    Ok(())
+}
+
 /// Parse an EPUB and return chapters in spine order.
-pub fn parse(path: &Path) -> Result<ParsedEpub> {
+pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedEpub> {
     let epub = Epub::open(path).map_err(|e| Error::Invalid(format!("EPUB open failed: {e}")))?;
 
     let title = epub
@@ -151,8 +294,8 @@ pub fn parse(path: &Path) -> Result<ParsedEpub> {
         let html = manifest
             .read_str()
             .map_err(|e| Error::Invalid(format!("EPUB chapter read failed: {e}")))?;
-        let text = strip_html(&html)?;
-        if text.trim().is_empty() {
+        let blocks = html_to_blocks(&epub, &html, &href, image_dir)?;
+        if blocks.is_empty() {
             continue;
         }
         let title = toc_titles
@@ -160,7 +303,11 @@ pub fn parse(path: &Path) -> Result<ParsedEpub> {
             .cloned()
             .or_else(|| first_heading(&html))
             .unwrap_or_else(|| format!("Chapter {}", index + 1));
-        chapters.push(ParsedChapter { title, href, text });
+        chapters.push(ParsedChapter {
+            title,
+            href,
+            blocks,
+        });
     }
 
     if chapters.is_empty() {

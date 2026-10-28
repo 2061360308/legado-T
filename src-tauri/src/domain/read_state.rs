@@ -9,7 +9,7 @@ use crate::data::repositories::{BookRepo, ChapterRepo};
 use crate::domain::content_processor;
 use crate::domain::import_service;
 use crate::domain::layout_engine::{self, LayoutPage, LayoutStyle};
-use crate::domain::model::{Book, BookChapter, ReplaceRule};
+use crate::domain::model::{Book, BookChapter, ContentBlock, ReplaceRule};
 use crate::domain::txt_parser;
 use crate::platform::charset_codec::CharsetCodec;
 use crate::platform::filesystem::read_file_range;
@@ -94,27 +94,45 @@ fn load_chapter(
 ) -> Result<CachedChapter> {
     let chapter = find_chapter(chapters, index)?;
     let override_key = format!("chapterOverride:{}:{}", book.book_url, index);
-    let raw = match KeyValue::get(conn, &override_key)? {
-        Some(content) => content,
-        None => {
-            if import_service::is_epub(&book.book_url) {
-                import_service::read_epub_chapter(&book.book_url, chapter.index)?
-            } else {
+    let override_content = KeyValue::get(conn, &override_key)?;
+    let is_epub = import_service::is_epub(&book.book_url) || import_service::is_pdf(&book.book_url);
+    let display_title = content_processor::display_title(conn, &chapter.title, book)?;
+
+    let (blocks, effective_rules, paragraphs) = if is_epub && override_content.is_none() {
+        let blocks = import_service::read_epub_chapter_blocks(&book.book_url, chapter.index)?;
+        let paragraphs = blocks
+            .iter()
+            .filter_map(|block| match block {
+                ContentBlock::Paragraph { text } => Some(text.clone()),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+        (blocks, Vec::new(), paragraphs)
+    } else {
+        let raw = match override_content {
+            Some(content) => content,
+            None => {
                 let bytes = read_file_range(Path::new(&book.book_url), chapter.start, chapter.end)?;
                 let codec = CharsetCodec::from_label(book.charset.as_deref().unwrap_or("UTF-8"));
                 txt_parser::read_chapter_raw(&bytes, &codec, 0, bytes.len() as i64, &chapter.title)
             }
-        }
+        };
+        let processed = content_processor::process(conn, &chapter.title, &raw, book, false)?;
+        let blocks = processed
+            .contents
+            .iter()
+            .cloned()
+            .map(ContentBlock::paragraph)
+            .collect::<Vec<_>>();
+        (blocks, processed.effective_rules, processed.contents)
     };
-    let processed = content_processor::process(conn, &chapter.title, &raw, book, false)?;
-    let display_title = content_processor::display_title(conn, &chapter.title, book)?;
-    let result = layout_engine::layout(&display_title, &processed.contents, style);
+    let result = layout_engine::layout_blocks(&display_title, &blocks, style);
     Ok(CachedChapter {
         style_key: current_style_key(conn, style),
         pages: result.pages,
-        effective_rules: processed.effective_rules,
+        effective_rules,
         chapter_title: display_title,
-        paragraphs: processed.contents,
+        paragraphs,
     })
 }
 
