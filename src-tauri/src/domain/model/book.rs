@@ -148,6 +148,8 @@ pub struct BookChapter {
     pub tag: Option<String>,
     #[serde(default)]
     pub resource_url: Option<String>,
+    #[serde(default)]
+    pub toc_level: i32,
 }
 
 impl BookChapter {

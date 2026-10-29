@@ -60,14 +60,61 @@ const tocMenuItems = computed<PopupMenuItem[]>(() => {
   ];
 });
 
-const displayChapters = computed(() =>
-  reverseToc.value ? [...chapters.value].reverse() : chapters.value,
-);
+const collapsed = ref(new Set<number>());
+
+const parentIndex = computed(() => {
+  const result: number[] = [];
+  chapters.value.forEach((chapter, index) => {
+    const level = chapter.tocLevel ?? 0;
+    let parent = -1;
+    if (level > 0) {
+      for (let i = index - 1; i >= 0; i -= 1) {
+        if ((chapters.value[i].tocLevel ?? 0) < level) {
+          parent = i;
+          break;
+        }
+      }
+    }
+    result.push(parent);
+  });
+  return result;
+});
+
+function isCollapsed(index: number): boolean {
+  return collapsed.value.has(index);
+}
+
+function hasChildren(index: number): boolean {
+  const level = chapters.value[index]?.tocLevel ?? 0;
+  return (chapters.value[index + 1]?.tocLevel ?? 0) > level;
+}
+
+function isVisible(index: number): boolean {
+  let parent = parentIndex.value[index] ?? -1;
+  while (parent >= 0) {
+    if (collapsed.value.has(parent)) return false;
+    parent = parentIndex.value[parent] ?? -1;
+  }
+  return true;
+}
+
+function toggleVolume(index: number) {
+  const next = new Set(collapsed.value);
+  if (next.has(index)) next.delete(index);
+  else next.add(index);
+  collapsed.value = next;
+}
+
+const displayChapters = computed(() => {
+  const visible = chapters.value.filter((_, index) => isVisible(index));
+  return reverseToc.value ? [...visible].reverse() : visible;
+});
 
 const filteredChapters = computed(() => {
   const key = searchKeyword.value.trim();
   if (!key) return displayChapters.value;
-  return displayChapters.value.filter((ch) => ch.title.includes(key));
+  const source = reverseToc.value ? [...chapters.value].reverse() : chapters.value;
+  return source.filter((ch) => ch.title.includes(key));
 });
 
 const filteredBookmarks = computed(() => {
@@ -164,6 +211,7 @@ const currentInfo = computed(() => {
 async function load() {
   book.value = await bookGet(bookUrl);
   chapters.value = await chapterList(bookUrl);
+  collapsed.value = new Set();
   rules.value = await txtTocRuleList();
   try {
     bookmarks.value = await bookmarkList();
@@ -290,8 +338,18 @@ onMounted(load);
             v-for="ch in filteredChapters"
             :key="ch.index"
             :class="{ volume: ch.isVolume, current: ch.index === book?.durChapterIndex }"
+            :style="{ paddingLeft: `${12 + (ch.tocLevel ?? 0) * 16}px` }"
             @click="openChapter(ch)"
           >
+            <button
+              v-if="hasChildren(chapters.findIndex((item) => item.index === ch.index))"
+              class="toc-toggle"
+              :class="{ collapsed: isCollapsed(chapters.findIndex((item) => item.index === ch.index)) }"
+              aria-label="展开/收起"
+              @click.stop="toggleVolume(chapters.findIndex((item) => item.index === ch.index))"
+            >
+              <Icon name="ic_expand_more" :size="18" />
+            </button>
             <span class="title">{{ ch.title }}</span>
             <Icon
               v-if="ch.index === book?.durChapterIndex"
@@ -450,12 +508,32 @@ onMounted(load);
 .chapter-list li:active {
   background: var(--ac-transparent-10);
 }
+.toc-toggle {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: var(--ac-primary);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.toc-toggle.collapsed {
+  transform: rotate(-90deg);
+}
 .title {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.chapter-list li.volume {
+  background: var(--ac-background-card);
 }
 .chapter-list li.volume .title {
   font-weight: 600;

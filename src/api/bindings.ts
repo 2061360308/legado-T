@@ -82,6 +82,7 @@ export interface BookChapter {
   isPay?: boolean;
   tag?: string | null;
   resourceUrl?: string | null;
+  tocLevel?: number;
 }
 
 export interface BookGroup {

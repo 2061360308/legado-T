@@ -15,6 +15,8 @@ use crate::{Error, Result};
 pub struct ParsedMobiChapter {
     pub title: String,
     pub blocks: Vec<ContentBlock>,
+    pub is_volume: bool,
+    pub toc_level: i32,
 }
 
 pub struct ParsedMobi {
@@ -215,12 +217,17 @@ fn section_blocks(book: &Book, section: &ebook_rs::Section, image_dir: &Path) ->
     text_blocks(&section.plain_text)
 }
 
-fn collect_toc(points: &[ebook_rs::NavPoint], out: &mut Vec<(String, String)>) {
+fn collect_toc(points: &[ebook_rs::NavPoint], level: i32, out: &mut Vec<(String, String, i32, bool)>) {
     for point in points {
         if !point.label.trim().is_empty() && !point.href.trim().is_empty() {
-            out.push((point.label.trim().to_string(), point.href.clone()));
+            out.push((
+                point.label.trim().to_string(),
+                point.href.clone(),
+                level,
+                !point.subitems.is_empty(),
+            ));
         }
-        collect_toc(&point.subitems, out);
+        collect_toc(&point.subitems, level + 1, out);
     }
 }
 
@@ -291,16 +298,16 @@ pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedMobi> {
         });
 
     let mut toc = Vec::new();
-    collect_toc(&book.toc, &mut toc);
-    let mut starts: Vec<(usize, String)> = Vec::new();
-    for (label, href) in toc {
+    collect_toc(&book.toc, 0, &mut toc);
+    let mut starts: Vec<(usize, String, bool, i32)> = Vec::new();
+    for (label, href, level, is_volume) in toc {
         if let Some(index) = find_section(&book.sections, &href) {
-            if !starts.iter().any(|(value, _)| *value == index) {
-                starts.push((index, label));
+            if !starts.iter().any(|(value, _, _, _)| *value == index) {
+                starts.push((index, label, is_volume, level));
             }
         }
     }
-    starts.sort_by_key(|(index, _)| *index);
+    starts.sort_by_key(|(index, _, _, _)| *index);
 
     if starts.is_empty() {
         for (index, section) in book.sections.iter().enumerate() {
@@ -315,15 +322,15 @@ pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedMobi> {
                 .find(|line| !line.is_empty())
                 .unwrap_or("正文");
             let title = first_line.chars().take(40).collect::<String>();
-            starts.push((index, title));
+            starts.push((index, title, false, 0));
         }
     }
 
     let mut chapters = Vec::new();
-    for (position, (index, chapter_title)) in starts.iter().enumerate() {
+    for (position, (index, chapter_title, is_volume, toc_level)) in starts.iter().enumerate() {
         let end = starts
             .get(position + 1)
-            .map(|(next, _)| *next)
+            .map(|(next, _, _, _)| *next)
             .unwrap_or(book.sections.len());
         let mut blocks = Vec::new();
         for section in book.sections.iter().take(end).skip(*index) {
@@ -335,6 +342,8 @@ pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedMobi> {
         chapters.push(ParsedMobiChapter {
             title: chapter_title.clone(),
             blocks,
+            is_volume: *is_volume,
+            toc_level: *toc_level,
         });
     }
 
@@ -345,6 +354,8 @@ pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedMobi> {
                 chapters.push(ParsedMobiChapter {
                     title: format!("第 {} 章", index + 1),
                     blocks,
+                    is_volume: false,
+                    toc_level: 0,
                 });
             }
         }

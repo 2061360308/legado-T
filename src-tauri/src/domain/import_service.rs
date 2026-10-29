@@ -355,6 +355,8 @@ pub fn import_epub(
             start: 0,
             end: 0,
             resource_url: Some(chapter.href.clone()),
+            is_volume: chapter.is_volume,
+            toc_level: chapter.toc_level,
             ..Default::default()
         });
     }
@@ -416,7 +418,7 @@ fn import_cached_chapters(
     intro: String,
     kind: Option<String>,
     cover: Option<epub_import::CoverData>,
-    chapters: Vec<(String, Option<String>, Vec<ContentBlock>)>,
+    chapters: Vec<(String, Option<String>, Vec<ContentBlock>, bool, i32)>,
     group: u64,
 ) -> Result<ImportResult> {
     let book_url = dst.to_string_lossy().to_string();
@@ -438,7 +440,7 @@ fn import_cached_chapters(
     fs::create_dir_all(&cache_dir)?;
 
     let mut book_chapters = Vec::with_capacity(chapters.len());
-    for (index, (title, href, blocks)) in chapters.iter().enumerate() {
+    for (index, (title, href, blocks, is_volume, toc_level)) in chapters.iter().enumerate() {
         fs::write(
             cache_dir.join(format!("{index}.txt")),
             blocks_text(blocks).as_bytes(),
@@ -454,6 +456,8 @@ fn import_cached_chapters(
             start: 0,
             end: 0,
             resource_url: href.clone(),
+            is_volume: *is_volume,
+            toc_level: *toc_level,
             ..Default::default()
         });
     }
@@ -461,7 +465,7 @@ fn import_cached_chapters(
     let intro = if intro.trim().is_empty() {
         chapters
             .first()
-            .map(|(_, _, blocks)| blocks_text(blocks).chars().take(500).collect())
+            .map(|(_, _, blocks, _, _)| blocks_text(blocks).chars().take(500).collect())
             .unwrap_or_default()
     } else {
         intro
@@ -536,7 +540,7 @@ pub fn import_umd(
     let chapters = parsed
         .chapters
         .into_iter()
-        .map(|chapter| (chapter.title, None, chapter.blocks))
+        .map(|chapter| (chapter.title, None, chapter.blocks, false, 0))
         .collect();
     import_cached_chapters(
         conn,
@@ -580,7 +584,15 @@ pub fn import_mobi(
     let chapters = parsed
         .chapters
         .into_iter()
-        .map(|chapter| (chapter.title, None, chapter.blocks))
+        .map(|chapter| {
+            (
+                chapter.title,
+                None,
+                chapter.blocks,
+                chapter.is_volume,
+                chapter.toc_level,
+            )
+        })
         .collect();
     import_cached_chapters(
         conn,

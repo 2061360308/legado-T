@@ -1,6 +1,5 @@
 //! EPUB import (rbook): metadata, spine order, TOC labels, text and inline images.
 
-use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use fancy_regex::Regex;
@@ -15,6 +14,8 @@ pub struct ParsedChapter {
     pub title: String,
     pub href: String,
     pub blocks: Vec<ContentBlock>,
+    pub is_volume: bool,
+    pub toc_level: i32,
 }
 
 pub struct ParsedEpub {
@@ -327,6 +328,63 @@ fn push_paragraphs(blocks: &mut Vec<ContentBlock>, html: &str) -> Result<()> {
     Ok(())
 }
 
+struct TocChapter {
+    title: String,
+    path: String,
+    fragment: Option<String>,
+    level: i32,
+    is_volume: bool,
+}
+
+fn collect_toc(entry: rbook::epub::toc::EpubTocEntry<'_>, level: i32, out: &mut Vec<TocChapter>) {
+    let has_children = !entry.is_empty();
+    let mut node_index = None;
+    if let Some(href) = entry.href() {
+        let path = href.path().as_str().to_string();
+        let fragment = href.fragment().map(str::to_string);
+        let title = entry.label().trim().to_string();
+        if !path.is_empty() {
+            out.push(TocChapter {
+                title,
+                path,
+                fragment,
+                level,
+                is_volume: has_children,
+            });
+            node_index = Some(out.len() - 1);
+        }
+    }
+    if has_children {
+        if let Some(index) = node_index {
+            out[index].is_volume = true;
+        }
+        for child in entry.iter() {
+            collect_toc(child, level + 1, out);
+        }
+    }
+}
+
+fn find_fragment_start(html: &str, fragment: &str) -> Option<usize> {
+    for quote in ['"', '\''] {
+        let needle = format!("id={quote}{fragment}{quote}");
+        if let Some(position) = html.find(&needle) {
+            return html[..position].rfind('<').or(Some(position));
+        }
+    }
+    None
+}
+
+fn fragment_html(html: &str, fragment: &str, next: Option<&str>) -> String {
+    let Some(start) = find_fragment_start(html, fragment) else {
+        return html.to_string();
+    };
+    let end = next
+        .and_then(|value| find_fragment_start(html, value))
+        .filter(|value| *value > start)
+        .unwrap_or(html.len());
+    html[start..end].to_string()
+}
+
 /// Parse an EPUB and return chapters in spine order.
 pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedEpub> {
     let epub = Epub::open(path).map_err(|e| Error::Invalid(format!("EPUB open failed: {e}")))?;
@@ -355,44 +413,104 @@ pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedEpub> {
         .map(|value| strip_html(value.value()).unwrap_or_default())
         .unwrap_or_default();
 
-    let mut toc_titles = HashMap::new();
+    let mut toc_nodes = Vec::new();
     if let Some(root) = epub.toc().contents() {
-        for entry in root.flatten() {
-            let Some(manifest) = entry.manifest_entry() else {
-                continue;
-            };
-            let label = entry.label().trim();
-            if !label.is_empty() {
-                toc_titles
-                    .entry(normalize_path(&manifest.href().to_string()))
-                    .or_insert_with(|| label.to_string());
-            }
+        for entry in root.iter() {
+            collect_toc(entry, 0, &mut toc_nodes);
         }
     }
 
     let mut chapters = Vec::new();
-    for (index, entry) in epub.spine().iter().enumerate() {
-        let Some(manifest) = entry.manifest_entry() else {
-            continue;
-        };
-        let href = manifest.href().to_string();
-        let html = manifest
-            .read_str()
-            .map_err(|e| Error::Invalid(format!("EPUB chapter read failed: {e}")))?;
-        let blocks = html_to_blocks(&epub, &html, &href, image_dir)?;
-        if blocks.is_empty() {
-            continue;
+    if !toc_nodes.is_empty() {
+        let first_path = normalize_path(&toc_nodes[0].path);
+        for entry in epub.spine().iter() {
+            let Some(manifest) = entry.manifest_entry() else {
+                continue;
+            };
+            let href = manifest.href().to_string();
+            if normalize_path(&href) == first_path {
+                break;
+            }
+            let html = manifest
+                .read_str()
+                .map_err(|e| Error::Invalid(format!("EPUB chapter read failed: {e}")))?;
+            let blocks = html_to_blocks(&epub, &html, &href, image_dir)?;
+            if blocks.is_empty() {
+                continue;
+            }
+            let title = first_heading(&html).unwrap_or_else(|| format!("Chapter {}", chapters.len() + 1));
+            chapters.push(ParsedChapter {
+                title,
+                href,
+                blocks,
+                is_volume: false,
+                toc_level: 0,
+            });
         }
-        let title = toc_titles
-            .get(&normalize_path(&href))
-            .cloned()
-            .or_else(|| first_heading(&html))
-            .unwrap_or_else(|| format!("Chapter {}", index + 1));
-        chapters.push(ParsedChapter {
-            title,
-            href,
-            blocks,
-        });
+
+        for (index, node) in toc_nodes.iter().enumerate() {
+            let path = node.path.clone();
+            let Some(manifest) = epub
+                .manifest()
+                .by_href(&path)
+                .or_else(|| epub.manifest().by_href(path.trim_start_matches('/')))
+            else {
+                continue;
+            };
+            let html = manifest
+                .read_str()
+                .map_err(|e| Error::Invalid(format!("EPUB chapter read failed: {e}")))?;
+            let next_fragment = toc_nodes[index + 1..]
+                .iter()
+                .find(|other| other.path == path)
+                .and_then(|other| other.fragment.as_deref());
+            let content = match node.fragment.as_deref() {
+                Some(fragment) => fragment_html(&html, fragment, next_fragment),
+                None => html.clone(),
+            };
+            let blocks = html_to_blocks(&epub, &content, &path, image_dir)?;
+            if blocks.is_empty() {
+                continue;
+            }
+            let title = if node.title.trim().is_empty() {
+                first_heading(&html).unwrap_or_else(|| format!("Chapter {}", chapters.len() + 1))
+            } else {
+                node.title.clone()
+            };
+            let href = match node.fragment.as_deref() {
+                Some(fragment) => format!("{path}#{fragment}"),
+                None => path,
+            };
+            chapters.push(ParsedChapter {
+                title,
+                href,
+                blocks,
+                is_volume: node.is_volume,
+                toc_level: node.level,
+            });
+        }
+    } else {
+        for (index, entry) in epub.spine().iter().enumerate() {
+            let Some(manifest) = entry.manifest_entry() else {
+                continue;
+            };
+            let href = manifest.href().to_string();
+            let html = manifest
+                .read_str()
+                .map_err(|e| Error::Invalid(format!("EPUB chapter read failed: {e}")))?;
+            let blocks = html_to_blocks(&epub, &html, &href, image_dir)?;
+            if blocks.is_empty() {
+                continue;
+            }
+            let title = first_heading(&html).unwrap_or_else(|| format!("Chapter {}", index + 1));
+            chapters.push(ParsedChapter {
+                title,
+                href,
+                blocks,
+                is_volume: false,
+                toc_level: 0,
+            });
+        }
     }
 
     if chapters.is_empty() {

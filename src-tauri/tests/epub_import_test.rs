@@ -89,8 +89,12 @@ fn write_epub(path: &std::path::Path) {
         r#"<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
 <body><nav epub:type="toc"><ol>
-  <li><a href="ch1.xhtml">第一章 起点</a></li>
-  <li><a href="ch2.xhtml">第二章 转折</a></li>
+  <li><a href="ch1.xhtml">第一卷</a>
+    <ol>
+      <li><a href="ch1.xhtml#part1">第一章 起点</a></li>
+      <li><a href="ch2.xhtml">第二章 转折</a></li>
+    </ol>
+  </li>
 </ol></nav></body></html>"#,
         false,
     );
@@ -99,7 +103,7 @@ fn write_epub(path: &std::path::Path) {
         "OEBPS/ch1.xhtml",
         r#"<?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml"><head><title>ignored</title><style>p{color:red}</style></head>
-<body><h1>第一章 起点</h1><p>这是第一段正文。</p><img src="images/pic.gif" alt="插图"/><p>这是第二段正文。</p><script>ignored()</script></body></html>"#,
+<body><h1>第一章 起点</h1><p id="part1">这是第一段正文。</p><img src="images/pic.gif" alt="插图"/><p>这是第二段正文。</p><script>ignored()</script></body></html>"#,
         false,
     );
     add_bytes(&mut zip, "OEBPS/images/pic.gif", ONE_PIXEL_GIF, false);
@@ -127,7 +131,7 @@ fn imports_epub_text_and_reads_cached_chapters() {
 
     assert_eq!(import.book.name, "测试 EPUB");
     assert_eq!(import.book.author, "测试作者");
-    assert_eq!(import.chapter_count, 2);
+    assert_eq!(import.chapter_count, 3);
     assert_eq!(import.intro, "一本测试书");
     let cover = import.book.cover_url.as_deref().expect("EPUB cover");
     assert!(std::path::Path::new(cover).exists());
@@ -144,9 +148,14 @@ fn imports_epub_text_and_reads_cached_chapters() {
     let chapters =
         local_reader_lib::data::repositories::ChapterRepo::list(&conn, &import.book.book_url)
             .unwrap();
-    assert_eq!(chapters.len(), 2);
-    assert_eq!(chapters[0].title, "第一章 起点");
-    assert_eq!(chapters[1].title, "第二章 转折");
+    assert_eq!(chapters.len(), 3);
+    assert_eq!(chapters[0].title, "第一卷");
+    assert!(chapters[0].is_volume);
+    assert_eq!(chapters[0].toc_level, 0);
+    assert_eq!(chapters[1].title, "第一章 起点");
+    assert_eq!(chapters[1].toc_level, 1);
+    assert_eq!(chapters[2].title, "第二章 转折");
+    assert_eq!(chapters[2].toc_level, 1);
 
     let style = LayoutStyle {
         view_width: 400.0,
@@ -156,7 +165,7 @@ fn imports_epub_text_and_reads_cached_chapters() {
     let mut cache = ReaderCache::default();
     let first =
         read_state::open(&conn, &mut cache, &import.book.book_url, None, None, &style).unwrap();
-    assert_eq!(first.chapter_title, "第一章 起点");
+    assert_eq!(first.chapter_title, "第一卷");
     assert!(first
         .chapter_paragraphs
         .join("")
@@ -184,7 +193,7 @@ fn imports_epub_text_and_reads_cached_chapters() {
         &conn,
         &mut cache,
         &import.book.book_url,
-        Some(1),
+        Some(2),
         Some(0),
         &style,
     )

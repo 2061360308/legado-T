@@ -53,6 +53,7 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             isPay         INTEGER NOT NULL DEFAULT 0,
             tag           TEXT,
             resourceUrl   TEXT,
+            tocLevel      INTEGER NOT NULL DEFAULT 0,
             PRIMARY KEY (url, bookUrl),
             FOREIGN KEY (bookUrl) REFERENCES books(bookUrl) ON DELETE CASCADE
         );
@@ -169,6 +170,7 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
         "#,
     )?;
     ensure_column(conn, "books", "customIntro", "TEXT")?;
+    ensure_column(conn, "chapters", "tocLevel", "INTEGER NOT NULL DEFAULT 0")?;
     Ok(())
 }
 

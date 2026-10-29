@@ -146,8 +146,8 @@ impl ChapterRepo {
         {
             let mut stmt = tx.prepare(
                 r#"INSERT OR REPLACE INTO chapters
-                   (url,bookUrl,title,"index",isVolume,start,end,isVip,isPay,tag,resourceUrl)
-                   VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11)"#,
+                   (url,bookUrl,title,"index",isVolume,start,end,isVip,isPay,tag,resourceUrl,tocLevel)
+                   VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12)"#,
             )?;
             for c in chapters {
                 stmt.execute(params![
@@ -162,6 +162,7 @@ impl ChapterRepo {
                     c.is_pay as i64,
                     c.tag,
                     c.resource_url,
+                    c.toc_level,
                 ])?;
             }
         }
@@ -171,7 +172,7 @@ impl ChapterRepo {
 
     pub fn list(conn: &Connection, book_url: &str) -> Result<Vec<BookChapter>> {
         let mut stmt = conn.prepare(
-            r#"SELECT url,title,"index",isVolume,start,end,isVip,isPay,tag,resourceUrl
+            r#"SELECT url,title,"index",isVolume,start,end,isVip,isPay,tag,resourceUrl,tocLevel
                FROM chapters WHERE bookUrl = ?1 ORDER BY "index" ASC"#,
         )?;
         let rows = stmt.query_map([book_url], |row| {
@@ -186,6 +187,7 @@ impl ChapterRepo {
                 is_pay: row.get::<_, i64>(7)? != 0,
                 tag: row.get(8)?,
                 resource_url: row.get(9)?,
+                toc_level: row.get(10)?,
             })
         })?;
         let mut out = Vec::new();
