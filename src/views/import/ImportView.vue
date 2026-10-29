@@ -133,7 +133,7 @@ async function openEntry(entry: LocalImportEntry) {
     return;
   }
   if (!entry.supported) {
-    showToast("暂不支持该格式，当前支持 TXT / EPUB / PDF");
+    showToast("暂不支持该格式，当前支持 TXT / EPUB / PDF / UMD / MOBI / AZW3");
     return;
   }
   const next = new Set(selected.value);

@@ -14,7 +14,9 @@ use md5::{Digest, Md5};
 use crate::data::keyvalue::KeyValue;
 use crate::data::repositories::{BookRepo, ChapterRepo, TxtTocRuleRepo};
 use crate::domain::epub_import;
+use crate::domain::mobi_import;
 use crate::domain::pdf_import;
+use crate::domain::umd_import;
 use crate::domain::model::{book_type, Book, BookChapter, ContentBlock};
 use crate::domain::txt_parser;
 use crate::platform::charset_codec::CharsetCodec;
@@ -90,13 +92,12 @@ fn write_cover(data_dir: &Path, book_url: &str, cover: epub_import::CoverData) -
     Ok(path.to_string_lossy().to_string())
 }
 
-pub fn ensure_epub_cover(book: &mut Book, data_dir: &Path) -> Result<bool> {
-    if !is_epub(&book.book_url)
-        || book
-            .cover_url
-            .as_deref()
-            .map(|value| !value.trim().is_empty())
-            .unwrap_or(false)
+pub fn ensure_local_cover(book: &mut Book, data_dir: &Path) -> Result<bool> {
+    if book
+        .cover_url
+        .as_deref()
+        .map(|value| !value.trim().is_empty())
+        .unwrap_or(false)
     {
         return Ok(false);
     }
@@ -104,11 +105,24 @@ pub fn ensure_epub_cover(book: &mut Book, data_dir: &Path) -> Result<bool> {
     if !path.exists() {
         return Ok(false);
     }
-    let Some(cover) = epub_import::extract_cover(path)? else {
+    let cover = if is_epub(&book.book_url) {
+        epub_import::extract_cover(path)?
+    } else if is_umd(&book.book_url) {
+        umd_import::parse(path)?.cover
+    } else if is_mobi(&book.book_url) {
+        mobi_import::parse(path, &chapter_image_dir(&book.book_url))?.cover
+    } else {
+        None
+    };
+    let Some(cover) = cover else {
         return Ok(false);
     };
     book.cover_url = Some(write_cover(data_dir, &book.book_url, cover)?);
     Ok(true)
+}
+
+pub fn ensure_epub_cover(book: &mut Book, data_dir: &Path) -> Result<bool> {
+    ensure_local_cover(book, data_dir)
 }
 
 pub fn is_epub(path: &str) -> bool {
@@ -125,6 +139,30 @@ pub fn is_pdf(path: &str) -> bool {
         .and_then(|value| value.to_str())
         .map(|value| value.eq_ignore_ascii_case("pdf"))
         .unwrap_or(false)
+}
+
+pub fn is_umd(path: &str) -> bool {
+    Path::new(path)
+        .extension()
+        .and_then(|value| value.to_str())
+        .map(|value| value.eq_ignore_ascii_case("umd"))
+        .unwrap_or(false)
+}
+
+pub fn is_mobi(path: &str) -> bool {
+    Path::new(path)
+        .extension()
+        .and_then(|value| value.to_str())
+        .map(|value| {
+            value.eq_ignore_ascii_case("mobi")
+                || value.eq_ignore_ascii_case("azw")
+                || value.eq_ignore_ascii_case("azw3")
+        })
+        .unwrap_or(false)
+}
+
+pub fn is_cached_format(path: &str) -> bool {
+    is_epub(path) || is_pdf(path) || is_umd(path) || is_mobi(path)
 }
 
 pub fn chapter_cache_path(book_url: &str, index: i32) -> PathBuf {
@@ -369,6 +407,195 @@ pub fn import_epub(
     })
 }
 
+fn import_cached_chapters(
+    conn: &Connection,
+    data_dir: &Path,
+    dst: &Path,
+    book_name: String,
+    author: String,
+    intro: String,
+    kind: Option<String>,
+    cover: Option<epub_import::CoverData>,
+    chapters: Vec<(String, Option<String>, Vec<ContentBlock>)>,
+    group: u64,
+) -> Result<ImportResult> {
+    let book_url = dst.to_string_lossy().to_string();
+    let cache_dir = chapter_cache_path(&book_url, 0)
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_else(|| dst.with_file_name("chapters"));
+    if cache_dir.exists() {
+        for entry in fs::read_dir(&cache_dir)? {
+            let entry = entry?;
+            let path = entry.path();
+            if path.extension().and_then(|value| value.to_str()) == Some("txt")
+                || path.extension().and_then(|value| value.to_str()) == Some("json")
+            {
+                fs::remove_file(path)?;
+            }
+        }
+    }
+    fs::create_dir_all(&cache_dir)?;
+
+    let mut book_chapters = Vec::with_capacity(chapters.len());
+    for (index, (title, href, blocks)) in chapters.iter().enumerate() {
+        fs::write(
+            cache_dir.join(format!("{index}.txt")),
+            blocks_text(blocks).as_bytes(),
+        )?;
+        fs::write(
+            cache_dir.join(format!("{index}.json")),
+            serde_json::to_vec(blocks)?,
+        )?;
+        book_chapters.push(BookChapter {
+            url: format!("{book_url}#{index}"),
+            title: title.clone(),
+            index: index as i32,
+            start: 0,
+            end: 0,
+            resource_url: href.clone(),
+            ..Default::default()
+        });
+    }
+
+    let intro = if intro.trim().is_empty() {
+        chapters
+            .first()
+            .map(|(_, _, blocks)| blocks_text(blocks).chars().take(500).collect())
+            .unwrap_or_default()
+    } else {
+        intro
+    };
+    let cover_url = cover
+        .map(|cover| write_cover(data_dir, &book_url, cover))
+        .transpose()?;
+    let book = Book {
+        book_url: book_url.clone(),
+        name: book_name,
+        author: if author.trim().is_empty() {
+            "未知作者".to_string()
+        } else {
+            author
+        },
+        origin: "local".to_string(),
+        origin_name: dst
+            .file_name()
+            .and_then(|value| value.to_str())
+            .unwrap_or_default()
+            .to_string(),
+        charset: Some("UTF-8".to_string()),
+        r#type: book_type::TEXT | book_type::LOCAL,
+        group,
+        kind,
+        intro: if intro.is_empty() {
+            None
+        } else {
+            Some(intro.clone())
+        },
+        cover_url,
+        total_chapter_num: book_chapters.len() as i32,
+        can_update: false,
+        sync_time: mtime_secs(dst),
+        ..Default::default()
+    };
+    let count = book_chapters.len();
+    BookRepo::upsert(conn, &book)?;
+    ChapterRepo::replace_all(conn, &book_url, &book_chapters)?;
+    Ok(ImportResult {
+        book,
+        chapter_count: count,
+        charset: "UTF-8".to_string(),
+        rule: String::new(),
+        intro,
+    })
+}
+
+pub fn import_umd(
+    conn: &Connection,
+    src_path: &str,
+    data_dir: &Path,
+    name: Option<&str>,
+    group: u64,
+) -> Result<ImportResult> {
+    let src = Path::new(src_path);
+    let fallback_name = name
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .or_else(|| {
+            src.file_stem()
+                .and_then(|value| value.to_str())
+                .map(str::to_string)
+        })
+        .unwrap_or_else(|| "Untitled".to_string());
+    let dst = copy_into_private(src, data_dir, &fallback_name)?;
+    let parsed = umd_import::parse(&dst)?;
+    let book_name = name
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or(parsed.title);
+    let chapters = parsed
+        .chapters
+        .into_iter()
+        .map(|chapter| (chapter.title, None, chapter.blocks))
+        .collect();
+    import_cached_chapters(
+        conn,
+        data_dir,
+        &dst,
+        book_name,
+        parsed.author,
+        String::new(),
+        Some(parsed.kind).filter(|value| !value.trim().is_empty()),
+        parsed.cover,
+        chapters,
+        group,
+    )
+}
+
+pub fn import_mobi(
+    conn: &Connection,
+    src_path: &str,
+    data_dir: &Path,
+    name: Option<&str>,
+    group: u64,
+) -> Result<ImportResult> {
+    let src = Path::new(src_path);
+    let fallback_name = name
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .or_else(|| {
+            src.file_stem()
+                .and_then(|value| value.to_str())
+                .map(str::to_string)
+        })
+        .unwrap_or_else(|| "Untitled".to_string());
+    let dst = copy_into_private(src, data_dir, &fallback_name)?;
+    let book_url = dst.to_string_lossy().to_string();
+    let image_dir = chapter_image_dir(&book_url);
+    let parsed = mobi_import::parse(&dst, &image_dir)?;
+    let book_name = name
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or(parsed.title);
+    let chapters = parsed
+        .chapters
+        .into_iter()
+        .map(|chapter| (chapter.title, None, chapter.blocks))
+        .collect();
+    import_cached_chapters(
+        conn,
+        data_dir,
+        &dst,
+        book_name,
+        parsed.author,
+        parsed.intro,
+        Some(parsed.kind).filter(|value| !value.trim().is_empty()),
+        parsed.cover,
+        chapters,
+        group,
+    )
+}
+
 pub fn import_pdf(
     conn: &Connection,
     src_path: &str,
@@ -489,6 +716,10 @@ pub fn import_book(
         import_epub(conn, src_path, data_dir, name, group)
     } else if is_pdf(src_path) {
         import_pdf(conn, src_path, data_dir, name, group)
+    } else if is_umd(src_path) {
+        import_umd(conn, src_path, data_dir, name, group)
+    } else if is_mobi(src_path) {
+        import_mobi(conn, src_path, data_dir, name, group)
     } else {
         import_txt(conn, src_path, data_dir, name, group, charset, split_long)
     }
@@ -545,7 +776,7 @@ pub fn read_chapter(conn: &Connection, book_url: &str, index: i32) -> Result<Str
         .iter()
         .find(|c| c.index == index)
         .ok_or_else(|| Error::NotFound(format!("chapter {index}")))?;
-    if is_epub(book_url) || is_pdf(book_url) {
+    if is_cached_format(book_url) {
         return read_epub_chapter(book_url, index);
     }
     let bytes = read_file_range(Path::new(book_url), ch.start, ch.end)?;

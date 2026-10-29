@@ -17,7 +17,7 @@ use crate::{Error, Result};
 
 const BOOK_EXTENSIONS: [&str; 7] = ["txt", "epub", "pdf", "umd", "mobi", "azw3", "azw"];
 const ARCHIVE_EXTENSIONS: [&str; 3] = ["zip", "rar", "7z"];
-const SUPPORTED_EXTENSIONS: [&str; 3] = ["txt", "epub", "pdf"];
+const SUPPORTED_EXTENSIONS: [&str; 7] = ["txt", "epub", "pdf", "umd", "mobi", "azw3", "azw"];
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]

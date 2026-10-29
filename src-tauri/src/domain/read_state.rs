@@ -95,7 +95,7 @@ fn load_chapter(
     let chapter = find_chapter(chapters, index)?;
     let override_key = format!("chapterOverride:{}:{}", book.book_url, index);
     let override_content = KeyValue::get(conn, &override_key)?;
-    let is_epub = import_service::is_epub(&book.book_url) || import_service::is_pdf(&book.book_url);
+    let is_epub = import_service::is_cached_format(&book.book_url);
     let display_title = content_processor::display_title(conn, &chapter.title, book)?;
 
     let (blocks, effective_rules, paragraphs) = if is_epub && override_content.is_none() {

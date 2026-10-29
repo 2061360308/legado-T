@@ -35,6 +35,9 @@ imagesize = "0.15"
 pdfium-render = { version = "0.9.4", default-features = false, features = ["image_025", "pdfium_latest", "thread_safe"] }
 image = { version = "0.25", default-features = false, features = ["png"] }
 boa_engine = "0.22"
+ebook-rs = { version = "0.18", default-features = false }
+flate2 = "1.1.10"
+base64 = "0.23"
 
 [features]
 default = ["custom-protocol"]
