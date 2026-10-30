@@ -23,6 +23,9 @@ const hideNav = [
   "/dict-rules",
   "/dict",
   "/theme",
+  "/cover-config",
+  "/welcome-config",
+  "/welcome",
   "/read-schemes",
   "/backup",
   "/webdav",
@@ -55,6 +58,7 @@ function navigate(tab: MainTab) {
 </script>
 
 <template>
+  <div class="app-bg" aria-hidden="true" />
   <div class="app-shell">
     <div class="app-content" :class="{ 'with-nav': showNav }">
       <RouterView />
@@ -64,7 +68,20 @@ function navigate(tab: MainTab) {
 </template>
 
 <style scoped>
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--app-bg-image, none);
+  background-position: center;
+  background-size: cover;
+  filter: blur(var(--app-bg-blur, 0px));
+  transform: scale(1.06);
+}
 .app-shell {
+  position: relative;
+  z-index: 1;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -77,6 +94,6 @@ function navigate(tab: MainTab) {
   overflow-x: hidden;
 }
 .app-content.with-nav {
-  padding-bottom: calc(50px + env(safe-area-inset-bottom));
+  padding-bottom: calc(50px + max(env(safe-area-inset-bottom), var(--safe-bottom, 0px)));
 }
 </style>

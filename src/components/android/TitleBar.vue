@@ -8,6 +8,7 @@ withDefaults(
     back?: boolean;
     flat?: boolean;
     dark?: boolean;
+    safeTop?: boolean;
   }>(),
   {
     title: "",
@@ -15,6 +16,7 @@ withDefaults(
     back: true,
     flat: false,
     dark: false,
+    safeTop: true,
   },
 );
 
@@ -23,6 +25,7 @@ defineEmits<{ back: [] }>();
 
 <template>
   <header class="title-bar" :class="{ flat, dark }">
+    <div v-if="safeTop" class="status-bar-spacer" aria-hidden="true" />
     <div class="bar">
       <button v-if="back" class="nav-button" aria-label="返回" @click="$emit('back')">
         <Icon name="ic_arrow_back" :size="24" />
@@ -49,9 +52,14 @@ defineEmits<{ back: [] }>();
   flex-direction: column;
   background: var(--ac-primary);
   color: #ffffff;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 var(--title-bar-elevation, 4px) var(--title-bar-elevation, 4px) rgba(0, 0, 0, 0.12);
   position: relative;
   z-index: 5;
+}
+.status-bar-spacer {
+  flex: none;
+  height: var(--safe-top, 0px);
+  background: inherit;
 }
 .title-bar.flat {
   background: var(--ac-background);
@@ -66,7 +74,7 @@ defineEmits<{ back: [] }>();
   display: flex;
   align-items: center;
   min-height: 56px;
-  padding: 0 4px;
+  padding: 0 calc(4px + var(--safe-right, 0px)) 0 calc(4px + var(--safe-left, 0px));
 }
 .nav-button,
 .actions :deep(button) {

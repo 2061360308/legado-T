@@ -41,8 +41,8 @@ function select(item: (typeof items)[number]) {
   z-index: 40;
   display: flex;
   align-items: stretch;
-  height: calc(50px + env(safe-area-inset-bottom));
-  padding-bottom: env(safe-area-inset-bottom);
+  height: calc(50px + max(env(safe-area-inset-bottom), var(--safe-bottom, 0px)));
+  padding-bottom: max(env(safe-area-inset-bottom), var(--safe-bottom, 0px));
   background: var(--ac-background);
   border-top: 1px solid var(--ac-divider);
 }

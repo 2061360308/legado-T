@@ -1,7 +1,7 @@
 //! Local book import helpers: directory browsing, recursive scanning, batch
 //! import, cover files and filename scripts.
 
-use std::collections::HashSet;
+use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::UNIX_EPOCH;
@@ -9,10 +9,9 @@ use std::time::UNIX_EPOCH;
 use rusqlite::Connection;
 use serde::Serialize;
 
-use md5::{Digest, Md5};
-
 use crate::data::repositories::BookRepo;
 use crate::domain::import_service;
+use crate::domain::storage::BookStorage;
 use crate::{Error, Result};
 
 const BOOK_EXTENSIONS: [&str; 7] = ["txt", "epub", "pdf", "umd", "mobi", "azw3", "azw"];
@@ -30,6 +29,7 @@ pub struct LocalImportEntry {
     pub ext: String,
     pub supported: bool,
     pub on_shelf: bool,
+    pub book_url: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -39,6 +39,7 @@ pub struct LocalImportResult {
     pub name: String,
     pub book_url: Option<String>,
     pub error: Option<String>,
+    pub duplicate: bool,
 }
 
 fn extension(path: &Path) -> String {
@@ -79,21 +80,26 @@ fn modified_secs(path: &Path) -> i64 {
         .unwrap_or(0)
 }
 
-fn on_shelf_names(conn: &Connection) -> Result<HashSet<String>> {
+fn on_shelf_books(conn: &Connection) -> Result<HashMap<String, String>> {
     let books = BookRepo::list(conn)?;
-    let mut names = HashSet::new();
+    let mut names = HashMap::new();
     for book in books {
         if !book.origin_name.trim().is_empty() {
-            names.insert(book.origin_name);
+            names.insert(book.origin_name, book.book_url.clone());
         }
-        if let Some(name) = Path::new(&book.book_url).file_name().and_then(|v| v.to_str()) {
-            names.insert(name.to_string());
+        if !book.book_url.starts_with("local:") {
+            if let Some(name) = Path::new(&book.book_url)
+                .file_name()
+                .and_then(|v| v.to_str())
+            {
+                names.insert(name.to_string(), book.book_url.clone());
+            }
         }
     }
     Ok(names)
 }
 
-fn entry_from_path(path: PathBuf, on_shelf: &HashSet<String>) -> Option<LocalImportEntry> {
+fn entry_from_path(path: PathBuf, on_shelf: &HashMap<String, String>) -> Option<LocalImportEntry> {
     let name = path.file_name()?.to_str()?.to_string();
     if name.starts_with('.') {
         return None;
@@ -103,6 +109,7 @@ fn entry_from_path(path: PathBuf, on_shelf: &HashSet<String>) -> Option<LocalImp
     if !is_dir && !is_book_file(&name) {
         return None;
     }
+    let book_url = on_shelf.get(&name).cloned();
     Some(LocalImportEntry {
         path: path.to_string_lossy().to_string(),
         ext: extension(&path),
@@ -111,7 +118,8 @@ fn entry_from_path(path: PathBuf, on_shelf: &HashSet<String>) -> Option<LocalImp
         size: if is_dir { 0 } else { meta.len() },
         modified: modified_secs(&path),
         supported: !is_dir && is_supported(&name) && !is_archive(&name),
-        on_shelf: !is_dir && on_shelf.contains(&name),
+        on_shelf: !is_dir && book_url.is_some(),
+        book_url,
     })
 }
 
@@ -120,7 +128,7 @@ pub fn list_dir(conn: &Connection, path: &str) -> Result<Vec<LocalImportEntry>> 
     if !dir.is_dir() {
         return Err(Error::Invalid(format!("目录不存在: {path}")));
     }
-    let on_shelf = on_shelf_names(conn)?;
+    let on_shelf = on_shelf_books(conn)?;
     let mut entries = Vec::new();
     for item in fs::read_dir(dir)? {
         let item = item?;
@@ -141,7 +149,7 @@ pub fn scan_dir(conn: &Connection, path: &str) -> Result<Vec<LocalImportEntry>> 
     if !root.is_dir() {
         return Err(Error::Invalid(format!("目录不存在: {path}")));
     }
-    let on_shelf = on_shelf_names(conn)?;
+    let on_shelf = on_shelf_books(conn)?;
     let mut entries = Vec::new();
     let mut stack = vec![root.to_path_buf()];
     while let Some(dir) = stack.pop() {
@@ -183,7 +191,7 @@ pub fn delete_files(paths: &[String]) -> Result<usize> {
 
 pub fn import_files(
     conn: &Connection,
-    data_dir: &Path,
+    storage: &BookStorage,
     paths: &[String],
     group: u64,
     name_script: Option<&str>,
@@ -196,28 +204,37 @@ pub fn import_files(
             .and_then(|value| value.to_str())
             .unwrap_or(path)
             .to_string();
+        if target.is_file() {
+            if let Ok(hash) = BookStorage::hash_file(target) {
+                if let Ok(Some(existing)) = BookRepo::find_by_source_hash(conn, &hash) {
+                    results.push(LocalImportResult {
+                        path: path.clone(),
+                        name: file_name,
+                        book_url: Some(existing.book_url),
+                        error: None,
+                        duplicate: true,
+                    });
+                    continue;
+                }
+            }
+        }
         let (name, author) = analyze_file_name(&file_name, name_script);
-        match import_service::import_book(
-            conn,
-            path,
-            data_dir,
-            name.as_deref(),
-            group,
-            None,
-            true,
-        ) {
+        match import_service::import_book(conn, path, storage, name.as_deref(), group, None, true) {
             Ok(mut result) => {
                 let current = result.book.author.trim();
                 if !author.is_empty()
                     && (current.is_empty() || current == "未知作者" || current == "Unknown")
                 {
                     result.book.author = author;
-                    if let Err(error) = BookRepo::upsert(conn, &result.book) {
+                    let mut persisted = result.book.clone();
+                    storage.normalize_book(&mut persisted);
+                    if let Err(error) = BookRepo::upsert(conn, &persisted) {
                         results.push(LocalImportResult {
                             path: path.clone(),
                             name: file_name,
                             book_url: None,
                             error: Some(error.to_string()),
+                            duplicate: false,
                         });
                         continue;
                     }
@@ -227,6 +244,7 @@ pub fn import_files(
                     name: file_name,
                     book_url: Some(result.book.book_url),
                     error: None,
+                    duplicate: false,
                 });
             }
             Err(error) => results.push(LocalImportResult {
@@ -234,6 +252,7 @@ pub fn import_files(
                 name: file_name,
                 book_url: None,
                 error: Some(error.to_string()),
+                duplicate: false,
             }),
         }
     }
@@ -314,64 +333,45 @@ fn run_name_script(script: &str, src: &str) -> Option<(String, String)> {
 }
 
 pub fn save_cover_from_file(
-    _conn: &Connection,
-    data_dir: &Path,
-    _book_url: &str,
+    conn: &Connection,
+    storage: &BookStorage,
+    book_url: &str,
     src_path: &str,
 ) -> Result<String> {
     let src = Path::new(src_path);
     if !src.is_file() {
         return Err(Error::Invalid(format!("图片不存在: {src_path}")));
     }
+    let book =
+        BookRepo::get(conn, book_url)?.ok_or_else(|| Error::NotFound(book_url.to_string()))?;
     let ext = extension(src);
-    let ext = if ext.is_empty() { "jpg".to_string() } else { ext };
-    let bytes = fs::read(src)?;
-    let digest = Md5::digest(&bytes);
-    let dir = data_dir.join("covers");
-    fs::create_dir_all(&dir)?;
-    let dst = dir.join(format!("{digest:x}.{ext}"));
-    if !dst.exists() {
-        fs::write(&dst, bytes)?;
+    let ext = if ext.is_empty() {
+        "jpg".to_string()
+    } else {
+        ext
+    };
+    let dst = storage.cover_path(&book, &ext);
+    if let Some(parent) = dst.parent() {
+        fs::create_dir_all(parent)?;
     }
-    Ok(dst.to_string_lossy().to_string())
+    fs::write(&dst, fs::read(src)?)?;
+    Ok(storage.relative_string(&dst))
 }
 
 pub fn refresh_cover(
     conn: &Connection,
-    data_dir: &Path,
+    storage: &BookStorage,
     book_url: &str,
 ) -> Result<Option<String>> {
     let Some(mut book) = BookRepo::get(conn, book_url)? else {
         return Err(Error::NotFound(book_url.to_string()));
     };
     book.cover_url = None;
-    if import_service::ensure_epub_cover(&mut book, data_dir)? {
+    if import_service::ensure_epub_cover(&mut book, storage)? {
         let cover = book.cover_url.clone();
         BookRepo::upsert(conn, &book)?;
         Ok(cover)
     } else {
         Ok(None)
     }
-}
-
-pub fn file_size(book_url: &str) -> i64 {
-    fs::metadata(book_url)
-        .map(|meta| meta.len() as i64)
-        .unwrap_or(0)
-}
-
-pub fn clear_cache(book_url: &str) -> Result<()> {
-    let path = Path::new(book_url);
-    let name = path
-        .file_name()
-        .and_then(|value| value.to_str())
-        .unwrap_or_default();
-    if name.is_empty() {
-        return Ok(());
-    }
-    let cache = path.with_file_name(format!("{name}.chapters"));
-    if cache.exists() {
-        fs::remove_dir_all(cache)?;
-    }
-    Ok(())
 }

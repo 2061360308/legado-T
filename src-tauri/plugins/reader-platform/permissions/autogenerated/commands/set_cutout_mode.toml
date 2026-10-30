@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-set-cutout-mode"
+description = "Enables the set_cutout_mode command without any pre-configured scope."
+commands.allow = ["set_cutout_mode"]
+
+[[permission]]
+identifier = "deny-set-cutout-mode"
+description = "Denies the set_cutout_mode command without any pre-configured scope."
+commands.deny = ["set_cutout_mode"]

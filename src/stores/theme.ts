@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { convertFileSrc } from "@tauri-apps/api/core";
+import { setSystemBarStyle, setTextZoom } from "@/platform";
 
 export enum ThemeMode {
   Day = 0,
@@ -36,6 +38,12 @@ export interface GlobalThemeColors {
 export interface GlobalThemeTokens {
   day: GlobalThemeColors;
   night: GlobalThemeColors;
+}
+
+export interface SavedThemeConfig {
+  name: string;
+  isNightTheme: boolean;
+  colors: GlobalThemeColors;
 }
 
 export const DEFAULT_GLOBAL_TOKENS: GlobalThemeTokens = {
@@ -95,6 +103,42 @@ function normalizeSchemes(list: ReadStyleScheme[]): ReadStyleScheme[] {
   }));
 }
 
+function cloneColors(colors: GlobalThemeColors): GlobalThemeColors {
+  return { ...colors };
+}
+
+function normalizeSavedThemes(list: unknown): SavedThemeConfig[] {
+  if (!Array.isArray(list)) return [];
+  const result: SavedThemeConfig[] = [];
+  for (const item of list as Array<Record<string, unknown>>) {
+    if (!item || typeof item.name !== "string" || !item.name) continue;
+    if (item.colors && typeof item.isNightTheme === "boolean") {
+      result.push({
+        name: item.name,
+        isNightTheme: item.isNightTheme,
+        colors: {
+          ...DEFAULT_GLOBAL_TOKENS.day,
+          ...(item.colors as Partial<GlobalThemeColors>),
+        },
+      });
+      continue;
+    }
+    if (item.day && item.night) {
+      result.push({
+        name: `${item.name}（日间）`,
+        isNightTheme: false,
+        colors: { ...DEFAULT_GLOBAL_TOKENS.day, ...(item.day as Partial<GlobalThemeColors>) },
+      });
+      result.push({
+        name: `${item.name}（夜间）`,
+        isNightTheme: true,
+        colors: { ...DEFAULT_GLOBAL_TOKENS.night, ...(item.night as Partial<GlobalThemeColors>) },
+      });
+    }
+  }
+  return result;
+}
+
 export const PRESET_SCHEMES: ReadStyleScheme[] = [
   { name: "白底黑字", day: colors("#ffffff", "#1a1a1a"), night: colors("#121212", "#e8e8e8"), eink: colors("#ffffff", "#000000") },
   { name: "米黄仿纸", day: colors("#f7f1e3", "#2f2a24"), night: colors("#1d1a16", "#d8cfc0"), eink: colors("#f7f1e3", "#000000") },
@@ -110,6 +154,43 @@ interface Persisted {
   schemes: ReadStyleScheme[];
   currentScheme: number;
   globalTokens: GlobalThemeTokens;
+  transparentStatusBar: boolean;
+  immNavigationBar: boolean;
+  barElevation: number;
+  fontScale: number;
+  dayBgImage: string | null;
+  nightBgImage: string | null;
+  dayBgBlur: number;
+  nightBgBlur: number;
+  savedThemes: SavedThemeConfig[];
+}
+
+function cloneGlobalTokens(): GlobalThemeTokens {
+  return JSON.parse(JSON.stringify(DEFAULT_GLOBAL_TOKENS)) as GlobalThemeTokens;
+}
+
+function clonePresets(): ReadStyleScheme[] {
+  return JSON.parse(JSON.stringify(PRESET_SCHEMES)) as ReadStyleScheme[];
+}
+
+function clamp(value: number, min: number, max: number, fallback: number): number {
+  if (!Number.isFinite(value)) return fallback;
+  return Math.min(max, Math.max(min, Math.round(value)));
+}
+
+function withAlpha(hex: string, alpha: number): string {
+  const value = hex.replace("#", "");
+  if (value.length !== 6) return hex;
+  const r = parseInt(value.slice(0, 2), 16);
+  const g = parseInt(value.slice(2, 4), 16);
+  const b = parseInt(value.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function imageUrl(path: string | null): string | null {
+  if (!path) return null;
+  if (/^(https?:|data:|content:|file:)/i.test(path)) return path;
+  return convertFileSrc(path);
 }
 
 function loadPersisted(): Persisted {
@@ -126,6 +207,15 @@ function loadPersisted(): Persisted {
         schemes,
         currentScheme: Math.min(Math.max(parsed.currentScheme ?? 1, 0), schemes.length - 1),
         globalTokens: parsed.globalTokens ?? cloneGlobalTokens(),
+        transparentStatusBar: parsed.transparentStatusBar ?? true,
+        immNavigationBar: parsed.immNavigationBar ?? true,
+        barElevation: clamp(parsed.barElevation ?? 10, 0, 32, 10),
+        fontScale: clamp(parsed.fontScale ?? 10, 8, 16, 10),
+        dayBgImage: parsed.dayBgImage ?? null,
+        nightBgImage: parsed.nightBgImage ?? null,
+        dayBgBlur: clamp(parsed.dayBgBlur ?? 0, 0, 25, 0),
+        nightBgBlur: clamp(parsed.nightBgBlur ?? 0, 0, 25, 0),
+        savedThemes: normalizeSavedThemes(parsed.savedThemes),
       };
     }
   } catch {
@@ -136,15 +226,16 @@ function loadPersisted(): Persisted {
     schemes: clonePresets(),
     currentScheme: 1,
     globalTokens: cloneGlobalTokens(),
+    transparentStatusBar: true,
+    immNavigationBar: true,
+    barElevation: 10,
+    fontScale: 10,
+    dayBgImage: null,
+    nightBgImage: null,
+    dayBgBlur: 0,
+    nightBgBlur: 0,
+    savedThemes: [],
   };
-}
-
-function cloneGlobalTokens(): GlobalThemeTokens {
-  return JSON.parse(JSON.stringify(DEFAULT_GLOBAL_TOKENS)) as GlobalThemeTokens;
-}
-
-function clonePresets(): ReadStyleScheme[] {
-  return JSON.parse(JSON.stringify(PRESET_SCHEMES)) as ReadStyleScheme[];
 }
 
 export const useThemeStore = defineStore("theme", {
@@ -155,6 +246,15 @@ export const useThemeStore = defineStore("theme", {
       schemes: persisted.schemes,
       currentScheme: persisted.currentScheme,
       globalTokens: persisted.globalTokens,
+      transparentStatusBar: persisted.transparentStatusBar,
+      immNavigationBar: persisted.immNavigationBar,
+      barElevation: persisted.barElevation,
+      fontScale: persisted.fontScale,
+      dayBgImage: persisted.dayBgImage,
+      nightBgImage: persisted.nightBgImage,
+      dayBgBlur: persisted.dayBgBlur,
+      nightBgBlur: persisted.nightBgBlur,
+      savedThemes: persisted.savedThemes,
       systemDark: window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false,
     };
   },
@@ -168,6 +268,9 @@ export const useThemeStore = defineStore("theme", {
     isEink(): boolean {
       return this.effectiveMode === ThemeMode.Eink;
     },
+    isNight(): boolean {
+      return this.effectiveMode === ThemeMode.Night;
+    },
     currentSchemeData(state): ReadStyleScheme {
       return state.schemes[state.currentScheme] ?? state.schemes[0] ?? PRESET_SCHEMES[0];
     },
@@ -177,6 +280,18 @@ export const useThemeStore = defineStore("theme", {
       if (this.effectiveMode === ThemeMode.Eink) return scheme.eink;
       return scheme.day;
     },
+    backgroundImagePath(): string | null {
+      return this.isNight ? this.nightBgImage : this.dayBgImage;
+    },
+    backgroundImageUrl(): string | null {
+      return imageUrl(this.backgroundImagePath);
+    },
+    backgroundBlur(): number {
+      return this.isNight ? this.nightBgBlur : this.dayBgBlur;
+    },
+    hasBackgroundImage(): boolean {
+      return Boolean(this.backgroundImageUrl) && !this.isEink;
+    },
   },
   actions: {
     persist() {
@@ -185,6 +300,15 @@ export const useThemeStore = defineStore("theme", {
         schemes: this.schemes,
         currentScheme: this.currentScheme,
         globalTokens: this.globalTokens,
+        transparentStatusBar: this.transparentStatusBar,
+        immNavigationBar: this.immNavigationBar,
+        barElevation: this.barElevation,
+        fontScale: this.fontScale,
+        dayBgImage: this.dayBgImage,
+        nightBgImage: this.nightBgImage,
+        dayBgBlur: this.dayBgBlur,
+        nightBgBlur: this.nightBgBlur,
+        savedThemes: this.savedThemes,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     },
@@ -234,17 +358,92 @@ export const useThemeStore = defineStore("theme", {
       this.applyToDocument();
       this.persist();
     },
+    setTransparentStatusBar(value: boolean) {
+      this.transparentStatusBar = value;
+      this.applyToDocument();
+      this.persist();
+    },
+    setImmNavigationBar(value: boolean) {
+      this.immNavigationBar = value;
+      this.applyToDocument();
+      this.persist();
+    },
+    setBarElevation(value: number) {
+      this.barElevation = clamp(value, 0, 32, 10);
+      this.applyToDocument();
+      this.persist();
+    },
+    setFontScale(value: number) {
+      this.fontScale = clamp(value, 8, 16, 10);
+      this.applyToDocument();
+      this.persist();
+    },
+    setBackgroundImage(part: "day" | "night", path: string | null) {
+      if (part === "day") this.dayBgImage = path;
+      else this.nightBgImage = path;
+      this.applyToDocument();
+      this.persist();
+    },
+    setBackgroundBlur(part: "day" | "night", value: number) {
+      const blur = clamp(value, 0, 25, 0);
+      if (part === "day") this.dayBgBlur = blur;
+      else this.nightBgBlur = blur;
+      this.applyToDocument();
+      this.persist();
+    },
+    saveGlobalTheme(part: "day" | "night", name: string) {
+      const isNightTheme = part === "night";
+      const themeName =
+        name.trim() ||
+        `${isNightTheme ? "夜间" : "日间"}主题 ${this.savedThemes.length + 1}`;
+      const config: SavedThemeConfig = {
+        name: themeName,
+        isNightTheme,
+        colors: cloneColors(this.globalTokens[part]),
+      };
+      const existing = this.savedThemes.findIndex(
+        (item) => item.name === themeName && item.isNightTheme === isNightTheme,
+      );
+      if (existing >= 0) this.savedThemes[existing] = config;
+      else this.savedThemes.push(config);
+      this.persist();
+      return themeName;
+    },
+    applySavedTheme(index: number) {
+      const saved = this.savedThemes[index];
+      if (!saved) return;
+      const part = saved.isNightTheme ? "night" : "day";
+      this.globalTokens[part] = cloneColors(saved.colors);
+      this.mode = saved.isNightTheme ? ThemeMode.Night : ThemeMode.Day;
+      this.applyToDocument();
+      this.persist();
+    },
+    removeSavedTheme(index: number) {
+      if (index < 0 || index >= this.savedThemes.length) return;
+      this.savedThemes.splice(index, 1);
+      this.persist();
+    },
     applyToDocument() {
       const colors = this.readerColors;
       const root = document.documentElement;
       const night = this.effectiveMode === ThemeMode.Night;
+      const globalColors = night ? this.globalTokens.night : this.globalTokens.day;
+      const bgUrl = this.backgroundImageUrl;
+      const hasBg = Boolean(bgUrl) && !this.isEink;
       root.classList.toggle("theme-night", night);
       root.classList.toggle("eink-mode", this.isEink);
-      const globalColors = night ? this.globalTokens.night : this.globalTokens.day;
+      root.classList.toggle("has-bg-image", hasBg);
       root.style.setProperty("--ac-primary", globalColors.primary);
       root.style.setProperty("--ac-accent", globalColors.accent);
-      root.style.setProperty("--ac-background", globalColors.background);
+      root.style.setProperty(
+        "--ac-background",
+        hasBg ? withAlpha(globalColors.background, 0.88) : globalColors.background,
+      );
       root.style.setProperty("--ac-background-menu", globalColors.bottomBackground);
+      root.style.setProperty("--app-bg-image", bgUrl ? `url("${bgUrl.replace(/"/g, "%22")}")` : "none");
+      root.style.setProperty("--app-bg-blur", `${this.backgroundBlur}px`);
+      root.style.setProperty("--title-bar-elevation", `${this.barElevation}px`);
+      root.style.setProperty("--app-font-scale", String(this.fontScale / 10));
       root.style.setProperty("--lr-reader-bg", colors.bgValue);
       root.style.setProperty("--lr-reader-text", colors.textColor);
       if (this.isEink) {
@@ -260,6 +459,13 @@ export const useThemeStore = defineStore("theme", {
         root.style.removeProperty("--lr-color-background");
         root.style.removeProperty("--lr-color-on-background");
       }
+      void setTextZoom(this.fontScale * 10).catch(() => undefined);
+      void setSystemBarStyle({
+        transparentStatusBar: this.transparentStatusBar,
+        transparentNavigationBar: this.immNavigationBar,
+        statusBarColor: globalColors.primary,
+        navigationBarColor: globalColors.bottomBackground,
+      }).catch(() => undefined);
     },
     watchSystem() {
       window.matchMedia?.("(prefers-color-scheme: dark)").addEventListener?.("change", (event) => {

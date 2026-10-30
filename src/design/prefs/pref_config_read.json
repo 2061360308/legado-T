@@ -291,18 +291,6 @@
     },
     {
       "tag": "SwitchPreference",
-      "title": "启用绘制优化",
-      "summary": "",
-      "icon": "",
-      "key": "optimizeRender",
-      "defaultValue": "false",
-      "dependency": "",
-      "entries": [],
-      "entryValues": [],
-      "children": []
-    },
-    {
-      "tag": "SwitchPreference",
       "title": "禁用返回键",
       "summary": "",
       "icon": "",

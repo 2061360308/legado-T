@@ -7,6 +7,7 @@ use flate2::write::ZlibEncoder;
 use flate2::Compression;
 use local_reader_lib::data::db;
 use local_reader_lib::domain::import_service;
+use local_reader_lib::domain::storage::BookStorage;
 use local_reader_lib::domain::umd_import;
 
 fn temp_dir() -> std::path::PathBuf {
@@ -18,7 +19,9 @@ fn temp_dir() -> std::path::PathBuf {
 }
 
 fn utf16(text: &str) -> Vec<u8> {
-    text.encode_utf16().flat_map(|value| value.to_le_bytes()).collect()
+    text.encode_utf16()
+        .flat_map(|value| value.to_le_bytes())
+        .collect()
 }
 
 fn segment(out: &mut Vec<u8>, kind: u8, flag: u8, payload: &[u8]) {
@@ -28,10 +31,9 @@ fn segment(out: &mut Vec<u8>, kind: u8, flag: u8, payload: &[u8]) {
 
 fn write_umd(path: &Path) {
     const COVER: &[u8] = &[
-        0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0xFF, 0xFF, 0xFF, 0x21, 0xF9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2C,
-        0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00,
-        0x3B,
+        0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0xFF, 0xFF, 0xFF, 0x21, 0xF9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2C, 0x00, 0x00,
+        0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3B,
     ];
     let content = utf16("第一章 开始\u{2029}这是正文。");
     let title = utf16("第一章 开始");
@@ -109,13 +111,15 @@ fn imports_umd_into_cached_chapters_and_cover() {
     let path = dir.join("book.umd");
     write_umd(&path);
     let conn = db::open_in_memory().unwrap();
+    let data_dir = dir.join("data");
+    let storage = BookStorage::new(&data_dir);
+    storage.ensure_layout().unwrap();
     let result =
-        import_service::import_umd(&conn, &path.to_string_lossy(), &dir.join("data"), None, 0)
-            .unwrap();
+        import_service::import_umd(&conn, &path.to_string_lossy(), &storage, None, 0).unwrap();
     assert_eq!(result.book.name, "测试 UMD");
     assert_eq!(result.chapter_count, 1);
     assert!(result.book.cover_url.as_deref().unwrap().ends_with(".gif"));
-    let blocks = import_service::read_epub_chapter_blocks(&result.book.book_url, 0).unwrap();
+    let blocks = import_service::read_epub_chapter_blocks(&storage, &result.book, 0).unwrap();
     assert!(!blocks.is_empty());
     fs::remove_dir_all(&dir).ok();
 }

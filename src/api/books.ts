@@ -21,8 +21,8 @@ export function bookUpsert(book: Book): Promise<void> {
   return invoke<void>(COMMANDS.bookUpsert, { book });
 }
 
-export function bookDelete(bookUrl: string): Promise<void> {
-  return invoke<void>(COMMANDS.bookDelete, { bookUrl });
+export function bookDelete(bookUrl: string, deleteFiles = true): Promise<void> {
+  return invoke<void>(COMMANDS.bookDelete, { bookUrl, deleteFiles });
 }
 
 export function chapterList(bookUrl: string): Promise<BookChapter[]> {
@@ -31,6 +31,18 @@ export function chapterList(bookUrl: string): Promise<BookChapter[]> {
 
 export function groupList(): Promise<BookGroup[]> {
   return invoke<BookGroup[]>(COMMANDS.groupList);
+}
+
+export function groupSave(group: BookGroup): Promise<BookGroup> {
+  return invoke<BookGroup>(COMMANDS.groupSave, { group });
+}
+
+export function groupDelete(groupId: number): Promise<void> {
+  return invoke<void>(COMMANDS.groupDelete, { groupId });
+}
+
+export function groupCoverSave(srcPath: string): Promise<string> {
+  return invoke<string>(COMMANDS.groupCoverSave, { srcPath });
 }
 
 export function txtTocRuleList(): Promise<TxtTocRule[]> {

@@ -60,13 +60,25 @@ type FolderItem =
   | { type: "group"; group: BookGroup }
   | { type: "book"; book: Book };
 
+function hasGroupBit(value: number, bit: number): boolean {
+  if (!bit) return false;
+  return Math.floor(value / bit) % 2 === 1;
+}
+
+function inAnyGroup(book: Book): boolean {
+  const value = book.group ?? 0;
+  return userGroups.value.some((group) => hasGroupBit(value, group.groupId));
+}
+
 const folderItems = computed<FolderItem[]>(() => {
   if (!folderStyle.value || activeGroup.value !== VIRTUAL_GROUP.all) {
     return booksStore.list.map((book) => ({ type: "book" as const, book }));
   }
   return [
     ...userGroups.value.map((group) => ({ type: "group" as const, group })),
-    ...booksStore.list.map((book) => ({ type: "book" as const, book })),
+    ...booksStore.list
+      .filter((book) => !inAnyGroup(book))
+      .map((book) => ({ type: "book" as const, book })),
   ];
 });
 

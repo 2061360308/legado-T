@@ -20,6 +20,7 @@ pub fn reader_open(
     let style = style.unwrap_or_default();
     read_state::open(
         &conn,
+        &state.storage,
         &mut cache,
         &book_url,
         chapter_index,
@@ -67,6 +68,13 @@ pub fn reader_effective_rules(
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
     let mut cache = state.reader_cache.lock().map_err(|e| e.to_string())?;
     let style = style.unwrap_or_default();
-    read_state::effective_rules(&conn, &mut cache, &book_url, chapter_index, &style)
-        .map_err(|e| e.to_string())
+    read_state::effective_rules(
+        &conn,
+        &state.storage,
+        &mut cache,
+        &book_url,
+        chapter_index,
+        &style,
+    )
+    .map_err(|e| e.to_string())
 }

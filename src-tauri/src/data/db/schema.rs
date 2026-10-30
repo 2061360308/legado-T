@@ -37,9 +37,12 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             "order"           INTEGER NOT NULL DEFAULT 0,
             syncTime          INTEGER NOT NULL DEFAULT 0,
             readConfig        TEXT,
-            customIntro       TEXT
+            customIntro       TEXT,
+            sourcePath        TEXT,
+            sourceHash        TEXT
         );
-        CREATE UNIQUE INDEX IF NOT EXISTS idx_books_name_author ON books(name, author);
+        DROP INDEX IF EXISTS idx_books_name_author;
+        CREATE INDEX IF NOT EXISTS idx_books_name_author ON books(name, author);
 
         CREATE TABLE IF NOT EXISTS chapters (
             url           TEXT NOT NULL,
@@ -170,6 +173,8 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
         "#,
     )?;
     ensure_column(conn, "books", "customIntro", "TEXT")?;
+    ensure_column(conn, "books", "sourcePath", "TEXT")?;
+    ensure_column(conn, "books", "sourceHash", "TEXT")?;
     ensure_column(conn, "chapters", "tocLevel", "INTEGER NOT NULL DEFAULT 0")?;
     Ok(())
 }

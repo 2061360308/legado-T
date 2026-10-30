@@ -38,6 +38,7 @@ boa_engine = "0.22"
 ebook-rs = { version = "0.18", default-features = false }
 flate2 = "1.1.10"
 base64 = "0.23"
+tauri-plugin-reader-platform = { path = "plugins/reader-platform" }
 
 [features]
 default = ["custom-protocol"]

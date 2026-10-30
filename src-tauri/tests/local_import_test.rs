@@ -3,6 +3,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use local_reader_lib::data::db;
 use local_reader_lib::domain::local_import;
+use local_reader_lib::domain::storage::BookStorage;
 
 fn temp_dir() -> std::path::PathBuf {
     let stamp = SystemTime::now()
@@ -18,26 +19,27 @@ fn lists_and_imports_with_filename_script() {
     let books = dir.join("books");
     let nested = books.join("nested");
     fs::create_dir_all(&nested).unwrap();
-    fs::write(
-        books.join("张三 - 李四.txt"),
-        "第一章 开始\n这是正文。\n",
-    )
-    .unwrap();
+    fs::write(books.join("张三 - 李四.txt"), "第一章 开始\n这是正文。\n").unwrap();
     fs::write(nested.join("另一本.epub"), b"not an epub").unwrap();
     fs::write(books.join("ignore.doc"), b"ignored").unwrap();
 
     let conn = db::open_in_memory().unwrap();
+    let data_dir = dir.join("data");
+    let storage = BookStorage::new(&data_dir);
+    storage.ensure_layout().unwrap();
     let entries = local_import::list_dir(&conn, &books.to_string_lossy()).unwrap();
     assert!(entries.iter().any(|entry| entry.name == "张三 - 李四.txt"));
     assert!(!entries.iter().any(|entry| entry.name == "ignore.doc"));
-    assert!(entries.iter().any(|entry| entry.is_dir && entry.name == "nested"));
+    assert!(entries
+        .iter()
+        .any(|entry| entry.is_dir && entry.name == "nested"));
 
     let scanned = local_import::scan_dir(&conn, &books.to_string_lossy()).unwrap();
     assert_eq!(scanned.len(), 2);
 
     let results = local_import::import_files(
         &conn,
-        &dir.join("data"),
+        &storage,
         &[books.join("张三 - 李四.txt").to_string_lossy().to_string()],
         0,
         Some(r#"name = src.split(" - ")[0]; author = src.split(" - ")[1] || "";"#),

@@ -6,6 +6,7 @@ use local_reader_lib::data::db;
 use local_reader_lib::domain::import_service;
 use local_reader_lib::domain::mobi_import;
 use local_reader_lib::domain::model::ContentBlock;
+use local_reader_lib::domain::storage::BookStorage;
 
 fn temp_dir() -> std::path::PathBuf {
     let stamp = SystemTime::now()
@@ -63,15 +64,18 @@ fn imports_mobi_into_reader_cache() {
     let data_dir = dir.join("data");
     fs::create_dir_all(&data_dir).unwrap();
     let conn = db::open_in_memory().unwrap();
+    let storage = BookStorage::new(&data_dir);
+    storage.ensure_layout().unwrap();
     let path = fixture("alice.mobi");
     let result =
-        import_service::import_mobi(&conn, &path.to_string_lossy(), &data_dir, None, 0).unwrap();
+        import_service::import_mobi(&conn, &path.to_string_lossy(), &storage, None, 0).unwrap();
     assert!(result.book.name.contains("Alice"));
     assert!(result.chapter_count > 1);
     assert!(result.book.cover_url.as_deref().is_some());
     let mut has_image = false;
     for index in 0..result.chapter_count as i32 {
-        let blocks = import_service::read_epub_chapter_blocks(&result.book.book_url, index).unwrap();
+        let blocks =
+            import_service::read_epub_chapter_blocks(&storage, &result.book, index).unwrap();
         has_image |= blocks
             .iter()
             .any(|block| matches!(block, ContentBlock::Image { .. }));

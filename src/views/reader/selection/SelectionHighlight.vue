@@ -9,9 +9,11 @@ const props = withDefaults(
     selection: TextSelection;
     width: number;
     height: number;
+    scrollTop?: number;
+    offsetX?: number;
     color?: string;
   }>(),
-  { color: "rgba(255, 213, 79, 0.38)" },
+  { scrollTop: 0, offsetX: 0, color: "rgba(255, 213, 79, 0.38)" },
 );
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -30,12 +32,14 @@ function draw() {
   ctx.clearRect(0, 0, props.width, props.height);
   ctx.fillStyle = props.color;
   for (const rect of selectionRects(props.page, props.selection)) {
-    ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+    const y = rect.y - (props.scrollTop ?? 0);
+    if (y + rect.height < 0 || y > props.height) continue;
+    ctx.fillRect(rect.x + (props.offsetX ?? 0), y, rect.width, rect.height);
   }
 }
 
 watch(
-  () => [props.page, props.selection, props.width, props.height, props.color],
+  () => [props.page, props.selection, props.width, props.height, props.scrollTop, props.offsetX, props.color],
   draw,
   { deep: true },
 );

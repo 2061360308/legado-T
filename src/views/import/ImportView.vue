@@ -1,23 +1,31 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { open } from "@tauri-apps/plugin-dialog";
-import {
-  localImportDelete,
-  localImportImport,
-  localImportList,
-  localImportScan,
-} from "@/api/books";
+import { localImportImport } from "@/api/books";
 import { kvGet, kvSet } from "@/api/config";
-import type { LocalImportEntry } from "@/api/bindings";
+import {
+  cleanupPreparedImport,
+  deleteImportEntries,
+  importPickerCapabilities,
+  listImportDirectory,
+  loadSavedImportLocation,
+  pickImportLocation,
+  prepareImport,
+  saveImportLocation,
+  scanImportDirectory,
+  type ImportEntry,
+  type ImportLocation,
+  type PreparedImport,
+} from "@/platform/bookImportPicker";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 
 const router = useRouter();
-const importPath = ref("");
-const entries = ref<LocalImportEntry[]>([]);
+const location = ref<ImportLocation | null>(null);
+const stack = ref<{ token: string; name: string }[]>([]);
+const entries = ref<ImportEntry[]>([]);
 const selected = ref(new Set<string>());
 const query = ref("");
 const loading = ref(false);
@@ -29,17 +37,29 @@ const moreMenuVisible = ref(false);
 const scriptDialogVisible = ref(false);
 const nameScript = ref("");
 
-const sortItems = computed<PopupMenuItem[]>(() => [
-  { key: "0", label: "按名称", checked: sort.value === 0 },
-  { key: "1", label: "按大小", checked: sort.value === 1 },
-  { key: "2", label: "按时间", checked: sort.value === 2 },
-  { key: "scan", label: "智能扫描文件夹" },
-  { key: "script", label: "导入文件名" },
-]);
+const capabilities = computed(() => importPickerCapabilities(location.value));
+const currentToken = computed(() => stack.value[stack.value.length - 1]?.token ?? "");
+const pathLabel = computed(() => stack.value.map((item) => item.name).join(" / "));
+const canGoUp = computed(() => stack.value.length > 1);
 
-const moreItems: PopupMenuItem[] = [
-  { key: "delete", label: "删除选中文件", icon: "ic_outline_delete", danger: true },
-];
+const sortItems = computed<PopupMenuItem[]>(() => {
+  const items: PopupMenuItem[] = [
+    { key: "0", label: "按名称", checked: sort.value === 0 },
+    { key: "1", label: "按大小", checked: sort.value === 1 },
+    { key: "2", label: "按时间", checked: sort.value === 2 },
+  ];
+  if (capabilities.value.scan) {
+    items.push({ key: "scan", label: "智能扫描文件夹" });
+  }
+  items.push({ key: "script", label: "导入文件名脚本" });
+  return items;
+});
+
+const moreItems = computed<PopupMenuItem[]>(() =>
+  capabilities.value.delete
+    ? [{ key: "delete", label: "删除选中文件", icon: "ic_outline_delete", danger: true }]
+    : [],
+);
 
 const visibleEntries = computed(() => {
   const key = query.value.trim().toLowerCase();
@@ -84,52 +104,56 @@ function showToast(text: string) {
   }, 1800);
 }
 
-async function loadDir(path: string) {
+async function loadDirectory(token: string): Promise<boolean> {
+  if (!location.value) return false;
   loading.value = true;
   selected.value = new Set();
   try {
-    entries.value = await localImportList(path);
-    importPath.value = path;
-    await kvSet("importBookPath", path);
+    entries.value = await listImportDirectory(location.value, token);
+    return true;
   } catch (error) {
+    entries.value = [];
     showToast(String(error));
+    return false;
   } finally {
     loading.value = false;
   }
 }
 
-async function pickFolder() {
-  const picked = await open({
-    directory: true,
-    multiple: false,
-    defaultPath: importPath.value || undefined,
-    title: "选择文件夹",
-  });
-  if (typeof picked === "string" && picked) {
-    await loadDir(picked);
+async function applyLocation(next: ImportLocation): Promise<boolean> {
+  location.value = next;
+  stack.value = [{ token: next.rootToken, name: next.name }];
+  await saveImportLocation(next);
+  const loaded = await loadDirectory(next.rootToken);
+  if (!loaded) {
+    location.value = null;
+    stack.value = [];
+  }
+  return loaded;
+}
+
+async function chooseFolder() {
+  if (loading.value) return;
+  try {
+    const picked = await pickImportLocation();
+    if (picked) await applyLocation(picked);
+  } catch (error) {
+    showToast(String(error));
   }
 }
 
-function parentPath(path: string): string {
-  const value = path.replace(/[\\/]+$/, "");
-  const index = Math.max(value.lastIndexOf("\\"), value.lastIndexOf("/"));
-  if (index <= 0) return value;
-  return value.slice(0, index);
-}
-
-async function goUp() {
-  if (!importPath.value) return;
-  const parent = parentPath(importPath.value);
-  if (parent && parent !== importPath.value) await loadDir(parent);
-}
-
-async function openEntry(entry: LocalImportEntry) {
+async function openEntry(entry: ImportEntry) {
   if (entry.isDir) {
-    await loadDir(entry.path);
+    stack.value = [...stack.value, { token: entry.key, name: entry.name }];
+    await loadDirectory(entry.key);
     return;
   }
   if (entry.onShelf) {
-    router.push({ path: "/reader", query: { bookUrl: entry.path } });
+    if (entry.bookUrl) {
+      router.push({ path: "/reader", query: { bookUrl: entry.bookUrl } });
+    } else {
+      showToast("书籍已在书架");
+    }
     return;
   }
   if (!entry.supported) {
@@ -137,9 +161,16 @@ async function openEntry(entry: LocalImportEntry) {
     return;
   }
   const next = new Set(selected.value);
-  if (next.has(entry.path)) next.delete(entry.path);
-  else next.add(entry.path);
+  if (next.has(entry.key)) next.delete(entry.key);
+  else next.add(entry.key);
   selected.value = next;
+}
+
+async function goUp() {
+  if (!canGoUp.value) return;
+  const next = stack.value.slice(0, -1);
+  stack.value = next;
+  await loadDirectory(next[next.length - 1].token);
 }
 
 function toggleAll() {
@@ -150,7 +181,7 @@ function toggleAll() {
   selected.value = new Set(
     visibleEntries.value
       .filter((item) => !item.isDir && item.supported && !item.onShelf)
-      .map((item) => item.path),
+      .map((item) => item.key),
   );
 }
 
@@ -158,34 +189,44 @@ function revertSelection() {
   const next = new Set<string>();
   for (const item of visibleEntries.value) {
     if (item.isDir || !item.supported || item.onShelf) continue;
-    if (!selected.value.has(item.path)) next.add(item.path);
+    if (!selected.value.has(item.key)) next.add(item.key);
   }
   selected.value = next;
 }
 
 async function importSelected() {
-  if (!selectedCount.value) return;
+  if (!selectedCount.value || loading.value || !location.value) return;
   loading.value = true;
+  let prepared: PreparedImport | undefined;
   try {
-    const paths = [...selected.value];
-    const results = await localImportImport(paths, 0, nameScript.value || null);
-    const ok = results.filter((item) => !item.error).length;
-    const failed = results.length - ok;
-    showToast(failed ? `成功 ${ok} 本，失败 ${failed} 本` : `已添加 ${ok} 本到书架`);
+    const selectedEntries = entries.value.filter((item) => selected.value.has(item.key));
+    prepared = await prepareImport(location.value, selectedEntries);
+    if (!prepared.paths.length) {
+      showToast(prepared.skipped ? `没有可导入的书籍，已跳过 ${prepared.skipped} 个文件` : "没有可导入的书籍");
+      return;
+    }
+    const results = await localImportImport(prepared.paths, 0, nameScript.value || null);
+    const ok = results.filter((item) => !item.error && !item.duplicate).length;
+    const duplicates = results.filter((item) => item.duplicate).length;
+    const failed = results.filter((item) => item.error).length;
+    const skipped = prepared.skipped ? `，跳过 ${prepared.skipped} 个` : "";
+    const duplicateText = duplicates ? `，已存在 ${duplicates} 本` : "";
+    showToast(failed ? `成功 ${ok} 本，失败 ${failed} 本${duplicateText}${skipped}` : `已添加 ${ok} 本到书架${duplicateText}${skipped}`);
     selected.value = new Set();
-    await loadDir(importPath.value);
+    await loadDirectory(currentToken.value);
   } catch (error) {
     showToast(String(error));
   } finally {
+    if (prepared) await cleanupPreparedImport(prepared);
     loading.value = false;
   }
 }
 
 async function scanFolder() {
-  if (!importPath.value || scanning.value) return;
+  if (!capabilities.value.scan || !location.value || !currentToken.value || scanning.value) return;
   scanning.value = true;
   try {
-    entries.value = await localImportScan(importPath.value);
+    entries.value = await scanImportDirectory(location.value, currentToken.value);
     selected.value = new Set();
     showToast(`扫描到 ${entries.value.length} 个文件`);
   } catch (error) {
@@ -196,12 +237,13 @@ async function scanFolder() {
 }
 
 async function deleteSelected() {
-  if (!selectedCount.value) return;
+  if (!capabilities.value.delete || !location.value || !selectedCount.value) return;
   if (!confirm(`确定删除选中的 ${selectedCount.value} 个文件？`)) return;
   try {
-    const count = await localImportDelete([...selected.value]);
+    const selectedEntries = entries.value.filter((item) => selected.value.has(item.key));
+    const count = await deleteImportEntries(location.value, selectedEntries);
     selected.value = new Set();
-    await loadDir(importPath.value);
+    await loadDirectory(currentToken.value);
     showToast(`已删除 ${count} 个文件`);
   } catch (error) {
     showToast(String(error));
@@ -231,12 +273,12 @@ function onMore(key: string) {
 }
 
 onMounted(async () => {
-  const [savedPath, savedScript] = await Promise.all([
-    kvGet("importBookPath"),
-    kvGet("bookImportFileName"),
-  ]);
+  const savedScript = await kvGet("bookImportFileName");
   nameScript.value = savedScript ?? "";
-  if (savedPath) await loadDir(savedPath);
+  const saved = await loadSavedImportLocation();
+  if (!saved) return;
+  const loaded = await applyLocation(saved);
+  if (!loaded) showToast("?????????????????");
 });
 </script>
 
@@ -250,7 +292,7 @@ onMounted(async () => {
         </label>
       </template>
       <template #actions>
-        <button aria-label="选择文件夹" @click="pickFolder">
+        <button aria-label="选择文件夹" @click="chooseFolder">
           <Icon name="ic_folder_open" :size="24" />
         </button>
         <button aria-label="排序" @click="sortMenuVisible = true">
@@ -260,8 +302,8 @@ onMounted(async () => {
     </TitleBar>
 
     <div class="path-bar" data-id="lay_top">
-      <span class="path" data-id="tv_path">{{ importPath || "/" }}</span>
-      <button data-id="tv_go_back" :disabled="!importPath" @click="goUp">上级</button>
+      <span class="path" data-id="tv_path">{{ pathLabel || "/" }}</span>
+      <button data-id="tv_go_back" :disabled="!canGoUp" @click="goUp">上级</button>
     </div>
 
     <div v-if="loading || scanning" class="progress-bar" data-id="refresh_progress_bar" />
@@ -271,9 +313,9 @@ onMounted(async () => {
       <div v-if="visibleEntries.length" class="file-list" data-id="recycler_view">
         <button
           v-for="entry in visibleEntries"
-          :key="entry.path"
+          :key="entry.key"
           class="file-row"
-          :class="{ selected: selected.has(entry.path) }"
+          :class="{ selected: selected.has(entry.key) }"
           @click="openEntry(entry)"
         >
           <span class="row-leading">
@@ -283,8 +325,8 @@ onMounted(async () => {
             <span v-else-if="entry.onShelf" class="row-icon" data-id="iv_icon">
               <Icon name="ic_book_has" :size="26" />
             </span>
-            <span v-else class="checkbox" :class="{ checked: selected.has(entry.path) }" data-id="cb_select">
-              <Icon v-if="selected.has(entry.path)" name="ic_check" :size="18" />
+            <span v-else class="checkbox" :class="{ checked: selected.has(entry.key) }" data-id="cb_select">
+              <Icon v-if="selected.has(entry.key)" name="ic_check" :size="18" />
             </span>
           </span>
           <span class="row-main">
@@ -298,7 +340,7 @@ onMounted(async () => {
         </button>
       </div>
       <p v-else class="empty" data-id="tv_empty_msg">
-        {{ importPath ? "当前文件夹没有可导入的书籍文件" : "点击右上角文件夹图标选择文件夹" }}
+        {{ pathLabel ? "当前文件夹没有可导入的书籍文件" : "点击右上角文件夹图标选择文件夹" }}
       </p>
     </main>
 
@@ -311,7 +353,7 @@ onMounted(async () => {
       <button class="bar-button accent" :disabled="!selectedCount" @click="importSelected">
         加入书架
       </button>
-      <button class="bar-icon" :disabled="!selectedCount" @click="moreMenuVisible = true">
+      <button v-if="moreItems.length" class="bar-icon" :disabled="!selectedCount" @click="moreMenuVisible = true">
         <Icon name="ic_more_vert" :size="22" />
       </button>
     </div>

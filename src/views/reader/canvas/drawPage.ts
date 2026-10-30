@@ -5,13 +5,17 @@ import { drawInfoBar, type InfoBarPayload } from "../infoBar";
 const pageImages = new Map<string, HTMLImageElement>();
 const loadingImages = new Set<string>();
 
-function imageSource(src: string): string {
+export function imageSource(src: string): string {
   if (/^(https?:|data:|asset:|blob:)/i.test(src)) return src;
   try {
     return convertFileSrc(src);
   } catch {
     return src;
   }
+}
+
+export function getCachedPageImage(src: string): HTMLImageElement | undefined {
+  return pageImages.get(src);
 }
 
 export function preloadPageImages(page: LayoutPage | null, onLoad?: () => void): void {
@@ -111,6 +115,44 @@ export function renderPageBitmap(
   dpr = window.devicePixelRatio || 1,
 ): HTMLCanvasElement {
   return renderPageTo(document.createElement("canvas"), page, options, dpr);
+}
+
+export function renderSpreadTo(
+  canvas: HTMLCanvasElement,
+  leftPage: LayoutPage | null,
+  rightPage: LayoutPage | null,
+  options: PageDrawOptions,
+  dpr = window.devicePixelRatio || 1,
+  brightness = 1,
+): HTMLCanvasElement {
+  const halfWidth = Math.max(1, options.width / 2);
+  canvas.width = Math.max(1, Math.floor(options.width * dpr));
+  canvas.height = Math.max(1, Math.floor(options.height * dpr));
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return canvas;
+  const left = renderPageTo(
+    document.createElement("canvas"),
+    leftPage,
+    { ...options, width: halfWidth, infoBar: undefined },
+    dpr,
+    brightness,
+  );
+  const right = renderPageTo(
+    document.createElement("canvas"),
+    rightPage,
+    { ...options, width: halfWidth, infoBar: undefined },
+    dpr,
+    brightness,
+  );
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(left, 0, 0);
+  ctx.drawImage(right, canvas.width / 2, 0);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (options.infoBar) {
+    drawInfoBar(ctx, options.infoBar, options.width, options.height);
+  }
+  return canvas;
 }
 
 export function renderPageTo(

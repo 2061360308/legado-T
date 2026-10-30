@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { LayoutPage } from "@/api/bindings";
-import { renderPageTo, type PageDrawOptions } from "./drawPage";
+import { renderPageTo, renderSpreadTo, type PageDrawOptions } from "./drawPage";
 import type { InfoBarPayload } from "../infoBar";
 import {
   calcCornerXY,
@@ -18,6 +18,9 @@ const props = defineProps<{
   direction: TurnDirection;
   fromPage: LayoutPage | null;
   toPage: LayoutPage | null;
+  fromRightPage?: LayoutPage | null;
+  toRightPage?: LayoutPage | null;
+  spread?: boolean;
   width: number;
   height: number;
   background: string;
@@ -69,20 +72,39 @@ function baseOptions(): PageDrawOptions {
 function renderBitmaps() {
   const dpr = renderDpr();
   const brightness = props.brightness ?? 1;
-  fromCanvas = renderPageTo(
-    fromCanvas ?? document.createElement("canvas"),
-    props.fromPage,
-    { ...baseOptions(), infoBar: props.fromInfoBar ?? undefined },
-    dpr,
-    brightness,
-  );
-  toCanvas = renderPageTo(
-    toCanvas ?? document.createElement("canvas"),
-    props.toPage ?? props.fromPage,
-    { ...baseOptions(), infoBar: (props.toInfoBar ?? props.fromInfoBar) ?? undefined },
-    dpr,
-    brightness,
-  );
+  if (props.spread) {
+    fromCanvas = renderSpreadTo(
+      fromCanvas ?? document.createElement("canvas"),
+      props.fromPage,
+      props.fromRightPage ?? null,
+      { ...baseOptions(), infoBar: props.fromInfoBar ?? undefined },
+      dpr,
+      brightness,
+    );
+    toCanvas = renderSpreadTo(
+      toCanvas ?? document.createElement("canvas"),
+      props.toPage ?? props.fromPage,
+      props.toRightPage ?? props.fromRightPage ?? null,
+      { ...baseOptions(), infoBar: (props.toInfoBar ?? props.fromInfoBar) ?? undefined },
+      dpr,
+      brightness,
+    );
+  } else {
+    fromCanvas = renderPageTo(
+      fromCanvas ?? document.createElement("canvas"),
+      props.fromPage,
+      { ...baseOptions(), infoBar: props.fromInfoBar ?? undefined },
+      dpr,
+      brightness,
+    );
+    toCanvas = renderPageTo(
+      toCanvas ?? document.createElement("canvas"),
+      props.toPage ?? props.fromPage,
+      { ...baseOptions(), infoBar: (props.toInfoBar ?? props.fromInfoBar) ?? undefined },
+      dpr,
+      brightness,
+    );
+  }
   draw();
 }
 

@@ -7,15 +7,15 @@ import PreferenceRow from "@/components/android/PreferenceRow.vue";
 import PreferenceCategory from "@/components/android/PreferenceCategory.vue";
 import Icon from "@/components/android/Icon.vue";
 import { useThemeStore } from "@/stores/theme";
+import { renderMarkdown } from "@/utils/markdown";
 import ThemeModeDialog from "./ThemeModeDialog.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
+import helpMarkdown from "@/assets/help/appHelp.md?raw";
 
 const router = useRouter();
 const theme = useThemeStore();
 const themeModeVisible = ref(false);
 const helpVisible = ref(false);
-const webServiceOn = ref(false);
-const webServiceTip = ref("");
 
 interface Item {
   label: string;
@@ -74,21 +74,12 @@ const currentModeLabel = computed(() => {
   return labels[theme.mode] ?? "跟随系统";
 });
 
+const helpHtml = computed(() => renderMarkdown(helpMarkdown));
+
 function open(item: Item) {
   if (item.action) item.action();
   else if (item.path) router.push(item.path);
 }
-
-function onWebServiceChange(value: boolean) {
-  webServiceOn.value = value;
-  webServiceTip.value = value
-    ? "桌面版暂不支持 Web 服务，已记录开关状态"
-    : "Web 服务未开启";
-}
-
-const webServiceSummary = computed(() =>
-  webServiceOn.value ? "Web 服务与上传页面（暂不支持）" : "开启后可在局域网内传书",
-);
 </script>
 
 <template>
@@ -111,21 +102,6 @@ const webServiceSummary = computed(() =>
           chevron
           @click="open(item)"
         />
-        <PreferenceRow
-          label="Web 服务"
-          :summary="webServiceSummary"
-          icon="ic_cfg_web"
-          @click="onWebServiceChange(!webServiceOn)"
-        >
-          <template #right>
-            <input
-              class="web-switch"
-              type="checkbox"
-              :checked="webServiceOn"
-              @change="onWebServiceChange(($event.target as HTMLInputElement).checked)"
-            />
-          </template>
-        </PreferenceRow>
       </PreferenceCategory>
 
       <PreferenceCategory
@@ -145,15 +121,10 @@ const webServiceSummary = computed(() =>
       </PreferenceCategory>
     </main>
 
-    <p v-if="webServiceTip" class="web-tip">{{ webServiceTip }}</p>
-
     <ThemeModeDialog v-model="themeModeVisible" />
 
-    <AndroidDialog v-model="helpVisible" mode="center" title="帮助">
-      <div class="help-body">
-        <p>帮助说明暂未提供。</p>
-        <p class="help-hint">如需帮助请查看 README 或 Issues。</p>
-      </div>
+    <AndroidDialog v-model="helpVisible" mode="center" title="帮助" width="min(92vw, 760px)">
+      <article class="help-body markdown-body" v-html="helpHtml" />
     </AndroidDialog>
   </div>
 </template>
@@ -171,50 +142,79 @@ const webServiceSummary = computed(() =>
   overflow-y: auto;
   padding: 0 0 24px;
 }
-.web-switch {
-  flex: none;
-  width: 40px;
-  height: 22px;
-  appearance: none;
-  border-radius: 11px;
-  background: var(--ac-transparent-10);
-  position: relative;
-  cursor: pointer;
-  outline: none;
-  transition: background 0.15s;
-}
-.web-switch::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  transition: transform 0.15s;
-}
-.web-switch:checked {
-  background: var(--ac-primary);
-}
-.web-switch:checked::after {
-  transform: translateX(18px);
-}
-.web-tip {
-  margin: 0;
-  padding: 8px 20px;
-  font-size: 12px;
-  color: var(--ac-secondary-text);
-}
 .help-body {
-  padding: 4px 0;
-}
-.help-body p {
-  margin: 0 0 8px;
   font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
 }
-.help-hint {
+.help-body :deep(h1) {
+  margin: 0 0 12px;
+  font-size: 22px;
+  line-height: 1.3;
+}
+.help-body :deep(h2) {
+  margin: 22px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--ac-divider);
+  font-size: 18px;
+}
+.help-body :deep(h3) {
+  margin: 18px 0 6px;
+  font-size: 16px;
+}
+.help-body :deep(h4),
+.help-body :deep(h5),
+.help-body :deep(h6) {
+  margin: 14px 0 6px;
+  font-size: 15px;
+}
+.help-body :deep(p) {
+  margin: 0 0 10px;
+}
+.help-body :deep(ul),
+.help-body :deep(ol) {
+  margin: 0 0 10px;
+  padding-left: 22px;
+}
+.help-body :deep(li) {
+  margin: 2px 0;
+}
+.help-body :deep(blockquote) {
+  margin: 8px 0;
+  padding: 6px 12px;
+  border-left: 3px solid var(--ac-primary);
+  background: var(--ac-transparent-10);
   color: var(--ac-secondary-text);
-  font-size: 12px;
+}
+.help-body :deep(a) {
+  color: var(--ac-primary);
+  text-decoration: none;
+}
+.help-body :deep(code) {
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: var(--ac-transparent-10);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.92em;
+}
+.help-body :deep(pre) {
+  overflow-x: auto;
+  padding: 10px;
+  background: var(--ac-transparent-10);
+}
+.help-body :deep(pre code) {
+  padding: 0;
+  background: transparent;
+}
+.help-body :deep(img) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 8px 0;
+}
+.help-body :deep(hr) {
+  margin: 14px 0;
+  border: none;
+  border-top: 1px solid var(--ac-divider);
 }
 </style>

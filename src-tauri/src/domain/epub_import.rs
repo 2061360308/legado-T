@@ -438,7 +438,8 @@ pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedEpub> {
             if blocks.is_empty() {
                 continue;
             }
-            let title = first_heading(&html).unwrap_or_else(|| format!("Chapter {}", chapters.len() + 1));
+            let title =
+                first_heading(&html).unwrap_or_else(|| format!("Chapter {}", chapters.len() + 1));
             chapters.push(ParsedChapter {
                 title,
                 href,

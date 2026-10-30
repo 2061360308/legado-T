@@ -25,24 +25,7 @@ const toast = ref("");
 let toastTimer: number | undefined;
 
 const UNSUPPORTED = new Set([
-  "screenOrientation",
-  "keep_light",
-  "hideStatusBar",
-  "hideNavigationBar",
-  "readBodyToLh",
-  "paddingDisplayCutouts",
-  "doubleHorizontalPage",
-  "progressBarBehavior",
-  "volumeKeyPage",
-  "volumeKeyPageOnPlay",
-  "keyPageOnLongPress",
-  "optimizeRender",
-  "disableReturnKey",
-  "noAnimScrollPage",
-  "previewImageByClick",
   "autoChangeSource",
-  "selectText",
-  "expandTextMenu",
 ]);
 
 const listEntries = computed(() => listNode.value?.entries ?? []);

@@ -17,12 +17,15 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())
+        .plugin(tauri_plugin_reader_platform::init())
         .setup(|app| {
             let dir = app
                 .path()
                 .app_data_dir()
                 .unwrap_or_else(|_| std::path::PathBuf::from("."));
             std::fs::create_dir_all(&dir).ok();
+            let storage = domain::storage::BookStorage::new(&dir);
+            storage.ensure_layout().ok();
             let db_path = dir.join("local_reader.db");
             let conn = data::db::open(&db_path.to_string_lossy()).expect("open database");
 
@@ -38,9 +41,12 @@ pub fn run() {
                 }
             }
 
+            let _ = data::migration::migrate_legacy_books(&conn, &storage);
+
             app.manage(state::AppState {
                 conn: Mutex::new(conn),
                 reader_cache: Mutex::new(Default::default()),
+                storage,
             });
             Ok(())
         })
@@ -52,6 +58,9 @@ pub fn run() {
             commands::db::book_delete,
             commands::db::chapter_list,
             commands::db::group_list,
+            commands::db::group_save,
+            commands::db::group_delete,
+            commands::db::group_cover_save,
             commands::db::txt_toc_rule_list,
             commands::db::kv_get,
             commands::db::kv_set,

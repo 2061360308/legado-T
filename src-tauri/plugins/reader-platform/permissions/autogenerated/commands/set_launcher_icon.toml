@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-set-launcher-icon"
+description = "Enables the set_launcher_icon command without any pre-configured scope."
+commands.allow = ["set_launcher_icon"]
+
+[[permission]]
+identifier = "deny-set-launcher-icon"
+description = "Denies the set_launcher_icon command without any pre-configured scope."
+commands.deny = ["set_launcher_icon"]

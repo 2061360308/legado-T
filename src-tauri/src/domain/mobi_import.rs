@@ -146,12 +146,7 @@ fn attr(tag: &str, name: &str) -> Option<String> {
     Some(decode_html_entities(value).trim().to_string())
 }
 
-fn html_blocks(
-    book: &Book,
-    section_href: &str,
-    html: &str,
-    image_dir: &Path,
-) -> Vec<ContentBlock> {
+fn html_blocks(book: &Book, section_href: &str, html: &str, image_dir: &Path) -> Vec<ContentBlock> {
     let Ok(image_regex) = Regex::new(r"(?is)<img\b[^>]*>") else {
         return text_blocks(&strip_html(html));
     };
@@ -217,7 +212,11 @@ fn section_blocks(book: &Book, section: &ebook_rs::Section, image_dir: &Path) ->
     text_blocks(&section.plain_text)
 }
 
-fn collect_toc(points: &[ebook_rs::NavPoint], level: i32, out: &mut Vec<(String, String, i32, bool)>) {
+fn collect_toc(
+    points: &[ebook_rs::NavPoint],
+    level: i32,
+    out: &mut Vec<(String, String, i32, bool)>,
+) {
     for point in points {
         if !point.label.trim().is_empty() && !point.href.trim().is_empty() {
             out.push((

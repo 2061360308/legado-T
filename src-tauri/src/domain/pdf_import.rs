@@ -69,10 +69,7 @@ pub fn parse(path: &Path, image_dir: &Path) -> Result<ParsedPdf> {
     let mut pages = Vec::with_capacity(document.pages().len() as usize);
     for (index, page) in document.pages().iter().enumerate() {
         let page_number = index as u32 + 1;
-        let text = page
-            .text()
-            .map(|text| text.all())
-            .unwrap_or_default();
+        let text = page.text().map(|text| text.all()).unwrap_or_default();
         let bitmap = page
             .render_with_config(&render_config)
             .map_err(|e| Error::Invalid(format!("PDF page render failed: {e}")))?;

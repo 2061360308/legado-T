@@ -113,7 +113,7 @@ onMounted(load);
     </TitleBar>
     <main v-if="book" class="content">
       <div class="top">
-        <CoverImage :name="name || book.name" :src="coverUrl" :width="90" :height="130" :radius="2" />
+        <CoverImage :name="name || book.name" :author="author" :src="coverUrl" :width="90" :height="130" :radius="2" />
         <div class="fields">
           <label>
             书名

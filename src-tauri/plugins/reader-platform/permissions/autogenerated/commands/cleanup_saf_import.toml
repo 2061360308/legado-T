@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-cleanup-saf-import"
+description = "Enables the cleanup_saf_import command without any pre-configured scope."
+commands.allow = ["cleanup_saf_import"]
+
+[[permission]]
+identifier = "deny-cleanup-saf-import"
+description = "Denies the cleanup_saf_import command without any pre-configured scope."
+commands.deny = ["cleanup_saf_import"]

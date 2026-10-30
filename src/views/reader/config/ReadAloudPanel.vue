@@ -17,6 +17,7 @@ const emit = defineEmits<{
   position: [charPos: number];
   "open-config": [];
   "show-menu": [];
+  "playing-change": [boolean];
   backstage: [];
 }>();
 
@@ -55,6 +56,11 @@ const aloud = useReadAloud({
   },
   onPosition: (pos) => emit("position", pos),
 });
+
+watch(
+  () => aloud.speaking.value && !aloud.paused.value,
+  (playing) => emit("playing-change", playing),
+);
 
 aloud.rate.value = prefs.readAloudRate;
 aloud.timerMinutes.value = timerMinutes.value;

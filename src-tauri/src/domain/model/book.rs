@@ -103,6 +103,10 @@ pub struct Book {
     pub read_config: Option<ReadConfig>,
     #[serde(default)]
     pub custom_intro: Option<String>,
+    #[serde(default)]
+    pub source_path: Option<String>,
+    #[serde(default)]
+    pub source_hash: Option<String>,
 }
 
 impl Book {

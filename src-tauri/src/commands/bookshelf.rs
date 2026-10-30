@@ -1,6 +1,6 @@
 //! 书架与导入 IPC 命令（M2 / M3）。
 
-use tauri::{Manager, State};
+use tauri::State;
 
 use crate::data::repositories::BookRepo;
 use crate::data::shelf_export;
@@ -14,7 +14,6 @@ type CmdResult<T> = std::result::Result<T, String>;
 #[tauri::command]
 pub fn bookshelf_list(
     state: State<AppState>,
-    app: tauri::AppHandle,
     group_id: i64,
     sort: i32,
 ) -> CmdResult<Vec<crate::domain::model::Book>> {
@@ -22,12 +21,11 @@ pub fn bookshelf_list(
     let group = VirtualGroup::from_id(group_id).ok_or("无效分组")?;
     let sort = BookSort::from_i32(sort).unwrap_or_default();
     let mut books = bookshelf::list_by_group(&conn, group, sort).map_err(|e| e.to_string())?;
-    if let Ok(data_dir) = app.path().app_data_dir() {
-        for book in &mut books {
-            if import_service::ensure_epub_cover(book, &data_dir).unwrap_or(false) {
-                let _ = BookRepo::upsert(&conn, book);
-            }
+    for book in &mut books {
+        if import_service::ensure_epub_cover(book, &state.storage).unwrap_or(false) {
+            let _ = BookRepo::upsert(&conn, book);
         }
+        state.storage.hydrate_book(book);
     }
     Ok(books)
 }
@@ -58,7 +56,6 @@ pub fn book_set_group(state: State<AppState>, book_url: String, group: u64) -> C
 #[tauri::command]
 pub fn import_txt(
     state: State<AppState>,
-    app: tauri::AppHandle,
     path: String,
     name: Option<String>,
     group: Option<u64>,
@@ -66,11 +63,10 @@ pub fn import_txt(
     split_long: Option<bool>,
 ) -> CmdResult<import_service::ImportResult> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
-    let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
     import_service::import_txt(
         &conn,
         &path,
-        &data_dir,
+        &state.storage,
         name.as_deref(),
         group.unwrap_or(0),
         charset.as_deref(),
@@ -82,7 +78,6 @@ pub fn import_txt(
 #[tauri::command]
 pub fn import_book(
     state: State<AppState>,
-    app: tauri::AppHandle,
     path: String,
     name: Option<String>,
     group: Option<u64>,
@@ -90,11 +85,10 @@ pub fn import_book(
     split_long: Option<bool>,
 ) -> CmdResult<import_service::ImportResult> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
-    let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
     import_service::import_book(
         &conn,
         &path,
-        &data_dir,
+        &state.storage,
         name.as_deref(),
         group.unwrap_or(0),
         charset.as_deref(),
@@ -124,16 +118,14 @@ pub fn local_import_scan(
 #[tauri::command]
 pub fn local_import_import(
     state: State<AppState>,
-    app: tauri::AppHandle,
     paths: Vec<String>,
     group: Option<u64>,
     name_script: Option<String>,
 ) -> CmdResult<Vec<local_import::LocalImportResult>> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
-    let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
     Ok(local_import::import_files(
         &conn,
-        &data_dir,
+        &state.storage,
         &paths,
         group.unwrap_or(0),
         name_script.as_deref(),
@@ -148,35 +140,45 @@ pub fn local_import_delete(paths: Vec<String>) -> CmdResult<usize> {
 #[tauri::command]
 pub fn book_cover_save(
     state: State<AppState>,
-    app: tauri::AppHandle,
     book_url: String,
     src_path: String,
 ) -> CmdResult<String> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
-    let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
-    local_import::save_cover_from_file(&conn, &data_dir, &book_url, &src_path)
-        .map_err(|e| e.to_string())
+    let cover = local_import::save_cover_from_file(&conn, &state.storage, &book_url, &src_path)
+        .map_err(|e| e.to_string())?;
+    Ok(state.storage.resolve(&cover))
 }
 
 #[tauri::command]
-pub fn book_cover_refresh(
-    state: State<AppState>,
-    app: tauri::AppHandle,
-    book_url: String,
-) -> CmdResult<Option<String>> {
+pub fn book_cover_refresh(state: State<AppState>, book_url: String) -> CmdResult<Option<String>> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
-    let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
-    local_import::refresh_cover(&conn, &data_dir, &book_url).map_err(|e| e.to_string())
+    let cover =
+        local_import::refresh_cover(&conn, &state.storage, &book_url).map_err(|e| e.to_string())?;
+    Ok(cover.map(|value| state.storage.resolve(&value)))
 }
 
 #[tauri::command]
-pub fn book_file_size(book_url: String) -> i64 {
-    local_import::file_size(&book_url)
+pub fn book_file_size(state: State<AppState>, book_url: String) -> CmdResult<i64> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let book = BookRepo::get(&conn, &book_url).map_err(|e| e.to_string())?;
+    let Some(book) = book else {
+        return Ok(0);
+    };
+    Ok(state
+        .storage
+        .storage_size(&book)
+        .map_err(|e| e.to_string())?
+        .total as i64)
 }
 
 #[tauri::command]
-pub fn book_clear_cache(book_url: String) -> CmdResult<()> {
-    local_import::clear_cache(&book_url).map_err(|e| e.to_string())
+pub fn book_clear_cache(state: State<AppState>, book_url: String) -> CmdResult<()> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let book = BookRepo::get(&conn, &book_url).map_err(|e| e.to_string())?;
+    let Some(book) = book else {
+        return Ok(());
+    };
+    state.storage.clear_cache(&book).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -190,6 +192,7 @@ pub fn re_split_book(
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
     import_service::re_split(
         &conn,
+        &state.storage,
         &book_url,
         rule.as_deref(),
         charset.as_deref(),
@@ -201,5 +204,5 @@ pub fn re_split_book(
 #[tauri::command]
 pub fn read_chapter(state: State<AppState>, book_url: String, index: i32) -> CmdResult<String> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
-    import_service::read_chapter(&conn, &book_url, index).map_err(|e| e.to_string())
+    import_service::read_chapter(&conn, &state.storage, &book_url, index).map_err(|e| e.to_string())
 }

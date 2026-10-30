@@ -1,25 +1,29 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { appDataDir } from "@tauri-apps/api/path";
-import { readDir } from "@tauri-apps/plugin-fs";
+import { bookFileSize, bookList } from "@/api/books";
+import type { Book } from "@/api/bindings";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 
 const router = useRouter();
-const dataDir = ref("");
-const files = ref<{ name: string; isFile: boolean }[]>([]);
+const files = ref<{ book: Book; size: number }[]>([]);
 const error = ref("");
+
+function formatSize(size: number): string {
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
+  if (size < 1024 * 1024 * 1024) return `${(size / 1024 / 1024).toFixed(1)} MB`;
+  return `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`;
+}
 
 onMounted(async () => {
   try {
-    const dir = await appDataDir();
-    dataDir.value = dir;
-    const entries = await readDir(`${dir.replace(/[\\/]+$/, "")}/booksData`);
-    files.value = entries
-      .filter((entry) => entry.isFile)
-      .map((entry) => ({ name: entry.name, isFile: true }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const books = await bookList();
+    const rows = await Promise.all(
+      books.map(async (book) => ({ book, size: await bookFileSize(book.bookUrl) })),
+    );
+    files.value = rows.sort((a, b) => a.book.name.localeCompare(b.book.name, "zh-CN"));
   } catch (e) {
     error.value = String(e);
   }
@@ -30,16 +34,17 @@ onMounted(async () => {
   <div class="files-page">
     <TitleBar title="文件管理" @back="router.back()" />
     <main class="content">
-      <p class="path">{{ dataDir }}/booksData</p>
+      <p class="path">应用数据目录 / books</p>
       <p v-if="error" class="error">{{ error }}</p>
       <div class="file-list">
-        <div v-for="file in files" :key="file.name" class="file-row">
+        <div v-for="file in files" :key="file.book.bookUrl" class="file-row">
           <Icon name="ic_import" :size="22" />
-          <span>{{ file.name }}</span>
+          <span>{{ file.book.name }}</span>
+          <span class="size">{{ formatSize(file.size) }}</span>
         </div>
         <p v-if="files.length === 0 && !error" class="empty">目录内暂无书籍文件</p>
       </div>
-      <button class="import" @click="router.push('/import')">导入 TXT</button>
+      <button class="import" @click="router.push('/import')">导入书籍</button>
     </main>
   </div>
 </template>
@@ -78,6 +83,18 @@ onMounted(async () => {
   border-bottom: 1px solid var(--ac-divider);
   font-size: 13px;
   word-break: break-all;
+}
+.file-row > span:first-of-type {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.file-row .size {
+  flex: none;
+  color: var(--ac-secondary-text);
+  font-size: 12px;
 }
 .empty {
   text-align: center;

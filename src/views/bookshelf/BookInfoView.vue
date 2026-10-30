@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import {
@@ -18,7 +18,7 @@ import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
-import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
+import GroupSelectDialog from "./GroupSelectDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -43,10 +43,18 @@ const backgroundSrc = computed(() => {
     return src;
   }
 });
+function hasGroupBit(value: number, bit: number): boolean {
+  if (!bit) return false;
+  return Math.floor(value / bit) % 2 === 1;
+}
+
 const groupName = computed(() => {
   const value = book.value?.group ?? 0;
-  if (!value) return book.value?.type && (book.value.type & 16) ? "本地未分组" : "未分组";
-  return groups.value.find((group) => (value & group.groupId) !== 0)?.groupName ?? "未分组";
+  const names = groups.value
+    .filter((group) => hasGroupBit(value, group.groupId))
+    .map((group) => group.groupName);
+  if (names.length) return names.join("、");
+  return book.value?.type && (book.value.type & 16) ? "本地未分组" : "未分组";
 });
 const kindTags = computed(() => {
   const tags = (book.value?.kind ?? "")
@@ -123,16 +131,24 @@ async function onMenu(key: string) {
 
 async function removeFromShelf() {
   if (!book.value) return;
-  if (!confirm(`将《${book.value.name}》移出书架？`)) return;
-  await bookDelete(bookUrl.value);
+  if (!confirm(`将《${book.value.name}》移出书架并删除应用内副本？原始文件不受影响。`)) return;
+  await bookDelete(bookUrl.value, true);
   router.back();
 }
 
-async function selectGroup(groupId: number) {
-  await bookSetGroup(bookUrl.value, groupId);
-  groupDialogVisible.value = false;
-  await load();
+async function saveGroup(groupId: number) {
+  try {
+    await bookSetGroup(bookUrl.value, groupId);
+    groupDialogVisible.value = false;
+    showToast("分组已更新");
+  } catch (error) {
+    showToast(String(error));
+  }
 }
+
+watch(groupDialogVisible, (open) => {
+  if (!open) load();
+});
 
 onMounted(load);
 </script>
@@ -161,6 +177,7 @@ onMounted(load);
         <div class="cover-wrap">
           <CoverImage
             :name="book.name"
+            :author="book.author"
             :src="displayCover"
             :width="110"
             :height="160"
@@ -207,19 +224,11 @@ onMounted(load);
 
     <PopupMenu v-model="menuVisible" :items="menuItems" :top="54" @select="onMenu" />
 
-    <AndroidDialog v-model="groupDialogVisible" mode="center" title="分组设置">
-      <div class="group-list">
-        <button class="group-row" @click="selectGroup(0)">未分组</button>
-        <button
-          v-for="group in groups"
-          :key="group.groupId"
-          class="group-row"
-          @click="selectGroup(group.groupId)"
-        >
-          {{ group.groupName }}
-        </button>
-      </div>
-    </AndroidDialog>
+    <GroupSelectDialog
+      v-model="groupDialogVisible"
+      :group-id="book.group ?? 0"
+      @confirm="saveGroup"
+    />
 
     <p v-if="message" class="toast">{{ message }}</p>
   </div>
@@ -364,19 +373,6 @@ onMounted(load);
 .actions button.primary {
   background: var(--ac-primary);
   color: #fff;
-}
-.group-list {
-  display: flex;
-  flex-direction: column;
-}
-.group-row {
-  border: none;
-  border-bottom: 1px solid var(--ac-divider);
-  background: transparent;
-  color: var(--ac-primary-text);
-  padding: 13px 16px;
-  text-align: left;
-  font-size: 14px;
 }
 .toast {
   position: fixed;

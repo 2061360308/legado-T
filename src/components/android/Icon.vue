@@ -40,6 +40,20 @@ const url = computed(() => {
   }
   return "";
 });
+
+const maskStyle = computed<Record<string, string>>(() => {
+  const image = url.value ? `url("${url.value}")` : "none";
+  return {
+    maskImage: image,
+    WebkitMaskImage: image,
+    maskRepeat: "no-repeat",
+    WebkitMaskRepeat: "no-repeat",
+    maskPosition: "center",
+    WebkitMaskPosition: "center",
+    maskSize: "contain",
+    WebkitMaskSize: "contain",
+  };
+});
 </script>
 
 <template>
@@ -49,7 +63,7 @@ const url = computed(() => {
       width: `${size}px`,
       height: `${size}px`,
       backgroundColor: color,
-      '--icon-mask': url ? `url(${url})` : 'none',
+      ...maskStyle,
     }"
   />
 </template>
@@ -58,7 +72,5 @@ const url = computed(() => {
 .android-icon {
   display: inline-block;
   flex: none;
-  -webkit-mask: var(--icon-mask) center / contain no-repeat;
-  mask: var(--icon-mask) center / contain no-repeat;
 }
 </style>

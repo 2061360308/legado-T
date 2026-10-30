@@ -1,0 +1,19 @@
+[default]
+description = "Reader platform capabilities"
+permissions = [
+  "allow-platform-info",
+  "allow-get-safe-area-insets",
+  "allow-set-keep-screen-on",
+  "allow-set-screen-orientation",
+  "allow-set-cutout-mode",
+  "allow-set-system-bars",
+  "allow-set-system-bar-style",
+  "allow-set-text-zoom",
+  "allow-set-launcher-icon",
+  "allow-pick-image",
+  "allow-set-reader-key-mode",
+  "allow-pick-books-directory",
+  "allow-list-books-directory",
+  "allow-prepare-books-import",
+  "allow-cleanup-saf-import",
+]

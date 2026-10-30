@@ -6,6 +6,7 @@ use local_reader_lib::data::db;
 use local_reader_lib::domain::import_service;
 use local_reader_lib::domain::layout_engine::LayoutStyle;
 use local_reader_lib::domain::read_state::{self, ReaderCache};
+use local_reader_lib::domain::storage::BookStorage;
 
 fn temp_dir() -> std::path::PathBuf {
     let stamp = SystemTime::now()
@@ -63,12 +64,14 @@ fn imports_pdf_pages_and_reads_cached_chapters() {
     write_pdf(&pdf, "Hello PDF this is a text layer page for testing");
 
     let conn = db::open_in_memory().unwrap();
+    let storage = BookStorage::new(&dir);
+    storage.ensure_layout().unwrap();
     let import =
-        import_service::import_pdf(&conn, &pdf.to_string_lossy(), &dir, None, 0).unwrap();
+        import_service::import_pdf(&conn, &pdf.to_string_lossy(), &storage, None, 0).unwrap();
     assert_eq!(import.chapter_count, 1);
     assert_eq!(import.book.name, "book");
 
-    let blocks = import_service::read_epub_chapter_blocks(&import.book.book_url, 0).unwrap();
+    let blocks = import_service::read_epub_chapter_blocks(&storage, &import.book, 0).unwrap();
     let image = blocks
         .iter()
         .find_map(|block| match block {
@@ -87,8 +90,16 @@ fn imports_pdf_pages_and_reads_cached_chapters() {
         ..Default::default()
     };
     let mut cache = ReaderCache::default();
-    let snapshot =
-        read_state::open(&conn, &mut cache, &import.book.book_url, None, None, &style).unwrap();
+    let snapshot = read_state::open(
+        &conn,
+        &storage,
+        &mut cache,
+        &import.book.book_url,
+        None,
+        None,
+        &style,
+    )
+    .unwrap();
     assert!(snapshot
         .pages
         .iter()

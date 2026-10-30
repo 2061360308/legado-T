@@ -5,8 +5,19 @@ import type { LayoutPage, ReaderSnapshot } from "@/api/bindings";
 import { readerOpen, readerSaveProgress } from "@/api/reader";
 import { bookmarkAdd } from "@/api/bookmarks";
 import { useReaderPrefsStore } from "@/stores/readerPrefs";
+import { useReaderSettingsStore } from "@/stores/readerSettings";
 import { useThemeStore } from "@/stores/theme";
+import {
+  refreshPlatform,
+  setCutoutMode,
+  setKeepScreenOn,
+  setScreenOrientation,
+  setSystemBars,
+  setReaderKeyMode,
+  type SafeAreaInsets,
+} from "@/platform";
 import ReaderCanvas from "./canvas/ReaderCanvas.vue";
+import ScrollReaderCanvas from "./canvas/ScrollReaderCanvas.vue";
 import PageTurnOverlay from "./canvas/PageTurnOverlay.vue";
 import SelectionHighlight from "./selection/SelectionHighlight.vue";
 import {
@@ -33,6 +44,7 @@ import SimulatedReadingDialog from "./dialogs/SimulatedReadingDialog.vue";
 import EffectiveReplacesDialog from "./dialogs/EffectiveReplacesDialog.vue";
 import ContentEditDialog from "./dialogs/ContentEditDialog.vue";
 import FontSelectDialog from "./dialogs/FontSelectDialog.vue";
+import ImagePreviewDialog from "./dialogs/ImagePreviewDialog.vue";
 import {
   buildInfoBarStyle,
   measureInfoBarHeights,
@@ -47,7 +59,18 @@ import { ThemeMode } from "@/stores/theme";
 const route = useRoute();
 const router = useRouter();
 const prefs = useReaderPrefsStore();
+const settings = useReaderSettingsStore();
 const theme = useThemeStore();
+const safeArea = ref<SafeAreaInsets>({
+  left: 0,
+  top: 0,
+  right: 0,
+  bottom: 0,
+  cutoutLeft: 0,
+  cutoutTop: 0,
+  cutoutRight: 0,
+  cutoutBottom: 0,
+});
 
 const bookUrl = computed(() => String(route.query.bookUrl || ""));
 const snapshot = ref<ReaderSnapshot | null>(null);
@@ -101,55 +124,95 @@ const moreMenuItems = computed<PopupMenuItem[]>(() => {
 });
 const dictVisible = ref(false);
 const dictWord = ref("");
+const imagePreviewVisible = ref(false);
+const imagePreviewSrc = ref("");
+
+function imageAt(x: number, y: number): string | null {
+  const target = pageAtPoint(x, y);
+  const page = target.page;
+  if (!page) return null;
+  const line = page.lines.find(
+    (item) =>
+      item.image &&
+      target.x >= item.x &&
+      target.x <= item.x + item.width &&
+      y >= item.y &&
+      y <= item.y + item.height,
+  );
+  return line?.image?.src ?? null;
+}
+
+function previewImageAt(x: number, y: number): boolean {
+  if (!settingBool("previewImageByClick", false)) return false;
+  const src = imageAt(x, y);
+  if (!src) return false;
+  imagePreviewSrc.value = src;
+  imagePreviewVisible.value = true;
+  return true;
+}
+
 const selection = ref<TextSelection | null>(null);
+const selectionPageIndex = ref(0);
 const selectionMenuVisible = ref(false);
 let selectionHandle: "start" | "end" | null = null;
 let selectionDragging = false;
 let longPressTimer: number | undefined;
 let longPressStart: { x: number; y: number } | null = null;
+const selectionPage = computed(() =>
+  doublePageActive.value && selectionPageIndex.value === 1 ? rightPage.value : currentPage.value,
+);
+const selectionOffsetX = computed(() =>
+  doublePageActive.value && selectionPageIndex.value === 1 ? layoutWidth.value : 0,
+);
 const selectionHandles = computed(() => {
-  const page = currentPage.value;
+  const page = selectionPage.value;
   const value = selection.value;
   if (!page || !value) return null;
   return selectionHandlesFor(page, value);
 });
+const expandedSelectionMenu = computed(() => settingBool("expandTextMenu", false));
 const selectionMenuStyle = computed(() => {
-  const page = currentPage.value;
+  const page = selectionPage.value;
   const value = selection.value;
   if (!page || !value) return {};
   const box = selectionBounds(page, value);
   if (!box) return {};
-  const menuWidth = 236;
-  const menuHeight = 44;
+  const offset = scrollMode.value ? scrollTop.value : 0;
+  const xOffset = selectionOffsetX.value;
+  const menuWidth = expandedSelectionMenu.value ? Math.min(320, viewWidth.value - 16) : 236;
+  const menuHeight = expandedSelectionMenu.value ? 88 : 44;
   const left = Math.min(
-    Math.max((box.left + box.right) / 2 - menuWidth / 2, 8),
+    Math.max((box.left + box.right) / 2 + xOffset - menuWidth / 2, 8),
     Math.max(8, viewWidth.value - menuWidth - 8),
   );
-  const below = box.bottom + 12;
+  const below = box.bottom - offset + 12;
+  const above = box.top - offset - menuHeight - 12;
   const top =
     below + menuHeight <= viewHeight.value
       ? below
-      : Math.max(8, box.top - menuHeight - 12);
+      : Math.min(Math.max(8, above), Math.max(8, viewHeight.value - menuHeight - 8));
   return { left: `${left}px`, top: `${top}px` };
 });
 const selectionHandleStyle = computed(() => {
-  const page = currentPage.value;
+  const page = selectionPage.value;
   const value = selection.value;
   if (!page || !value) return null;
   const handles = selectionHandlesFor(page, value);
   if (!handles) return null;
+  const offset = scrollMode.value ? scrollTop.value : 0;
   return {
     start: {
-      left: `${handles.start.x - 7}px`,
-      top: `${handles.start.y - 7}px`,
+      left: `${handles.start.x + selectionOffsetX.value - 7}px`,
+      top: `${handles.start.y - offset - 7}px`,
     },
     end: {
-      left: `${handles.end.x - 7}px`,
-      top: `${handles.end.y - 7}px`,
+      left: `${handles.end.x + selectionOffsetX.value - 7}px`,
+      top: `${handles.end.y - offset - 7}px`,
     },
   };
 });
 const aloudVisible = ref(false);
+const aloudPlaying = ref(false);
 const aloudPosition = ref(-1);
 const brightness = ref(1);
 const brightnessSide = ref<"left" | "right">("left");
@@ -166,22 +229,52 @@ let wheelNextTimer: number | undefined;
 let wheelPrevTimer: number | undefined;
 let lastTurnStartedAt = 0;
 
+const scrollMode = computed(() => prefs.pageAnim === 3);
+
+const doublePageActive = computed(() => {
+  if (scrollMode.value) return false;
+  const mode = settingString("doubleHorizontalPage", "0");
+  if (mode === "1") return true;
+  if (mode === "2") return viewWidth.value > viewHeight.value;
+  if (mode === "3") return viewWidth.value > viewHeight.value || viewWidth.value >= 600;
+  return false;
+});
+
+const layoutWidth = computed(() =>
+  doublePageActive.value ? Math.max(1, Math.floor(viewWidth.value / 2)) : viewWidth.value,
+);
+
+const scrollRef = ref<HTMLElement | null>(null);
+const scrollTop = ref(0);
+let scrollSaveTimer: number | undefined;
+
 const currentPage = computed(() => {
   const snap = snapshot.value;
   if (!snap) return null;
+  if (scrollMode.value) return snap.pages[0] ?? null;
   return snap.pages[snap.pageIndex] ?? null;
 });
+
+const rightPage = computed(() => {
+  const snap = snapshot.value;
+  if (!snap || !doublePageActive.value) return null;
+  return snap.pages[snap.pageIndex + 1] ?? null;
+});
+
+const scrollHeight = computed(() =>
+  Math.max(viewHeight.value, currentPage.value?.height ?? viewHeight.value),
+);
 
 const anyDialogOpen = computed(() => activeDialog.value !== "");
 
 
 const useTurnOverlay = computed(
-  () => !theme.isEink && (prefs.pageAnim === 0 || prefs.pageAnim === 2),
+  () => !scrollMode.value && !theme.isEink && (prefs.pageAnim === 0 || prefs.pageAnim === 2),
 );
 const turnMode = computed<"cover" | "simulation">(() =>
   prefs.pageAnim === 2 ? "simulation" : "cover",
 );
-const slideMode = computed(() => !theme.isEink && prefs.pageAnim === 1);
+const slideMode = computed(() => !scrollMode.value && !doublePageActive.value && !theme.isEink && prefs.pageAnim === 1);
 const transitionName = computed(() => {
   if (!slideMode.value) return "";
   return `page-slide-${animDir.value}`;
@@ -248,6 +341,21 @@ function currentDividerColor(): string {
   return value || "rgba(0,0,0,0.12)";
 }
 
+const followPageMenu = computed(
+  () => settingBool("readBarStyleFollowPage", false) && !theme.readerColors.bgImage,
+);
+
+const readerMenuStyle = computed<Record<string, string>>(() => {
+  if (!followPageMenu.value) return {} as Record<string, string>;
+  return {
+    "--ac-background": readerBackground.value,
+    "--ac-background-menu": readerBackground.value,
+    "--ac-primary-text": readerTextColor.value,
+    "--ac-secondary-text": readerTextColor.value,
+    "--ac-divider": currentDividerColor(),
+  };
+});
+
 const infoBarStyle = computed(() =>
   buildInfoBarStyle(prefs, {
     textColor: readerTextColor.value,
@@ -298,8 +406,86 @@ function showToast(message: string) {
   toastTimer = window.setTimeout(() => (toast.value = ""), 1600);
 }
 
+function settingString(key: string, fallback: string): string {
+  const value = settings.values[key];
+  return typeof value === "string" ? value : fallback;
+}
+
+function settingBool(key: string, fallback: boolean): boolean {
+  const value = settings.values[key];
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") return value === "true";
+  return fallback;
+}
+
+function orientationMode(): "system" | "portrait" | "landscape" | "sensor" | "reversePortrait" {
+  switch (settingString("screenOrientation", "0")) {
+    case "1":
+      return "portrait";
+    case "2":
+      return "landscape";
+    case "3":
+      return "sensor";
+    case "4":
+      return "reversePortrait";
+    default:
+      return "system";
+  }
+}
+
+async function syncSystemBars() {
+  const hide = !menuVisible.value;
+  try {
+    await setSystemBars({
+      hideStatusBar: hide && settingBool("hideStatusBar", false),
+      hideNavigationBar: hide && settingBool("hideNavigationBar", false),
+      lightStatusBar: false,
+      lightNavigationBar: false,
+    });
+  } catch {
+    // Desktop and unsupported devices are no-ops.
+  }
+}
+
+async function applyPlatformSettings() {
+  try {
+    const info = await refreshPlatform();
+    safeArea.value = info.safeArea;
+    await setScreenOrientation(orientationMode());
+    await setCutoutMode(settingBool("readBodyToLh", true) ? "shortEdges" : "never");
+    const keep = settingString("keep_light", "0");
+    if (keep === "-1") {
+      await setKeepScreenOn(true, null);
+    } else if (Number(keep) > 0) {
+      await setKeepScreenOn(true, Number(keep));
+    } else {
+      await setKeepScreenOn(false);
+    }
+    await syncSystemBars();
+  } catch {
+    // Keep the reader usable if the native platform plugin is unavailable.
+  }
+}
+
+async function resetPlatformSettings() {
+  await Promise.allSettled([
+    setKeepScreenOn(false),
+    setScreenOrientation("system"),
+    setCutoutMode("never"),
+    setSystemBars({
+      hideStatusBar: false,
+      hideNavigationBar: false,
+      lightStatusBar: false,
+      lightNavigationBar: false,
+    }),
+  ]);
+}
+
 function buildStyle() {
   const infoBarHeights = measureInfoBarHeights(infoBarStyle.value);
+  const safe = settingBool("paddingDisplayCutouts", false)
+    ? safeArea.value
+    : { left: 0, top: 0, right: 0, bottom: 0 };
   return {
     fontSize: prefs.fontSize,
     titleFontSize: prefs.fontSize + prefs.titleSize,
@@ -312,16 +498,17 @@ function buildStyle() {
     textBold: prefs.textBold,
     letterSpacing: prefs.letterSpacing,
     paragraphIndent: prefs.paragraphIndent,
-    paddingLeft: prefs.paddingLeft,
-    paddingRight: prefs.paddingRight,
-    paddingTop: prefs.paddingTop + infoBarHeights.header,
-    paddingBottom: prefs.paddingBottom + infoBarHeights.footer,
+    paddingLeft: prefs.paddingLeft + safe.left,
+    paddingRight: prefs.paddingRight + safe.right,
+    paddingTop: prefs.paddingTop + infoBarHeights.header + safe.top,
+    paddingBottom: prefs.paddingBottom + infoBarHeights.footer + safe.bottom,
     fullJustify: prefs.fullJustify,
     bottomJustify: prefs.bottomJustify,
     useZhLayout: prefs.useZhLayout,
-    viewWidth: viewWidth.value,
+    viewWidth: layoutWidth.value,
     viewHeight: viewHeight.value,
     imageStyle: "DEFAULT",
+    scroll: scrollMode.value,
   };
 }
 
@@ -343,6 +530,16 @@ async function open(chapterIndex: number | null = null, chapterPos: number | nul
     if (snapshot.value.marginFellBack) {
       showToast("边距过大，已回退默认边距");
     }
+    if (scrollMode.value) {
+      await nextTick();
+      scrollTop.value =
+        chapterPos === 2147483647
+          ? Math.max(0, scrollHeight.value - viewHeight.value)
+          : snapshot.value.scrollOffset ?? 0;
+      if (scrollRef.value) scrollRef.value.scrollTop = scrollTop.value;
+    } else {
+      scrollTop.value = 0;
+    }
     persistProgress();
   } catch (e) {
     error.value = String(e);
@@ -351,11 +548,56 @@ async function open(chapterIndex: number | null = null, chapterPos: number | nul
   }
 }
 
+const progressMode = computed(() => settingString("progressBarBehavior", "page"));
+const pageSliderMax = computed(() =>
+  doublePageActive.value
+    ? Math.max(0, Math.ceil((snapshot.value?.pages.length ?? 0) / 2) - 1)
+    : Math.max((snapshot.value?.pages.length ?? 1) - 1, 0),
+);
+const pageSliderValue = computed(() => {
+  const snap = snapshot.value;
+  if (!snap) return 0;
+  return doublePageActive.value ? Math.floor(snap.pageIndex / 2) : snap.pageIndex;
+});
+
+function seekPage(value: number) {
+  jumpPage(doublePageActive.value ? value * 2 : value);
+}
+
+function seekChapter(value: number) {
+  open(value, 0);
+}
+
+const scrollProgress = computed(() => {
+  const max = Math.max(0, scrollHeight.value - viewHeight.value);
+  return max > 0 ? Math.round((scrollTop.value / max) * 1000) : 0;
+});
+
+function seekScroll(value: number) {
+  const el = scrollRef.value;
+  if (!el) return;
+  const max = Math.max(0, scrollHeight.value - viewHeight.value);
+  el.scrollTo({ top: (max * value) / 1000, behavior: "auto" });
+}
+
+function scrollCharPos(): number {
+  const page = currentPage.value;
+  if (!page || page.lines.length === 0) return 0;
+  const y = scrollTop.value + 1;
+  const line =
+    page.lines.find((item) => item.y + item.height > y) ?? page.lines[page.lines.length - 1];
+  return line.startChar;
+}
+
 function persistProgress() {
   const snap = snapshot.value;
   if (!snap) return;
   const page = snap.pages[snap.pageIndex];
-  const pos = page ? page.startChar : snap.pageStartChar;
+  const pos = scrollMode.value
+    ? scrollCharPos()
+    : page
+      ? page.startChar
+      : snap.pageStartChar;
   readerSaveProgress(bookUrl.value, snap.chapterIndex, pos, snap.chapterTitle).catch(
     () => undefined,
   );
@@ -365,6 +607,8 @@ const turnActive = ref(false);
 const turnDirection = ref<"next" | "prev">("next");
 const turnFromPage = ref<LayoutPage | null>(null);
 const turnToPage = ref<LayoutPage | null>(null);
+const turnFromRightPage = ref<LayoutPage | null>(null);
+const turnToRightPage = ref<LayoutPage | null>(null);
 const turnOverlay = ref<InstanceType<typeof PageTurnOverlay> | null>(null);
 const canvasWrapRef = ref<HTMLElement | null>(null);
 let turnApply: (() => void) | null = null;
@@ -396,12 +640,16 @@ function startTurn(
   apply: (() => void) | null,
   gesture?: { downX: number; downY: number; startX: number; startY: number },
   speed = 300,
+  fromRight: LayoutPage | null = null,
+  toRight: LayoutPage | null = null,
 ) {
   if (turnActive.value || !from) return;
   clearSelection();
   turnDirection.value = direction;
   turnFromPage.value = from;
   turnToPage.value = to;
+  turnFromRightPage.value = fromRight;
+  turnToRightPage.value = toRight;
   turnApply = apply;
   turnFromInfoBar.value = infoPayloadFor(from);
   turnToInfoBar.value = infoPayloadFor(to);
@@ -433,6 +681,8 @@ function onTurnDone(completed: boolean) {
       turnActive.value = false;
       turnFromPage.value = null;
       turnToPage.value = null;
+      turnFromRightPage.value = null;
+      turnToRightPage.value = null;
       turnFromInfoBar.value = null;
       turnToInfoBar.value = null;
     });
@@ -453,6 +703,8 @@ function startChapterTurn(direction: "next" | "prev", speed = 300) {
   turnDirection.value = direction;
   turnFromPage.value = from;
   turnToPage.value = null;
+  turnFromRightPage.value = rightPage.value;
+  turnToRightPage.value = null;
   turnFromInfoBar.value = infoPayloadFor(from);
   turnToInfoBar.value = null;
   turnApply = () => {};
@@ -468,6 +720,7 @@ function startChapterTurn(direction: "next" | "prev", speed = 300) {
       return;
     }
     turnToPage.value = to;
+    turnToRightPage.value = rightPage.value;
     turnToInfoBar.value = infoPayloadFor(to);
     await nextTick();
     armTurnWatchdog(1500);
@@ -475,9 +728,75 @@ function startChapterTurn(direction: "next" | "prev", speed = 300) {
   });
 }
 
+function scrollBehavior(): ScrollBehavior {
+  return settingBool("noAnimScrollPage", false) ? "auto" : "smooth";
+}
+
+function scrollByViewport(direction: 1 | -1) {
+  const el = scrollRef.value;
+  const snap = snapshot.value;
+  if (!el || !snap) return;
+  const max = Math.max(0, scrollHeight.value - viewHeight.value);
+  if (direction > 0) {
+    if (scrollTop.value >= max - 2) {
+      if (snap.chapterIndex + 1 < snap.totalChapters) open(snap.chapterIndex + 1, 0);
+      else showToast("已复制选中文本");
+      return;
+    }
+    el.scrollTo({
+      top: Math.min(max, scrollTop.value + viewHeight.value * 0.9),
+      behavior: scrollBehavior(),
+    });
+    return;
+  }
+  if (scrollTop.value <= 2) {
+    if (snap.chapterIndex > 0) open(snap.chapterIndex - 1, 2147483647);
+    else showToast("??????");
+    return;
+  }
+  el.scrollTo({
+    top: Math.max(0, scrollTop.value - viewHeight.value * 0.9),
+    behavior: scrollBehavior(),
+  });
+}
+
+function onScroll(event: Event) {
+  const el = event.currentTarget as HTMLElement;
+  scrollTop.value = el.scrollTop;
+  window.clearTimeout(scrollSaveTimer);
+  scrollSaveTimer = window.setTimeout(() => persistProgress(), 400);
+}
+
 function nextPage(speed = 300) {
   const snap = snapshot.value;
   if (!snap) return;
+  if (scrollMode.value) {
+    scrollByViewport(1);
+    return;
+  }
+  if (doublePageActive.value) {
+    if (snap.pageIndex + 2 < snap.pages.length) {
+      const from = currentPage.value;
+      const to = snap.pages[snap.pageIndex + 2];
+      const toRight = snap.pages[snap.pageIndex + 3] ?? null;
+      if (useTurnOverlay.value && from) {
+        startTurn("next", from, to, () => {
+          snap.pageIndex += 2;
+          persistProgress();
+        }, undefined, speed, rightPage.value, toRight);
+      } else {
+        snap.pageIndex += 2;
+        persistProgress();
+      }
+      return;
+    }
+    if (snap.chapterIndex + 1 < snap.totalChapters) {
+      open(snap.chapterIndex + 1, 0);
+      return;
+    }
+    showToast("???????");
+    return;
+  }
   if (useTurnOverlay.value) {
     if (turnActive.value) return;
     if (snap.pageIndex + 1 < snap.pages.length) {
@@ -513,6 +832,33 @@ function nextPage(speed = 300) {
 function prevPage(speed = 300) {
   const snap = snapshot.value;
   if (!snap) return;
+  if (scrollMode.value) {
+    scrollByViewport(-1);
+    return;
+  }
+  if (doublePageActive.value) {
+    if (snap.pageIndex >= 2) {
+      const from = currentPage.value;
+      const to = snap.pages[snap.pageIndex - 2];
+      const toRight = snap.pages[snap.pageIndex - 1] ?? null;
+      if (useTurnOverlay.value && from) {
+        startTurn("prev", from, to, () => {
+          snap.pageIndex -= 2;
+          persistProgress();
+        }, undefined, speed, rightPage.value, toRight);
+      } else {
+        snap.pageIndex -= 2;
+        persistProgress();
+      }
+      return;
+    }
+    if (snap.chapterIndex > 0) {
+      open(snap.chapterIndex - 1, 2147483647);
+      return;
+    }
+    showToast("??????");
+    return;
+  }
   if (useTurnOverlay.value) {
     if (turnActive.value) return;
     if (snap.pageIndex > 0) {
@@ -549,7 +895,9 @@ function jumpPage(index: number) {
   const snap = snapshot.value;
   if (!snap) return;
   animDir.value = "next";
-  snap.pageIndex = Math.min(Math.max(index, 0), snap.pages.length - 1);
+  let target = Math.min(Math.max(index, 0), snap.pages.length - 1);
+  if (doublePageActive.value) target -= target % 2;
+  snap.pageIndex = target;
   persistProgress();
 }
 
@@ -637,11 +985,22 @@ let swiped = false;
 let ignoreClickUntil = 0;
 
 function pointerOffset(event: PointerEvent) {
-  const rect = canvasWrapRef.value?.getBoundingClientRect();
+  const element = scrollMode.value ? scrollRef.value : canvasWrapRef.value;
+  const rect = element?.getBoundingClientRect();
   return {
     x: event.clientX - (rect?.left ?? 0),
-    y: event.clientY - (rect?.top ?? 0),
+    y: event.clientY - (rect?.top ?? 0) + (scrollMode.value ? scrollTop.value : 0),
   };
+}
+
+function pageAtPoint(x: number, y: number) {
+  if (doublePageActive.value) {
+    if (x < layoutWidth.value) {
+      return { page: currentPage.value, x, offsetX: 0, index: 0 };
+    }
+    return { page: rightPage.value, x: x - layoutWidth.value, offsetX: layoutWidth.value, index: 1 };
+  }
+  return { page: currentPage.value, x, offsetX: 0, index: 0 };
 }
 
 function clearLongPress() {
@@ -654,6 +1013,7 @@ function clearLongPress() {
 
 function clearSelection() {
   selection.value = null;
+  selectionPageIndex.value = 0;
   selectionMenuVisible.value = false;
   selectionDragging = false;
   selectionHandle = null;
@@ -661,6 +1021,7 @@ function clearSelection() {
 
 function beginLongPress(event: PointerEvent) {
   clearLongPress();
+  if (!settingBool("selectText", true)) return;
   const page = currentPage.value;
   if (!page || turnActive.value) return;
   longPressStart = { x: event.clientX, y: event.clientY };
@@ -670,10 +1031,13 @@ function beginLongPress(event: PointerEvent) {
     const current = currentPage.value;
     if (!current || turnActive.value) return;
     const point = pointerOffset(event);
-    const hit = hitTestText(current, point.x, point.y);
+    const target = pageAtPoint(point.x, point.y);
+    if (!target.page) return;
+    const hit = hitTestText(target.page, target.x, point.y);
     if (!hit) return;
-    const word = wordSelection(current, hit.line, hit.char);
+    const word = wordSelection(target.page, hit.line, hit.char);
     if (!word) return;
+    selectionPageIndex.value = target.index;
     selection.value = word;
     selectionMenuVisible.value = false;
     selectionDragging = true;
@@ -705,13 +1069,15 @@ function onSelectionHandleDown(event: PointerEvent, which: "start" | "end") {
 
 function onSelectionHandleMove(event: PointerEvent) {
   const which = selectionHandle;
-  const page = currentPage.value;
+  const page = selectionPage.value;
   const current = selection.value;
   if (!which || !page || !current) return;
   event.preventDefault();
   event.stopPropagation();
   const point = pointerOffset(event);
-  const hit = hitTestText(page, point.x, point.y);
+  const target = pageAtPoint(point.x, point.y);
+  if (!target.page || target.page !== page) return;
+  const hit = hitTestText(page, target.x, point.y);
   if (!hit) return;
   if (which === "start") {
     updateSelection(page, hit, current.end);
@@ -763,6 +1129,15 @@ function jumpToText(keyword: string) {
     const index = paragraph.indexOf(key);
     if (index >= 0) {
       const pos = offset + index;
+      if (scrollMode.value) {
+        const page = currentPage.value;
+        const line = page?.lines.find((item) => pos >= item.startChar && pos < item.endChar);
+        if (line) {
+          scrollTop.value = Math.max(0, line.y - 20);
+          if (scrollRef.value) scrollRef.value.scrollTop = scrollTop.value;
+          return true;
+        }
+      }
       const pageIndex = snap.pages.findIndex(
         (page) => pos >= page.startChar && pos < page.endChar,
       );
@@ -786,12 +1161,21 @@ function onSelectionAction(key: string) {
       showToast("本章未找到匹配内容");
     }
   } else if (key === "bookmark") {
-    const page = currentPage.value;
+    const page = selectionPage.value;
     const line = page?.lines[current.start.line];
     void addBookmark(current.text, line ? line.startChar + current.start.char : undefined);
   } else if (key === "dict") {
     dictWord.value = text;
     dictVisible.value = true;
+  } else if (key === "share") {
+    if (navigator.share) {
+      void navigator.share({ text }).catch(() => undefined);
+    } else {
+      void copySelectionText(current.text);
+      showToast("???????");
+    }
+  } else if (key === "readAloud") {
+    aloudVisible.value = true;
   }
   clearSelection();
 }
@@ -891,11 +1275,14 @@ function onPointerCancel(event: PointerEvent) {
 }
 
 function onPointerMove(event: PointerEvent) {
-  if (selectionDragging && selection.value && currentPage.value) {
+  const selectedPage = selectionPage.value;
+  if (selectionDragging && selection.value && selectedPage) {
     const current = selection.value;
     const point = pointerOffset(event);
-    const hit = hitTestText(currentPage.value, point.x, point.y);
-    if (hit) updateSelection(currentPage.value, current.start, hit);
+    const target = pageAtPoint(point.x, point.y);
+    if (!target.page || target.page !== selectedPage) return;
+    const hit = hitTestText(selectedPage, target.x, point.y);
+    if (hit) updateSelection(selectedPage, current.start, hit);
     return;
   }
   if (!pointerStart) return;
@@ -1038,46 +1425,9 @@ function onClick(event: MouseEvent) {
   const rect = target.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
+  if (previewImageAt(x, y + (scrollMode.value ? scrollTop.value : 0))) return;
   window.clearTimeout(clickTimer);
   clickTimer = window.setTimeout(() => applyClick(x, y, rect.width, rect.height), 220);
-}
-
-function onDoubleClick(event: MouseEvent) {
-  if (turnActive.value || selection.value) return;
-  window.clearTimeout(clickTimer);
-  const page = currentPage.value;
-  if (!page) return;
-  const target = event.currentTarget as HTMLElement;
-  const rect = target.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  const line = page.lines.find((l) => y >= l.y && y <= l.y + l.height);
-  if (!line) return;
-  let hit = -1;
-  for (let i = 0; i < line.chars.length; i++) {
-    const ch = line.chars[i];
-    if (x >= ch.x && x <= ch.x + ch.width) {
-      hit = i;
-      break;
-    }
-  }
-  if (hit < 0) return;
-  const isWordChar = (s: string) => /[\u4e00-\u9fffA-Za-z0-9]/.test(s);
-  let start = hit;
-  let end = hit + 1;
-  while (start > 0 && isWordChar(line.chars[start - 1].ch)) start -= 1;
-  while (end < line.chars.length && isWordChar(line.chars[end].ch)) end += 1;
-  const word = line.chars
-    .slice(start, end)
-    .map((c) => c.ch)
-    .join("")
-    .trim();
-  if (!word) {
-    showToast("请选中文字");
-    return;
-  }
-  dictWord.value = word;
-  dictVisible.value = true;
 }
 
 function onKeydown(event: KeyboardEvent) {
@@ -1098,30 +1448,96 @@ function onKeydown(event: KeyboardEvent) {
   }
 }
 
-function onResize() {
-  if (turnActive.value) {
-    clearTurnWatchdog();
-    turnOverlay.value?.stop();
-    turnActive.value = false;
-    turnFromPage.value = null;
-    turnToPage.value = null;
-    turnApply = null;
+function resetInteractionState() {
+  pointerStart = null;
+  swiped = false;
+  ignoreClickUntil = 0;
+  pointerOutside = false;
+  dragDirection = null;
+  dragBoundary = null;
+  dragStartPoint = null;
+  clearLongPress();
+  clearSelection();
+  clearTurnWatchdog();
+  turnOverlay.value?.stop();
+  turnActive.value = false;
+  turnFromPage.value = null;
+  turnToPage.value = null;
+  turnApply = null;
+}
+
+function syncReaderKeyMode() {
+  void setReaderKeyMode({
+    active: true,
+    volumeKeyEnabled:
+      settingBool("volumeKeyPage", true) &&
+      (!aloudPlaying.value || settingBool("volumeKeyPageOnPlay", true)),
+    keyPageOnLongPress: settingBool("keyPageOnLongPress", false),
+    disableReturnKey: settingBool("disableReturnKey", false),
+  }).catch(() => undefined);
+}
+
+function onReaderKey(event: Event) {
+  const detail = (event as CustomEvent<{ key?: string; repeat?: number }>).detail;
+  if (!detail?.key) return;
+  if ((detail.repeat ?? 0) > 0 && !settingBool("keyPageOnLongPress", false)) return;
+  if (detail.key === "volumeUp" || detail.key === "pageUp") {
+    prevPage();
+  } else if (detail.key === "volumeDown" || detail.key === "pageDown" || detail.key === "space") {
+    nextPage();
   }
+}
+
+function onReaderBack() {
+  if (selection.value || selectionMenuVisible.value) {
+    clearSelection();
+    return;
+  }
+  if (menuVisible.value) {
+    menuVisible.value = false;
+    return;
+  }
+  if (activeDialog.value) {
+    activeDialog.value = "";
+    return;
+  }
+  if (dictVisible.value) {
+    dictVisible.value = false;
+    return;
+  }
+  if (aloudVisible.value) {
+    aloudVisible.value = false;
+  }
+}
+
+function onResize() {
+  resetInteractionState();
   window.clearTimeout(resizeTimer);
   resizeTimer = window.setTimeout(() => {
     measureViewport();
     const snap = snapshot.value;
     const page = currentPage.value;
-    open(snap?.chapterIndex ?? null, page ? page.startChar : null);
+    const pos = scrollTop.value > 0 ? scrollCharPos() : page ? page.startChar : null;
+    open(snap?.chapterIndex ?? null, pos);
   }, 260);
 }
 
+function onOrientationChange() {
+  menuVisible.value = false;
+  activeDialog.value = "";
+  selectionMenuVisible.value = false;
+  resetInteractionState();
+  onResize();
+}
+
 function onPrefsApplied() {
+  void applyPlatformSettings();
   window.clearTimeout(prefsTimer);
   prefsTimer = window.setTimeout(() => {
     const snap = snapshot.value;
     const page = currentPage.value;
-    open(snap?.chapterIndex ?? null, page ? page.startChar : null);
+    const pos = scrollTop.value > 0 ? scrollCharPos() : page ? page.startChar : null;
+    open(snap?.chapterIndex ?? null, pos);
   }, 180);
 }
 
@@ -1346,20 +1762,48 @@ watch(
   },
 );
 
-onMounted(() => {
+watch(
+  [
+    aloudVisible,
+    aloudPlaying,
+    () => settings.values.volumeKeyPage,
+    () => settings.values.volumeKeyPageOnPlay,
+    () => settings.values.keyPageOnLongPress,
+    () => settings.values.disableReturnKey,
+  ],
+  syncReaderKeyMode,
+);
+
+watch(menuVisible, () => {
+  void syncSystemBars();
+});
+
+onMounted(async () => {
+  await applyPlatformSettings();
+  syncReaderKeyMode();
   measureViewport();
   const target = initialTarget();
   open(target.chapter, target.pos);
   window.addEventListener("keydown", onKeydown);
   window.addEventListener("resize", onResize);
+  window.addEventListener("orientationchange", onOrientationChange);
+  window.addEventListener("reader-key", onReaderKey);
+  window.addEventListener("reader-back", onReaderBack);
+  window.screen.orientation?.addEventListener?.("change", onOrientationChange);
   loadBattery();
   clockTimer = window.setInterval(() => (now.value = new Date()), 30_000);
 });
 
 onBeforeUnmount(() => {
   persistProgress();
+  void resetPlatformSettings();
+  void setReaderKeyMode({ active: false, volumeKeyEnabled: false, keyPageOnLongPress: false, disableReturnKey: false }).catch(() => undefined);
   window.removeEventListener("keydown", onKeydown);
   window.removeEventListener("resize", onResize);
+  window.removeEventListener("orientationchange", onOrientationChange);
+  window.removeEventListener("reader-key", onReaderKey);
+  window.removeEventListener("reader-back", onReaderBack);
+  window.screen.orientation?.removeEventListener?.("change", onOrientationChange);
   window.removeEventListener("pointerout", onWindowPointerOut);
   window.removeEventListener("pointerover", onWindowPointerOver);
   window.removeEventListener("blur", onWindowBlur);
@@ -1367,6 +1811,7 @@ onBeforeUnmount(() => {
   document.documentElement.removeEventListener("mouseenter", onDocumentEnter);
   window.clearTimeout(resizeTimer);
   window.clearTimeout(prefsTimer);
+  window.clearTimeout(scrollSaveTimer);
   window.clearTimeout(toastTimer);
   window.clearTimeout(clickTimer);
   window.clearInterval(autoTimer);
@@ -1390,12 +1835,45 @@ onBeforeUnmount(() => {
     </div>
 
     <div
+      v-else-if="snapshot && currentPage && scrollMode"
+      ref="scrollRef"
+      class="scroll-wrap"
+      :style="{ width: `${viewWidth}px`, height: `${viewHeight}px`, ...brightnessStyle }"
+      @scroll.passive="onScroll"
+      @click="onClick"
+      @pointerdown="onPointerDown"
+      @pointermove="onPointerMove"
+      @pointerup="onPointerUp"
+      @pointercancel="onPointerCancel"
+      @lostpointercapture="onLostPointerCapture"
+    >
+      <ScrollReaderCanvas
+        class="scroll-canvas"
+        :page="currentPage"
+        :width="viewWidth"
+        :height="viewHeight"
+        :scroll-top="scrollTop"
+        :background="readerBackground"
+        :background-image="readerImage"
+        :background-alpha="readerBackgroundAlpha"
+        :text-color="readerTextColor"
+        :highlight-line="highlightLine"
+        :font-family="prefs.fontFamily"
+        :underline="readerUnderline"
+        :info-bar="currentInfoBar"
+      />
+      <div
+        class="scroll-spacer"
+        :style="{ height: `${Math.max(0, scrollHeight - viewHeight)}px` }"
+      />
+    </div>
+
+    <div
       v-else-if="snapshot && currentPage"
       ref="canvasWrapRef"
       class="canvas-wrap"
       :style="{ width: `${viewWidth}px`, height: `${viewHeight}px`, ...brightnessStyle }"
       @click="onClick"
-      @dblclick="onDoubleClick"
       @pointerdown="onPointerDown"
       @pointermove="onPointerMove"
       @pointerup="onPointerUp"
@@ -1403,7 +1881,35 @@ onBeforeUnmount(() => {
       @lostpointercapture="onLostPointerCapture"
       @wheel.prevent="onWheel"
     >
-      <Transition v-if="slideMode" :name="transitionName">
+      <div v-if="doublePageActive" class="double-canvas">
+        <ReaderCanvas
+          :page="currentPage"
+          :width="layoutWidth"
+          :height="viewHeight"
+          :background="readerBackground"
+          :background-image="readerImage"
+          :background-alpha="readerBackgroundAlpha"
+          :text-color="readerTextColor"
+          :highlight-line="highlightLine"
+          :font-family="prefs.fontFamily"
+          :underline="readerUnderline"
+          :info-bar="currentInfoBar"
+        />
+        <ReaderCanvas
+          :page="rightPage"
+          :width="layoutWidth"
+          :height="viewHeight"
+          :background="readerBackground"
+          :background-image="readerImage"
+          :background-alpha="readerBackgroundAlpha"
+          :text-color="readerTextColor"
+          :highlight-line="-1"
+          :font-family="prefs.fontFamily"
+          :underline="readerUnderline"
+          :info-bar="null"
+        />
+      </div>
+      <Transition v-else-if="slideMode" :name="transitionName">
         <ReaderCanvas
           v-show="!turnActive"
           :key="`${snapshot.chapterIndex}-${snapshot.pageIndex}`"
@@ -1436,12 +1942,22 @@ onBeforeUnmount(() => {
         :underline="readerUnderline"
         :info-bar="currentInfoBar"
       />
+    </div>
+
+    <div v-else class="status">
+      <p>章节加载失败</p>
+      <button @click="goToc">打开目录</button>
+    </div>
+
+    <div v-if="selection && selectionPage" class="selection-layer">
       <SelectionHighlight
-        v-if="selection"
-        :page="currentPage"
+        v-if="selection && selectionPage"
+        :page="selectionPage"
         :selection="selection"
-        :width="viewWidth"
+        :width="doublePageActive ? layoutWidth : viewWidth"
         :height="viewHeight"
+        :scroll-top="scrollTop"
+        :offset-x="selectionOffsetX"
       />
       <template v-if="selection && selectionHandleStyle">
         <button
@@ -1478,12 +1994,11 @@ onBeforeUnmount(() => {
         <button type="button" @click.stop="onSelectionAction('search')">搜索</button>
         <button type="button" @click.stop="onSelectionAction('bookmark')">书签</button>
         <button type="button" @click.stop="onSelectionAction('dict')">词典</button>
+        <template v-if="expandedSelectionMenu">
+          <button type="button" @click.stop="onSelectionAction('share')">分享</button>
+          <button type="button" @click.stop="onSelectionAction('readAloud')">朗读</button>
+        </template>
       </div>
-    </div>
-
-    <div v-else class="status">
-      <p>章节加载失败</p>
-      <button @click="goToc">打开目录</button>
     </div>
 
     <div v-if="turnActive" class="turn-layer">
@@ -1493,6 +2008,9 @@ onBeforeUnmount(() => {
         :direction="turnDirection"
         :from-page="turnFromPage"
         :to-page="turnToPage"
+        :from-right-page="turnFromRightPage"
+        :to-right-page="turnToRightPage"
+        :spread="doublePageActive"
         :width="viewWidth"
         :height="viewHeight"
         :background="readerBackground"
@@ -1511,8 +2029,15 @@ onBeforeUnmount(() => {
     <div v-if="toast" class="toast">{{ toast }}</div>
 
     <transition name="menu">
-      <div v-if="menuVisible && snapshot" class="menu-mask" data-id="vw_menu_bg" @click.self="menuVisible = false">
-        <TitleBar data-id="title_bar" :title="snapshot.book.name" @back="goBack">
+      <div
+        v-if="menuVisible && snapshot"
+        class="menu-mask"
+        :class="{ 'follow-page': followPageMenu }"
+        :style="readerMenuStyle"
+        data-id="vw_menu_bg"
+        @click.self="menuVisible = false"
+      >
+        <TitleBar data-id="title_bar" :title="snapshot.book.name" :safe-top="false" @back="goBack">
           <template #below>
             <div v-if="prefs.showTitleAddition" class="title-addition" data-id="title_bar_addition">
               <span class="addition-chapter" data-id="tv_chapter_name">{{ snapshot.chapterTitle }}</span>
@@ -1606,12 +2131,31 @@ onBeforeUnmount(() => {
           <div class="chapter-nav">
             <button data-id="tv_pre" @click="changeChapter(-1)">上一章</button>
             <input
+              v-if="scrollMode"
               type="range"
               data-id="seek_read_page"
               min="0"
-              :max="Math.max(snapshot.pages.length - 1, 0)"
-              :value="snapshot.pageIndex"
-              @input="jumpPage(Number(($event.target as HTMLInputElement).value))"
+              max="1000"
+              :value="scrollProgress"
+              @input="seekScroll(Number(($event.target as HTMLInputElement).value))"
+            />
+            <input
+              v-else-if="progressMode === 'chapter'"
+              type="range"
+              data-id="seek_read_page"
+              min="0"
+              :max="Math.max(snapshot.totalChapters - 1, 0)"
+              :value="snapshot.chapterIndex"
+              @input="seekChapter(Number(($event.target as HTMLInputElement).value))"
+            />
+            <input
+              v-else
+              type="range"
+              data-id="seek_read_page"
+              min="0"
+              :max="pageSliderMax"
+              :value="pageSliderValue"
+              @input="seekPage(Number(($event.target as HTMLInputElement).value))"
             />
             <button data-id="tv_next" @click="changeChapter(1)">下一章</button>
           </div>
@@ -1640,6 +2184,8 @@ onBeforeUnmount(() => {
       </div>
     </transition>
 
+    <ImagePreviewDialog v-model="imagePreviewVisible" :src="imagePreviewSrc" />
+
     <ReadAloudPanel
       v-model="aloudVisible"
       :snapshot="snapshot"
@@ -1648,6 +2194,7 @@ onBeforeUnmount(() => {
       @finished="onAloudFinished"
       @open-config="activeDialog = 'aloudConfig'"
       @show-menu="onAloudShowMenu"
+      @playing-change="aloudPlaying = $event"
       @backstage="onAloudBackstage"
     />
     <ReadStyleDialog
@@ -1753,10 +2300,42 @@ onBeforeUnmount(() => {
 .status.error {
   color: #ffb4b4;
 }
+.scroll-wrap {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+.scroll-canvas {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.scroll-spacer {
+  pointer-events: none;
+}
+.double-canvas {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 .canvas-wrap {
   position: relative;
   overflow: hidden;
   touch-action: pan-y;
+}
+.selection-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.selection-layer .selection-handle,
+.selection-layer .selection-menu {
+  pointer-events: auto;
 }
 .selection-handle {
   position: absolute;
@@ -1775,7 +2354,9 @@ onBeforeUnmount(() => {
   position: absolute;
   z-index: 5;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  max-width: calc(100% - 16px);
   padding: 2px 0;
   border-radius: 3px;
   background: var(--ac-background);
@@ -1818,6 +2399,13 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   right: 0;
+}
+.menu-mask.follow-page :deep(.title-bar) {
+  background: var(--lr-reader-bg);
+  color: var(--lr-reader-text);
+}
+.menu-mask.follow-page .read-bottom {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.12);
 }
 .brightness-bar {
   position: absolute;

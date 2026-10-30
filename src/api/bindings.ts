@@ -51,6 +51,8 @@ export interface Book {
   order?: number;
   syncTime?: number;
   readConfig?: ReadConfig | null;
+  sourcePath?: string | null;
+  sourceHash?: string | null;
 }
 
 export interface LocalImportEntry {
@@ -62,6 +64,7 @@ export interface LocalImportEntry {
   ext: string;
   supported: boolean;
   onShelf: boolean;
+  bookUrl?: string | null;
 }
 
 export interface LocalImportResult {
@@ -69,6 +72,7 @@ export interface LocalImportResult {
   name: string;
   bookUrl?: string | null;
   error?: string | null;
+  duplicate: boolean;
 }
 
 export interface BookChapter {
@@ -203,6 +207,7 @@ export interface LayoutPage {
   startChar: number;
   endChar: number;
   chapterTitle: string;
+  height: number;
 }
 
 export interface ReaderSnapshot {
@@ -216,6 +221,7 @@ export interface ReaderSnapshot {
   totalChapters: number;
   pageStartChar: number;
   pageEndChar: number;
+  scrollOffset: number;
   marginFellBack: boolean;
 }
 
@@ -250,6 +256,9 @@ export const COMMANDS = {
   bookDelete: "book_delete",
   chapterList: "chapter_list",
   groupList: "group_list",
+  groupSave: "group_save",
+  groupDelete: "group_delete",
+  groupCoverSave: "group_cover_save",
   txtTocRuleList: "txt_toc_rule_list",
   kvGet: "kv_get",
   kvSet: "kv_set",

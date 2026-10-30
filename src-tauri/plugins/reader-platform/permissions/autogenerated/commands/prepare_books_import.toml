@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-prepare-books-import"
+description = "Enables the prepare_books_import command without any pre-configured scope."
+commands.allow = ["prepare_books_import"]
+
+[[permission]]
+identifier = "deny-prepare-books-import"
+description = "Denies the prepare_books_import command without any pre-configured scope."
+commands.deny = ["prepare_books_import"]

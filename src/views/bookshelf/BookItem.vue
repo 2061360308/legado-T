@@ -85,7 +85,7 @@ onBeforeUnmount(() => window.clearTimeout(pressTimer));
     @pointerup="cancelPress"
     @pointerleave="cancelPress"
   >
-    <CoverImage :name="book.name" :src="book.customCoverUrl || book.coverUrl" :width="66" :height="90" data-id="iv_cover" />
+    <CoverImage :name="book.name" :author="book.author" :src="book.customCoverUrl || book.coverUrl" :width="66" :height="90" data-id="iv_cover" />
     <div class="row-text">
       <div class="name-line">
         <span class="name" data-id="tv_name">{{ book.name }}</span>
@@ -117,7 +117,7 @@ onBeforeUnmount(() => window.clearTimeout(pressTimer));
     @pointerleave="cancelPress"
   >
     <div class="grid-cover-wrap">
-      <CoverImage :name="book.name" :src="book.customCoverUrl || book.coverUrl" fill class="grid-cover" />
+      <CoverImage :name="book.name" :author="book.author" :src="book.customCoverUrl || book.coverUrl" fill class="grid-cover" />
       <span v-if="showUnread && unreadCount > 0" class="badge grid-badge" data-id="bv_unread">{{ unreadCount > 99 ? "99+" : unreadCount }}</span>
     </div>
     <span class="grid-name">{{ book.name }}</span>

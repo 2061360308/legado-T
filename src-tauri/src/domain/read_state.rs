@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::path::Path;
 
 use rusqlite::Connection;
 use serde::Serialize;
@@ -10,6 +9,7 @@ use crate::domain::content_processor;
 use crate::domain::import_service;
 use crate::domain::layout_engine::{self, LayoutPage, LayoutStyle};
 use crate::domain::model::{Book, BookChapter, ContentBlock, ReplaceRule};
+use crate::domain::storage::BookStorage;
 use crate::domain::txt_parser;
 use crate::platform::charset_codec::CharsetCodec;
 use crate::platform::filesystem::read_file_range;
@@ -43,12 +43,13 @@ pub struct ReaderSnapshot {
     pub total_chapters: usize,
     pub page_start_char: i32,
     pub page_end_char: i32,
+    pub scroll_offset: f32,
     pub margin_fell_back: bool,
 }
 
 fn style_key(style: &LayoutStyle, converter: &str) -> String {
     format!(
-        "{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}",
+        "{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}",
         style.font_size,
         style.title_font_size,
         style.title_bold,
@@ -66,6 +67,11 @@ fn style_key(style: &LayoutStyle, converter: &str) -> String {
         style.use_zh_layout,
         style.view_width,
         style.view_height,
+        style.title_mode,
+        style.title_top_spacing,
+        style.title_bottom_spacing,
+        style.image_style,
+        style.scroll,
         converter
     )
 }
@@ -87,6 +93,7 @@ fn find_chapter<'a>(chapters: &'a [BookChapter], index: i32) -> Result<&'a BookC
 
 fn load_chapter(
     conn: &Connection,
+    storage: &BookStorage,
     book: &Book,
     chapters: &[BookChapter],
     index: i32,
@@ -95,11 +102,11 @@ fn load_chapter(
     let chapter = find_chapter(chapters, index)?;
     let override_key = format!("chapterOverride:{}:{}", book.book_url, index);
     let override_content = KeyValue::get(conn, &override_key)?;
-    let is_epub = import_service::is_cached_format(&book.book_url);
+    let is_epub = import_service::is_cached_book(book, storage);
     let display_title = content_processor::display_title(conn, &chapter.title, book)?;
 
     let (blocks, effective_rules, paragraphs) = if is_epub && override_content.is_none() {
-        let blocks = import_service::read_epub_chapter_blocks(&book.book_url, chapter.index)?;
+        let blocks = import_service::read_epub_chapter_blocks(storage, book, chapter.index)?;
         let paragraphs = blocks
             .iter()
             .filter_map(|block| match block {
@@ -112,7 +119,8 @@ fn load_chapter(
         let raw = match override_content {
             Some(content) => content,
             None => {
-                let bytes = read_file_range(Path::new(&book.book_url), chapter.start, chapter.end)?;
+                let paths = storage.paths(book)?;
+                let bytes = read_file_range(&paths.source, chapter.start, chapter.end)?;
                 let codec = CharsetCodec::from_label(book.charset.as_deref().unwrap_or("UTF-8"));
                 txt_parser::read_chapter_raw(&bytes, &codec, 0, bytes.len() as i64, &chapter.title)
             }
@@ -138,6 +146,7 @@ fn load_chapter(
 
 fn get_or_load(
     conn: &Connection,
+    storage: &BookStorage,
     cache: &mut ReaderCache,
     book: &Book,
     chapters: &[BookChapter],
@@ -150,7 +159,7 @@ fn get_or_load(
             return Ok(cached.clone());
         }
     }
-    let loaded = load_chapter(conn, book, chapters, index, style)?;
+    let loaded = load_chapter(conn, storage, book, chapters, index, style)?;
     cache.chapters.insert(index, loaded.clone());
     Ok(loaded)
 }
@@ -163,6 +172,7 @@ fn trim_cache(cache: &mut ReaderCache, current: i32) {
 
 pub fn open(
     conn: &Connection,
+    storage: &BookStorage,
     cache: &mut ReaderCache,
     book_url: &str,
     chapter_index: Option<i32>,
@@ -190,19 +200,32 @@ pub fn open(
         book.dur_chapter_pos
     });
 
-    let current = get_or_load(conn, cache, &book, &chapters, target, style)?;
+    let current = get_or_load(conn, storage, cache, &book, &chapters, target, style)?;
     for neighbor in [target - 1, target + 1] {
         if neighbor >= 0 && (neighbor as usize) < chapters.len() {
-            if let Ok(loaded) = get_or_load(conn, cache, &book, &chapters, neighbor, style) {
+            if let Ok(loaded) = get_or_load(conn, storage, cache, &book, &chapters, neighbor, style)
+            {
                 cache.chapters.insert(neighbor, loaded);
             }
         }
     }
     trim_cache(cache, target);
 
-    let page_index = layout_engine::find_page_index(&current.pages, pos);
+    let page_index = if style.scroll {
+        0
+    } else {
+        layout_engine::find_page_index(&current.pages, pos)
+    };
     let page = current.pages.get(page_index);
     let (start_char, end_char) = page.map(|p| (p.start_char, p.end_char)).unwrap_or((0, 0));
+    let scroll_offset = if style.scroll {
+        page.map(|p| layout_engine::find_scroll_offset(p, pos, style.padding_top))
+            .unwrap_or(0.0)
+    } else {
+        0.0
+    };
+    let mut book = book;
+    storage.hydrate_book(&mut book);
 
     Ok(ReaderSnapshot {
         book,
@@ -215,6 +238,7 @@ pub fn open(
         total_chapters: chapters.len(),
         page_start_char: start_char,
         page_end_char: end_char,
+        scroll_offset,
         margin_fell_back: false,
     })
 }
@@ -254,6 +278,7 @@ pub fn save_progress(
 
 pub fn effective_rules(
     conn: &Connection,
+    storage: &BookStorage,
     cache: &mut ReaderCache,
     book_url: &str,
     chapter_index: i32,
@@ -266,7 +291,7 @@ pub fn effective_rules(
         cache.book_url = book_url.to_string();
         cache.chapters.clear();
     }
-    let cached = get_or_load(conn, cache, &book, &chapters, chapter_index, style)?;
+    let cached = get_or_load(conn, storage, cache, &book, &chapters, chapter_index, style)?;
     Ok(cached.effective_rules)
 }
 

@@ -1,0 +1,20 @@
+[package]
+name = "tauri-plugin-reader-platform"
+version = "0.1.0"
+description = "Android platform capabilities for local-reader"
+authors = ["local-reader"]
+edition = "2021"
+rust-version = "1.88.0"
+links = "tauri-plugin-reader-platform"
+build = "build.rs"
+
+[lib]
+name = "tauri_plugin_reader_platform"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-plugin = { version = "2.7.1", features = ["build"] }
+
+[dependencies]
+tauri = { version = "2.12", default-features = false }
+serde = { version = "1", features = ["derive"] }

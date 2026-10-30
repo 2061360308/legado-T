@@ -6,6 +6,7 @@ use local_reader_lib::data::db;
 use local_reader_lib::domain::import_service;
 use local_reader_lib::domain::layout_engine::LayoutStyle;
 use local_reader_lib::domain::read_state::{self, ReaderCache};
+use local_reader_lib::domain::storage::BookStorage;
 use zip::write::FileOptions;
 use zip::{CompressionMethod, ZipWriter};
 
@@ -38,9 +39,9 @@ fn add_bytes(zip: &mut ZipWriter<fs::File>, name: &str, content: &[u8], stored: 
 }
 
 const ONE_PIXEL_GIF: &[u8] = &[
-    0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0xFF, 0xFF, 0xFF, 0x21, 0xF9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2C, 0x00, 0x00,
-    0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3B,
+    0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0xFF, 0xFF, 0xFF, 0x21, 0xF9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2C, 0x00, 0x00, 0x00, 0x00,
+    0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3B,
 ];
 
 fn write_epub(path: &std::path::Path) {
@@ -126,8 +127,10 @@ fn imports_epub_text_and_reads_cached_chapters() {
     write_epub(&epub);
 
     let conn = db::open_in_memory().unwrap();
+    let storage = BookStorage::new(&dir);
+    storage.ensure_layout().unwrap();
     let import =
-        import_service::import_epub(&conn, &epub.to_string_lossy(), &dir, None, 0).unwrap();
+        import_service::import_epub(&conn, &epub.to_string_lossy(), &storage, None, 0).unwrap();
 
     assert_eq!(import.book.name, "测试 EPUB");
     assert_eq!(import.book.author, "测试作者");
@@ -138,7 +141,8 @@ fn imports_epub_text_and_reads_cached_chapters() {
 
     let mut repaired = import.book.clone();
     repaired.cover_url = None;
-    assert!(import_service::ensure_epub_cover(&mut repaired, &dir).unwrap());
+    assert!(import_service::ensure_epub_cover(&mut repaired, &storage).unwrap());
+    storage.hydrate_book(&mut repaired);
     assert!(repaired
         .cover_url
         .as_deref()
@@ -163,15 +167,23 @@ fn imports_epub_text_and_reads_cached_chapters() {
         ..Default::default()
     };
     let mut cache = ReaderCache::default();
-    let first =
-        read_state::open(&conn, &mut cache, &import.book.book_url, None, None, &style).unwrap();
+    let first = read_state::open(
+        &conn,
+        &storage,
+        &mut cache,
+        &import.book.book_url,
+        None,
+        None,
+        &style,
+    )
+    .unwrap();
     assert_eq!(first.chapter_title, "第一卷");
     assert!(first
         .chapter_paragraphs
         .join("")
         .contains("这是第一段正文。"));
 
-    let blocks = import_service::read_epub_chapter_blocks(&import.book.book_url, 0).unwrap();
+    let blocks = import_service::read_epub_chapter_blocks(&storage, &import.book, 0).unwrap();
     let image = blocks
         .iter()
         .find_map(|block| match block {
@@ -191,6 +203,7 @@ fn imports_epub_text_and_reads_cached_chapters() {
 
     let second = read_state::open(
         &conn,
+        &storage,
         &mut cache,
         &import.book.book_url,
         Some(2),

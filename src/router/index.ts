@@ -63,6 +63,21 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/config/ThemeSettingsView.vue"),
   },
   {
+    path: "/cover-config",
+    name: "cover-config",
+    component: () => import("@/views/config/CoverConfigView.vue"),
+  },
+  {
+    path: "/welcome-config",
+    name: "welcome-config",
+    component: () => import("@/views/config/WelcomeConfigView.vue"),
+  },
+  {
+    path: "/welcome",
+    name: "welcome",
+    component: () => import("@/views/welcome/WelcomeView.vue"),
+  },
+  {
     path: "/read-schemes",
     name: "read-schemes",
     component: () => import("@/views/config/ReadSchemesView.vue"),

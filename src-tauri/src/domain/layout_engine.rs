@@ -28,6 +28,8 @@ pub struct LayoutStyle {
     pub view_height: f32,
     #[serde(default)]
     pub image_style: String,
+    #[serde(default)]
+    pub scroll: bool,
 }
 
 impl Default for LayoutStyle {
@@ -54,6 +56,7 @@ impl Default for LayoutStyle {
             view_width: 360.0,
             view_height: 640.0,
             image_style: "DEFAULT".to_string(),
+            scroll: false,
         }
     }
 }
@@ -137,6 +140,8 @@ pub struct LayoutPage {
     pub start_char: i32,
     pub end_char: i32,
     pub chapter_title: String,
+    #[serde(default)]
+    pub height: f32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -415,6 +420,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                 start_char: 0,
                 end_char: 0,
                 chapter_title: title.to_string(),
+                height: style.view_height,
             }],
             margin_fell_back,
         };
@@ -426,12 +432,11 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
     for block in blocks {
         match block {
             ContentBlock::Paragraph { text } => {
-                let first_indent =
-                    if style.paragraph_indent > 0 && !text.trim().is_empty() {
-                        style.paragraph_indent as f32 * style.font_size
-                    } else {
-                        0.0
-                    };
+                let first_indent = if style.paragraph_indent > 0 && !text.trim().is_empty() {
+                    style.paragraph_indent as f32 * style.font_size
+                } else {
+                    0.0
+                };
                 let broken = break_text(
                     text,
                     max_width,
@@ -468,10 +473,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                 paragraph_start += para_char_len + 1;
             }
             ContentBlock::Image {
-                src,
-                width,
-                height,
-                ..
+                src, width, height, ..
             } => {
                 if *width == 0 || *height == 0 {
                     continue;
@@ -518,10 +520,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                 });
             }
             ContentBlock::ImagePage {
-                src,
-                width,
-                height,
-                ..
+                src, width, height, ..
             } => {
                 if *width == 0 || *height == 0 {
                     continue;
@@ -544,6 +543,92 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                 });
             }
         }
+    }
+
+    if style.scroll {
+        let mut lines = title_lines;
+        let mut cursor_y = style.padding_top;
+        for line in &lines {
+            cursor_y = cursor_y.max(line.y + line.height);
+        }
+        let mut start_char: i32 = 0;
+        let mut end_char: i32 = 0;
+        let mut has_content = false;
+        for item in items {
+            match item {
+                BuildItem::Text(b) => {
+                    let gap = if lines.is_empty() { 0.0 } else { b.gap_before };
+                    cursor_y += gap;
+                    if !has_content {
+                        start_char = b.start_char;
+                        has_content = true;
+                    }
+                    end_char = b.end_char;
+                    let line = build_line(
+                        BrokenLine {
+                            text: b.text,
+                            width: b.width,
+                            start_char: b.start_char as usize,
+                            end_char: b.end_char as usize,
+                            paragraph_end: b.paragraph_end,
+                        },
+                        style.padding_left + b.indent,
+                        cursor_y,
+                        (max_width - b.indent).max(1.0),
+                        b.font_size,
+                        b.bold,
+                        style.text_bold == 2,
+                        style.full_justify && !b.paragraph_end,
+                        style.letter_spacing,
+                        b.height,
+                    );
+                    cursor_y += b.height;
+                    lines.push(line);
+                }
+                BuildItem::Image {
+                    src,
+                    width,
+                    height,
+                    gap_before,
+                    full_page,
+                } => {
+                    let _ = full_page;
+                    let gap = if lines.is_empty() { 0.0 } else { gap_before };
+                    cursor_y += gap;
+                    let x = style.padding_left + (max_width - width).max(0.0) / 2.0;
+                    let y = cursor_y;
+                    cursor_y += height;
+                    lines.push(TextLine {
+                        text: String::new(),
+                        x,
+                        y,
+                        width,
+                        height,
+                        font_size: 0.0,
+                        bold: false,
+                        light: false,
+                        justified: false,
+                        start_char,
+                        end_char,
+                        chars: Vec::new(),
+                        image: Some(ImageLine { src, width, height }),
+                    });
+                    has_content = true;
+                }
+            }
+        }
+        let total_height = (cursor_y + style.padding_bottom).max(style.view_height);
+        return LayoutResult {
+            pages: vec![LayoutPage {
+                index: 0,
+                lines,
+                start_char,
+                end_char,
+                chapter_title: title.to_string(),
+                height: total_height,
+            }],
+            margin_fell_back,
+        };
     }
 
     let mut pages: Vec<LayoutPage> = Vec::new();
@@ -572,6 +657,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                         start_char: page_start_char,
                         end_char: page_end_char,
                         chapter_title: title.to_string(),
+                        height: style.view_height,
                     });
                     cursor_y = style.padding_top;
                     page_start_char = b.start_char;
@@ -621,6 +707,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                             start_char: page_start_char,
                             end_char: page_end_char,
                             chapter_title: title.to_string(),
+                            height: style.view_height,
                         });
                     }
                     let y = style.padding_top + (content_height - height).max(0.0) / 2.0;
@@ -638,11 +725,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                         start_char: page_start_char,
                         end_char: page_end_char,
                         chars: Vec::new(),
-                        image: Some(ImageLine {
-                            src,
-                            width,
-                            height,
-                        }),
+                        image: Some(ImageLine { src, width, height }),
                     });
                     pages.push(LayoutPage {
                         index: pages.len(),
@@ -650,6 +733,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                         start_char: page_start_char,
                         end_char: page_end_char,
                         chapter_title: title.to_string(),
+                        height: style.view_height,
                     });
                     cursor_y = style.padding_top;
                     has_content = true;
@@ -669,6 +753,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                         start_char: page_start_char,
                         end_char: page_end_char,
                         chapter_title: title.to_string(),
+                        height: style.view_height,
                     });
                     cursor_y = style.padding_top;
                 } else {
@@ -690,11 +775,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
                     start_char: page_start_char,
                     end_char: page_end_char,
                     chars: Vec::new(),
-                    image: Some(ImageLine {
-                        src,
-                        width,
-                        height,
-                    }),
+                    image: Some(ImageLine { src, width, height }),
                 });
                 has_content = true;
             }
@@ -708,6 +789,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
             start_char: page_start_char,
             end_char: page_end_char,
             chapter_title: title.to_string(),
+            height: style.view_height,
         });
     }
 
@@ -718,6 +800,7 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
             start_char: 0,
             end_char: 0,
             chapter_title: title.to_string(),
+            height: style.view_height,
         });
     }
 
@@ -725,6 +808,19 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
         pages,
         margin_fell_back,
     }
+}
+
+pub fn find_scroll_offset(page: &LayoutPage, char_pos: i32, padding_top: f32) -> f32 {
+    if page.lines.is_empty() {
+        return 0.0;
+    }
+    let line = page
+        .lines
+        .iter()
+        .find(|line| char_pos >= line.start_char && char_pos < line.end_char)
+        .or_else(|| page.lines.last())
+        .unwrap();
+    (line.y - padding_top).max(0.0)
 }
 
 pub fn find_page_index(pages: &[LayoutPage], char_pos: i32) -> usize {
@@ -790,6 +886,19 @@ mod tests {
         assert!(result.pages.len() > 1);
         assert_eq!(result.pages[0].start_char, 0);
         assert!(result.pages.last().unwrap().end_char > 0);
+    }
+
+    #[test]
+    fn scroll_layout_is_one_tall_page() {
+        let mut s = style();
+        s.scroll = true;
+        let paragraphs: Vec<String> = (0..30)
+            .map(|i| format!("Paragraph {i} with enough content for a tall scroll layout."))
+            .collect();
+        let result = layout("Scroll", &paragraphs, &s);
+        assert_eq!(result.pages.len(), 1);
+        assert!(result.pages[0].height > s.view_height);
+        assert!(result.pages[0].lines.len() > 10);
     }
 
     #[test]
