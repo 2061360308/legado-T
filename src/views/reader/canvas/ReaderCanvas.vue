@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import type { LayoutPage } from "@/api/bindings";
+import type { LayoutPage } from "@/core/domain";
 import { drawPage, preloadPageImages } from "./drawPage";
 import type { InfoBarPayload } from "../infoBar";
 

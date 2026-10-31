@@ -22,6 +22,10 @@ export interface ReaderPrefs {
   titleSize: number;
   titleBold: boolean;
   fontFamily: string;
+  customFontPath: string;
+  customFontName: string;
+  systemTypeface: number;
+  imageStyle: string;
   lineSpacing: number;
   paragraphSpacing: number;
   textBold: number;
@@ -76,6 +80,7 @@ export interface ReaderPrefs {
   ignoreAudioFocus: boolean;
   ttsFollowSystem: boolean;
   ttsEngine: string;
+  enableReadRecord: boolean;
 }
 
 const STORAGE_KEY = "local-reader:reader-prefs";
@@ -98,6 +103,10 @@ const defaults: ReaderPrefs = {
   titleSize: 0,
   titleBold: true,
   fontFamily: 'system-ui, "Microsoft YaHei", "PingFang SC", sans-serif',
+  customFontPath: "",
+  customFontName: "",
+  systemTypeface: 0,
+  imageStyle: "DEFAULT",
   lineSpacing: 1.2,
   paragraphSpacing: 2,
   textBold: 0,
@@ -152,6 +161,7 @@ const defaults: ReaderPrefs = {
   ignoreAudioFocus: false,
   ttsFollowSystem: true,
   ttsEngine: "",
+  enableReadRecord: true,
 };
 
 function load(): ReaderPrefs {

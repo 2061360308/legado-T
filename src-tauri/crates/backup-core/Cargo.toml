@@ -1,0 +1,14 @@
+[package]
+name = "backup-core"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.88.0"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+aes = "0.8"
+md-5 = "0.10"
+base64 = "0.23"
+zip = { version = "9", default-features = false, features = ["deflate"] }

@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.activity.result.ActivityResult
 import androidx.core.view.ViewCompat
@@ -84,6 +85,12 @@ class ReaderKeyModeArgs {
 }
 
 @InvokeArg
+class CookieArgs {
+    var url: String = ""
+    var cookie: String = ""
+}
+
+@InvokeArg
 class SafCleanupArgs {
     var sessionId: String = ""
 }
@@ -96,6 +103,12 @@ class SafListArgs {
 
 @InvokeArg
 class SafPrepareArgs {
+    var treeUri: String = ""
+    var documentIds: Array<String> = emptyArray()
+}
+
+@InvokeArg
+class SafDeleteArgs {
     var treeUri: String = ""
     var documentIds: Array<String> = emptyArray()
 }
@@ -145,6 +158,31 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
             }
         }
         return null
+    }
+
+    @Command
+    fun getWebViewCookie(invoke: Invoke) {
+        try {
+            val args = invoke.parseArgs(CookieArgs::class.java)
+            val cookie = CookieManager.getInstance().getCookie(args.url) ?: ""
+            val result = JSObject()
+            result.put("cookie", cookie)
+            invoke.resolve(result)
+        } catch (ex: Exception) {
+            invoke.reject(ex.message)
+        }
+    }
+
+    @Command
+    fun setWebViewCookie(invoke: Invoke) {
+        try {
+            val args = invoke.parseArgs(CookieArgs::class.java)
+            CookieManager.getInstance().setCookie(args.url, args.cookie)
+            CookieManager.getInstance().flush()
+            invoke.resolve()
+        } catch (ex: Exception) {
+            invoke.reject(ex.message)
+        }
     }
 
     @Command
@@ -461,6 +499,64 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
     }
 
     @Command
+    fun pickFontFile(invoke: Invoke) {
+        try {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "*/*"
+                putExtra(
+                    Intent.EXTRA_MIME_TYPES,
+                    arrayOf(
+                        "font/ttf",
+                        "font/otf",
+                        "application/x-font-ttf",
+                        "application/x-font-opentype",
+                        "application/octet-stream"
+                    )
+                )
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivityForResult(invoke, intent, "pickFontFileResult")
+        } catch (error: Exception) {
+            invoke.reject(error.message ?: "pickFontFile failed")
+        }
+    }
+
+    @ActivityCallback
+    fun pickFontFileResult(invoke: Invoke, result: ActivityResult) {
+        val uri = result.data?.data
+        if (result.resultCode != Activity.RESULT_OK || uri == null) {
+            val payload = JSObject()
+            payload.put("cancelled", true)
+            payload.put("path", "")
+            payload.put("name", "")
+            invoke.resolve(payload)
+            return
+        }
+        Thread {
+            try {
+                val name = queryDisplayName(uri) ?: "font.ttf"
+                val ext = name.substringAfterLast('.', "ttf").lowercase()
+                if (ext != "ttf" && ext != "otf") {
+                    throw IllegalArgumentException("仅支持 TTF/OTF 字体")
+                }
+                val dir = File(activity.filesDir, "font").apply { mkdirs() }
+                val file = uniqueFile(dir, name)
+                activity.contentResolver.openInputStream(uri)?.use { input ->
+                    file.outputStream().use { output -> input.copyTo(output) }
+                } ?: throw IllegalStateException("无法读取字体文件")
+                val payload = JSObject()
+                payload.put("cancelled", false)
+                payload.put("path", file.absolutePath)
+                payload.put("name", file.name)
+                onUiThread { invoke.resolve(payload) }
+            } catch (error: Exception) {
+                onUiThread { invoke.reject(error.message ?: "读取字体失败") }
+            }
+        }.start()
+    }
+
+    @Command
     fun pickBooksDirectory(invoke: Invoke) {
         try {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
@@ -559,6 +655,72 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
             invoke.resolveObject(entries)
         } catch (error: Exception) {
             invoke.reject(error.message ?: "listBooksDirectory failed")
+        }
+    }
+
+    @Command
+    fun scanBooksDirectory(invoke: Invoke) {
+        try {
+            val args = invoke.parseArgs(SafListArgs::class.java)
+            val treeUri = Uri.parse(args.treeUri)
+            val entries = JSArray()
+            scanSafTree(treeUri, args.documentId, entries)
+            invoke.resolveObject(entries)
+        } catch (error: Exception) {
+            invoke.reject(error.message ?: "scanBooksDirectory failed")
+        }
+    }
+
+    private fun scanSafTree(treeUri: Uri, documentId: String, entries: JSArray) {
+        val projection = arrayOf(
+            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+            DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+            DocumentsContract.Document.COLUMN_MIME_TYPE,
+            DocumentsContract.Document.COLUMN_SIZE,
+            DocumentsContract.Document.COLUMN_LAST_MODIFIED
+        )
+        val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, documentId)
+        activity.contentResolver.query(childrenUri, projection, null, null, null)?.use { cursor ->
+            while (cursor.moveToNext()) {
+                val childId = cursor.getString(0) ?: continue
+                val name = cursor.getString(1) ?: continue
+                if (name.startsWith(".")) continue
+                val mime = cursor.getString(2) ?: ""
+                val isDir = mime == DocumentsContract.Document.MIME_TYPE_DIR
+                if (isDir) {
+                    scanSafTree(treeUri, childId, entries)
+                    continue
+                }
+                val ext = name.substringAfterLast('.', "").lowercase()
+                if (ext !in supportedExtensions) continue
+                val entry = JSObject()
+                entry.put("documentId", childId)
+                entry.put("name", name)
+                entry.put("isDir", false)
+                entry.put("size", if (cursor.isNull(3)) 0L else cursor.getLong(3))
+                entry.put("modified", if (cursor.isNull(4)) 0L else cursor.getLong(4) / 1000L)
+                entry.put("ext", ext)
+                entry.put("supported", true)
+                entries.put(entry)
+            }
+        }
+    }
+
+    @Command
+    fun deleteSafDocuments(invoke: Invoke) {
+        try {
+            val args = invoke.parseArgs(SafDeleteArgs::class.java)
+            val treeUri = Uri.parse(args.treeUri)
+            var deleted = 0
+            for (documentId in args.documentIds) {
+                val uri = DocumentsContract.buildDocumentUriUsingTree(treeUri, documentId)
+                if (DocumentsContract.deleteDocument(activity.contentResolver, uri)) deleted++
+            }
+            val payload = JSObject()
+            payload.put("count", deleted)
+            invoke.resolve(payload)
+        } catch (error: Exception) {
+            invoke.reject(error.message ?: "deleteSafDocuments failed")
         }
     }
 

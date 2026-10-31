@@ -51,6 +51,9 @@ function close() {
       <div class="dialog-panel" :style="panelStyle">
         <header v-if="headerVisible" class="dialog-header">
           <h2>{{ title }}</h2>
+          <div v-if="$slots.actions" class="dialog-actions">
+            <slot name="actions" />
+          </div>
           <button aria-label="关闭" @click="close">
             <Icon name="ic_baseline_close" :size="22" />
           </button>
@@ -134,6 +137,25 @@ function close() {
   margin: 0;
   font-size: 17px;
   font-weight: 500;
+}
+.dialog-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+.dialog-actions :deep(button) {
+  border: none;
+  background: transparent;
+  color: var(--ac-primary-text);
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dialog-actions :deep(button:hover) {
+  background: var(--ac-transparent-10);
 }
 .dialog-header button {
   width: 40px;

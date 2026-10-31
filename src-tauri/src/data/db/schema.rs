@@ -39,7 +39,8 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             readConfig        TEXT,
             customIntro       TEXT,
             sourcePath        TEXT,
-            sourceHash        TEXT
+            sourceHash        TEXT,
+            originalPath      TEXT
         );
         DROP INDEX IF EXISTS idx_books_name_author;
         CREATE INDEX IF NOT EXISTS idx_books_name_author ON books(name, author);
@@ -175,6 +176,7 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
     ensure_column(conn, "books", "customIntro", "TEXT")?;
     ensure_column(conn, "books", "sourcePath", "TEXT")?;
     ensure_column(conn, "books", "sourceHash", "TEXT")?;
+    ensure_column(conn, "books", "originalPath", "TEXT")?;
     ensure_column(conn, "chapters", "tocLevel", "INTEGER NOT NULL DEFAULT 0")?;
     Ok(())
 }

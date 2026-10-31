@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { open } from "@tauri-apps/plugin-dialog";
-import { groupCoverSave, groupDelete, groupSave } from "@/api/books";
-import type { BookGroup } from "@/api/bindings";
+import { groupCoverSave, groupDelete, groupSave } from "@/core/application/books";
+import { platform } from "@/runtime";
+import type { BookGroup } from "@/core/domain";
 import CoverImage from "@/components/android/CoverImage.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 
@@ -49,13 +49,10 @@ watch(
 );
 
 async function selectCover() {
-  const picked = await open({
-    multiple: false,
-    filters: [{ name: "图片", extensions: ["jpg", "jpeg", "png", "webp", "gif", "bmp"] }],
-  });
-  if (typeof picked !== "string" || !picked) return;
+  const picked = await platform.pickThemeImage();
+  if (picked.cancelled || !picked.path) return;
   try {
-    coverUrl.value = await groupCoverSave(picked);
+    coverUrl.value = await groupCoverSave(picked.path);
   } catch (e) {
     error.value = String(e);
   }

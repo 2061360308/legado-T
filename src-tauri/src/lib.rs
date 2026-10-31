@@ -4,6 +4,7 @@ pub mod domain;
 pub mod error;
 pub mod platform;
 pub mod state;
+pub mod webview_bridge;
 
 pub use error::{Error, Result};
 
@@ -71,22 +72,37 @@ pub fn run() {
             commands::bookshelf::bookshelf_export,
             commands::bookshelf::book_move_to_top,
             commands::bookshelf::book_set_group,
+            commands::bookshelf::book_add_group,
+            commands::bookshelf::book_batch_add_group,
+            commands::bookshelf::book_set_can_update,
+            commands::bookshelf::book_batch_set_can_update,
             commands::bookshelf::import_txt,
             commands::bookshelf::import_book,
             commands::bookshelf::local_import_list,
             commands::bookshelf::local_import_scan,
             commands::bookshelf::local_import_import,
+            commands::bookshelf::local_import_archive_list,
+            commands::bookshelf::local_import_archive_import,
+            commands::bookshelf::local_import_reimport,
             commands::bookshelf::local_import_delete,
             commands::bookshelf::book_cover_save,
             commands::bookshelf::book_cover_refresh,
             commands::bookshelf::book_file_size,
             commands::bookshelf::book_clear_cache,
             commands::bookshelf::re_split_book,
+            commands::bookshelf::chapter_word_counts,
             commands::bookshelf::read_chapter,
+            commands::read_record::read_record_add_time,
+            commands::read_record::read_record_list,
+            commands::read_record::read_record_delete,
+            commands::read_record::read_record_clear,
             commands::reader::reader_open,
             commands::reader::reader_save_progress,
             commands::reader::reader_effective_rules,
             commands::reader::reader_save_chapter_content,
+            commands::reader::reader_search_book,
+            commands::reader::reader_invalidate_book,
+            commands::reader::reader_invalidate_all,
             commands::rules::txt_toc_rule_save,
             commands::rules::txt_toc_rule_delete,
             commands::rules::txt_toc_rule_reorder,
@@ -107,9 +123,15 @@ pub fn run() {
             commands::rules::http_tts_export,
             commands::bookmarks::bookmark_list,
             commands::bookmarks::bookmark_add,
+            commands::bookmarks::bookmark_update,
             commands::bookmarks::bookmark_delete,
             commands::backup::backup_export,
             commands::backup::backup_import,
+            webview_bridge::webview_fetch,
+            webview_bridge::webview_login,
+            webview_bridge::webview_engine_probe,
+            webview_bridge::execute_pay_action,
+            webview_bridge::webview_audit_sources,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

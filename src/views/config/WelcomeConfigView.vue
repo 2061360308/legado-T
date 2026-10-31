@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
-import { pickThemeImage } from "@/platform";
+import { platform } from "@/runtime";
 import { useAppearanceStore } from "@/stores/appearance";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 
@@ -35,7 +35,7 @@ function notify(text: string) {
 
 async function chooseImage(part: "day" | "night") {
   try {
-    const picked = await pickThemeImage();
+    const picked = await platform.pickThemeImage();
     if (picked.cancelled) return;
     appearance.setWelcomeImage(part, picked.path);
     notify(`已选择欢迎图片：${picked.name}`);

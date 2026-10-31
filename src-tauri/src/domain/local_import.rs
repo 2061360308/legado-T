@@ -195,6 +195,7 @@ pub fn import_files(
     paths: &[String],
     group: u64,
     name_script: Option<&str>,
+    charset: Option<&str>,
 ) -> Vec<LocalImportResult> {
     let mut results = Vec::new();
     for path in paths {
@@ -219,7 +220,15 @@ pub fn import_files(
             }
         }
         let (name, author) = analyze_file_name(&file_name, name_script);
-        match import_service::import_book(conn, path, storage, name.as_deref(), group, None, true) {
+        match import_service::import_book(
+            conn,
+            path,
+            storage,
+            name.as_deref(),
+            group,
+            charset,
+            true,
+        ) {
             Ok(mut result) => {
                 let current = result.book.author.trim();
                 if !author.is_empty()
@@ -299,37 +308,37 @@ fn analyze_file_name(file_name: &str, script: Option<&str>) -> (Option<String>, 
 }
 
 fn run_name_script(script: &str, src: &str) -> Option<(String, String)> {
-    use boa_engine::{Context, JsString, JsValue, Source};
-
-    let mut context = Context::default();
-    let src = JsValue::from(JsString::from(src));
-    context
-        .global_object()
-        .set(boa_engine::js_string!("src"), src, true, &mut context)
-        .ok()?;
+    let runtime = rquickjs::Runtime::new().ok()?;
+    runtime.set_memory_limit(64 * 1024 * 1024);
+    runtime.set_max_stack_size(2 * 1024 * 1024);
+    let context = rquickjs::Context::full(&runtime).ok()?;
     let wrapped = format!(
         "{script}\nJSON.stringify({{name: typeof name === 'undefined' ? '' : String(name), author: typeof author === 'undefined' ? '' : String(author)}})"
     );
-    let value = context.eval(Source::from_bytes(&wrapped)).ok()?;
-    let json = value.to_string(&mut context).ok()?.to_std_string_escaped();
-    let parsed: serde_json::Value = serde_json::from_str(&json).ok()?;
-    let name = parsed
-        .get("name")
-        .and_then(|value| value.as_str())
-        .unwrap_or("")
-        .trim()
-        .to_string();
-    let author = parsed
-        .get("author")
-        .and_then(|value| value.as_str())
-        .unwrap_or("")
-        .trim()
-        .to_string();
-    if name.is_empty() {
-        None
-    } else {
-        Some((name, author))
-    }
+    context.with(|ctx| {
+        ctx.globals().set("src", src).ok()?;
+        let mut options = rquickjs::context::EvalOptions::default();
+        options.strict = false;
+        let json: String = ctx.eval_with_options(wrapped, options).ok()?;
+        let parsed: serde_json::Value = serde_json::from_str(&json).ok()?;
+        let name = parsed
+            .get("name")
+            .and_then(|value| value.as_str())
+            .unwrap_or("")
+            .trim()
+            .to_string();
+        let author = parsed
+            .get("author")
+            .and_then(|value| value.as_str())
+            .unwrap_or("")
+            .trim()
+            .to_string();
+        if name.is_empty() {
+            None
+        } else {
+            Some((name, author))
+        }
+    })
 }
 
 pub fn save_cover_from_file(
@@ -373,5 +382,169 @@ pub fn refresh_cover(
         Ok(cover)
     } else {
         Ok(None)
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ArchiveEntry {
+    pub name: String,
+    pub size: u64,
+    pub supported: bool,
+}
+
+pub fn archive_list(path: &str) -> Result<Vec<ArchiveEntry>> {
+    if !path.to_ascii_lowercase().ends_with(".zip") {
+        return Err(Error::Invalid("目前仅支持 ZIP 压缩包".into()));
+    }
+    let file = fs::File::open(path)?;
+    let mut archive = zip::ZipArchive::new(file).map_err(|e| Error::Invalid(e.to_string()))?;
+    let mut entries = Vec::new();
+    for index in 0..archive.len() {
+        let entry = archive
+            .by_index(index)
+            .map_err(|e| Error::Invalid(e.to_string()))?;
+        if entry.is_dir() {
+            continue;
+        }
+        let name = entry
+            .enclosed_name()
+            .and_then(|value| value.file_name())
+            .and_then(|value| value.to_str())
+            .unwrap_or(entry.name())
+            .to_string();
+        entries.push(ArchiveEntry {
+            supported: is_supported(&name),
+            name,
+            size: entry.size(),
+        });
+    }
+    entries.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    Ok(entries)
+}
+
+pub fn archive_import(
+    conn: &Connection,
+    storage: &BookStorage,
+    path: &str,
+    names: &[String],
+    group: u64,
+    name_script: Option<&str>,
+    charset: Option<&str>,
+) -> Result<Vec<LocalImportResult>> {
+    if !path.to_ascii_lowercase().ends_with(".zip") {
+        return Err(Error::Invalid("目前仅支持 ZIP 压缩包".into()));
+    }
+    let file = fs::File::open(path)?;
+    let mut archive = zip::ZipArchive::new(file).map_err(|e| Error::Invalid(e.to_string()))?;
+    let temp = std::env::temp_dir().join(format!(
+        "local-reader-archive-{}",
+        chrono::Utc::now().timestamp_millis()
+    ));
+    fs::create_dir_all(&temp)?;
+    let mut paths = Vec::new();
+    for index in 0..archive.len() {
+        let mut entry = archive
+            .by_index(index)
+            .map_err(|e| Error::Invalid(e.to_string()))?;
+        if entry.is_dir() {
+            continue;
+        }
+        let Some(file_name) = entry
+            .enclosed_name()
+            .and_then(|value| value.file_name())
+            .and_then(|value| value.to_str())
+            .map(|value| value.to_string())
+        else {
+            continue;
+        };
+        if !is_supported(&file_name) {
+            continue;
+        }
+        if !names.is_empty() && !names.iter().any(|name| name == &file_name) {
+            continue;
+        }
+        let dst = temp.join(&file_name);
+        let mut out = fs::File::create(&dst)?;
+        std::io::copy(&mut entry, &mut out)?;
+        paths.push(dst.to_string_lossy().to_string());
+    }
+    let results = import_files(conn, storage, &paths, group, name_script, charset);
+    let _ = fs::remove_dir_all(&temp);
+    Ok(results)
+}
+
+pub fn reimport_file(
+    conn: &Connection,
+    storage: &BookStorage,
+    path: &str,
+    charset: Option<&str>,
+) -> Result<LocalImportResult> {
+    let target = Path::new(path);
+    let file_name = target
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or(path)
+        .to_string();
+    let hash = BookStorage::hash_file(target)?;
+    let existing = BookRepo::list(conn)?
+        .into_iter()
+        .find(|book| book.original_path.as_deref() == Some(path));
+    let Some(mut book) = existing else {
+        return Err(Error::NotFound("未找到对应的已导入书籍".into()));
+    };
+    if book.source_hash.as_deref() == Some(hash.as_str()) {
+        return Ok(LocalImportResult {
+            path: path.to_string(),
+            name: file_name,
+            book_url: Some(book.book_url),
+            error: None,
+            duplicate: true,
+        });
+    }
+    if !path.to_ascii_lowercase().ends_with(".txt") {
+        return Err(Error::Invalid("当前仅支持 TXT 文件更新".into()));
+    }
+    let paths = storage.paths(&book)?;
+    fs::copy(target, &paths.source)?;
+    book.source_hash = Some(hash);
+    book.charset = charset.map(|value| value.to_string()).or(book.charset);
+    BookRepo::upsert(conn, &book)?;
+    let rule = if book.toc_url.is_empty() {
+        None
+    } else {
+        Some(book.toc_url.as_str())
+    };
+    import_service::re_split(
+        conn,
+        storage,
+        &book.book_url,
+        rule,
+        book.charset.as_deref(),
+        book.read_config
+            .as_ref()
+            .map(|config| config.split_long_chapter)
+            .unwrap_or(true),
+    )?;
+    Ok(LocalImportResult {
+        path: path.to_string(),
+        name: file_name,
+        book_url: Some(book.book_url),
+        error: None,
+        duplicate: false,
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn filename_script_uses_src() {
+        let result = run_name_script(
+            "name = src.split(' - ')[0]; author = src.split(' - ')[1]",
+            "书名 - 作者",
+        );
+        assert_eq!(result, Some(("书名".into(), "作者".into())));
     }
 }

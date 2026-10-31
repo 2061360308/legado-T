@@ -14,7 +14,10 @@ Reader platform capabilities
 - `allow-set-text-zoom`
 - `allow-set-launcher-icon`
 - `allow-pick-image`
+- `allow-pick-font-file`
 - `allow-set-reader-key-mode`
+- `allow-get-web-view-cookie`
+- `allow-set-web-view-cookie`
 - `allow-pick-books-directory`
 - `allow-list-books-directory`
 - `allow-prepare-books-import`
@@ -84,6 +87,32 @@ Denies the get_safe_area_insets command without any pre-configured scope.
 <tr>
 <td>
 
+`reader-platform:allow-get-web-view-cookie`
+
+</td>
+<td>
+
+Enables the get_web_view_cookie command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:deny-get-web-view-cookie`
+
+</td>
+<td>
+
+Denies the get_web_view_cookie command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
 `reader-platform:allow-list-books-directory`
 
 </td>
@@ -129,6 +158,32 @@ Enables the pick_books_directory command without any pre-configured scope.
 <td>
 
 Denies the pick_books_directory command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:allow-pick-font-file`
+
+</td>
+<td>
+
+Enables the pick_font_file command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:deny-pick-font-file`
+
+</td>
+<td>
+
+Denies the pick_font_file command without any pre-configured scope.
 
 </td>
 </tr>
@@ -415,6 +470,32 @@ Enables the set_text_zoom command without any pre-configured scope.
 <td>
 
 Denies the set_text_zoom command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:allow-set-web-view-cookie`
+
+</td>
+<td>
+
+Enables the set_web_view_cookie command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:deny-set-web-view-cookie`
+
+</td>
+<td>
+
+Denies the set_web_view_cookie command without any pre-configured scope.
 
 </td>
 </tr>

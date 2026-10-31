@@ -12,6 +12,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/bookshelf/ArrangeBooksView.vue"),
   },
   {
+    path: "/group-manage",
+    name: "group-manage",
+    component: () => import("@/views/bookshelf/GroupManageView.vue"),
+  },
+  {
     path: "/book-info",
     name: "book-info",
     component: () => import("@/views/bookshelf/BookInfoView.vue"),
@@ -50,6 +55,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/toc/TocRulesView.vue"),
   },
   { path: "/replace", name: "replace", component: () => import("@/views/replace/ReplaceView.vue") },
+  {
+    path: "/replace-edit",
+    name: "replace-edit",
+    component: () => import("@/views/replace/ReplaceEditView.vue"),
+  },
   { path: "/dict", name: "dict", component: () => import("@/views/dict/DictView.vue") },
   {
     path: "/dict-rules",
@@ -90,7 +100,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/webdav",
     name: "webdav",
-    component: () => import("@/views/config/WebDavView.vue"),
+    redirect: "/backup",
   },
   { path: "/aloud", name: "aloud", component: () => import("@/views/aloud/AloudView.vue") },
   {

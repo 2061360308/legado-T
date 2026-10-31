@@ -1,8 +1,9 @@
 //! 书架与导入 IPC 命令（M2 / M3）。
 
+use serde::Serialize;
 use tauri::State;
 
-use crate::data::repositories::BookRepo;
+use crate::data::repositories::{BookRepo, ChapterRepo};
 use crate::data::shelf_export;
 use crate::domain::bookshelf::{self, BookSort, VirtualGroup};
 use crate::domain::import_service;
@@ -10,6 +11,13 @@ use crate::domain::local_import;
 use crate::state::AppState;
 
 type CmdResult<T> = std::result::Result<T, String>;
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChapterWordCount {
+    pub index: i32,
+    pub count: usize,
+}
 
 #[tauri::command]
 pub fn bookshelf_list(
@@ -51,6 +59,66 @@ pub fn book_set_group(state: State<AppState>, book_url: String, group: u64) -> C
         .ok_or("书籍不存在")?;
     book.group = group;
     BookRepo::upsert(&conn, &book).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn book_add_group(state: State<AppState>, book_url: String, group: u64) -> CmdResult<()> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let mut book = BookRepo::get(&conn, &book_url)
+        .map_err(|e| e.to_string())?
+        .ok_or("书籍不存在")?;
+    book.group |= group;
+    BookRepo::upsert(&conn, &book).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn book_batch_add_group(
+    state: State<AppState>,
+    book_urls: Vec<String>,
+    group: u64,
+) -> CmdResult<usize> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let mut count = 0;
+    for url in book_urls {
+        if let Some(mut book) = BookRepo::get(&conn, &url).map_err(|e| e.to_string())? {
+            book.group |= group;
+            BookRepo::upsert(&conn, &book).map_err(|e| e.to_string())?;
+            count += 1;
+        }
+    }
+    Ok(count)
+}
+
+#[tauri::command]
+pub fn book_set_can_update(
+    state: State<AppState>,
+    book_url: String,
+    value: bool,
+) -> CmdResult<()> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let mut book = BookRepo::get(&conn, &book_url)
+        .map_err(|e| e.to_string())?
+        .ok_or("书籍不存在")?;
+    book.can_update = value;
+    BookRepo::upsert(&conn, &book).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn book_batch_set_can_update(
+    state: State<AppState>,
+    book_urls: Vec<String>,
+    value: bool,
+) -> CmdResult<usize> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let mut count = 0;
+    for url in book_urls {
+        if let Some(mut book) = BookRepo::get(&conn, &url).map_err(|e| e.to_string())? {
+            book.can_update = value;
+            BookRepo::upsert(&conn, &book).map_err(|e| e.to_string())?;
+            count += 1;
+        }
+    }
+    Ok(count)
 }
 
 #[tauri::command]
@@ -121,6 +189,7 @@ pub fn local_import_import(
     paths: Vec<String>,
     group: Option<u64>,
     name_script: Option<String>,
+    charset: Option<String>,
 ) -> CmdResult<Vec<local_import::LocalImportResult>> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
     Ok(local_import::import_files(
@@ -129,7 +198,46 @@ pub fn local_import_import(
         &paths,
         group.unwrap_or(0),
         name_script.as_deref(),
+        charset.as_deref(),
     ))
+}
+
+#[tauri::command]
+pub fn local_import_archive_list(path: String) -> CmdResult<Vec<local_import::ArchiveEntry>> {
+    local_import::archive_list(&path).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn local_import_archive_import(
+    state: State<AppState>,
+    path: String,
+    names: Vec<String>,
+    group: Option<u64>,
+    name_script: Option<String>,
+    charset: Option<String>,
+) -> CmdResult<Vec<local_import::LocalImportResult>> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    local_import::archive_import(
+        &conn,
+        &state.storage,
+        &path,
+        &names,
+        group.unwrap_or(0),
+        name_script.as_deref(),
+        charset.as_deref(),
+    )
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn local_import_reimport(
+    state: State<AppState>,
+    path: String,
+    charset: Option<String>,
+) -> CmdResult<local_import::LocalImportResult> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    local_import::reimport_file(&conn, &state.storage, &path, charset.as_deref())
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -178,6 +286,9 @@ pub fn book_clear_cache(state: State<AppState>, book_url: String) -> CmdResult<(
     let Some(book) = book else {
         return Ok(());
     };
+    if import_service::is_cached_book(&book, &state.storage) {
+        return Err("该格式的章节缓存是阅读所必需的，请使用“更新目录”重新解析".into());
+    }
     state.storage.clear_cache(&book).map_err(|e| e.to_string())
 }
 
@@ -199,6 +310,30 @@ pub fn re_split_book(
         split_long.unwrap_or(true),
     )
     .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn chapter_word_counts(
+    state: State<AppState>,
+    book_url: String,
+) -> CmdResult<Vec<ChapterWordCount>> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let chapters = ChapterRepo::list(&conn, &book_url).map_err(|e| e.to_string())?;
+    let mut result = Vec::with_capacity(chapters.len());
+    for chapter in chapters {
+        let content = import_service::read_chapter(
+            &conn,
+            &state.storage,
+            &book_url,
+            chapter.index,
+        )
+        .unwrap_or_default();
+        result.push(ChapterWordCount {
+            index: chapter.index,
+            count: content.chars().filter(|ch| !ch.is_whitespace()).count(),
+        });
+    }
+    Ok(result)
 }
 
 #[tauri::command]

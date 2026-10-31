@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useConfigStore, type GlobalConfig } from "@/stores/config";
-import { BOOK_SORT_LABELS } from "@/api/books";
+import { BOOK_SORT_LABELS } from "@/core/application/books";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 
 defineProps<{ modelValue: boolean }>();

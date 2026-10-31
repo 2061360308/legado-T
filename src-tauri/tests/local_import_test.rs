@@ -43,6 +43,7 @@ fn lists_and_imports_with_filename_script() {
         &[books.join("张三 - 李四.txt").to_string_lossy().to_string()],
         0,
         Some(r#"name = src.split(" - ")[0]; author = src.split(" - ")[1] || "";"#),
+        None,
     );
     assert_eq!(results.len(), 1);
     assert!(results[0].error.is_none(), "{:?}", results[0].error);

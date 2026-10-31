@@ -1,12 +1,28 @@
 import { defineStore } from "pinia";
-import { convertFileSrc } from "@tauri-apps/api/core";
-import { setSystemBarStyle, setTextZoom } from "@/platform";
+import { platform } from "@/runtime";
 
 export enum ThemeMode {
-  Day = 0,
-  Night = 1,
-  FollowSystem = 2,
+  FollowSystem = 0,
+  Day = 1,
+  Night = 2,
   Eink = 3,
+}
+
+const STORAGE_VERSION = 2;
+
+function migrateMode(mode: number | undefined): ThemeMode {
+  switch (mode) {
+    case 0:
+      return ThemeMode.Day;
+    case 1:
+      return ThemeMode.Night;
+    case 2:
+      return ThemeMode.FollowSystem;
+    case 3:
+      return ThemeMode.Eink;
+    default:
+      return ThemeMode.FollowSystem;
+  }
 }
 
 export interface ModeColors {
@@ -150,6 +166,7 @@ export const PRESET_SCHEMES: ReadStyleScheme[] = [
 const STORAGE_KEY = "local-reader:theme";
 
 interface Persisted {
+  version?: number;
   mode: ThemeMode;
   schemes: ReadStyleScheme[];
   currentScheme: number;
@@ -190,7 +207,7 @@ function withAlpha(hex: string, alpha: number): string {
 function imageUrl(path: string | null): string | null {
   if (!path) return null;
   if (/^(https?:|data:|content:|file:)/i.test(path)) return path;
-  return convertFileSrc(path);
+  return platform.assets.fileSrc(path);
 }
 
 function loadPersisted(): Persisted {
@@ -203,7 +220,11 @@ function loadPersisted(): Persisted {
           ? normalizeSchemes(parsed.schemes)
           : clonePresets();
       return {
-        mode: parsed.mode ?? ThemeMode.FollowSystem,
+        version: STORAGE_VERSION,
+        mode:
+          parsed.version === STORAGE_VERSION
+            ? (parsed.mode ?? ThemeMode.FollowSystem)
+            : migrateMode(parsed.mode),
         schemes,
         currentScheme: Math.min(Math.max(parsed.currentScheme ?? 1, 0), schemes.length - 1),
         globalTokens: parsed.globalTokens ?? cloneGlobalTokens(),
@@ -222,6 +243,7 @@ function loadPersisted(): Persisted {
     // ignore corrupt storage
   }
   return {
+    version: STORAGE_VERSION,
     mode: ThemeMode.FollowSystem,
     schemes: clonePresets(),
     currentScheme: 1,
@@ -296,6 +318,7 @@ export const useThemeStore = defineStore("theme", {
   actions: {
     persist() {
       const data: Persisted = {
+        version: STORAGE_VERSION,
         mode: this.mode,
         schemes: this.schemes,
         currentScheme: this.currentScheme,
@@ -459,8 +482,8 @@ export const useThemeStore = defineStore("theme", {
         root.style.removeProperty("--lr-color-background");
         root.style.removeProperty("--lr-color-on-background");
       }
-      void setTextZoom(this.fontScale * 10).catch(() => undefined);
-      void setSystemBarStyle({
+      void platform.setTextZoom(this.fontScale * 10).catch(() => undefined);
+      void platform.setSystemBarStyle({
         transparentStatusBar: this.transparentStatusBar,
         transparentNavigationBar: this.immNavigationBar,
         statusBarColor: globalColors.primary,

@@ -8,47 +8,25 @@
 use rusqlite::Connection;
 
 use crate::domain::model::{book_type, Book};
-use crate::domain::pinyin::PinyinComparator;
 use crate::Result;
+pub use reader_core::shelf::BookSort;
+use reader_core::shelf::{compare_books, ShelfBook};
 
-/// 书架六种排序（spec 5.1.1-5/6）。
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum BookSort {
-    /// 最近阅读（durChapterTime 降序）。
-    LastRead = 0,
-    /// 更新时间。
-    UpdateTime = 1,
-    /// 书名拼音升序。
-    BookNamePinyin = 2,
-    /// 手动排序（order 升序）。
-    Manual = 3,
-    /// 综合时间（阅读时间与更新时间取大）。
-    Comprehensive = 4,
-    /// 作者拼音升序。
-    AuthorPinyin = 5,
-}
-
-impl Default for BookSort {
-    fn default() -> Self {
-        BookSort::LastRead
-    }
-}
-
-impl BookSort {
-    pub fn from_i32(v: i32) -> Option<Self> {
-        match v {
-            0 => Some(BookSort::LastRead),
-            1 => Some(BookSort::UpdateTime),
-            2 => Some(BookSort::BookNamePinyin),
-            3 => Some(BookSort::Manual),
-            4 => Some(BookSort::Comprehensive),
-            5 => Some(BookSort::AuthorPinyin),
-            _ => None,
+impl From<&Book> for ShelfBook {
+    fn from(book: &Book) -> Self {
+        Self {
+            book_url: book.book_url.clone(),
+            name: book.name.clone(),
+            author: book.author.clone(),
+            dur_chapter_time: book.dur_chapter_time,
+            sync_time: book.sync_time,
+            order: book.order,
+            book_type: book.r#type,
+            group: book.group,
         }
     }
 }
 
-/// 虚拟组（spec 6.3-5）。
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum VirtualGroup {
     All,
@@ -78,24 +56,11 @@ impl VirtualGroup {
 
 /// 对书籍列表按指定排序键排序（内存排序，书量级足够）。
 pub fn sort_books(books: &mut [Book], sort: BookSort) {
-    match sort {
-        BookSort::LastRead => books.sort_by(|a, b| b.dur_chapter_time.cmp(&a.dur_chapter_time)),
-        BookSort::UpdateTime => books.sort_by(|a, b| b.sync_time.cmp(&a.sync_time)),
-        BookSort::BookNamePinyin => {
-            let cmp = PinyinComparator;
-            books.sort_by(|a, b| cmp.compare(&a.name, &b.name));
-        }
-        BookSort::Manual => books.sort_by(|a, b| a.order.cmp(&b.order)),
-        BookSort::Comprehensive => books.sort_by(|a, b| {
-            let ka = a.dur_chapter_time.max(a.sync_time);
-            let kb = b.dur_chapter_time.max(b.sync_time);
-            kb.cmp(&ka)
-        }),
-        BookSort::AuthorPinyin => {
-            let cmp = PinyinComparator;
-            books.sort_by(|a, b| cmp.compare(&a.author, &b.author));
-        }
-    }
+    books.sort_by(|a, b| {
+        let left = ShelfBook::from(a);
+        let right = ShelfBook::from(b);
+        compare_books(&left, &right, sort)
+    });
 }
 
 /// 按「全部」（最近阅读降序）取书架。

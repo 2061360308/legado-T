@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { bookList } from "@/api/books";
-import type { Book } from "@/api/bindings";
+import { bookList } from "@/core/application/books";
+import type { Book } from "@/core/domain";
 
 export const useBooksStore = defineStore("books", {
   state: () => ({

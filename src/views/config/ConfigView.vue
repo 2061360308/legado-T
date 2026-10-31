@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { platform } from "@/runtime";
 import TitleBar from "@/components/android/TitleBar.vue";
 import PreferenceRow from "@/components/android/PreferenceRow.vue";
 import PreferenceCategory from "@/components/android/PreferenceCategory.vue";
@@ -54,21 +54,19 @@ const groups = computed<{ title: string; items: Item[] }[]>(() => [
     items: [
       { label: "书签", summary: "全部书签", icon: "ic_bookmark", path: "/bookmarks" },
       { label: "阅读记录", summary: "阅读时间记录", icon: "ic_history", path: "/read-records" },
+      { label: "音频播放", summary: "播放本地音频文件", icon: "ic_play_24dp", path: "/audio" },
       { label: "文件管理", summary: "管理私有文件夹的文件", icon: "ic_folder_outline", path: "/files" },
       { label: "关于", summary: "", icon: "ic_cfg_about", path: "/about" },
-      { label: "原版界面清单", summary: "286 个 XML 的壳子与实现状态", icon: "ic_menu", path: "/legacy" },
-      { label: "生成组件清单", summary: "转换器生成的 283 个 Vue 组件", icon: "ic_cfg_other", path: "/generated" },
-      { label: "原版流程演示", summary: "按原 app 跳转图浏览全部生成界面", icon: "ic_bookshelf_list", path: "/shell" },
-      { label: "退出", summary: "", icon: "ic_exit", action: () => getCurrentWindow().close() },
+      { label: "退出", summary: "", icon: "ic_exit", action: () => platform.closeWindow() },
     ],
   },
 ]);
 
 const currentModeLabel = computed(() => {
   const labels: Record<number, string> = {
-    0: "日间",
-    1: "夜间",
-    2: "跟随系统",
+    0: "跟随系统",
+    1: "日间",
+    2: "夜间",
     3: "墨水屏",
   };
   return labels[theme.mode] ?? "跟随系统";

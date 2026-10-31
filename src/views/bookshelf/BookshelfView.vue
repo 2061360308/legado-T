@@ -8,15 +8,14 @@ import {
   bookshelfList,
   groupList,
   VIRTUAL_GROUP,
-} from "@/api/books";
-import type { Book, BookGroup } from "@/api/bindings";
+} from "@/core/application/books";
+import type { Book, BookGroup } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 import BookItem from "./BookItem.vue";
 import BookshelfConfigDialog from "./BookshelfConfigDialog.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
-import EmptyState from "@/components/android/EmptyState.vue";
 
 const router = useRouter();
 
@@ -49,6 +48,11 @@ const layout = computed<"list" | "grid">(() =>
 
 const groups = computed(() => [
   { id: VIRTUAL_GROUP.all, name: "全部" },
+  { id: VIRTUAL_GROUP.local, name: "本地" },
+  { id: VIRTUAL_GROUP.audio, name: "音频" },
+  { id: VIRTUAL_GROUP.networkUngrouped, name: "网络未分组" },
+  { id: VIRTUAL_GROUP.localUngrouped, name: "本地未分组" },
+  { id: VIRTUAL_GROUP.error, name: "错误" },
   ...userGroups.value.map((group) => ({ id: group.groupId, name: group.groupName })),
 ]);
 
@@ -89,14 +93,18 @@ const gridColumns = computed(() =>
 );
 
 async function load() {
-  booksStore.setList(
-    await bookshelfList(activeGroup.value, configStore.global.bookshelfSort),
-  );
+  const group = userGroups.value.find((item) => item.groupId === activeGroup.value);
+  const sort = group && (group.bookSort ?? -1) >= 0
+    ? group.bookSort
+    : configStore.global.bookshelfSort;
+  booksStore.setList(await bookshelfList(activeGroup.value, sort ?? 0));
 }
 
 async function loadGroups() {
   try {
-    userGroups.value = (await groupList()).filter((group) => group.groupId > 0);
+    userGroups.value = (await groupList()).filter(
+      (group) => group.groupId > 0 && group.show !== false,
+    );
   } catch {
     userGroups.value = [];
   }
@@ -151,17 +159,17 @@ function openBookshelfConfig() {
 }
 
 function onManage(key: string) {
-  if (key === "updateToc") router.push("/legacy/activity_chapter_list");
+  if (key === "updateToc") message.value = "请在书籍目录中使用“更新目录”";
   else if (key === "import") router.push("/import");
-  else if (key === "remote") router.push("/book-search");
-  else if (key === "addUrl") router.push("/book-source-edit");
+  else if (key === "remote") message.value = "当前版本不支持远程书籍";
+  else if (key === "addUrl") message.value = "当前版本不支持添加网址";
   else if (key === "arrange") router.push("/arrange-books");
   else if (key === "cache") router.push("/cache-books");
-  else if (key === "group") router.push("/legacy/fragment_my_config");
+  else if (key === "group") router.push("/group-manage");
   else if (key === "layout") openBookshelfConfig();
   else if (key === "export") onExport();
-  else if (key === "importShelf") router.push("/legacy/activity_import_book");
-  else if (key === "log") router.push("/legacy/activity_config");
+  else if (key === "importShelf") message.value = "书单导入暂未接入";
+  else if (key === "log") message.value = "日志暂未接入";
 }
 
 async function onConfigSaved() {
@@ -292,14 +300,9 @@ onMounted(async () => {
         </template>
       </div>
 
-      <EmptyState
-        v-if="folderItems.length === 0"
-        data-id="tv_empty_msg"
-        icon="ic_bottom_books_e"
-        text="书架还很空哦～快去添加书籍添加进来吧"
-        action="添加本地书籍"
-        @action="router.push('/import')"
-      />
+      <p v-if="folderItems.length === 0" class="empty-bookshelf" data-id="tv_empty_msg">
+        书架还空着，先去添加本地书籍吧！
+      </p>
     </main>
 
     <BookshelfConfigDialog v-model="bookshelfConfigVisible" @saved="onConfigSaved" />
@@ -396,6 +399,12 @@ onMounted(async () => {
   min-height: 0;
   overflow-y: auto;
   padding-bottom: 12px;
+}
+.empty-bookshelf {
+  margin: 80px 24px;
+  text-align: center;
+  color: var(--ac-secondary-text);
+  font-size: 14px;
 }
 .refresh-bar {
   padding: 6px 16px;

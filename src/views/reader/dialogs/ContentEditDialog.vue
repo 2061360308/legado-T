@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import type { ReaderSnapshot } from "@/api/bindings";
-import { readerSaveChapterContent } from "@/api/reader";
+import { computed, ref, watch } from "vue";
+import type { ReaderSnapshot } from "@/core/domain";
+import { readerSaveChapterContent } from "@/core/application/reader";
 import AndroidDialog from "./AndroidDialog.vue";
 
 const props = defineProps<{ modelValue: boolean; snapshot: ReaderSnapshot | null }>();
@@ -11,19 +11,42 @@ const emit = defineEmits<{
 }>();
 
 const content = ref("");
+const original = ref("");
 const saving = ref(false);
 const error = ref("");
+const notice = ref("");
+const title = computed(() => props.snapshot?.chapterTitle || "编辑正文");
+
+function loadContent() {
+  return (props.snapshot?.chapterParagraphs ?? [])
+    .map((paragraph) => paragraph.replace(/^[\s\u3000]+/, ""))
+    .join("\n");
+}
 
 watch(
   () => props.modelValue,
   (open) => {
     if (!open) return;
     error.value = "";
-    content.value = (props.snapshot?.chapterParagraphs ?? [])
-      .map((paragraph) => paragraph.replace(/^[\s\u3000]+/, ""))
-      .join("\n");
+    notice.value = "";
+    original.value = loadContent();
+    content.value = original.value;
   },
 );
+
+function reset() {
+  content.value = original.value;
+  notice.value = "已还原为当前缓存正文";
+}
+
+async function copyAll() {
+  try {
+    await navigator.clipboard.writeText(`${title.value}\n${content.value}`);
+    notice.value = "已复制全部正文";
+  } catch (e) {
+    error.value = String(e);
+  }
+}
 
 async function save() {
   const snapshot = props.snapshot;
@@ -46,12 +69,17 @@ async function save() {
   <AndroidDialog
     :model-value="modelValue"
     mode="fullscreen"
-    title="编辑正文"
+    :title="title"
     @update:model-value="emit('update:modelValue', $event)"
   >
+    <template #actions>
+      <button @click="reset">还原</button>
+      <button @click="copyAll">复制</button>
+    </template>
     <div class="editor-wrap">
       <p class="hint">编辑只影响当前章节的本地缓存，不会修改原始 TXT 文件。</p>
       <textarea v-model="content" spellcheck="false" />
+      <p v-if="notice" class="notice">{{ notice }}</p>
       <p v-if="error" class="error">{{ error }}</p>
     </div>
     <template #footer>
@@ -86,6 +114,11 @@ textarea {
   font-size: 15px;
   line-height: 1.7;
   font-family: inherit;
+}
+.notice {
+  margin: 0;
+  color: var(--ac-primary);
+  font-size: 12px;
 }
 .error {
   margin: 0;

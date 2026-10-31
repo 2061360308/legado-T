@@ -1,21 +1,25 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import type { LayoutPage, ReaderSnapshot } from "@/api/bindings";
-import { readerOpen, readerSaveProgress } from "@/api/reader";
-import { bookmarkAdd } from "@/api/bookmarks";
+import type { LayoutPage, ReaderSnapshot } from "@/core/domain";
+import {
+  readerInvalidateBook,
+  readerOpen,
+  readerSaveChapterContent,
+  readerSaveProgress,
+} from "@/core/application/reader";
+import { bookGet, bookUpsert, reSplitBook } from "@/core/application/books";
+import { bookmarkAdd } from "@/core/application/bookmarks";
+import { readRecordAddTime } from "@/core/application/readRecords";
+import { kvGet, kvSet } from "@/core/application/config";
+import { renderMarkdown } from "@/utils/markdown";
+import { loadActiveFont } from "@/utils/customFonts";
+import readMenuHelp from "@/assets/help/readMenuHelp.md?raw";
 import { useReaderPrefsStore } from "@/stores/readerPrefs";
 import { useReaderSettingsStore } from "@/stores/readerSettings";
 import { useThemeStore } from "@/stores/theme";
-import {
-  refreshPlatform,
-  setCutoutMode,
-  setKeepScreenOn,
-  setScreenOrientation,
-  setSystemBars,
-  setReaderKeyMode,
-  type SafeAreaInsets,
-} from "@/platform";
+import { platform } from "@/runtime";
+import type { SafeAreaInsets } from "@/platform/contract";
 import ReaderCanvas from "./canvas/ReaderCanvas.vue";
 import ScrollReaderCanvas from "./canvas/ScrollReaderCanvas.vue";
 import PageTurnOverlay from "./canvas/PageTurnOverlay.vue";
@@ -45,6 +49,9 @@ import EffectiveReplacesDialog from "./dialogs/EffectiveReplacesDialog.vue";
 import ContentEditDialog from "./dialogs/ContentEditDialog.vue";
 import FontSelectDialog from "./dialogs/FontSelectDialog.vue";
 import ImagePreviewDialog from "./dialogs/ImagePreviewDialog.vue";
+import EncodingDialog from "./dialogs/EncodingDialog.vue";
+import ReaderSearchDialog from "./dialogs/ReaderSearchDialog.vue";
+import AndroidDialog from "./dialogs/AndroidDialog.vue";
 import {
   buildInfoBarStyle,
   measureInfoBarHeights,
@@ -61,6 +68,21 @@ const router = useRouter();
 const prefs = useReaderPrefsStore();
 const settings = useReaderSettingsStore();
 const theme = useThemeStore();
+let readStartedAt = Date.now();
+let readRecordTimer: ReturnType<typeof setInterval> | null = null;
+
+async function flushReadTime() {
+  const now = Date.now();
+  const elapsed = Math.round((now - readStartedAt) / 1000);
+  readStartedAt = now;
+  if (!prefs.enableReadRecord || document.hidden || !bookUrl.value || elapsed <= 0) return;
+  await readRecordAddTime(bookUrl.value, Math.min(elapsed, 300)).catch(() => undefined);
+}
+
+function onVisibilityChange() {
+  if (document.hidden) void flushReadTime();
+  readStartedAt = Date.now();
+}
 const safeArea = ref<SafeAreaInsets>({
   left: 0,
   top: 0,
@@ -96,8 +118,11 @@ const menuVisible = ref(false);
 const activeDialog = ref<DialogName>("");
 const moreMenuVisible = ref(false);
 const isOnline = computed(() => /^https?:/i.test(snapshot.value?.book.bookUrl ?? ""));
-const isTxt = computed(() => /\.txt$/i.test(snapshot.value?.book.bookUrl ?? ""));
-const isEpub = computed(() => /\.epub$/i.test(snapshot.value?.book.bookUrl ?? ""));
+const bookFileName = computed(
+  () => snapshot.value?.book.originName || snapshot.value?.book.bookUrl || "",
+);
+const isTxt = computed(() => /\.txt$/i.test(bookFileName.value));
+const isEpub = computed(() => /\.epub$/i.test(bookFileName.value));
 
 // book_read.xml：never 项按原版顺序；反转内容(在线)/删除ruby、删除h(epub) 为动态组
 const moreMenuItems = computed<PopupMenuItem[]>(() => {
@@ -106,9 +131,14 @@ const moreMenuItems = computed<PopupMenuItem[]>(() => {
     { key: "edit", label: "编辑内容" },
     { key: "pageAnim", label: "翻页动画（本书）" },
   ];
-  if (isOnline.value) items.push({ key: "reverse", label: "反转内容" });
+  items.push({ key: "reverse", label: "反转内容" });
   items.push({ key: "simulated", label: "模拟追读" });
   items.push({ key: "replace", label: "替换净化", icon: "ic_find_replace" });
+  items.push({
+    key: "useReplaceRule",
+    label: "启用替换规则",
+    checked: snapshot.value?.book.readConfig?.useReplaceRule !== false,
+  });
   items.push({ key: "sameTitleRemoved", label: "移除重复标题" });
   items.push({ key: "reSegment", label: "重新分段" });
   if (isEpub.value) {
@@ -126,6 +156,19 @@ const dictVisible = ref(false);
 const dictWord = ref("");
 const imagePreviewVisible = ref(false);
 const imagePreviewSrc = ref("");
+const encodingVisible = ref(false);
+const searchVisible = ref(false);
+const searchKeyword = ref("");
+const imageStyleVisible = ref(false);
+const helpVisible = ref(false);
+const logVisible = ref(false);
+const helpHtml = computed(() => renderMarkdown(readMenuHelp));
+const imageStyles = [
+  { value: "DEFAULT", label: "默认" },
+  { value: "FULL", label: "全宽" },
+  { value: "TEXT", label: "文字大小" },
+  { value: "SINGLE", label: "单页" },
+];
 
 function imageAt(x: number, y: number): string | null {
   const target = pageAtPoint(x, y);
@@ -436,7 +479,7 @@ function orientationMode(): "system" | "portrait" | "landscape" | "sensor" | "re
 async function syncSystemBars() {
   const hide = !menuVisible.value;
   try {
-    await setSystemBars({
+    await platform.setSystemBars({
       hideStatusBar: hide && settingBool("hideStatusBar", false),
       hideNavigationBar: hide && settingBool("hideNavigationBar", false),
       lightStatusBar: false,
@@ -449,17 +492,17 @@ async function syncSystemBars() {
 
 async function applyPlatformSettings() {
   try {
-    const info = await refreshPlatform();
+    const info = await platform.refreshPlatform();
     safeArea.value = info.safeArea;
-    await setScreenOrientation(orientationMode());
-    await setCutoutMode(settingBool("readBodyToLh", true) ? "shortEdges" : "never");
+    await platform.setScreenOrientation(orientationMode());
+    await platform.setCutoutMode(settingBool("readBodyToLh", true) ? "shortEdges" : "never");
     const keep = settingString("keep_light", "0");
     if (keep === "-1") {
-      await setKeepScreenOn(true, null);
+      await platform.setKeepScreenOn(true, null);
     } else if (Number(keep) > 0) {
-      await setKeepScreenOn(true, Number(keep));
+      await platform.setKeepScreenOn(true, Number(keep));
     } else {
-      await setKeepScreenOn(false);
+      await platform.setKeepScreenOn(false);
     }
     await syncSystemBars();
   } catch {
@@ -469,10 +512,10 @@ async function applyPlatformSettings() {
 
 async function resetPlatformSettings() {
   await Promise.allSettled([
-    setKeepScreenOn(false),
-    setScreenOrientation("system"),
-    setCutoutMode("never"),
-    setSystemBars({
+    platform.setKeepScreenOn(false),
+    platform.setScreenOrientation("system"),
+    platform.setCutoutMode("never"),
+    platform.setSystemBars({
       hideStatusBar: false,
       hideNavigationBar: false,
       lightStatusBar: false,
@@ -507,7 +550,9 @@ function buildStyle() {
     useZhLayout: prefs.useZhLayout,
     viewWidth: layoutWidth.value,
     viewHeight: viewHeight.value,
-    imageStyle: "DEFAULT",
+    imageStyle:
+      (prefs.shareLayout ? prefs.imageStyle : snapshot.value?.book.readConfig?.imageStyle) ||
+      "DEFAULT",
     scroll: scrollMode.value,
   };
 }
@@ -956,7 +1001,7 @@ function applyClick(x: number, y: number, width: number, height: number) {
       goToc();
       break;
     case "search":
-      searchChapter();
+      openSearch();
       break;
     case "addBookmark":
       addBookmark();
@@ -1157,9 +1202,7 @@ function onSelectionAction(key: string) {
   if (key === "copy") {
     void copySelectionText(current.text);
   } else if (key === "search") {
-    if (!jumpToText(text) && !jumpToText(text.replace(/\s+/g, ""))) {
-      showToast("本章未找到匹配内容");
-    }
+    openSearch(text);
   } else if (key === "bookmark") {
     const page = selectionPage.value;
     const line = page?.lines[current.start.line];
@@ -1430,6 +1473,14 @@ function onClick(event: MouseEvent) {
   clickTimer = window.setTimeout(() => applyClick(x, y, rect.width, rect.height), 220);
 }
 
+function matchesPageKey(event: KeyboardEvent, value: string): boolean {
+  return value
+    .split(",")
+    .map((key) => key.trim())
+    .filter(Boolean)
+    .some((key) => key === event.key || key === String(event.keyCode));
+}
+
 function onKeydown(event: KeyboardEvent) {
   if (event.key === "Escape") {
     menuVisible.value = false;
@@ -1439,10 +1490,10 @@ function onKeydown(event: KeyboardEvent) {
   }
   if (anyDialogOpen.value || aloudVisible.value || dictVisible.value) return;
   if (selection.value || selectionMenuVisible.value) return;
-  if (event.key === prefs.pageKeyPrev) {
+  if (matchesPageKey(event, prefs.pageKeyPrev)) {
     event.preventDefault();
     prevPage(100);
-  } else if (event.key === prefs.pageKeyNext) {
+  } else if (matchesPageKey(event, prefs.pageKeyNext)) {
     event.preventDefault();
     nextPage(100);
   }
@@ -1467,7 +1518,7 @@ function resetInteractionState() {
 }
 
 function syncReaderKeyMode() {
-  void setReaderKeyMode({
+  void platform.setReaderKeyMode({
     active: true,
     volumeKeyEnabled:
       settingBool("volumeKeyPage", true) &&
@@ -1566,20 +1617,125 @@ function simulateFinish() {
   showToast("已模拟读完，进度归位末章末页");
 }
 
+async function applyEncoding(charset: string) {
+  const snap = snapshot.value;
+  if (!snap) return;
+  const book = await bookGet(bookUrl.value);
+  await reSplitBook(
+    bookUrl.value,
+    book?.tocUrl || null,
+    charset,
+    book?.readConfig?.splitLongChapter ?? true,
+  );
+  await open(snap.chapterIndex, 0);
+  showToast(`编码已切换为 ${charset}`);
+}
+
+async function reverseContent() {
+  const snap = snapshot.value;
+  if (!snap) return;
+  const content = [...snap.chapterParagraphs].reverse().join("\n");
+  await readerSaveChapterContent(bookUrl.value, snap.chapterIndex, content);
+  await open(snap.chapterIndex, 0);
+  showToast("本章内容已反转");
+}
+
+async function toggleReSegment() {
+  const snap = snapshot.value;
+  const book = await bookGet(bookUrl.value);
+  if (!snap || !book) return;
+  const next = !(book.readConfig?.reSegment ?? false);
+  book.readConfig = {
+    ...(book.readConfig ?? ({} as NonNullable<ReaderSnapshot["book"]["readConfig"]>)),
+    reSegment: next,
+  };
+  await bookUpsert(book);
+  await readerInvalidateBook(bookUrl.value);
+  await open(snap.chapterIndex, 0);
+  showToast(next ? "已开启重新分段" : "已关闭重新分段");
+}
+
+async function chooseImageStyle(value: string) {
+  const snap = snapshot.value;
+  imageStyleVisible.value = false;
+  if (prefs.shareLayout || !snap) {
+    prefs.patch({ imageStyle: value });
+  } else {
+    const book = await bookGet(bookUrl.value);
+    if (book) {
+      book.readConfig = {
+        ...(book.readConfig ?? ({} as NonNullable<typeof book.readConfig>)),
+        imageStyle: value,
+      };
+      await bookUpsert(book);
+      await readerInvalidateBook(bookUrl.value);
+    }
+  }
+  if (snap) await open(snap.chapterIndex, snap.pages[snap.pageIndex]?.startChar ?? 0);
+  showToast("图片样式已更新");
+}
+
+async function refreshToc() {
+  const snap = snapshot.value;
+  if (!snap) return;
+  if (!isTxt.value) {
+    showToast("当前格式请通过重新导入更新目录");
+    return;
+  }
+  const book = await bookGet(bookUrl.value);
+  if (!book) return;
+  await reSplitBook(
+    bookUrl.value,
+    book.tocUrl || null,
+    book.charset || null,
+    book.readConfig?.splitLongChapter ?? true,
+  );
+  await readerInvalidateBook(bookUrl.value);
+  await open(snap.chapterIndex, 0);
+  showToast("目录已更新");
+}
+
+async function toggleKeepDuplicateTitle() {
+  const snap = snapshot.value;
+  if (!snap) return;
+  const key = `keepDuplicateTitle:${bookUrl.value}`;
+  const next = (await kvGet(key)) !== "true";
+  await kvSet(key, next ? "true" : "false");
+  await readerInvalidateBook(bookUrl.value);
+  await open(snap.chapterIndex, snap.pages[snap.pageIndex]?.startChar ?? 0);
+  showToast(next ? "已保留重复标题" : "已移除重复标题");
+}
+
+async function toggleUseReplaceRule() {
+  const snap = snapshot.value;
+  const book = await bookGet(bookUrl.value);
+  if (!snap || !book) return;
+  const current = book.readConfig?.useReplaceRule ?? true;
+  book.readConfig = {
+    ...(book.readConfig ?? ({} as NonNullable<typeof book.readConfig>)),
+    useReplaceRule: !current,
+  };
+  await bookUpsert(book);
+  await readerInvalidateBook(bookUrl.value);
+  await open(snap.chapterIndex, snap.pages[snap.pageIndex]?.startChar ?? 0);
+  showToast(!current ? "已启用替换规则" : "已关闭替换规则");
+}
+
 function onMoreSelect(key: string) {
   if (key === "bookmark") addBookmark();
   else if (key === "edit") activeDialog.value = "contentEdit";
   else if (key === "pageAnim") activeDialog.value = "style";
   else if (key === "simulated") activeDialog.value = "simulated";
   else if (key === "replace" || key === "effective") activeDialog.value = "effective";
-  else if (key === "updateToc") goToc();
-  else if (key === "reverse") showToast("反转内容暂未实现");
-  else if (key === "sameTitleRemoved") showToast("移除重复标题暂未实现");
-  else if (key === "reSegment") showToast("重新分段暂未实现");
-  else if (key === "delRuby" || key === "delH") showToast("EPUB 标签处理暂未实现");
-  else if (key === "imageStyle") showToast("图片样式暂未实现");
-  else if (key === "log") showToast("日志暂未实现");
-  else if (key === "help") showToast("阅读器帮助暂未实现");
+  else if (key === "useReplaceRule") void toggleUseReplaceRule();
+  else if (key === "updateToc") void refreshToc();
+  else if (key === "reverse") void reverseContent();
+  else if (key === "sameTitleRemoved") void toggleKeepDuplicateTitle();
+  else if (key === "reSegment") void toggleReSegment();
+  else if (key === "delRuby" || key === "delH") showToast("EPUB 标签已在解析时处理");
+  else if (key === "imageStyle") imageStyleVisible.value = true;
+  else if (key === "log") logVisible.value = true;
+  else if (key === "help") helpVisible.value = true;
 }
 
 function onChangeSource() {
@@ -1643,16 +1799,14 @@ function toggleBrightnessSide() {
   brightnessSide.value = brightnessSide.value === "left" ? "right" : "left";
 }
 
-function searchChapter() {
+function openSearch(keyword = "") {
   menuVisible.value = false;
-  const keyword = window.prompt("本章搜索");
-  const key = keyword?.trim();
-  if (!key) return;
-  if (jumpToText(key)) {
-    showToast(`已定位到「${key}」`);
-  } else {
-    showToast("本章未找到匹配内容");
-  }
+  searchKeyword.value = keyword;
+  searchVisible.value = true;
+}
+
+function onSearchJump(chapterIndex: number, pos: number) {
+  open(chapterIndex, pos);
 }
 
 function onAloudPosition(pos: number) {
@@ -1729,7 +1883,11 @@ function initialTarget(): { chapter: number | null; pos: number | null } {
     return { chapter: null, pos: null };
   }
   const chapter = Number(raw);
-  return Number.isFinite(chapter) ? { chapter, pos: 0 } : { chapter: null, pos: null };
+  const posRaw = route.query.chapterPos;
+  const pos = posRaw === undefined || posRaw === null || posRaw === "" ? 0 : Number(posRaw);
+  return Number.isFinite(chapter)
+    ? { chapter, pos: Number.isFinite(pos) ? pos : 0 }
+    : { chapter: null, pos: null };
 }
 
 watch(aloudVisible, (open) => {
@@ -1753,7 +1911,7 @@ watch(
 );
 
 watch(
-  () => [route.query.bookUrl, route.query.chapter],
+  () => [route.query.bookUrl, route.query.chapter, route.query.chapterPos],
   () => {
     snapshot.value = null;
     menuVisible.value = false;
@@ -1780,6 +1938,7 @@ watch(menuVisible, () => {
 
 onMounted(async () => {
   await applyPlatformSettings();
+  await loadActiveFont(prefs.customFontPath);
   syncReaderKeyMode();
   measureViewport();
   const target = initialTarget();
@@ -1789,15 +1948,21 @@ onMounted(async () => {
   window.addEventListener("orientationchange", onOrientationChange);
   window.addEventListener("reader-key", onReaderKey);
   window.addEventListener("reader-back", onReaderBack);
+  document.addEventListener("visibilitychange", onVisibilityChange);
+  readStartedAt = Date.now();
+  readRecordTimer = setInterval(() => void flushReadTime(), 30_000);
   window.screen.orientation?.addEventListener?.("change", onOrientationChange);
   loadBattery();
   clockTimer = window.setInterval(() => (now.value = new Date()), 30_000);
 });
 
 onBeforeUnmount(() => {
+  void flushReadTime();
+  if (readRecordTimer) clearInterval(readRecordTimer);
+  document.removeEventListener("visibilitychange", onVisibilityChange);
   persistProgress();
   void resetPlatformSettings();
-  void setReaderKeyMode({ active: false, volumeKeyEnabled: false, keyPageOnLongPress: false, disableReturnKey: false }).catch(() => undefined);
+  void platform.setReaderKeyMode({ active: false, volumeKeyEnabled: false, keyPageOnLongPress: false, disableReturnKey: false }).catch(() => undefined);
   window.removeEventListener("keydown", onKeydown);
   window.removeEventListener("resize", onResize);
   window.removeEventListener("orientationchange", onOrientationChange);
@@ -2067,7 +2232,7 @@ onBeforeUnmount(() => {
             <button v-if="isTxt" aria-label="TXT 目录规则" @click="router.push('/toc-rules')">
               <Icon name="ic_exchange" :size="24" />
             </button>
-            <button v-if="!isOnline" aria-label="设置编码" @click="showToast('编码设置暂未实现')">
+            <button v-if="!isOnline" aria-label="设置编码" @click="encodingVisible = true">
               <Icon name="ic_translate" :size="24" />
             </button>
             <button aria-label="更多" @click="moreMenuVisible = true">
@@ -2101,7 +2266,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="fab-row" data-id="ll_floating_button">
-          <button class="fab" aria-label="搜索" data-id="fabSearch" @click="searchChapter">
+          <button class="fab" aria-label="搜索" data-id="fabSearch" @click="openSearch()">
             <Icon name="ic_search" :size="22" />
           </button>
           <button
@@ -2216,6 +2381,10 @@ onBeforeUnmount(() => {
       :model-value="activeDialog === 'auto'"
       @update:model-value="activeDialog = $event ? 'auto' : ''"
       @apply="updateAutoRead"
+      @toc="activeDialog = ''; goToc()"
+      @menu="activeDialog = ''; menuVisible = true"
+      @stop="activeDialog = ''; prefs.patch({ autoReadSeconds: 0 }); updateAutoRead()"
+      @settings="activeDialog = 'style'"
     />
     <ReadAloudConfigDialog
       :model-value="activeDialog === 'aloudConfig'"
@@ -2262,6 +2431,58 @@ onBeforeUnmount(() => {
       @update:model-value="activeDialog = $event ? 'fonts' : ''"
       @apply="onPrefsApplied"
     />
+    <EncodingDialog
+      v-model="encodingVisible"
+      :value="snapshot?.book.charset"
+      @confirm="applyEncoding"
+    />
+    <ReaderSearchDialog
+      v-model="searchVisible"
+      :book-url="bookUrl"
+      :initial-keyword="searchKeyword"
+      @jump="onSearchJump"
+    />
+    <AndroidDialog
+      :model-value="imageStyleVisible"
+      mode="center"
+      title="图片样式"
+      width="min(92vw, 420px)"
+      @update:model-value="imageStyleVisible = $event"
+    >
+      <button
+        v-for="item in imageStyles"
+        :key="item.value"
+        class="option-row"
+        @click="chooseImageStyle(item.value)"
+      >
+        <span>{{ item.label }}</span>
+        <span v-if="(prefs.imageStyle || 'DEFAULT') === item.value" class="option-check">✓</span>
+      </button>
+    </AndroidDialog>
+    <AndroidDialog
+      :model-value="helpVisible"
+      mode="center"
+      title="阅读器帮助"
+      width="min(94vw, 560px)"
+      @update:model-value="helpVisible = $event"
+    >
+      <div class="help-body" v-html="helpHtml" />
+    </AndroidDialog>
+    <AndroidDialog
+      :model-value="logVisible"
+      mode="center"
+      title="日志"
+      width="min(94vw, 560px)"
+      @update:model-value="logVisible = $event"
+    >
+      <div class="log-body">
+        <p>书籍：{{ snapshot?.book.name || "-" }}</p>
+        <p>章节：{{ snapshot?.chapterTitle || "-" }}</p>
+        <p>章节数：{{ snapshot?.totalChapters ?? 0 }}</p>
+        <p>起效替换：{{ snapshot?.effectiveRules.length ?? 0 }}</p>
+        <p>当前页：{{ (snapshot?.pageIndex ?? 0) + 1 }} / {{ snapshot?.pages.length ?? 0 }}</p>
+      </div>
+    </AndroidDialog>
     <DictDialog v-model="dictVisible" :word="dictWord" />
   </div>
 </template>
@@ -2625,5 +2846,40 @@ onBeforeUnmount(() => {
   background: rgba(255, 255, 255, 0.22);
   color: inherit;
   cursor: pointer;
+}
+.option-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  background: transparent;
+  color: var(--ac-primary-text);
+  font-size: 15px;
+  padding: 12px 4px;
+  cursor: pointer;
+}
+.option-check {
+  color: var(--ac-primary);
+}
+.help-body,
+.log-body {
+  max-height: 60vh;
+  overflow: auto;
+  color: var(--ac-primary-text);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.help-body :deep(h1),
+.help-body :deep(h2),
+.help-body :deep(h3) {
+  font-size: 16px;
+  margin: 12px 0 6px;
+}
+.help-body :deep(p) {
+  margin: 6px 0;
+}
+.log-body p {
+  margin: 4px 0;
 }
 </style>

@@ -1,18 +1,13 @@
-use std::fs::File;
-use std::io::{Read, Write};
-
+use backup_core::BackupFile;
 use rusqlite::{params, Connection, OptionalExtension};
 use serde::Serialize;
 use serde_json::Value;
-use zip::write::FileOptions;
-use zip::{CompressionMethod, ZipArchive, ZipWriter};
 
 use crate::data::keyvalue::{is_whitelisted_key, KeyValue};
 use crate::data::repositories::{
     BookRepo, BookmarkRepo, DictRuleRepo, GroupRepo, HttpTtsRepo, ReplaceRuleRepo, TxtTocRuleRepo,
 };
 use crate::domain::model::{Book, BookGroup, Bookmark, DictRule, HttpTts, ReplaceRule, TxtTocRule};
-use crate::platform::zip_aes;
 use crate::{Error, Result};
 
 #[derive(Debug, Clone, Serialize)]
@@ -29,98 +24,26 @@ pub struct RestoreReport {
     pub files: usize,
     pub items: usize,
     pub skipped: Vec<String>,
+    pub settings_json: Option<String>,
 }
 
-fn write_json<W: Write + std::io::Seek>(
-    zip: &mut ZipWriter<W>,
+fn write_json(
+    files: &mut Vec<BackupFile>,
     name: &str,
     json: &str,
-    files: &mut usize,
+    count: &mut usize,
     items: usize,
 ) -> Result<()> {
     if json == "[]" || json == "{}" || json.is_empty() {
         return Ok(());
     }
-    let options = FileOptions::default().compression_method(CompressionMethod::Deflated);
-    zip.start_file(name, options)
-        .map_err(|e| Error::Io(e.to_string()))?;
-    zip.write_all(json.as_bytes())?;
-    *files += 1;
+    files.push(BackupFile {
+        name: name.to_string(),
+        bytes: json.as_bytes().to_vec(),
+    });
+    *count += 1;
     let _ = items;
     Ok(())
-}
-
-fn xml_escape(text: &str) -> String {
-    text.replace('&', "&amp;")
-        .replace('<', "&lt;")
-        .replace('>', "&gt;")
-        .replace('"', "&quot;")
-        .replace('\'', "&apos;")
-}
-
-fn xml_unescape(text: &str) -> String {
-    text.replace("&lt;", "<")
-        .replace("&gt;", ">")
-        .replace("&quot;", "\"")
-        .replace("&apos;", "'")
-        .replace("&amp;", "&")
-}
-
-fn is_sensitive(key: &str) -> bool {
-    let lower = key.to_lowercase();
-    lower.contains("password") || lower.contains("secret") || key.contains("密码")
-}
-
-fn write_config_xml(pairs: &[(String, String)], password: Option<&str>) -> String {
-    let mut xml =
-        String::from("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n<map>\n");
-    for (key, value) in pairs {
-        if is_sensitive(key) {
-            if let Some(pass) = password {
-                let encrypted = zip_aes::encrypt(value.as_bytes(), pass);
-                xml.push_str(&format!(
-                    "  <string name=\"{}\" encrypted=\"true\">{}</string>\n",
-                    xml_escape(key),
-                    zip_aes::to_hex(&encrypted)
-                ));
-                continue;
-            }
-        }
-        xml.push_str(&format!(
-            "  <string name=\"{}\">{}</string>\n",
-            xml_escape(key),
-            xml_escape(value)
-        ));
-    }
-    xml.push_str("</map>\n");
-    xml
-}
-
-fn parse_config_xml(xml: &str) -> Vec<(String, String, bool)> {
-    let mut out = Vec::new();
-    let mut rest = xml;
-    while let Some(pos) = rest.find("<string ") {
-        rest = &rest[pos + 8..];
-        let Some(tag_end) = rest.find('>') else { break };
-        let tag = &rest[..tag_end];
-        let encrypted = tag.contains("encrypted=\"true\"");
-        let name = tag
-            .split("name=\"")
-            .nth(1)
-            .and_then(|s| s.split('"').next())
-            .map(xml_unescape)
-            .unwrap_or_default();
-        let body_start = tag_end + 1;
-        let Some(body_end) = rest[body_start..].find("</string>") else {
-            break;
-        };
-        let body = &rest[body_start..body_start + body_end];
-        if !name.is_empty() {
-            out.push((name, xml_unescape(body), encrypted));
-        }
-        rest = &rest[body_start + body_end + 9..];
-    }
-    out
 }
 
 fn json_value_rows(conn: &Connection, sql: &str) -> Result<Vec<Value>> {
@@ -153,68 +76,116 @@ pub fn export_backup(
     conn: &Connection,
     path: &str,
     password: Option<&str>,
+    settings_json: Option<&str>,
 ) -> Result<BackupReport> {
-    let file = File::create(path).map_err(|e| Error::Io(e.to_string()))?;
-    let mut zip = ZipWriter::new(file);
+    let mut backup_files = Vec::new();
     let mut files = 0usize;
     let mut items = 0usize;
 
     let books = BookRepo::list(conn)?;
     items += books.len();
+    let books_json = serde_json::to_string(&books)?;
     write_json(
-        &mut zip,
+        &mut backup_files,
         "books.json",
-        &serde_json::to_string(&books)?,
+        &books_json,
+        &mut files,
+        books.len(),
+    )?;
+    write_json(
+        &mut backup_files,
+        "bookshelf.json",
+        &books_json,
         &mut files,
         books.len(),
     )?;
 
     let groups = GroupRepo::list(conn)?;
     items += groups.len();
+    let groups_json = serde_json::to_string(&groups)?;
     write_json(
-        &mut zip,
+        &mut backup_files,
         "book_groups.json",
-        &serde_json::to_string(&groups)?,
+        &groups_json,
+        &mut files,
+        groups.len(),
+    )?;
+    write_json(
+        &mut backup_files,
+        "bookGroup.json",
+        &groups_json,
         &mut files,
         groups.len(),
     )?;
 
     let bookmarks = BookmarkRepo::list(conn)?;
     items += bookmarks.len();
+    let bookmarks_json = serde_json::to_string(&bookmarks)?;
     write_json(
-        &mut zip,
+        &mut backup_files,
         "bookmarks.json",
-        &serde_json::to_string(&bookmarks)?,
+        &bookmarks_json,
+        &mut files,
+        bookmarks.len(),
+    )?;
+    write_json(
+        &mut backup_files,
+        "bookmark.json",
+        &bookmarks_json,
         &mut files,
         bookmarks.len(),
     )?;
 
     let toc_rules = TxtTocRuleRepo::list(conn)?;
     items += toc_rules.len();
+    let toc_rules_json = serde_json::to_string(&toc_rules)?;
     write_json(
-        &mut zip,
+        &mut backup_files,
         "txtTocRules.json",
-        &serde_json::to_string(&toc_rules)?,
+        &toc_rules_json,
+        &mut files,
+        toc_rules.len(),
+    )?;
+    write_json(
+        &mut backup_files,
+        "txtTocRule.json",
+        &toc_rules_json,
         &mut files,
         toc_rules.len(),
     )?;
 
     let replace_rules = ReplaceRuleRepo::list(conn)?;
     items += replace_rules.len();
+    let replace_rules_json = serde_json::to_string(&replace_rules)?;
     write_json(
-        &mut zip,
+        &mut backup_files,
         "replace_rules.json",
-        &serde_json::to_string(&replace_rules)?,
+        &replace_rules_json,
+        &mut files,
+        replace_rules.len(),
+    )?;
+    write_json(
+        &mut backup_files,
+        "replaceRule.json",
+        &replace_rules_json,
         &mut files,
         replace_rules.len(),
     )?;
 
     let dict_rules = DictRuleRepo::list(conn)?;
     items += dict_rules.len();
+    let dict_rules_json = serde_json::to_string(&dict_rules)?;
     write_json(
-        &mut zip,
+        &mut backup_files,
         "dictRules.json",
-        &serde_json::to_string(&dict_rules)?,
+        &dict_rules_json,
+        &mut files,
+        dict_rules.len(),
+    )?;
+    write_json(
+        &mut backup_files,
+        "dictRule.json",
+        &dict_rules_json,
         &mut files,
         dict_rules.len(),
     )?;
@@ -222,7 +193,7 @@ pub fn export_backup(
     let tts = HttpTtsRepo::list(conn)?;
     items += tts.len();
     write_json(
-        &mut zip,
+        &mut backup_files,
         "httpTTS.json",
         &serde_json::to_string(&tts)?,
         &mut files,
@@ -232,7 +203,7 @@ pub fn export_backup(
     let read_records = json_value_rows(conn, "SELECT * FROM readRecord")?;
     items += read_records.len();
     write_json(
-        &mut zip,
+        &mut backup_files,
         "readRecord.json",
         &serde_json::to_string(&read_records)?,
         &mut files,
@@ -242,7 +213,7 @@ pub fn export_backup(
     let schemes = json_value_rows(conn, "SELECT * FROM read_style_schemes ORDER BY seqNo")?;
     items += schemes.len();
     write_json(
-        &mut zip,
+        &mut backup_files,
         "read_style_schemes.json",
         &serde_json::to_string(&schemes)?,
         &mut files,
@@ -252,7 +223,7 @@ pub fn export_backup(
     let themes = json_value_rows(conn, "SELECT * FROM themes")?;
     items += themes.len();
     write_json(
-        &mut zip,
+        &mut backup_files,
         "themes.json",
         &serde_json::to_string(&themes)?,
         &mut files,
@@ -261,11 +232,30 @@ pub fn export_backup(
 
     let config = KeyValue::all(conn)?;
     if !config.is_empty() {
-        let xml = write_config_xml(&config, password);
-        write_json(&mut zip, "config.xml", &xml, &mut files, config.len())?;
+        let xml = backup_core::write_config_xml(&config, password);
+        write_json(
+            &mut backup_files,
+            "config.xml",
+            &xml,
+            &mut files,
+            config.len(),
+        )?;
     }
 
-    zip.finish().map_err(|e| Error::Io(e.to_string()))?;
+    if let Some(settings) = settings_json {
+        if !settings.trim().is_empty() {
+            write_json(
+                &mut backup_files,
+                "local-reader-settings.json",
+                settings,
+                &mut files,
+                1,
+            )?;
+        }
+    }
+
+    let bytes = backup_core::pack(&backup_files).map_err(Error::Io)?;
+    std::fs::write(path, bytes).map_err(|e| Error::Io(e.to_string()))?;
     Ok(BackupReport {
         path: path.to_string(),
         files,
@@ -274,19 +264,12 @@ pub fn export_backup(
 }
 
 fn read_zip_entries(path: &str) -> Result<Vec<(String, String)>> {
-    let file = File::open(path).map_err(|e| Error::Io(e.to_string()))?;
-    let mut archive = ZipArchive::new(file).map_err(|_| Error::Invalid("备份文件无效".into()))?;
-    let mut out = Vec::new();
-    for i in 0..archive.len() {
-        let mut entry = archive
-            .by_index(i)
-            .map_err(|e| Error::Invalid(e.to_string()))?;
-        let name = entry.name().to_string();
-        let mut text = String::new();
-        entry.read_to_string(&mut text)?;
-        out.push((name, text));
-    }
-    Ok(out)
+    let data = std::fs::read(path).map_err(|e| Error::Io(e.to_string()))?;
+    let files = backup_core::unpack(&data).map_err(|_| Error::Invalid("备份文件无效".into()))?;
+    Ok(files
+        .into_iter()
+        .map(|file| (file.name, String::from_utf8_lossy(&file.bytes).to_string()))
+        .collect())
 }
 
 fn restore_config(
@@ -295,28 +278,16 @@ fn restore_config(
     password: Option<&str>,
     ignore: &[String],
 ) -> Result<usize> {
-    let pairs = parse_config_xml(xml);
+    let pairs = backup_core::parse_config_xml(xml, password);
     let mut count = 0;
-    for (key, value, encrypted) in pairs {
-        if ignore.iter().any(|i| i == &key) || !is_whitelisted_key(&key) {
+    for entry in pairs {
+        if ignore.iter().any(|item| item == &entry.key) || !is_whitelisted_key(&entry.key) {
             continue;
         }
-        let plain = if encrypted {
-            let Some(pass) = password else { continue };
-            let Some(bytes) = zip_aes::from_hex(&value) else {
-                continue;
-            };
-            let Some(decoded) = zip_aes::decrypt(&bytes, pass) else {
-                continue;
-            };
-            let Ok(text) = String::from_utf8(decoded) else {
-                continue;
-            };
-            text
-        } else {
-            value
-        };
-        KeyValue::set(conn, &key, &plain)?;
+        if entry.encrypted && !entry.decrypted {
+            continue;
+        }
+        KeyValue::set(conn, &entry.key, &entry.value)?;
         count += 1;
     }
     Ok(count)
@@ -332,6 +303,7 @@ pub fn import_backup(
     let mut files = 0usize;
     let mut items = 0usize;
     let mut skipped = Vec::new();
+    let mut settings_json = None;
 
     for (name, text) in entries {
         if ignore.iter().any(|i| i == &name) {
@@ -339,7 +311,7 @@ pub fn import_backup(
             continue;
         }
         match name.as_str() {
-            "books.json" => {
+            "books.json" | "bookshelf.json" => {
                 if ignore.iter().any(|i| i == "localBooks") {
                     continue;
                 }
@@ -350,15 +322,28 @@ pub fn import_backup(
                 items += books.len();
                 files += 1;
             }
-            "book_groups.json" => {
-                let groups: Vec<BookGroup> = serde_json::from_str(&text)?;
+            "book_groups.json" | "bookGroup.json" => {
+                let mut values: Vec<Value> = serde_json::from_str(&text)?;
+                for value in &mut values {
+                    if let Some(map) = value.as_object_mut() {
+                        if !map.contains_key("coverUrl") {
+                            if let Some(cover) = map.get("cover").cloned() {
+                                map.insert("coverUrl".into(), cover);
+                            }
+                        }
+                    }
+                }
+                let groups: Vec<BookGroup> = values
+                    .into_iter()
+                    .filter_map(|value| serde_json::from_value(value).ok())
+                    .collect();
                 for group in &groups {
                     GroupRepo::upsert(conn, group)?;
                 }
                 items += groups.len();
                 files += 1;
             }
-            "bookmarks.json" => {
+            "bookmarks.json" | "bookmark.json" => {
                 let bookmarks: Vec<Bookmark> = serde_json::from_str(&text)?;
                 for bookmark in &bookmarks {
                     BookmarkRepo::upsert(conn, bookmark)?;
@@ -366,7 +351,7 @@ pub fn import_backup(
                 items += bookmarks.len();
                 files += 1;
             }
-            "txtTocRules.json" => {
+            "txtTocRules.json" | "txtTocRule.json" => {
                 let rules: Vec<TxtTocRule> = serde_json::from_str(&text)?;
                 for rule in &rules {
                     TxtTocRuleRepo::upsert(conn, rule)?;
@@ -374,7 +359,7 @@ pub fn import_backup(
                 items += rules.len();
                 files += 1;
             }
-            "replace_rules.json" => {
+            "replace_rules.json" | "replaceRule.json" => {
                 let rules: Vec<ReplaceRule> = serde_json::from_str(&text)?;
                 for rule in &rules {
                     ReplaceRuleRepo::upsert(conn, rule)?;
@@ -382,7 +367,7 @@ pub fn import_backup(
                 items += rules.len();
                 files += 1;
             }
-            "dictRules.json" => {
+            "dictRules.json" | "dictRule.json" => {
                 let rules: Vec<DictRule> = serde_json::from_str(&text)?;
                 for rule in &rules {
                     DictRuleRepo::upsert(conn, rule)?;
@@ -471,6 +456,10 @@ pub fn import_backup(
                 }
                 files += 1;
             }
+            "local-reader-settings.json" => {
+                settings_json = Some(text);
+                files += 1;
+            }
             "config.xml" => {
                 items += restore_config(conn, &text, password, ignore)?;
                 files += 1;
@@ -483,5 +472,6 @@ pub fn import_backup(
         files,
         items,
         skipped,
+        settings_json,
     })
 }

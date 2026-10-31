@@ -9,6 +9,7 @@ const COMMANDS: &[&str] = &[
     "set_text_zoom",
     "set_launcher_icon",
     "pick_image",
+    "pick_font_file",
     "set_reader_key_mode",
     "pick_books_directory",
     "list_books_directory",

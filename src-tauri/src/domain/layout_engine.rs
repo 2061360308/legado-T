@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
 use crate::domain::model::ContentBlock;
-use crate::domain::text_measure::char_width;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default, rename_all = "camelCase")]
@@ -223,12 +222,8 @@ fn is_forbidden_at_line_end(c: char) -> bool {
     )
 }
 
-fn width_px(c: char, font_size: f32) -> f32 {
-    char_width(c) as f32 / 1000.0 * font_size
-}
-
 fn advance_px(c: char, font_size: f32, letter_spacing: f32) -> f32 {
-    width_px(c, font_size) + letter_spacing * font_size
+    crate::domain::font::advance_px(c, font_size, letter_spacing)
 }
 
 fn break_text(
@@ -244,16 +239,20 @@ fn break_text(
     if chars.is_empty() {
         return out;
     }
-    let mut limit = (max_width - first_indent).max(font_size);
     let mut start = 0usize;
+    let mut limit = (max_width - first_indent).max(font_size);
     let mut width = 0.0f32;
     let mut i = 0usize;
     while i < chars.len() {
         if chars[i] == '\n' {
             if i > start {
+                let line_width = chars[start..i]
+                    .iter()
+                    .map(|c| advance_px(*c, font_size, letter_spacing))
+                    .sum();
                 out.push(BrokenLine {
                     text: chars[start..i].iter().collect(),
-                    width,
+                    width: line_width,
                     start_char: start,
                     end_char: i,
                     paragraph_end: true,
@@ -261,43 +260,126 @@ fn break_text(
             }
             start = i + 1;
             width = 0.0;
+            limit = max_width;
             i += 1;
             continue;
         }
-        let w = advance_px(chars[i], font_size, letter_spacing);
-        if width + w > limit && i > start {
-            let mut brk = i;
-            if zh_layout {
-                while brk > start + 1 && is_forbidden_at_line_start(chars[brk]) {
-                    brk -= 1;
-                }
-                while brk > start + 1 && is_forbidden_at_line_end(chars[brk - 1]) {
-                    brk -= 1;
-                }
-            }
-            let line_width = chars[start..brk]
-                .iter()
-                .map(|c| advance_px(*c, font_size, letter_spacing))
-                .sum();
-            out.push(BrokenLine {
-                text: chars[start..brk].iter().collect(),
-                width: line_width,
-                start_char: start,
-                end_char: brk,
-                paragraph_end: false,
-            });
-            start = brk;
-            width = 0.0;
-            limit = max_width;
+        let current_width = advance_px(chars[i], font_size, letter_spacing);
+        if width + current_width <= limit || i == start {
+            width += current_width;
+            i += 1;
             continue;
         }
-        width += w;
-        i += 1;
+
+        let mut line_end = i;
+        let mut next_start = i;
+        if zh_layout {
+            let mut mode = 0u8;
+            if i >= 1 && is_forbidden_at_line_end(chars[i - 1]) {
+                mode = if i >= 2 && is_forbidden_at_line_end(chars[i - 2]) {
+                    4
+                } else {
+                    1
+                };
+            } else if is_forbidden_at_line_start(chars[i]) {
+                mode = if i >= 1 && is_forbidden_at_line_start(chars[i - 1]) {
+                    3
+                } else if i >= 2 && is_forbidden_at_line_end(chars[i - 2]) {
+                    5
+                } else {
+                    1
+                };
+            }
+
+            let cn_width = crate::domain::font::cn_char_width(font_size, letter_spacing);
+            let compressible = |value: f32| value < cn_width - 0.01;
+            let mut recheck = false;
+            if mode == 3
+                && (compressible(current_width)
+                    || compressible(advance_px(chars[i - 1], font_size, letter_spacing)))
+            {
+                recheck = true;
+            }
+            if mode == 4
+                && (compressible(advance_px(chars[i - 1], font_size, letter_spacing))
+                    || compressible(advance_px(chars[i - 2], font_size, letter_spacing)))
+            {
+                recheck = true;
+            }
+            if mode == 5
+                && (compressible(current_width)
+                    || compressible(advance_px(chars[i - 2], font_size, letter_spacing)))
+            {
+                recheck = true;
+            }
+            if mode > 2 && i + 1 < chars.len() && is_forbidden_at_line_start(chars[i + 1]) {
+                recheck = true;
+            }
+
+            if recheck && i > start + 2 {
+                let mut found = false;
+                let mut j = i;
+                while j > start + 1 {
+                    if !is_forbidden_at_line_start(chars[j])
+                        && !is_forbidden_at_line_end(chars[j - 1])
+                    {
+                        line_end = j;
+                        next_start = j;
+                        found = true;
+                        break;
+                    }
+                    j -= 1;
+                }
+                if !found {
+                    line_end = i;
+                    next_start = i;
+                }
+            } else {
+                match mode {
+                    1 => {
+                        line_end = i - 1;
+                        next_start = i - 1;
+                    }
+                    3 | 4 | 5 => {
+                        line_end = i + 1;
+                        next_start = i + 1;
+                    }
+                    _ => {
+                        line_end = i;
+                        next_start = i;
+                    }
+                }
+            }
+        }
+
+        if line_end <= start {
+            line_end = i;
+            next_start = i;
+        }
+        let line_width = chars[start..line_end]
+            .iter()
+            .map(|c| advance_px(*c, font_size, letter_spacing))
+            .sum();
+        out.push(BrokenLine {
+            text: chars[start..line_end].iter().collect(),
+            width: line_width,
+            start_char: start,
+            end_char: line_end,
+            paragraph_end: false,
+        });
+        start = next_start;
+        width = 0.0;
+        limit = max_width;
+        i = next_start;
     }
     if start < chars.len() {
+        let line_width = chars[start..]
+            .iter()
+            .map(|c| advance_px(*c, font_size, letter_spacing))
+            .sum();
         out.push(BrokenLine {
             text: chars[start..].iter().collect(),
-            width,
+            width: line_width,
             start_char: start,
             end_char: chars.len(),
             paragraph_end: true,
@@ -432,7 +514,14 @@ pub fn layout_blocks(title: &str, blocks: &[ContentBlock], style: &LayoutStyle) 
     for block in blocks {
         match block {
             ContentBlock::Paragraph { text } => {
-                let first_indent = if style.paragraph_indent > 0 && !text.trim().is_empty() {
+                let leading_indent = text
+                    .chars()
+                    .take_while(|ch| *ch == '\u{3000}' || *ch == ' ')
+                    .count();
+                let first_indent = if style.paragraph_indent > 0
+                    && !text.trim().is_empty()
+                    && leading_indent < style.paragraph_indent as usize
+                {
                     style.paragraph_indent as f32 * style.font_size
                 } else {
                     0.0

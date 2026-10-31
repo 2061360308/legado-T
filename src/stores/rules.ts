@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { dictRules, httpTtsEngines, replaceRules, txtTocRules } from "@/api/rules";
-import type { DictRule, HttpTts, ReplaceRule, TxtTocRule } from "@/api/bindings";
+import { dictRules, httpTtsEngines, replaceRules, txtTocRules } from "@/core/application/rules";
+import type { DictRule, HttpTts, ReplaceRule, TxtTocRule } from "@/core/domain";
 
 export const useRulesStore = defineStore("rules", {
   state: () => ({

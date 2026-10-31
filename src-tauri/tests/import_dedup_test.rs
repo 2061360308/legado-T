@@ -27,12 +27,12 @@ fn importing_the_same_file_twice_keeps_one_book() {
     storage.ensure_layout().unwrap();
     let paths = vec![file.to_string_lossy().to_string()];
 
-    let first = local_import::import_files(&conn, &storage, &paths, 0, None);
+    let first = local_import::import_files(&conn, &storage, &paths, 0, None, None);
     assert_eq!(first.len(), 1);
     assert!(first[0].error.is_none(), "{:?}", first[0].error);
     assert!(!first[0].duplicate);
 
-    let second = local_import::import_files(&conn, &storage, &paths, 0, None);
+    let second = local_import::import_files(&conn, &storage, &paths, 0, None, None);
     assert_eq!(second.len(), 1);
     assert!(second[0].error.is_none(), "{:?}", second[0].error);
     assert!(second[0].duplicate);

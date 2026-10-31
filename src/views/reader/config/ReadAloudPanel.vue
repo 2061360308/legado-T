@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import type { ReaderSnapshot } from "@/api/bindings";
+import type { ReaderSnapshot } from "@/core/domain";
 import { useReaderPrefsStore } from "@/stores/readerPrefs";
 import { useReadAloud } from "@/composables/useReadAloud";
 import Icon from "@/components/android/Icon.vue";
@@ -177,7 +177,6 @@ onBeforeUnmount(() => aloud.stop());
     <div class="panel" data-id="root_view">
       <div class="play-row">
         <button class="chapter-btn" data-id="tv_pre" @click="prevChapter">上一章</button>
-        <button class="chapter-btn" data-id="tv_next" @click="nextChapter">下一章</button>
         <span class="spacer" />
         <button class="ctrl" aria-label="上一句" data-id="iv_play_prev" @click="aloud.skip(-1)">
           <Icon name="ic_skip_previous" :size="26" />
@@ -191,6 +190,8 @@ onBeforeUnmount(() => aloud.stop());
         <button class="ctrl" aria-label="下一句" data-id="iv_play_next" @click="aloud.skip(1)">
           <Icon name="ic_skip_next" :size="26" />
         </button>
+        <span class="spacer" />
+        <button class="chapter-btn" data-id="tv_next" @click="nextChapter">下一章</button>
       </div>
 
       <div class="timer-row">
@@ -306,7 +307,7 @@ onBeforeUnmount(() => aloud.stop());
   z-index: 40;
 }
 .panel {
-  width: min(100%, 720px);
+  width: 100%;
   background: var(--ac-background-menu);
   padding: 6px 16px calc(6px + env(safe-area-inset-bottom));
   display: flex;

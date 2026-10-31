@@ -10,16 +10,18 @@ pub enum ProbeCharset {
     Utf16Le,
     Utf16Be,
     Gbk,
+    Other(String),
 }
 
 impl ProbeCharset {
-    pub fn label(&self) -> &'static str {
+    pub fn label(&self) -> String {
         match self {
-            ProbeCharset::Utf8 => "UTF-8",
-            ProbeCharset::Utf8Bom => "UTF-8 BOM",
-            ProbeCharset::Utf16Le => "UTF-16LE",
-            ProbeCharset::Utf16Be => "UTF-16BE",
-            ProbeCharset::Gbk => "GBK",
+            ProbeCharset::Utf8 => "UTF-8".to_string(),
+            ProbeCharset::Utf8Bom => "UTF-8 BOM".to_string(),
+            ProbeCharset::Utf16Le => "UTF-16LE".to_string(),
+            ProbeCharset::Utf16Be => "UTF-16BE".to_string(),
+            ProbeCharset::Gbk => "GBK".to_string(),
+            ProbeCharset::Other(name) => name.clone(),
         }
     }
 }
@@ -38,7 +40,13 @@ pub fn probe(bytes: &[u8]) -> ProbeCharset {
     if std::str::from_utf8(bytes).is_ok() {
         return ProbeCharset::Utf8;
     }
-    ProbeCharset::Gbk
+    let mut detector = chardetng::EncodingDetector::new();
+    detector.feed(bytes, true);
+    let encoding = detector.guess(None, true);
+    match encoding.name() {
+        "GBK" | "GB18030" | "gb18030" => ProbeCharset::Gbk,
+        other => ProbeCharset::Other(other.to_string()),
+    }
 }
 
 /// 探测文件头（默认 64KB）字符集。

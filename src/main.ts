@@ -3,7 +3,8 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 import "./styles/global.css";
-import { refreshPlatform } from "./platform";
+import { platform } from "./runtime";
+import { registerWebPwa } from "./pwa";
 import { useThemeStore } from "./stores/theme";
 
 const app = createApp(App);
@@ -18,7 +19,7 @@ theme.watchSystem();
 const WELCOME_KEY = "local-reader:welcome-shown";
 
 async function bootstrap() {
-  await refreshPlatform();
+  await platform.refreshPlatform();
   theme.applyToDocument();
   if (!sessionStorage.getItem(WELCOME_KEY)) {
     sessionStorage.setItem(WELCOME_KEY, "1");
@@ -28,7 +29,8 @@ async function bootstrap() {
 }
 
 void bootstrap();
+registerWebPwa();
 
 window.addEventListener("resize", () => {
-  void refreshPlatform();
+  void platform.refreshPlatform();
 });

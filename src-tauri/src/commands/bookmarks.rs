@@ -22,6 +22,7 @@ pub fn bookmark_add(
     chapter_pos: i32,
     chapter_name: String,
     book_text: String,
+    content: Option<String>,
 ) -> CmdResult<Bookmark> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
     let bookmark = Bookmark {
@@ -33,8 +34,27 @@ pub fn bookmark_add(
         chapter_pos,
         chapter_name,
         book_text,
-        content: None,
+        content,
     };
+    BookmarkRepo::upsert(&conn, &bookmark).map_err(|e| e.to_string())?;
+    Ok(bookmark)
+}
+
+#[tauri::command]
+pub fn bookmark_update(
+    state: State<AppState>,
+    time: i64,
+    book_text: String,
+    content: Option<String>,
+) -> CmdResult<Bookmark> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let mut bookmark = BookmarkRepo::list(&conn)
+        .map_err(|e| e.to_string())?
+        .into_iter()
+        .find(|item| item.time == time)
+        .ok_or("书签不存在")?;
+    bookmark.book_text = book_text;
+    bookmark.content = content;
     BookmarkRepo::upsert(&conn, &bookmark).map_err(|e| e.to_string())?;
     Ok(bookmark)
 }

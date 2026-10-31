@@ -107,6 +107,8 @@ pub struct Book {
     pub source_path: Option<String>,
     #[serde(default)]
     pub source_hash: Option<String>,
+    #[serde(default)]
+    pub original_path: Option<String>,
 }
 
 impl Book {

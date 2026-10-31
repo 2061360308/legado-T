@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import type { TxtTocRule } from "@/api/bindings";
+import type { TxtTocRule } from "@/core/domain";
 import {
   txtTocRuleDelete,
   txtTocRuleExport,
@@ -10,7 +10,7 @@ import {
   txtTocRuleRestoreDefault,
   txtTocRuleSave,
   txtTocRules,
-} from "@/api/rules";
+} from "@/core/application/rules";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";

@@ -1,5 +1,5 @@
-import { convertFileSrc } from "@tauri-apps/api/core";
-import type { LayoutPage } from "@/api/bindings";
+import { platform } from "@/runtime";
+import type { LayoutPage } from "@/core/domain";
 import { drawInfoBar, type InfoBarPayload } from "../infoBar";
 
 const pageImages = new Map<string, HTMLImageElement>();
@@ -8,7 +8,7 @@ const loadingImages = new Set<string>();
 export function imageSource(src: string): string {
   if (/^(https?:|data:|asset:|blob:)/i.test(src)) return src;
   try {
-    return convertFileSrc(src);
+    return platform.assets.fileSrc(src);
   } catch {
     return src;
   }

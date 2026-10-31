@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ReplaceRule } from "@/api/bindings";
+import type { ReplaceRule } from "@/core/domain";
 import AndroidDialog from "./AndroidDialog.vue";
 
 defineProps<{ modelValue: boolean; rules: ReplaceRule[] }>();

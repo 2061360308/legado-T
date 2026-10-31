@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import type { HttpTts } from "@/api/bindings";
-import { httpTtsSave } from "@/api/rules";
+import type { HttpTts } from "@/core/domain";
+import { httpTtsSave } from "@/core/application/rules";
 import AndroidDialog from "./AndroidDialog.vue";
 
 const props = defineProps<{ modelValue: boolean; engine: HttpTts | null }>();
@@ -48,7 +48,7 @@ async function save() {
 <template>
   <AndroidDialog
     :model-value="modelValue"
-    mode="center"
+    mode="fullscreen"
     title="在线语音引擎"
     @update:model-value="emit('update:modelValue', $event)"
   >

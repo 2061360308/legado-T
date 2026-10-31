@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { bookGet, chapterList, reSplitBook, txtTocRuleList } from "@/api/books";
-import type { Book, BookChapter, Bookmark, TxtTocRule } from "@/api/bindings";
-import { bookmarkList } from "@/api/bookmarks";
+import {
+  bookGet,
+  chapterList,
+  chapterWordCounts,
+  reSplitBook,
+  txtTocRuleList,
+} from "@/core/application/books";
+import type { Book, BookChapter, Bookmark, ReplaceRule, TxtTocRule } from "@/core/domain";
+import { bookmarkList } from "@/core/application/bookmarks";
+import { replaceRules } from "@/core/application/rules";
 import TitleBar from "@/components/android/TitleBar.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import Icon from "@/components/android/Icon.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
+import BookmarkDialog from "@/views/reader/dialogs/BookmarkDialog.vue";
 import { useReaderSettingsStore } from "@/stores/readerSettings";
 
 const route = useRoute();
@@ -17,6 +25,8 @@ const bookUrl = (route.query.bookUrl as string) || "";
 const book = ref<Book | null>(null);
 const chapters = ref<BookChapter[]>([]);
 const bookmarks = ref<Bookmark[]>([]);
+const editingBookmark = ref<Bookmark | null>(null);
+const bookmarkDialogVisible = ref(false);
 const rules = ref<TxtTocRule[]>([]);
 const selectedRule = ref("");
 const charset = ref("");
@@ -29,11 +39,15 @@ const searchVisible = ref(false);
 const searchKeyword = ref("");
 const searchInput = ref<HTMLInputElement | null>(null);
 const settings = useReaderSettingsStore();
-const isLocalTxt = computed(() => /\.txt$/i.test(bookUrl));
+const isLocalTxt = computed(() =>
+  /\.txt$/i.test(book.value?.originName || book.value?.bookUrl || bookUrl),
+);
 const splitLongChapter = ref(settings.get("tocSplitLongChapter") === true);
 const useReplace = ref(settings.get("tocUseReplace") === true);
 const loadWordCount = ref(settings.get("tocCountWords") === true);
 const reverseToc = ref(settings.get("tocReverse") === true);
+const titleRules = ref<ReplaceRule[]>([]);
+const wordCounts = ref<Record<number, number>>({});
 
 // book_toc.xml 溢出菜单（目录 tab / 书签 tab 动态显示）
 const tocMenuItems = computed<PopupMenuItem[]>(() => {
@@ -105,6 +119,22 @@ function toggleVolume(index: number) {
   collapsed.value = next;
 }
 
+function displayTitle(chapter: BookChapter): string {
+  if (!useReplace.value) return chapter.title;
+  let title = chapter.title;
+  for (const rule of titleRules.value) {
+    if (rule.isEnabled === false || rule.scopeTitle !== true || !rule.pattern) continue;
+    try {
+      title = rule.isRegex
+        ? title.replace(new RegExp(rule.pattern, "gs"), rule.replacement ?? "")
+        : title.split(rule.pattern).join(rule.replacement ?? "");
+    } catch {
+      // Ignore invalid legacy replacement rules.
+    }
+  }
+  return title;
+}
+
 const displayChapters = computed(() => {
   const visible = chapters.value.filter((_, index) => isVisible(index));
   return reverseToc.value ? [...visible].reverse() : visible;
@@ -114,7 +144,7 @@ const filteredChapters = computed(() => {
   const key = searchKeyword.value.trim();
   if (!key) return displayChapters.value;
   const source = reverseToc.value ? [...chapters.value].reverse() : chapters.value;
-  return source.filter((ch) => ch.title.includes(key));
+  return source.filter((ch) => displayTitle(ch).includes(key));
 });
 
 const filteredBookmarks = computed(() => {
@@ -126,13 +156,38 @@ const filteredBookmarks = computed(() => {
   );
 });
 
-function onTocMenu(key: string) {
+async function loadWordCounts() {
+  try {
+    const list = await chapterWordCounts(bookUrl);
+    wordCounts.value = Object.fromEntries(list.map((item) => [item.index, item.count]));
+    message.value = `已加载 ${list.length} 章字数`;
+  } catch (e) {
+    message.value = String(e);
+  }
+}
+
+async function onTocMenu(key: string) {
   if (key === "txtTocRule") {
     router.push({ path: "/toc-rules", query: { bookUrl } });
   } else if (key === "splitLongChapter") {
     splitLongChapter.value = !splitLongChapter.value;
     settings.set("tocSplitLongChapter", splitLongChapter.value);
-    message.value = "拆分超长章节：桌面版暂不生效";
+    reSplitting.value = true;
+    try {
+      const count = await reSplitBook(
+        bookUrl,
+        selectedRule.value || book.value?.tocUrl || null,
+        charset.value || null,
+        splitLongChapter.value,
+      );
+      message.value = `已${splitLongChapter.value ? "拆分" : "合并"}超长章节，共 ${count} 章`;
+      await load();
+      if (loadWordCount.value) await loadWordCounts();
+    } catch (e) {
+      message.value = String(e);
+    } finally {
+      reSplitting.value = false;
+    }
   } else if (key === "reverseToc") {
     reverseToc.value = !reverseToc.value;
     settings.set("tocReverse", reverseToc.value);
@@ -140,11 +195,15 @@ function onTocMenu(key: string) {
   } else if (key === "useReplace") {
     useReplace.value = !useReplace.value;
     settings.set("tocUseReplace", useReplace.value);
-    message.value = "使用替换：桌面版暂不生效";
+    message.value = useReplace.value ? "目录标题已使用替换规则" : "目录标题已使用原文";
   } else if (key === "loadWordCount") {
     loadWordCount.value = !loadWordCount.value;
     settings.set("tocCountWords", loadWordCount.value);
-    message.value = "加载字数：桌面版暂不生效";
+    if (loadWordCount.value) await loadWordCounts();
+    else {
+      wordCounts.value = {};
+      message.value = "已关闭字数显示";
+    }
   } else if (key === "exportBookmark") {
     exportBookmarks("json");
   } else if (key === "exportBookmarkMd") {
@@ -214,6 +273,11 @@ async function load() {
   collapsed.value = new Set();
   rules.value = await txtTocRuleList();
   try {
+    titleRules.value = await replaceRules();
+  } catch {
+    titleRules.value = [];
+  }
+  try {
     bookmarks.value = await bookmarkList();
   } catch {
     bookmarks.value = [];
@@ -230,7 +294,7 @@ async function onReSplit() {
       bookUrl,
       selectedRule.value || null,
       charset.value || null,
-      null,
+      splitLongChapter.value,
     );
     message.value = `已按所选规则重建目录，共 ${n} 章`;
     await load();
@@ -251,8 +315,14 @@ function openBookmark(bookmark: Bookmark) {
     query: {
       bookUrl: bookmark.bookUrl || bookUrl,
       chapter: String(bookmark.chapterIndex ?? 0),
+      chapterPos: String(bookmark.chapterPos ?? 0),
     },
   });
+}
+
+function editBookmark(bookmark: Bookmark) {
+  editingBookmark.value = bookmark;
+  bookmarkDialogVisible.value = true;
 }
 
 function scrollTop() {
@@ -350,7 +420,10 @@ onMounted(load);
             >
               <Icon name="ic_expand_more" :size="18" />
             </button>
-            <span class="title">{{ ch.title }}</span>
+            <span class="title">{{ displayTitle(ch) }}</span>
+            <span v-if="loadWordCount && wordCounts[ch.index]" class="word-count">
+              {{ wordCounts[ch.index] }}字
+            </span>
             <Icon
               v-if="ch.index === book?.durChapterIndex"
               name="ic_check"
@@ -366,6 +439,7 @@ onMounted(load);
           :key="bookmark.time"
           class="bookmark-row"
           @click="openBookmark(bookmark)"
+          @contextmenu.prevent="editBookmark(bookmark)"
         >
           <span class="chapter">{{ bookmark.chapterName }}</span>
           <span class="text">{{ bookmark.bookText }}</span>
@@ -388,6 +462,12 @@ onMounted(load);
         <Icon name="ic_arrow_drop_down" :size="24" />
       </button>
     </div>
+
+    <BookmarkDialog
+      v-model="bookmarkDialogVisible"
+      :bookmark="editingBookmark"
+      @saved="load"
+    />
   </div>
 </template>
 
@@ -542,6 +622,11 @@ onMounted(load);
 .chapter-list li.current .title {
   color: var(--ac-primary);
   font-weight: 500;
+}
+.word-count {
+  flex: none;
+  color: var(--ac-secondary-text);
+  font-size: 11px;
 }
 .checked {
   color: var(--ac-secondary-text);

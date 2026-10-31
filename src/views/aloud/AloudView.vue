@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import type { HttpTts } from "@/api/bindings";
+import type { HttpTts } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import {
   httpTtsDelete,
@@ -9,7 +9,7 @@ import {
   httpTtsExport,
   httpTtsImport,
   httpTtsSave,
-} from "@/api/rules";
+} from "@/core/application/rules";
 
 const router = useRouter();
 const engines = ref<HttpTts[]>([]);

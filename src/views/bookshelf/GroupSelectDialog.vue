@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { groupList } from "@/api/books";
-import type { BookGroup } from "@/api/bindings";
+import { groupList } from "@/core/application/books";
+import type { BookGroup } from "@/core/domain";
 import Icon from "@/components/android/Icon.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 import GroupEditDialog from "./GroupEditDialog.vue";

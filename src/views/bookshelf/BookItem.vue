@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount } from "vue";
-import type { Book } from "@/api/bindings";
+import type { Book } from "@/core/domain";
 import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 
@@ -23,23 +23,21 @@ const emit = defineEmits<{ open: [book: Book]; menu: [book: Book] }>();
 let pressTimer: number | undefined;
 let longPressed = false;
 
-function fmtDate(ts?: number): string {
+function fmtTimeAgo(ts?: number): string {
   if (!ts) return "";
-  return new Date(ts * 1000).toLocaleDateString("zh-CN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  const diff = Math.max(0, Date.now() / 1000 - ts);
+  if (diff < 60) return "刚刚";
+  if (diff < 3600) return `${Math.floor(diff / 60)} 分钟前`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} 小时前`;
+  if (diff < 86400 * 30) return `${Math.floor(diff / 86400)} 天前`;
+  return new Date(ts * 1000).toLocaleDateString("zh-CN");
 }
 
 const author = computed(() => props.book.author || "未知作者");
-const progress = computed(() =>
-  props.book.durChapterTitle ? `阅读至${props.book.durChapterTitle}` : "暂未开始阅读",
-);
-const latest = computed(() =>
-  props.book.latestChapterTitle ? `最新：${props.book.latestChapterTitle}` : "最新：",
-);
-const updateTime = computed(() => fmtDate(props.book.syncTime || props.book.durChapterTime));
+const isLocalBook = computed(() => ((props.book.type ?? 0) & 16) !== 0);
+const progress = computed(() => props.book.durChapterTitle || "暂未开始阅读");
+const latest = computed(() => props.book.latestChapterTitle || "暂无最新章节");
+const updateTime = computed(() => fmtTimeAgo(props.book.syncTime || props.book.durChapterTime));
 const unreadCount = computed(() => {
   const total = props.book.totalChapterNum ?? 0;
   const read = (props.book.durChapterIndex ?? -1) + 1;
@@ -94,7 +92,7 @@ onBeforeUnmount(() => window.clearTimeout(pressTimer));
       <div class="meta-line">
         <Icon name="ic_author" :size="18" class="meta-icon" data-id="iv_author" />
         <span class="author" data-id="tv_author">{{ author }}</span>
-        <span v-if="showLastUpdateTime" class="time" data-id="tv_last_update_time">{{ updateTime }}</span>
+        <span v-if="showLastUpdateTime && !isLocalBook" class="time" data-id="tv_last_update_time">{{ updateTime }}</span>
       </div>
       <div class="meta-line">
         <Icon name="ic_history" :size="18" class="meta-icon" data-id="iv_read" />
@@ -102,7 +100,7 @@ onBeforeUnmount(() => window.clearTimeout(pressTimer));
       </div>
       <div class="meta-line last">
         <Icon name="ic_book_last" :size="18" class="meta-icon" data-id="iv_last" />
-        <span class="summary" data-id="tv_last">{{ latest || "暂无最新章节" }}</span>
+        <span class="summary" data-id="tv_last">{{ latest }}</span>
       </div>
     </div>
   </div>

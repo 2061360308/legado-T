@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { fetch } from "@tauri-apps/plugin-http";
-import { readFile, writeFile } from "@tauri-apps/plugin-fs";
-import { appDataDir } from "@tauri-apps/api/path";
-import { open, save } from "@tauri-apps/plugin-dialog";
-import { bookList, bookUpsert } from "@/api/books";
-import { backupExport, backupImport } from "@/api/backup";
-import { kvGet, kvSet } from "@/api/config";
-import type { Book } from "@/api/bindings";
+import { platform } from "@/runtime";
+import { bookList, bookUpsert } from "@/core/application/books";
+import { backupExport, backupImport } from "@/core/application/backup";
+import { applySettingsSnapshot, snapshotSettings } from "@/stores/settingsSnapshot";
+import { kvGet, kvSet } from "@/core/application/config";
+import type { Book } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 
 const router = useRouter();
@@ -51,7 +49,7 @@ async function saveConfig() {
 }
 
 async function propfind(path = ""): Promise<string> {
-  const response = await fetch(fileUrl(path), {
+  const response = await platform.http.fetch(fileUrl(path), {
     method: "PROPFIND",
     headers: {
       ...authHeaders(),
@@ -80,7 +78,7 @@ async function ensureDirs() {
   busy.value = true;
   try {
     for (const dir of ["bookProgress/", "books/", "background/"]) {
-      const response = await fetch(fileUrl(dir), {
+      const response = await platform.http.fetch(fileUrl(dir), {
         method: "MKCOL",
         headers: authHeaders(),
       });
@@ -100,11 +98,11 @@ async function ensureDirs() {
 async function uploadBackup() {
   busy.value = true;
   try {
-    const dir = await appDataDir();
+    const dir = await platform.files.appDataDir();
     const temp = `${dir.replace(/[\\/]+$/, "")}/backup-upload.zip`;
-    await backupExport(temp, backupPassword.value || null);
-    const bytes = await readFile(temp);
-    const response = await fetch(fileUrl("backup.zip"), {
+    await backupExport(temp, backupPassword.value || null, snapshotSettings());
+    const bytes = await platform.files.readFile(temp);
+    const response = await platform.http.fetch(fileUrl("backup.zip"), {
       method: "PUT",
       headers: { ...authHeaders(), "Content-Type": "application/zip" },
       body: bytes,
@@ -124,20 +122,22 @@ async function downloadBackup() {
     const xml = await propfind("");
     const matches = [...xml.matchAll(/<d:href>([^<]+\.zip)<\/d:href>/gi)].map((m) => m[1]);
     const remote = matches.sort().at(-1) ?? "backup.zip";
-    const response = await fetch(new URL(remote, `${base()}/`).toString(), {
+    const response = await platform.http.fetch(new URL(remote, `${base()}/`).toString(), {
       headers: authHeaders(),
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const bytes = new Uint8Array(await response.arrayBuffer());
-    const path = await save({
+    const path = await platform.dialog.save({
       defaultPath: decodeURIComponent(remote.split("/").pop() ?? "backup.zip"),
       filters: [{ name: "ZIP 备份", extensions: ["zip"] }],
     });
     if (!path) return;
-    await writeFile(path, bytes);
+    await platform.files.writeFile(path, bytes);
     if (confirm("已下载备份，是否立即恢复？")) {
       const report = await backupImport(path, backupPassword.value || null, []);
-      append(`恢复完成：${report.items} 条记录`);
+      const applied = applySettingsSnapshot(report.settingsJson);
+      append(`恢复完成：${report.items} 条记录${applied ? "，设置将在重启后生效" : ""}`);
+      if (applied) setTimeout(() => window.location.reload(), 800);
     }
   } catch (e) {
     append(`下载失败：${e}`);
@@ -161,7 +161,7 @@ async function syncProgress() {
       if (!book.durChapterTitle) continue;
       const url = fileUrl(progressFileName(book));
       try {
-        const response = await fetch(url, { headers: authHeaders() });
+        const response = await platform.http.fetch(url, { headers: authHeaders() });
         if (response.ok) {
           const remote = (await response.json()) as {
             chapterIndex?: number;
@@ -195,7 +195,7 @@ async function syncProgress() {
           chapterTitle: book.durChapterTitle ?? "",
           lastModify: Math.floor(Date.now() / 1000),
         });
-        const put = await fetch(url, {
+        const put = await platform.http.fetch(url, {
           method: "PUT",
           headers: { ...authHeaders(), "Content-Type": "application/json" },
           body: payload,

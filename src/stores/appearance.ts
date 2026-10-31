@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { setLauncherIcon as applyLauncherIcon } from "@/platform";
+import { platform } from "@/runtime";
 import { useThemeStore } from "./theme";
 
 export type LauncherIcon =
@@ -126,7 +126,7 @@ export const useAppearanceStore = defineStore("appearance", {
     setLauncherIcon(icon: LauncherIcon) {
       this.launcherIcon = icon;
       this.persist();
-      void applyLauncherIcon(icon).catch(() => undefined);
+      void platform.setLauncherIcon(icon).catch(() => undefined);
     },
     setDefaultCover(part: "day" | "night", path: string | null) {
       if (part === "day") this.defaultCover = path;

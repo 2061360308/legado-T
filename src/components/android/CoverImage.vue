@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { convertFileSrc } from "@tauri-apps/api/core";
+import { platform } from "@/runtime";
 import defaultCover from "@/assets/android/drawable/image_cover_default.jpg";
 import { useAppearanceStore } from "@/stores/appearance";
 
@@ -32,7 +32,7 @@ function toImageUrl(value: string | null | undefined): string {
   if (!src) return "";
   if (/^(https?:|data:|asset:|blob:)/i.test(src)) return src;
   try {
-    return convertFileSrc(src);
+    return platform.assets.fileSrc(src);
   } catch {
     return src;
   }

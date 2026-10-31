@@ -4,7 +4,13 @@ dist-ssr
 *.local
 
 src-tauri/target
+src-tauri/crates/*/target
 src-tauri/gen/schemas
+src/adapters/web/wasm/pkg
+src/adapters/web/wasm/ebook
+src/adapters/web/wasm/rbook
+src/adapters/web/wasm/backup
+src/adapters/web/wasm/shelf
 
 .DS_Store
 .vscode/*

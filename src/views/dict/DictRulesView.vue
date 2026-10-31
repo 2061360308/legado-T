@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import type { DictRule } from "@/api/bindings";
+import type { DictRule } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import RuleRow from "@/components/android/RuleRow.vue";
 import SelectActionBar from "@/components/android/SelectActionBar.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
-import { dictRuleDelete, dictRuleExport, dictRuleImport, dictRuleSave, dictRules } from "@/api/rules";
+import { dictRuleDelete, dictRuleExport, dictRuleImport, dictRuleSave, dictRules } from "@/core/application/rules";
 
 const router = useRouter();
 const rules = ref<DictRule[]>([]);

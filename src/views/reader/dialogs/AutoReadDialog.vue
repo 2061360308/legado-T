@@ -6,6 +6,10 @@ defineProps<{ modelValue: boolean }>();
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
   apply: [];
+  toc: [];
+  menu: [];
+  stop: [];
+  settings: [];
 }>();
 
 const prefs = useReaderPrefsStore();
@@ -28,16 +32,9 @@ function setInterval(value: number) {
     title="自动翻页"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <label class="check">
-      <input
-        type="checkbox"
-        :checked="prefs.autoReadSeconds > 0"
-        @change="setEnabled(($event.target as HTMLInputElement).checked)"
-      />
-      开启自动翻页
-    </label>
     <label>
-      翻页间隔 {{ prefs.autoReadSeconds > 0 ? `${prefs.autoReadSeconds} 秒` : "关闭" }}
+      自动翻页速度
+      <strong>{{ prefs.autoReadSeconds > 0 ? `${prefs.autoReadSeconds} 秒` : "关闭" }}</strong>
       <input
         type="range"
         min="5"
@@ -47,7 +44,12 @@ function setInterval(value: number) {
         @input="setInterval(Number(($event.target as HTMLInputElement).value))"
       />
     </label>
-    <p class="hint">到达书籍末尾后自动翻页会停止并提示。</p>
+    <div class="icon-row">
+      <button @click="emit('toc')">目录</button>
+      <button @click="emit('menu')">主菜单</button>
+      <button @click="emit('stop'); setEnabled(false)">停止</button>
+      <button @click="emit('settings')">设置</button>
+    </div>
   </AndroidDialog>
 </template>
 
@@ -68,9 +70,18 @@ input[type="range"] {
   width: 100%;
   accent-color: var(--ac-primary);
 }
-.hint {
-  margin: 0;
+.icon-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+.icon-row button {
+  border: 1px solid var(--ac-divider);
+  background: transparent;
+  color: var(--ac-primary-text);
+  border-radius: 4px;
+  padding: 8px 4px;
   font-size: 12px;
-  color: var(--ac-secondary-text);
 }
 </style>

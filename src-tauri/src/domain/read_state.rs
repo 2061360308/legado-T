@@ -91,6 +91,29 @@ fn find_chapter<'a>(chapters: &'a [BookChapter], index: i32) -> Result<&'a BookC
         .ok_or_else(|| Error::NotFound(format!("chapter {index}")))
 }
 
+fn core_style(style: &LayoutStyle) -> reader_core::domain::layout_engine::LayoutStyle {
+    serde_json::from_value(serde_json::to_value(style).expect("layout style serializes"))
+        .expect("layout style deserializes")
+}
+
+fn core_blocks(blocks: &[ContentBlock]) -> Vec<reader_core::domain::model::ContentBlock> {
+    serde_json::from_value(serde_json::to_value(blocks).expect("content blocks serialize"))
+        .expect("content blocks deserialize")
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct CorePipelinePages {
+    display_title: String,
+    pages: Vec<LayoutPage>,
+    paragraphs: Vec<String>,
+}
+
+fn core_pages(result: &reader_core::pipeline::ChapterOutput) -> CorePipelinePages {
+    serde_json::from_value(serde_json::to_value(result).expect("pipeline result serializes"))
+        .expect("pipeline result deserializes")
+}
+
 fn load_chapter(
     conn: &Connection,
     storage: &BookStorage,
@@ -103,18 +126,15 @@ fn load_chapter(
     let override_key = format!("chapterOverride:{}:{}", book.book_url, index);
     let override_content = KeyValue::get(conn, &override_key)?;
     let is_epub = import_service::is_cached_book(book, storage);
-    let display_title = content_processor::display_title(conn, &chapter.title, book)?;
-
-    let (blocks, effective_rules, paragraphs) = if is_epub && override_content.is_none() {
-        let blocks = import_service::read_epub_chapter_blocks(storage, book, chapter.index)?;
-        let paragraphs = blocks
-            .iter()
-            .filter_map(|block| match block {
-                ContentBlock::Paragraph { text } => Some(text.clone()),
-                _ => None,
-            })
-            .collect::<Vec<_>>();
-        (blocks, Vec::new(), paragraphs)
+    let (raw, blocks) = if is_epub && override_content.is_none() {
+        (
+            String::new(),
+            Some(import_service::read_epub_chapter_blocks(
+                storage,
+                book,
+                chapter.index,
+            )?),
+        )
     } else {
         let raw = match override_content {
             Some(content) => content,
@@ -125,22 +145,56 @@ fn load_chapter(
                 txt_parser::read_chapter_raw(&bytes, &codec, 0, bytes.len() as i64, &chapter.title)
             }
         };
-        let processed = content_processor::process(conn, &chapter.title, &raw, book, false)?;
-        let blocks = processed
-            .contents
-            .iter()
-            .cloned()
-            .map(ContentBlock::paragraph)
-            .collect::<Vec<_>>();
-        (blocks, processed.effective_rules, processed.contents)
+        (raw, None)
     };
-    let result = layout_engine::layout_blocks(&display_title, &blocks, style);
+    let use_replace_rule = book
+        .read_config
+        .as_ref()
+        .and_then(|config| config.use_replace_rule)
+        .unwrap_or(true);
+    let request = reader_core::pipeline::ChapterRequest {
+        process: reader_core::content::ProcessRequest {
+            title: chapter.title.clone(),
+            content: raw,
+            book_name: book.name.clone(),
+            book_origin: book.origin_name.clone(),
+            rules: content_processor::core_rules(conn)?,
+            include_title: false,
+            use_replace: true,
+            use_replace_rule,
+            chinese_convert: true,
+            chinese_converter_type: content_processor::converter_direction(conn),
+            re_segment: book
+                .read_config
+                .as_ref()
+                .map(|config| config.re_segment)
+                .unwrap_or(false),
+            keep_duplicate_title: KeyValue::get(
+                conn,
+                &format!("keepDuplicateTitle:{}", book.book_url),
+            )?
+            .map(|value| value == "true")
+            .unwrap_or(false),
+            paragraph_indent: "\u{3000}\u{3000}".to_string(),
+            is_android8: false,
+        },
+        blocks: blocks.as_deref().map(core_blocks),
+        style: core_style(style),
+    };
+    let result = reader_core::pipeline::process_chapter(&request);
+    let native_rules = content_processor::native_rules(conn)?;
+    let effective_rules = result
+        .effective_rules
+        .iter()
+        .filter_map(|rule| native_rules.get(&rule.id).cloned())
+        .collect();
+    let pages = core_pages(&result);
     Ok(CachedChapter {
         style_key: current_style_key(conn, style),
-        pages: result.pages,
+        pages: pages.pages,
         effective_rules,
-        chapter_title: display_title,
-        paragraphs,
+        chapter_title: pages.display_title,
+        paragraphs: pages.paragraphs,
     })
 }
 
@@ -256,6 +310,16 @@ pub fn save_chapter_content(
 impl ReaderCache {
     pub fn invalidate_chapter(&mut self, chapter_index: i32) {
         self.chapters.remove(&chapter_index);
+    }
+
+    pub fn invalidate_book(&mut self, book_url: &str) {
+        if self.book_url == book_url {
+            self.chapters.clear();
+        }
+    }
+
+    pub fn invalidate_all(&mut self) {
+        self.chapters.clear();
     }
 }
 

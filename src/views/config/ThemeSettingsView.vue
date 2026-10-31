@@ -3,9 +3,10 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
-import { useThemeStore } from "@/stores/theme";
+import { ThemeMode, useThemeStore } from "@/stores/theme";
+import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import { useAppearanceStore, type LauncherIcon } from "@/stores/appearance";
-import { getPlatformInfo, pickThemeImage } from "@/platform";
+import { platform } from "@/runtime";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 import NumberPickerDialog from "@/views/reader/dialogs/NumberPickerDialog.vue";
 import defaultIcon from "@/assets/icons/default.png";
@@ -19,6 +20,13 @@ import launcher6Icon from "@/assets/icons/launcher6.svg";
 const router = useRouter();
 const theme = useThemeStore();
 const message = ref("");
+const menuVisible = ref(false);
+const menuItems = computed<PopupMenuItem[]>(() => [
+  { key: "follow", label: "跟随系统", checked: theme.mode === ThemeMode.FollowSystem },
+  { key: "day", label: "日间", checked: theme.mode === ThemeMode.Day },
+  { key: "night", label: "夜间", checked: theme.mode === ThemeMode.Night },
+  { key: "eink", label: "墨水屏", checked: theme.mode === ThemeMode.Eink },
+]);
 const elevationVisible = ref(false);
 const fontScaleVisible = ref(false);
 const themeListVisible = ref(false);
@@ -32,7 +40,7 @@ const bgBlurValue = ref(0);
 const appearance = useAppearanceStore();
 const iconDialogVisible = ref(false);
 const supportsLauncherIcon = computed(() => {
-  const info = getPlatformInfo();
+  const info = platform.getPlatformInfo();
   return info?.os === "android" && info.apiLevel >= 26;
 });
 const launcherOptions: { value: LauncherIcon; label: string; src: string }[] = [
@@ -58,6 +66,18 @@ const nightColors = dayColors;
 
 const dayBgName = computed(() => fileName(theme.dayBgImage));
 const nightBgName = computed(() => fileName(theme.nightBgImage));
+
+function onMenu(key: string) {
+  const mode =
+    key === "follow"
+      ? ThemeMode.FollowSystem
+      : key === "night"
+        ? ThemeMode.Night
+        : key === "eink"
+          ? ThemeMode.Eink
+          : ThemeMode.Day;
+  theme.setMode(mode);
+}
 
 function fileName(path: string | null): string {
   if (!path) return "未设置";
@@ -119,7 +139,7 @@ function removeTheme(index: number) {
 
 async function chooseBackground(part: "day" | "night") {
   try {
-    const picked = await pickThemeImage();
+    const picked = await platform.pickThemeImage();
     if (picked.cancelled) return;
     theme.setBackgroundImage(part, picked.path);
     notify(`已选择背景图片：${picked.name}`);
@@ -163,7 +183,14 @@ function reselectBackground() {
 
 <template>
   <div class="theme-page">
-    <TitleBar title="主题设置" @back="router.back()" />
+    <TitleBar title="主题设置" @back="router.back()">
+      <template #actions>
+        <button aria-label="主题模式" @click="menuVisible = true">
+          <Icon name="ic_cfg_theme" :size="24" />
+        </button>
+      </template>
+    </TitleBar>
+    <PopupMenu v-model="menuVisible" :items="menuItems" :top="54" @select="onMenu" />
     <main class="pref-scroll">
       <section class="pref-group">
         <button v-if="supportsLauncherIcon" class="pref-row" @click="iconDialogVisible = true">

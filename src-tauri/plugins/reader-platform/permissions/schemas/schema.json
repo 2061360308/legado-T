@@ -319,6 +319,18 @@
           "markdownDescription": "Denies the get_safe_area_insets command without any pre-configured scope."
         },
         {
+          "description": "Enables the get_web_view_cookie command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-get-web-view-cookie",
+          "markdownDescription": "Enables the get_web_view_cookie command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the get_web_view_cookie command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-get-web-view-cookie",
+          "markdownDescription": "Denies the get_web_view_cookie command without any pre-configured scope."
+        },
+        {
           "description": "Enables the list_books_directory command without any pre-configured scope.",
           "type": "string",
           "const": "allow-list-books-directory",
@@ -341,6 +353,18 @@
           "type": "string",
           "const": "deny-pick-books-directory",
           "markdownDescription": "Denies the pick_books_directory command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the pick_font_file command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-pick-font-file",
+          "markdownDescription": "Enables the pick_font_file command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the pick_font_file command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-pick-font-file",
+          "markdownDescription": "Denies the pick_font_file command without any pre-configured scope."
         },
         {
           "description": "Enables the pick_image command without any pre-configured scope.",
@@ -475,10 +499,22 @@
           "markdownDescription": "Denies the set_text_zoom command without any pre-configured scope."
         },
         {
-          "description": "Reader platform capabilities\n#### This default permission set includes:\n\n- `allow-platform-info`\n- `allow-get-safe-area-insets`\n- `allow-set-keep-screen-on`\n- `allow-set-screen-orientation`\n- `allow-set-cutout-mode`\n- `allow-set-system-bars`\n- `allow-set-system-bar-style`\n- `allow-set-text-zoom`\n- `allow-set-launcher-icon`\n- `allow-pick-image`\n- `allow-set-reader-key-mode`\n- `allow-pick-books-directory`\n- `allow-list-books-directory`\n- `allow-prepare-books-import`\n- `allow-cleanup-saf-import`",
+          "description": "Enables the set_web_view_cookie command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-set-web-view-cookie",
+          "markdownDescription": "Enables the set_web_view_cookie command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the set_web_view_cookie command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-set-web-view-cookie",
+          "markdownDescription": "Denies the set_web_view_cookie command without any pre-configured scope."
+        },
+        {
+          "description": "Reader platform capabilities\n#### This default permission set includes:\n\n- `allow-platform-info`\n- `allow-get-safe-area-insets`\n- `allow-set-keep-screen-on`\n- `allow-set-screen-orientation`\n- `allow-set-cutout-mode`\n- `allow-set-system-bars`\n- `allow-set-system-bar-style`\n- `allow-set-text-zoom`\n- `allow-set-launcher-icon`\n- `allow-pick-image`\n- `allow-pick-font-file`\n- `allow-set-reader-key-mode`\n- `allow-get-web-view-cookie`\n- `allow-set-web-view-cookie`\n- `allow-pick-books-directory`\n- `allow-list-books-directory`\n- `allow-prepare-books-import`\n- `allow-cleanup-saf-import`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Reader platform capabilities\n#### This default permission set includes:\n\n- `allow-platform-info`\n- `allow-get-safe-area-insets`\n- `allow-set-keep-screen-on`\n- `allow-set-screen-orientation`\n- `allow-set-cutout-mode`\n- `allow-set-system-bars`\n- `allow-set-system-bar-style`\n- `allow-set-text-zoom`\n- `allow-set-launcher-icon`\n- `allow-pick-image`\n- `allow-set-reader-key-mode`\n- `allow-pick-books-directory`\n- `allow-list-books-directory`\n- `allow-prepare-books-import`\n- `allow-cleanup-saf-import`"
+          "markdownDescription": "Reader platform capabilities\n#### This default permission set includes:\n\n- `allow-platform-info`\n- `allow-get-safe-area-insets`\n- `allow-set-keep-screen-on`\n- `allow-set-screen-orientation`\n- `allow-set-cutout-mode`\n- `allow-set-system-bars`\n- `allow-set-system-bar-style`\n- `allow-set-text-zoom`\n- `allow-set-launcher-icon`\n- `allow-pick-image`\n- `allow-pick-font-file`\n- `allow-set-reader-key-mode`\n- `allow-get-web-view-cookie`\n- `allow-set-web-view-cookie`\n- `allow-pick-books-directory`\n- `allow-list-books-directory`\n- `allow-prepare-books-import`\n- `allow-cleanup-saf-import`"
         }
       ]
     }

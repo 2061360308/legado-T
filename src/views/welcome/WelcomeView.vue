@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { convertFileSrc } from "@tauri-apps/api/core";
+import { platform } from "@/runtime";
 import { useAppearanceStore } from "@/stores/appearance";
 import iconBook from "@/assets/welcome/icon_read_book.png";
 
@@ -24,7 +24,7 @@ const backgroundImage = computed(() => {
   if (!path) return "";
   if (/^(https?:|data:|asset:|blob:)/i.test(path)) return path;
   try {
-    return convertFileSrc(path);
+    return platform.assets.fileSrc(path);
   } catch {
     return path;
   }

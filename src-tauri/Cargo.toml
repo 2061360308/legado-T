@@ -24,22 +24,27 @@ thiserror = "1"
 chrono = { version = "0.4", features = ["serde"] }
 rusqlite = { version = "0.32", features = ["bundled"] }
 encoding_rs = "0.8"
+chardetng = "0.1"
 fancy-regex = "0.14"
 pinyin = "0.10"
 zip = { version = "0.6", default-features = false, features = ["deflate"] }
 aes = "0.8"
 md-5 = "0.10"
-rbook = { version = "0.7", default-features = false, features = ["threadsafe"] }
-html-escape = "0.2"
-imagesize = "0.15"
 pdfium-render = { version = "0.9.4", default-features = false, features = ["image_025", "pdfium_latest", "thread_safe"] }
 image = { version = "0.25", default-features = false, features = ["png"] }
-boa_engine = "0.22"
-ebook-rs = { version = "0.18", default-features = false }
+rquickjs = { version = "0.13", features = ["bindgen"] }
 flate2 = "1.1.10"
 base64 = "0.23"
 tauri-plugin-reader-platform = { path = "plugins/reader-platform" }
+reader-core = { path = "crates/reader-core", features = ["ebook", "epub"] }
+backup-core = { path = "crates/backup-core" }
+legado-core = { path = "../../book-source-engine/vendor/legado-rust-engine/crates/legado-core" }
+legado-engine = { path = "../../book-source-engine/crates/legado-engine" }
+tokio = { version = "1", features = ["rt", "time"] }
 
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
+
+[target.'cfg(target_os = "android")'.dependencies]
+jni = "0.21"

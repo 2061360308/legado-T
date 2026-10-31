@@ -23,6 +23,25 @@ body,
   color: var(--ac-primary-text);
 }
 
+@media (display-mode: standalone) {
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+  }
+
+  html,
+  body,
+  #app {
+    height: 100dvh;
+  }
+
+  body {
+    overscroll-behavior-y: none;
+  }
+}
+
 html.eink-mode,
 html.eink-mode * {
   animation: none !important;

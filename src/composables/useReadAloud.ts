@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
-import { fetch } from "@tauri-apps/plugin-http";
-import type { HttpTts } from "@/api/bindings";
-import { httpTtsEngines } from "@/api/rules";
+import { platform } from "@/runtime";
+import type { HttpTts } from "@/core/domain";
+import { httpTtsEngines } from "@/core/application/rules";
 import { buildRequest } from "@/utils/ruleQuery";
 
 export interface AloudHooks {
@@ -136,7 +136,7 @@ export function useReadAloud(hooks: AloudHooks) {
     });
     const controller = new AbortController();
     currentAbort = controller;
-    const response = await fetch(request.url, {
+    const response = await platform.http.fetch(request.url, {
       method: request.method,
       headers: request.headers,
       body: request.body,

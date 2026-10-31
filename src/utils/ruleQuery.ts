@@ -1,4 +1,4 @@
-import { fetch } from "@tauri-apps/plugin-http";
+import { platform } from "@/runtime";
 
 export interface BuiltRequest {
   url: string;
@@ -52,7 +52,7 @@ function decode(buffer: ArrayBuffer, charset?: string): string {
 }
 
 export async function requestText(req: BuiltRequest, signal?: AbortSignal): Promise<string> {
-  const response = await fetch(req.url, {
+  const response = await platform.http.fetch(req.url, {
     method: req.method,
     headers: req.headers,
     body: req.body,

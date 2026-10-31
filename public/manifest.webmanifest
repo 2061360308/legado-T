@@ -1,0 +1,35 @@
+{
+  "id": "/",
+  "name": "本地阅读器",
+  "short_name": "本地阅读",
+  "description": "本地 EPUB、TXT、MOBI、UMD、PDF 阅读器",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#f6f3ee",
+  "theme_color": "#3f6f5f",
+  "orientation": "any",
+  "lang": "zh-CN",
+  "categories": ["books", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

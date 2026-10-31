@@ -10,9 +10,16 @@ pub fn backup_export(
     state: State<AppState>,
     path: String,
     password: Option<String>,
+    settings_json: Option<String>,
 ) -> CmdResult<BackupReport> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
-    backup::export_backup(&conn, &path, password.as_deref()).map_err(|e| e.to_string())
+    backup::export_backup(
+        &conn,
+        &path,
+        password.as_deref(),
+        settings_json.as_deref(),
+    )
+    .map_err(|e| e.to_string())
 }
 
 #[tauri::command]

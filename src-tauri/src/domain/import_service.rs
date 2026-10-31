@@ -7,7 +7,7 @@ use crate::data::keyvalue::KeyValue;
 use crate::data::repositories::{BookRepo, ChapterRepo, TxtTocRuleRepo};
 use crate::domain::epub_import;
 use crate::domain::mobi_import;
-use crate::domain::model::{book_type, Book, BookChapter, ContentBlock};
+use crate::domain::model::{book_type, Book, BookChapter, ContentBlock, TxtTocRule};
 use crate::domain::pdf_import;
 use crate::domain::storage::{hash_bytes, BookStorage};
 use crate::domain::txt_parser;
@@ -15,6 +15,8 @@ use crate::domain::umd_import;
 use crate::platform::charset_codec::CharsetCodec;
 use crate::platform::charset_probe;
 use crate::platform::filesystem::read_file_range;
+use reader_core::txt::TxtTocRule as CoreTxtTocRule;
+use reader_core::txt_kotlin;
 use crate::{Error, Result};
 
 #[derive(Debug, Clone, serde::Serialize)]
@@ -267,6 +269,39 @@ fn resolve_blocks(storage: &BookStorage, blocks: &mut [ContentBlock]) {
     }
 }
 
+fn core_rules(rules: &[TxtTocRule]) -> Vec<CoreTxtTocRule> {
+    rules
+        .iter()
+        .map(|rule| CoreTxtTocRule {
+            id: rule.id,
+            name: rule.name.clone(),
+            rule: rule.rule.clone(),
+            enable: rule.enable,
+            serial_number: rule.serial_number,
+        })
+        .collect()
+}
+
+fn core_chapters(
+    chapters: &[reader_core::txt_kotlin::KChapter],
+    book_url: &str,
+    base_url: &str,
+) -> Vec<BookChapter> {
+    chapters
+        .iter()
+        .enumerate()
+        .map(|(index, chapter)| BookChapter {
+            url: format!("{base_url}#{index}"),
+            title: chapter.title.clone(),
+            index: index as i32,
+            is_volume: chapter.is_volume,
+            start: chapter.start,
+            end: chapter.end,
+            resource_url: Some(book_url.to_string()),
+            ..Default::default()
+        })
+        .collect()
+}
 pub fn import_txt(
     conn: &Connection,
     src_path: &str,
@@ -294,14 +329,19 @@ pub fn import_txt(
         let effective_charset = charset
             .map(|s| s.to_string())
             .unwrap_or_else(|| probed.label().to_string());
-        let codec = CharsetCodec::from_label(&effective_charset);
-
         let file_stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("未命名");
         let book_name = name.unwrap_or(file_stem).to_string();
 
         let rules = TxtTocRuleRepo::list(conn)?;
-        let (outlines, intro, used_rule) =
-            txt_parser::analyze(&bytes, &codec, None, &rules, split_long)?;
+        let analyzed = txt_kotlin::analyze(
+            &bytes,
+            &effective_charset,
+            &core_rules(&rules),
+            split_long,
+        )
+        .map_err(Error::Invalid)?;
+        let intro = analyzed.intro.clone();
+        let used_rule = analyzed.rule.clone();
 
         let book = Book {
             book_url: id.clone(),
@@ -318,15 +358,16 @@ pub fn import_txt(
             } else {
                 Some(intro.clone())
             },
-            total_chapter_num: outlines.len() as i32,
+            total_chapter_num: analyzed.chapters.len() as i32,
             can_update: true,
             sync_time: mtime_secs(&dst),
             source_path: Some(storage.relative_string(&dst)),
             source_hash: Some(hash.clone()),
+            original_path: Some(src.to_string_lossy().to_string()),
             ..Default::default()
         };
 
-        let chapters = txt_parser::outlines_to_chapters(&outlines, &id, &id);
+        let chapters = core_chapters(&analyzed.chapters, &id, &id);
         let count = chapters.len();
 
         BookRepo::upsert(conn, &book)?;
@@ -334,7 +375,7 @@ pub fn import_txt(
         KeyValue::cache_set(
             conn,
             &txt_parser::cache_key(&id, mtime_secs(&dst)),
-            &serde_json::to_string(&outlines).unwrap_or_default(),
+            &serde_json::to_string(&analyzed.chapters).unwrap_or_default(),
         )?;
 
         let mut result = ImportResult {
@@ -436,6 +477,7 @@ pub fn import_epub(
             sync_time: mtime_secs(&dst),
             source_path: Some(storage.relative_string(&dst)),
             source_hash: Some(hash.clone()),
+            original_path: Some(src.to_string_lossy().to_string()),
             ..Default::default()
         };
         let count = chapters.len();
@@ -759,6 +801,7 @@ pub fn import_pdf(
             sync_time: mtime_secs(&dst),
             source_path: Some(storage.relative_string(&dst)),
             source_hash: Some(hash.clone()),
+            original_path: Some(src.to_string_lossy().to_string()),
             ..Default::default()
         };
         let count = chapters.len();
@@ -816,27 +859,31 @@ pub fn re_split(
         .map(|s| s.to_string())
         .or_else(|| book.charset.clone())
         .unwrap_or_else(|| "UTF-8".to_string());
-    let codec = CharsetCodec::from_label(&effective_charset);
-
     let rules = TxtTocRuleRepo::list(conn)?;
-    let (outlines, intro, used_rule) =
-        txt_parser::analyze(&bytes, &codec, rule_expr, &rules, split_long)?;
+    let analyzed = txt_kotlin::analyze_with_rule(
+        &bytes,
+        &effective_charset,
+        &core_rules(&rules),
+        rule_expr,
+        split_long,
+    )
+    .map_err(Error::Invalid)?;
 
-    let chapters = txt_parser::outlines_to_chapters(&outlines, book_url, book_url);
+    let chapters = core_chapters(&analyzed.chapters, book_url, book_url);
     let count = chapters.len();
 
     book.charset = Some(effective_charset);
-    book.toc_url = used_rule;
+    book.toc_url = analyzed.rule.clone();
     book.total_chapter_num = count as i32;
-    if !intro.is_empty() {
-        book.intro = Some(intro);
+    if !analyzed.intro.is_empty() {
+        book.intro = Some(analyzed.intro.clone());
     }
     BookRepo::upsert(conn, &book)?;
     ChapterRepo::replace_all(conn, book_url, &chapters)?;
     KeyValue::cache_set(
         conn,
         &txt_parser::cache_key(book_url, mtime_secs(&paths.source)),
-        &serde_json::to_string(&outlines).unwrap_or_default(),
+        &serde_json::to_string(&analyzed.chapters).unwrap_or_default(),
     )?;
     Ok(count)
 }

@@ -2,7 +2,7 @@
 import { computed, ref } from "vue";
 import { useReaderPrefsStore } from "@/stores/readerPrefs";
 import { useThemeStore } from "@/stores/theme";
-import { kvSet } from "@/api/config";
+import { kvSet } from "@/core/application/config";
 import resources from "@/design/resources.json";
 import AndroidDialog from "./AndroidDialog.vue";
 import DetailSeekBar from "@/components/android/DetailSeekBar.vue";

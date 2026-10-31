@@ -71,7 +71,7 @@ fn export_and_restore_merge_without_chapters() {
     KeyValue::set(&conn, "password", "secret").unwrap();
     KeyValue::set(&conn, "themeMode", "1").unwrap();
 
-    let report = export_backup(&conn, &path.to_string_lossy(), Some("123456")).unwrap();
+    let report = export_backup(&conn, &path.to_string_lossy(), Some("123456"), None).unwrap();
     assert!(report.files >= 3);
     assert!(path.exists());
 

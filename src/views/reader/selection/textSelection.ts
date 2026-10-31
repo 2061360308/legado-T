@@ -1,4 +1,4 @@
-import type { CharPos, LayoutPage, TextLine } from "@/api/bindings";
+import type { CharPos, LayoutPage, TextLine } from "@/core/domain";
 
 export interface SelectionPos {
   line: number;

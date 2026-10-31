@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { kvGet, kvSet } from "@/api/config";
+import { kvGet, kvSet } from "@/core/application/config";
 
 export interface GlobalConfig {
   themeMode: number;

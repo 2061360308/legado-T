@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
-import { pickThemeImage } from "@/platform";
+import { platform } from "@/runtime";
 import { useAppearanceStore } from "@/stores/appearance";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 
@@ -12,6 +12,12 @@ const appearance = useAppearanceStore();
 const message = ref("");
 const coverActionsVisible = ref(false);
 const coverPart = ref<"day" | "night">("day");
+const loadCoverOnlyWifi = ref(localStorage.getItem("cover:only-wifi") === "1");
+const useDefaultCover = ref(localStorage.getItem("cover:use-default") !== "0");
+
+function saveCoverPref(key: string, value: boolean) {
+  localStorage.setItem(key, value ? "1" : "0");
+}
 
 const dayCoverName = computed(() => fileName(appearance.defaultCover));
 const nightCoverName = computed(() => fileName(appearance.defaultCoverDark));
@@ -29,7 +35,7 @@ function notify(text: string) {
 
 async function chooseCover(part: "day" | "night") {
   try {
-    const picked = await pickThemeImage();
+    const picked = await platform.pickThemeImage();
     if (picked.cancelled) return;
     appearance.setDefaultCover(part, picked.path);
     notify(`已选择默认封面：${picked.name}`);
@@ -64,6 +70,35 @@ function removeCover() {
   <div class="cover-page">
     <TitleBar title="封面配置" @back="router.back()" />
     <main class="pref-scroll">
+      <section class="pref-group">
+        <label class="pref-row">
+          <span class="pref-text">
+            <span class="pref-label">仅 WiFi 加载封面</span>
+          </span>
+          <input
+            v-model="loadCoverOnlyWifi"
+            type="checkbox"
+            @change="saveCoverPref('cover:only-wifi', loadCoverOnlyWifi)"
+          />
+        </label>
+        <button class="pref-row" @click="notify('封面规则暂未接入')">
+          <span class="pref-text">
+            <span class="pref-label">封面规则</span>
+          </span>
+          <Icon name="ic_expand_more" :size="20" class="chevron" />
+        </button>
+        <label class="pref-row">
+          <span class="pref-text">
+            <span class="pref-label">使用默认封面</span>
+          </span>
+          <input
+            v-model="useDefaultCover"
+            type="checkbox"
+            @change="saveCoverPref('cover:use-default', useDefaultCover)"
+          />
+        </label>
+      </section>
+
       <section class="pref-group">
         <h2>日间</h2>
         <button class="pref-row" @click="openCover('day')">

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import type { HttpTts } from "@/api/bindings";
-import { httpTtsDelete, httpTtsEngines } from "@/api/rules";
+import type { HttpTts } from "@/core/domain";
+import { httpTtsDelete, httpTtsEngines } from "@/core/application/rules";
 import { useReaderPrefsStore } from "@/stores/readerPrefs";
 import AndroidDialog from "./AndroidDialog.vue";
 import HttpTtsEditDialog from "./HttpTtsEditDialog.vue";
@@ -13,6 +13,7 @@ const prefs = useReaderPrefsStore();
 const engines = ref<HttpTts[]>([]);
 const editVisible = ref(false);
 const editing = ref<HttpTts | null>(null);
+const selected = ref(prefs.ttsEngine);
 
 async function load() {
   try {
@@ -23,7 +24,12 @@ async function load() {
 }
 
 function select(id: string) {
-  prefs.patch({ ttsEngine: id });
+  selected.value = id;
+}
+
+function confirm() {
+  prefs.patch({ ttsEngine: selected.value });
+  emit("update:modelValue", false);
 }
 
 function add() {
@@ -37,16 +43,19 @@ function edit(engine: HttpTts) {
 }
 
 async function remove(engine: HttpTts) {
-  if (!confirm(`删除语音引擎「${engine.name}」？`)) return;
+  if (!window.confirm(`删除语音引擎「${engine.name}」？`)) return;
   await httpTtsDelete(engine.id);
-  if (prefs.ttsEngine === String(engine.id)) prefs.patch({ ttsEngine: "" });
+  if (selected.value === String(engine.id)) selected.value = "";
   await load();
 }
 
 watch(
   () => props.modelValue,
   (open) => {
-    if (open) load();
+    if (open) {
+      selected.value = prefs.ttsEngine;
+      void load();
+    }
   },
 );
 
@@ -56,21 +65,25 @@ onMounted(load);
 <template>
   <AndroidDialog
     :model-value="modelValue"
-    mode="center"
+    mode="sheet"
     title="语音引擎"
+    height="86vh"
     @update:model-value="emit('update:modelValue', $event)"
   >
+    <template #actions>
+      <button @click="add">新增</button>
+    </template>
     <div class="list">
-      <button class="engine-row" :class="{ active: !prefs.ttsEngine }" @click="select('')">
-        <span class="radio">{{ !prefs.ttsEngine ? "●" : "○" }}</span>
+      <button class="engine-row" :class="{ active: !selected }" @click="select('')">
+        <span class="radio">{{ !selected ? "●" : "○" }}</span>
         <span class="info">
           <span class="name">系统 TTS</span>
           <span class="meta">使用宿主系统语音合成</span>
         </span>
       </button>
-      <div v-for="engine in engines" :key="engine.id" class="engine-row">
+      <div v-for="engine in engines" :key="engine.id" class="engine-row" :class="{ active: selected === String(engine.id) }">
         <button class="select" @click="select(String(engine.id))">
-          <span class="radio">{{ prefs.ttsEngine === String(engine.id) ? "●" : "○" }}</span>
+          <span class="radio">{{ selected === String(engine.id) ? "●" : "○" }}</span>
           <span class="info">
             <span class="name">{{ engine.name }}</span>
             <span class="meta">{{ engine.url }}</span>
@@ -81,8 +94,8 @@ onMounted(load);
       </div>
     </div>
     <template #footer>
-      <button class="btn" @click="add">新增在线引擎</button>
-      <button class="btn primary" @click="emit('update:modelValue', false)">完成</button>
+      <button class="btn" @click="emit('update:modelValue', false)">取消</button>
+      <button class="btn primary" @click="confirm">确定</button>
     </template>
 
     <HttpTtsEditDialog v-model="editVisible" :engine="editing" @saved="load" />

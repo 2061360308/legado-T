@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { open } from "@tauri-apps/plugin-dialog";
 import {
   bookCoverRefresh,
   bookCoverSave,
   bookGet,
   bookUpsert,
-} from "@/api/books";
-import type { Book } from "@/api/bindings";
+} from "@/core/application/books";
+import { platform } from "@/runtime";
+import type { Book } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
+import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 
 const route = useRoute();
@@ -23,7 +24,7 @@ const coverUrl = ref("");
 const intro = ref("");
 const message = ref("");
 
-const typeOptions = ["Text", "Audio", "Image"];
+const typeOptions = ["Text", "Audio", "Image", "File"];
 
 function displayCover(value: Book): string {
   return value.customCoverUrl || value.coverUrl || "";
@@ -35,6 +36,7 @@ function displayIntro(value: Book): string {
 
 function typeOf(value: Book): number {
   const type = value.type ?? 0;
+  if (type & 8) return 3;
   if (type & 4) return 2;
   if (type & 2) return 1;
   return 0;
@@ -53,16 +55,12 @@ async function load() {
 }
 
 async function selectCover() {
-  const picked = await open({
-    multiple: false,
-    filters: [{ name: "图片", extensions: ["jpg", "jpeg", "png", "webp", "gif", "bmp"] }],
-  });
-  if (typeof picked === "string" && picked) {
-    try {
-      coverUrl.value = await bookCoverSave(bookUrl, picked);
-    } catch (error) {
-      message.value = String(error);
-    }
+  const picked = await platform.pickThemeImage();
+  if (picked.cancelled || !picked.path) return;
+  try {
+    coverUrl.value = await bookCoverSave(bookUrl, picked.path);
+  } catch (error) {
+    message.value = String(error);
   }
 }
 
@@ -87,7 +85,8 @@ function changeCoverSource() {
 async function save() {
   if (!book.value || !name.value.trim()) return;
   const local = (book.value.type ?? 0) & 16;
-  const base = typeIndex.value === 2 ? 4 : typeIndex.value === 1 ? 2 : 1;
+  const base =
+    typeIndex.value === 3 ? 8 : typeIndex.value === 2 ? 4 : typeIndex.value === 1 ? 2 : 1;
   const nextCover = coverUrl.value.trim();
   const nextIntro = intro.value;
   await bookUpsert({
@@ -108,7 +107,9 @@ onMounted(load);
   <div class="edit-page">
     <TitleBar title="书籍信息编辑" @back="router.back()">
       <template #actions>
-        <button class="save-button" @click="save">保存</button>
+        <button class="save-button" aria-label="保存" @click="save">
+          <Icon name="ic_save" :size="24" />
+        </button>
       </template>
     </TitleBar>
     <main v-if="book" class="content">

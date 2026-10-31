@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { convertFileSrc } from "@tauri-apps/api/core";
+import { platform } from "@/runtime";
 import {
   bookClearCache,
   bookCoverRefresh,
@@ -10,10 +10,12 @@ import {
   bookGet,
   bookMoveToTop,
   bookSetGroup,
+  bookUpsert,
   chapterList,
+  chapterWordCounts,
   groupList,
-} from "@/api/books";
-import type { Book, BookChapter, BookGroup } from "@/api/bindings";
+} from "@/core/application/books";
+import type { Book, BookChapter, BookGroup } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
@@ -27,6 +29,7 @@ const book = ref<Book | null>(null);
 const chapters = ref<BookChapter[]>([]);
 const groups = ref<BookGroup[]>([]);
 const fileSize = ref(0);
+const wordCount = ref(0);
 const menuVisible = ref(false);
 const groupDialogVisible = ref(false);
 const message = ref("");
@@ -38,7 +41,7 @@ const backgroundSrc = computed(() => {
   if (!src) return "";
   if (/^(https?:|data:|asset:|blob:)/i.test(src)) return src;
   try {
-    return convertFileSrc(src);
+    return platform.assets.fileSrc(src);
   } catch {
     return src;
   }
@@ -61,15 +64,21 @@ const kindTags = computed(() => {
     .split(/[,;，；]/)
     .map((value) => value.trim())
     .filter(Boolean);
+  if (wordCount.value > 0) tags.push(`${wordCount.value.toLocaleString("zh-CN")} 字`);
   if (fileSize.value > 0) tags.push(formatSize(fileSize.value));
   return tags;
 });
 const menuItems = computed<PopupMenuItem[]>(() => [
   { key: "edit", label: "编辑书籍信息", icon: "ic_edit" },
+  { key: "share", label: "分享", icon: "ic_share" },
+  { key: "refresh", label: "刷新", icon: "ic_refresh_black_24dp" },
   { key: "top", label: "置顶", icon: "ic_book_last" },
   { key: "copy", label: "复制书籍地址", icon: "ic_share" },
-  { key: "cover", label: "刷新封面", icon: "ic_refresh_black_24dp" },
+  { key: "copyToc", label: "复制目录地址", icon: "ic_share" },
+  { key: "canUpdate", label: "允许更新", checked: book.value?.canUpdate === true },
+  { key: "splitLong", label: "拆分超长章节" },
   { key: "cache", label: "清除缓存", icon: "ic_outline_delete" },
+  { key: "log", label: "日志", muted: true },
 ]);
 
 function formatSize(size: number): string {
@@ -93,6 +102,12 @@ async function load() {
   chapters.value = await chapterList(bookUrl.value);
   groups.value = (await groupList()).filter((group) => group.groupId > 0);
   fileSize.value = await bookFileSize(bookUrl.value);
+  try {
+    const counts = await chapterWordCounts(bookUrl.value);
+    wordCount.value = counts.reduce((sum, item) => sum + item.count, 0);
+  } catch {
+    wordCount.value = 0;
+  }
 }
 
 function read() {
@@ -109,29 +124,53 @@ function edit() {
 
 async function onMenu(key: string) {
   if (key === "edit") edit();
-  else if (key === "top") {
+  else if (key === "share") {
+    const text = `${book.value?.name || ""} ${book.value?.author || ""}`.trim();
+    if (navigator.share) await navigator.share({ title: book.value?.name, text }).catch(() => undefined);
+    else {
+      await navigator.clipboard.writeText(text);
+      showToast("已复制书籍信息");
+    }
+  } else if (key === "refresh") {
+    await load();
+    showToast("已刷新");
+  } else if (key === "top") {
     await bookMoveToTop(bookUrl.value);
     showToast("已置顶");
   } else if (key === "copy") {
     await navigator.clipboard.writeText(bookUrl.value);
     showToast("已复制书籍地址");
-  } else if (key === "cover") {
-    const cover = await bookCoverRefresh(bookUrl.value);
-    if (cover) {
-      if (book.value) book.value.coverUrl = cover;
-      showToast("封面已刷新");
-    } else {
-      showToast("没有找到可用的封面");
-    }
+  } else if (key === "copyToc") {
+    await navigator.clipboard.writeText(book.value?.tocUrl || bookUrl.value);
+    showToast("已复制目录地址");
+  } else if (key === "canUpdate") {
+    if (!book.value) return;
+    book.value.canUpdate = !book.value.canUpdate;
+    await bookUpsert(book.value);
+    showToast(book.value.canUpdate ? "已允许更新" : "已禁止更新");
+  } else if (key === "splitLong") {
+    if (!book.value) return;
+    book.value.readConfig = {
+      ...(book.value.readConfig ?? ({} as NonNullable<Book["readConfig"]>)),
+      splitLongChapter: !(book.value.readConfig?.splitLongChapter ?? false),
+    };
+    await bookUpsert(book.value);
+    showToast(book.value.readConfig.splitLongChapter ? "已开启拆分超长章节" : "已关闭拆分超长章节");
   } else if (key === "cache") {
-    await bookClearCache(bookUrl.value);
-    showToast("缓存已清理");
+    try {
+      await bookClearCache(bookUrl.value);
+      showToast("缓存已清除");
+    } catch (e) {
+      showToast(String(e));
+    }
+  } else if (key === "log") {
+    showToast("日志暂未接入");
   }
 }
 
 async function removeFromShelf() {
   if (!book.value) return;
-  if (!confirm(`将《${book.value.name}》移出书架并删除应用内副本？原始文件不受影响。`)) return;
+  if (!confirm(`删除《${book.value.name}》及应用内文件？`)) return;
   await bookDelete(bookUrl.value, true);
   router.back();
 }
@@ -160,7 +199,7 @@ onMounted(load);
       :style="backgroundSrc ? { backgroundImage: `url(${backgroundSrc})` } : undefined"
     />
     <div class="bg-mask" />
-    <TitleBar title="书籍详情" dark @back="router.back()">
+    <TitleBar title="书籍信息" dark @back="router.back()">
       <template #actions>
         <button aria-label="编辑" @click="edit">
           <Icon name="ic_edit" :size="24" />
@@ -174,7 +213,7 @@ onMounted(load);
     <main class="scroll">
       <div class="hero">
         <div class="arc" />
-        <div class="cover-wrap">
+        <div class="cover-wrap" @click="edit">
           <CoverImage
             :name="book.name"
             :author="book.author"
@@ -193,24 +232,24 @@ onMounted(load);
         </div>
         <p class="line">
           <Icon name="ic_author" :size="18" />
-          <span>{{ book.author || "未知作者" }}</span>
+          <span>作者：{{ book.author || "未知作者" }}</span>
         </p>
         <p class="line">
           <Icon name="ic_web_outline" :size="18" />
-          <span>{{ book.originName || book.origin || "本地" }}</span>
+          <span>来源：{{ book.originName || book.origin || "本地" }}</span>
         </p>
         <p class="line">
           <Icon name="ic_book_last" :size="18" />
-          <span>{{ book.latestChapterTitle || "暂无最新章节" }}</span>
+          <span>最新：{{ book.latestChapterTitle || "暂无最新章节" }}</span>
         </p>
         <p class="line">
           <Icon name="ic_groups" :size="18" />
-          <span>{{ groupName }}</span>
+          <span>分组：{{ groupName }}</span>
           <button class="inline-action" @click="groupDialogVisible = true">分组设置</button>
         </p>
         <p class="line">
           <Icon name="ic_toc" :size="18" />
-          <span>{{ book.durChapterTitle || "尚未开始阅读" }}</span>
+          <span>目录：{{ book.durChapterTitle || "尚未开始阅读" }}</span>
           <button class="inline-action" @click="toc">查看目录</button>
         </p>
         <p class="intro">{{ displayIntro }}</p>
@@ -218,7 +257,7 @@ onMounted(load);
     </main>
 
     <footer class="actions">
-      <button @click="removeFromShelf">移出书架</button>
+      <button @click="removeFromShelf">删除书籍</button>
       <button class="primary" @click="read">阅读</button>
     </footer>
 

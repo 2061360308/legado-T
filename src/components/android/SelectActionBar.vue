@@ -3,13 +3,19 @@ withDefaults(
   defineProps<{
     count: number;
     text?: string;
+    mainText?: string;
+    addText?: string;
   }>(),
   {
     text: "已选择",
+    mainText: "",
+    addText: "",
   },
 );
 
 defineEmits<{
+  main: [];
+  add: [];
   enable: [];
   disable: [];
   remove: [];
@@ -20,6 +26,8 @@ defineEmits<{
 <template>
   <div v-if="count > 0" class="action-bar">
     <span class="count">{{ text }} {{ count }} 项</span>
+    <button v-if="mainText" @click="$emit('main')">{{ mainText }}</button>
+    <button v-if="addText" @click="$emit('add')">{{ addText }}</button>
     <button @click="$emit('enable')">启用</button>
     <button @click="$emit('disable')">禁用</button>
     <button class="danger" @click="$emit('remove')">删除</button>

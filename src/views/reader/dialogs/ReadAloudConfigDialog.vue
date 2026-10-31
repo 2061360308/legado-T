@@ -5,8 +5,8 @@ import PrefTree, { type PrefNode } from "@/components/android/PrefTree.vue";
 import AndroidDialog from "./AndroidDialog.vue";
 import { useReaderPrefsStore } from "@/stores/readerPrefs";
 import { useReaderSettingsStore, type PrefValue } from "@/stores/readerSettings";
-import { httpTtsEngines } from "@/api/rules";
-import type { HttpTts } from "@/api/bindings";
+import { httpTtsEngines } from "@/core/application/rules";
+import type { HttpTts } from "@/core/domain";
 import SpeakEngineDialog from "./SpeakEngineDialog.vue";
 
 const props = defineProps<{ modelValue: boolean }>();

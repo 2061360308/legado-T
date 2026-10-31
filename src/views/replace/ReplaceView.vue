@@ -1,41 +1,28 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import type { ReplaceRule } from "@/api/bindings";
-import TitleBar from "@/components/android/TitleBar.vue";
+import type { ReplaceRule } from "@/core/domain";
 import {
   replaceRuleDelete,
   replaceRuleExport,
   replaceRuleImport,
   replaceRuleSave,
   replaceRules,
-} from "@/api/rules";
+} from "@/core/application/rules";
+import { readerInvalidateAll } from "@/core/application/reader";
+import TitleBar from "@/components/android/TitleBar.vue";
+import Icon from "@/components/android/Icon.vue";
+import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 
 const router = useRouter();
 const rules = ref<ReplaceRule[]>([]);
-const editing = ref(false);
-const message = ref("");
 const keyword = ref("");
 const groupFilter = ref("");
-const form = ref<ReplaceRule>(emptyRule());
-
-function emptyRule(): ReplaceRule {
-  return {
-    id: 0,
-    name: "",
-    group: "",
-    pattern: "",
-    replacement: "",
-    scope: "",
-    excludeScope: "",
-    scopeTitle: false,
-    scopeContent: true,
-    isEnabled: true,
-    isRegex: true,
-    timeoutMillisecond: 3000,
-    sortOrder: 0,
-  };
-}
+const selected = ref(new Set<number>());
+const message = ref("");
+const menuVisible = ref(false);
+const groupMenuVisible = ref(false);
+const moreVisible = ref(false);
 
 const groups = computed(() => {
   const set = new Set<string>();
@@ -47,10 +34,35 @@ const groups = computed(() => {
   return [...set];
 });
 
+const groupItems = computed<PopupMenuItem[]>(() => [
+  { key: "", label: "全部", checked: !groupFilter.value },
+  { key: "none", label: "无分组", checked: groupFilter.value === "none" },
+  ...groups.value.map((group) => ({
+    key: group,
+    label: group,
+    checked: groupFilter.value === group,
+  })),
+]);
+
+const menuItems: PopupMenuItem[] = [
+  { key: "add", label: "添加替换规则" },
+  { key: "import", label: "本地导入" },
+  { key: "help", label: "帮助" },
+];
+
+const moreItems: PopupMenuItem[] = [
+  { key: "top", label: "置顶" },
+  { key: "bottom", label: "置底" },
+  { key: "delete", label: "删除", danger: true },
+];
+
 const filtered = computed(() => {
   const key = keyword.value.trim().toLowerCase();
   return rules.value.filter((rule) => {
-    if (groupFilter.value && !(rule.group || "").includes(groupFilter.value)) return false;
+    if (groupFilter.value === "none" && (rule.group || "").trim()) return false;
+    if (groupFilter.value && groupFilter.value !== "none") {
+      if (!(rule.group || "").includes(groupFilter.value)) return false;
+    }
     if (!key) return true;
     return (
       rule.name.toLowerCase().includes(key) ||
@@ -60,340 +72,285 @@ const filtered = computed(() => {
   });
 });
 
+const allChecked = computed(
+  () => filtered.value.length > 0 && filtered.value.every((rule) => selected.value.has(rule.id)),
+);
+
 async function load() {
   rules.value = await replaceRules();
+  selected.value = new Set();
 }
 
-function startCreate() {
-  form.value = { ...emptyRule(), sortOrder: (rules.value.at(-1)?.sortOrder ?? 0) + 1 };
-  editing.value = true;
+function toggle(rule: ReplaceRule, value: boolean) {
+  const next = new Set(selected.value);
+  if (value) next.add(rule.id);
+  else next.delete(rule.id);
+  selected.value = next;
 }
 
-function startEdit(rule: ReplaceRule) {
-  form.value = { ...rule };
-  editing.value = true;
+function toggleAll() {
+  if (allChecked.value) selected.value = new Set();
+  else selected.value = new Set(filtered.value.map((rule) => rule.id));
 }
 
-function cancel() {
-  editing.value = false;
-  form.value = emptyRule();
-}
-
-async function save() {
-  if (!form.value.name.trim() || !form.value.pattern) {
-    message.value = "规则名与替换内容不能为空";
-    return;
+function revertSelection() {
+  const next = new Set<number>();
+  for (const rule of filtered.value) {
+    if (!selected.value.has(rule.id)) next.add(rule.id);
   }
-  try {
-    await replaceRuleSave({ ...form.value });
-    message.value = "规则已保存";
-    cancel();
-    await load();
-  } catch (e) {
-    message.value = String(e);
-  }
+  selected.value = next;
 }
 
-async function toggle(rule: ReplaceRule) {
+function openEditor(id = 0) {
+  router.push({ path: "/replace-edit", query: id ? { id: String(id) } : {} });
+}
+
+async function toggleEnabled(rule: ReplaceRule) {
   await replaceRuleSave({ ...rule, isEnabled: !rule.isEnabled });
+  await readerInvalidateAll();
   await load();
 }
 
-async function remove(rule: ReplaceRule) {
-  if (!confirm(`删除替换规则「${rule.name}」？`)) return;
-  await replaceRuleDelete(rule.id);
-  message.value = "规则已删除";
+async function moveSelected(toTop: boolean) {
+  const selectedRules = rules.value.filter((rule) => selected.value.has(rule.id));
+  if (!selectedRules.length) return;
+  const rest = rules.value.filter((rule) => !selected.value.has(rule.id));
+  const ordered = toTop ? [...selectedRules, ...rest] : [...rest, ...selectedRules];
+  for (let index = 0; index < ordered.length; index += 1) {
+    if ((ordered[index].sortOrder ?? index) !== index) {
+      await replaceRuleSave({ ...ordered[index], sortOrder: index });
+    }
+  }
+  await readerInvalidateAll();
   await load();
 }
 
-async function move(index: number, delta: number) {
-  const target = index + delta;
-  if (target < 0 || target >= rules.value.length) return;
-  const a = rules.value[index];
-  const b = rules.value[target];
-  const orderA = a.sortOrder ?? index;
-  const orderB = b.sortOrder ?? target;
-  await replaceRuleSave({ ...a, sortOrder: orderB });
-  await replaceRuleSave({ ...b, sortOrder: orderA });
+async function removeSelected() {
+  if (!selected.value.size) return;
+  if (!confirm(`删除选中的 ${selected.value.size} 条替换规则？`)) return;
+  for (const id of selected.value) await replaceRuleDelete(id);
+  await readerInvalidateAll();
   await load();
 }
 
-async function onImport(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
-  if (!file) return;
-  try {
-    const report = await replaceRuleImport(await file.text());
-    const added = report.entries.filter((e) => e.status === "new").length;
-    const updated = report.entries.filter((e) => e.status === "updated").length;
-    message.value = `导入完成：新增 ${added}，更新 ${updated}`;
-    await load();
-  } catch (e) {
-    message.value = String(e);
-  } finally {
-    input.value = "";
+async function onMenu(key: string) {
+  if (key === "add") openEditor();
+  else if (key === "import") {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json,application/json";
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      try {
+        const report = await replaceRuleImport(await file.text());
+        await readerInvalidateAll();
+        await load();
+        message.value = `导入完成：新增 ${report.entries.filter((e) => e.status === "new").length}`;
+      } catch (e) {
+        message.value = String(e);
+      }
+    };
+    input.click();
+  } else if (key === "help") {
+    message.value = "替换规则帮助暂未接入";
   }
 }
 
-async function onExport() {
-  const json = await replaceRuleExport();
-  download("replaceRule.json", json);
+function onGroupMenu(key: string) {
+  groupFilter.value = key;
 }
 
-function download(name: string, content: string) {
-  const blob = new Blob([content], { type: "application/json" });
+async function onMore(key: string) {
+  if (key === "top") await moveSelected(true);
+  else if (key === "bottom") await moveSelected(false);
+  else if (key === "delete") await removeSelected();
+}
+
+async function exportRules() {
+  const json = await replaceRuleExport();
+  const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = name;
-  a.click();
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = "replace-rules.json";
+  anchor.click();
   URL.revokeObjectURL(url);
+  message.value = "规则已导出";
 }
 
 onMounted(load);
 </script>
 
 <template>
-  <div class="replace-view">
-    <TitleBar title="替换净化" @back="router.back()" />
-    <header class="toolbar">
-      <input v-model="keyword" class="search" placeholder="搜索名称/正则/分组" />
-      <select v-model="groupFilter">
-        <option value="">全部分组</option>
-        <option v-for="g in groups" :key="g" :value="g">{{ g }}</option>
-      </select>
-      <button @click="startCreate">新增</button>
-      <label class="file-btn">
-        导入
-        <input type="file" accept="application/json,.json" @change="onImport" />
-      </label>
-      <button @click="onExport">导出</button>
-    </header>
+  <div class="replace-page">
+    <TitleBar title="替换净化" @back="router.back()">
+      <template #content>
+        <label class="search-box">
+          <Icon name="ic_search_hint" :size="18" />
+          <input v-model="keyword" placeholder="搜索规则" />
+        </label>
+      </template>
+      <template #actions>
+        <button aria-label="分组" @click="groupMenuVisible = true">
+          <Icon name="ic_groups" :size="24" />
+        </button>
+        <button aria-label="添加" @click="openEditor()">
+          <Icon name="ic_add" :size="24" />
+        </button>
+        <button aria-label="更多" @click="menuVisible = true">
+          <Icon name="ic_more_vert" :size="24" />
+        </button>
+      </template>
+    </TitleBar>
+    <PopupMenu v-model="menuVisible" :items="menuItems" :top="54" @select="onMenu" />
+    <PopupMenu v-model="groupMenuVisible" :items="groupItems" :top="54" @select="onGroupMenu" />
+    <PopupMenu v-model="moreVisible" :items="moreItems" :top="52" :right="10" @select="onMore" />
 
     <p v-if="message" class="message">{{ message }}</p>
-
-    <form v-if="editing" class="editor" @submit.prevent="save">
-      <h2>{{ form.id ? "编辑替换规则" : "新增替换规则" }}</h2>
-      <div class="grid">
-        <label>名称<input v-model="form.name" /></label>
-        <label>分组<input v-model="form.group" placeholder="逗号分隔" /></label>
-      </div>
-      <label>替换内容<input v-model="form.pattern" placeholder="正则或普通字符串" /></label>
-      <label>替换为<input v-model="form.replacement" placeholder="留空表示删除" /></label>
-      <div class="grid">
-        <label>作用范围<input v-model="form.scope" placeholder="书名/书源名子串，逗号分隔" /></label>
-        <label>排除范围<input v-model="form.excludeScope" /></label>
-      </div>
-      <div class="grid">
-        <label>超时毫秒<input v-model.number="form.timeoutMillisecond" type="number" /></label>
-        <label>排序<input v-model.number="form.sortOrder" type="number" /></label>
-      </div>
-      <div class="checks">
-        <label><input v-model="form.isEnabled" type="checkbox" />启用</label>
-        <label><input v-model="form.isRegex" type="checkbox" />正则</label>
-        <label><input v-model="form.scopeTitle" type="checkbox" />作用于标题</label>
-        <label><input v-model="form.scopeContent" type="checkbox" />作用于正文</label>
-      </div>
-      <div class="editor-actions">
-        <button type="submit">保存</button>
-        <button type="button" @click="cancel">取消</button>
-      </div>
-    </form>
-
-    <ol class="rule-list">
-      <li v-for="(rule, index) in filtered" :key="rule.id">
-        <label class="check">
-          <input type="checkbox" :checked="rule.isEnabled" @change="toggle(rule)" />
+    <main class="list">
+      <div v-for="rule in filtered" :key="rule.id" class="rule-row">
+        <input
+          type="checkbox"
+          class="check"
+          :checked="selected.has(rule.id)"
+          @change="toggle(rule, ($event.target as HTMLInputElement).checked)"
+        />
+        <span class="name">{{ rule.name }}</span>
+        <label class="switch">
+          <input type="checkbox" :checked="rule.isEnabled !== false" @change="toggleEnabled(rule)" />
         </label>
-        <div class="rule-text">
-          <p class="rule-name">
-            {{ rule.name }}
-            <span v-if="rule.group" class="tag">{{ rule.group }}</span>
-            <span class="tag">{{ rule.isRegex ? "正则" : "文本" }}</span>
-            <span v-if="rule.scopeTitle" class="tag">标题</span>
-            <span v-if="rule.scopeContent" class="tag">正文</span>
-          </p>
-          <code>{{ rule.pattern }} → {{ rule.replacement || "（空）" }}</code>
-          <p v-if="rule.scope || rule.excludeScope" class="rule-example">
-            范围：{{ rule.scope || "全部" }}
-            <span v-if="rule.excludeScope"> · 排除：{{ rule.excludeScope }}</span>
-          </p>
-        </div>
-        <div class="rule-actions">
-          <button :disabled="index === 0" @click="move(index, -1)">上移</button>
-          <button :disabled="index === filtered.length - 1" @click="move(index, 1)">下移</button>
-          <button @click="startEdit(rule)">编辑</button>
-          <button class="danger" @click="remove(rule)">删除</button>
-        </div>
-      </li>
-    </ol>
-    <p v-if="filtered.length === 0" class="empty">暂无替换规则</p>
+        <button class="icon-button" aria-label="编辑" @click="openEditor(rule.id)">
+          <Icon name="ic_edit" :size="20" />
+        </button>
+        <button class="icon-button" aria-label="更多" @click="selected = new Set([rule.id]); moreVisible = true">
+          <Icon name="ic_more_vert" :size="20" />
+        </button>
+      </div>
+      <p v-if="filtered.length === 0" class="empty">暂无替换规则</p>
+    </main>
+
+    <div class="select-bar">
+      <label class="select-all" @click.prevent="toggleAll">
+        <input type="checkbox" :checked="allChecked" readonly />
+        <span>{{ allChecked ? "取消全选" : "全选" }}（{{ selected.size }}/{{ filtered.length }}）</span>
+      </label>
+      <button :disabled="!selected.size" @click="revertSelection">反选</button>
+      <button :disabled="!selected.size" @click="moreVisible = true">更多</button>
+      <button :disabled="!selected.size" @click="exportRules">导出</button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.replace-view {
+.replace-page {
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   background: var(--ac-background);
 }
-.toolbar {
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: 30px;
+  margin: 10px 0;
+  padding: 0 10px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.16);
+  color: inherit;
+}
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+}
+.search-box input::placeholder {
+  color: inherit;
+  opacity: 0.75;
+}
+.message {
+  margin: 6px 16px 0;
+  color: var(--ac-primary);
+  font-size: 12px;
+}
+.list {
+  flex: 1;
+  overflow-y: auto;
+}
+.rule-row {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  flex-wrap: wrap;
+  border-bottom: 1px solid var(--ac-divider);
 }
-.toolbar h1 {
-  font-size: 18px;
-  margin: 0 auto 0 0;
+.check {
+  flex: none;
+  accent-color: var(--ac-primary);
 }
-.search {
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  min-width: 160px;
-}
-.file-btn {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background: #fff;
-  border-radius: 8px;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.file-btn input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-.message {
-  color: var(--lr-color-primary);
-  font-size: 13px;
-}
-.editor {
-  margin: 12px 0;
-  padding: 12px;
-  border: 1px solid #e2dccf;
-  border-radius: 10px;
-  background: #fffdf8;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.editor h2 {
-  margin: 0;
-  font-size: 16px;
-}
-.editor label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
-}
-.editor input:not([type="checkbox"]),
-.editor select {
-  padding: 7px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-.checks {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-.checks label {
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-}
-.editor-actions {
-  display: flex;
-  gap: 8px;
-}
-.rule-list {
-  list-style: none;
-  margin: 12px 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.rule-list li {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 10px;
-  border: 1px solid #eee7da;
-  border-radius: 10px;
-  background: var(--lr-color-surface);
-}
-.rule-text {
+.name {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
 }
-.rule-name {
-  margin: 0;
-  font-weight: 600;
-  display: flex;
-  gap: 6px;
+.switch input {
+  width: 34px;
+  height: 18px;
+  accent-color: var(--ac-primary);
+}
+.icon-button {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: var(--ac-primary-text);
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: center;
 }
-.tag {
-  font-size: 11px;
-  color: #6b6154;
-  background: #efe8db;
-  border-radius: 4px;
-  padding: 1px 5px;
-  font-weight: normal;
-}
-.rule-text code {
-  display: block;
-  margin-top: 4px;
-  font-size: 12px;
-  word-break: break-all;
-  color: #6b6154;
-}
-.rule-example {
-  margin: 4px 0 0;
-  font-size: 12px;
-  color: #8a8175;
-}
-.rule-actions {
+.select-bar {
+  flex: none;
   display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 8px 6px 16px;
+  background: var(--ac-background-menu);
+  box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.18);
+}
+.select-all {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-.danger {
-  color: #c62828;
-}
-button {
-  border: 1px solid #d8d0c0;
-  background: #fffdf8;
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
   font-size: 13px;
 }
-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
+.select-bar button {
+  border: 1px solid var(--ac-primary);
+  background: transparent;
+  color: var(--ac-primary);
+  border-radius: 4px;
+  min-width: 60px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+.select-bar button:disabled {
+  opacity: 0.35;
 }
 .empty {
-  color: #999;
+  margin: 40px 16px;
   text-align: center;
-  padding: 24px 0;
+  color: var(--ac-secondary-text);
+  font-size: 13px;
 }
 </style>

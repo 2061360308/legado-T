@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import AndroidDialog from "./AndroidDialog.vue";
 
 const props = defineProps<{ modelValue: boolean; totalChapters: number; currentChapter: number }>();
@@ -11,7 +11,29 @@ const emit = defineEmits<{
 
 const enabled = ref(true);
 const chapter = ref(props.currentChapter + 1);
-const pos = ref(0);
+const startDate = ref(today());
+const dailyChapters = ref(1);
+
+function today() {
+  const date = new Date();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function reset() {
+  enabled.value = true;
+  chapter.value = props.currentChapter + 1;
+  startDate.value = today();
+  dailyChapters.value = 1;
+}
+
+watch(
+  () => props.modelValue,
+  (open) => {
+    if (open) reset();
+  },
+);
 
 function finishAll() {
   emit("finish");
@@ -20,7 +42,7 @@ function finishAll() {
 
 function jump() {
   const index = Math.min(Math.max(chapter.value - 1, 0), Math.max(props.totalChapters - 1, 0));
-  emit("jump", index, pos.value);
+  emit("jump", index, 0);
   emit("update:modelValue", false);
 }
 </script>
@@ -36,17 +58,18 @@ function jump() {
       <span>开启模拟读完</span>
       <input v-model="enabled" type="checkbox" />
     </label>
-    <p class="hint">
-      模拟读完会把进度直接置为末章末页；也可以从指定章节位置开始。
-    </p>
     <div class="grid">
+      <label>
+        开始日期
+        <input v-model="startDate" type="date" />
+      </label>
       <label>
         起始章节（1-{{ totalChapters }}）
         <input v-model.number="chapter" type="number" min="1" :max="totalChapters" />
       </label>
       <label>
-        章节内位置
-        <input v-model.number="pos" type="number" min="0" />
+        每天章节数
+        <input v-model.number="dailyChapters" type="number" min="1" />
       </label>
     </div>
     <template #footer>
