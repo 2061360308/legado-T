@@ -26,6 +26,10 @@ export function bookDelete(bookUrl: string, deleteFiles = true): Promise<void> {
   return invoke<void>(COMMANDS.bookDelete, { bookUrl, deleteFiles });
 }
 
+export function bookSetRemoteOrigin(bookUrl: string, origin: string): Promise<void> {
+  return invoke<void>(COMMANDS.bookSetRemoteOrigin, { bookUrl, origin });
+}
+
 export function chapterList(bookUrl: string): Promise<BookChapter[]> {
   return invoke<BookChapter[]>(COMMANDS.chapterList, { bookUrl });
 }

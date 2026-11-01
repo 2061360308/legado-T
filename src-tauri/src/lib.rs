@@ -71,6 +71,7 @@ pub fn run() {
             commands::bookshelf::bookshelf_list,
             commands::bookshelf::bookshelf_export,
             commands::bookshelf::book_move_to_top,
+            commands::bookshelf::book_set_remote_origin,
             commands::bookshelf::book_set_group,
             commands::bookshelf::book_add_group,
             commands::bookshelf::book_batch_add_group,

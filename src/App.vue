@@ -15,6 +15,7 @@ const hideNav = [
   "/cache-books",
   "/toc",
   "/import",
+  "/remote-books",
   "/arrange-books",
   "/group-manage",
   "/book-info",

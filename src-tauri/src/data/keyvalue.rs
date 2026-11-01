@@ -63,7 +63,7 @@ impl KeyValue {
 }
 
 /// `config.xml` 白名单键（未知键忽略，spec 4.5.2 / design 2.3.2）。
-pub const CONFIG_XML_WHITELIST: [&str; 8] = [
+pub const CONFIG_XML_WHITELIST: [&str; 17] = [
     "themeMode",
     "pageAnim",
     "preDownloadNum",
@@ -72,9 +72,20 @@ pub const CONFIG_XML_WHITELIST: [&str; 8] = [
     "chineseConverterType",
     "bookshelfSort",
     "password",
+    "remoteServers",
+    "remoteServerId",
+    "remoteProxyUrl",
+    "webdavUrl",
+    "webdavDir",
+    "webdavAccount",
+    "webdavUser",
+    "webdavPassword",
+    "webdavDeviceName",
 ];
 
-/// 判断某 `config.xml` 键是否在白名单内。
+/// 判断某个 `config.xml` 键是否在白名单内。
 pub fn is_whitelisted_key(key: &str) -> bool {
     CONFIG_XML_WHITELIST.contains(&key)
+        || key.starts_with("remoteServer:password:")
+        || key.starts_with("remoteServer:secret:")
 }

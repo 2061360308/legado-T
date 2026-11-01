@@ -93,6 +93,7 @@ export interface HttpPort {
 export interface FileSystemPort {
   readFile(path: string): Promise<Uint8Array<ArrayBuffer>>;
   writeFile(path: string, data: Uint8Array<ArrayBuffer>): Promise<void>;
+  writeStream?(path: string, stream: ReadableStream<Uint8Array>): Promise<void>;
   readDir(path: string): Promise<{ name: string; isFile: boolean; isDirectory: boolean }[]>;
   exists(path: string): Promise<boolean>;
   mkdir(path: string, options?: { recursive?: boolean }): Promise<void>;

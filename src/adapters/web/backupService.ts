@@ -66,6 +66,95 @@ async function parseConfigXml(xml: string, password: string | null): Promise<Con
   ) as ConfigEntry[];
 }
 
+async function decryptBackupText(text: string, password: string | null): Promise<string | null> {
+  if (!password) return null;
+  const wasm = await backupWasm();
+  return wasm.decrypt_backup_text(text, password) ?? null;
+}
+
+function parseLegacyServers(text: string): unknown[] | null {
+  try {
+    const value = JSON.parse(text) as unknown;
+    return Array.isArray(value) ? value : [value];
+  } catch {
+    return null;
+  }
+}
+
+async function importLegacyServers(
+  text: string,
+  password: string | null,
+): Promise<number> {
+  let values = parseLegacyServers(text);
+  if (!values) {
+    const plain = await decryptBackupText(text.trim(), password);
+    if (!plain) return 0;
+    values = parseLegacyServers(plain);
+  }
+  if (!values) return 0;
+  const row = await db.kv.get("remoteServers");
+  const existing = (() => {
+    if (!row?.value) return [] as unknown[];
+    try {
+      const value = JSON.parse(row.value) as unknown;
+      return Array.isArray(value) ? value : [];
+    } catch {
+      return [];
+    }
+  })();
+  const byId = new Map<number, Record<string, unknown>>();
+  for (const entry of existing) {
+    if (entry && typeof entry === "object") {
+      const value = entry as Record<string, unknown>;
+      const id = Number(value.id);
+      if (Number.isFinite(id)) byId.set(id, value);
+    }
+  }
+  let imported = 0;
+  for (const entry of values) {
+    if (!entry || typeof entry !== "object") continue;
+    const value = entry as Record<string, unknown>;
+    const id = Number(value.id);
+    if (!Number.isFinite(id)) continue;
+    const kind = String(value.type ?? "WEBDAV");
+    if (kind.toLowerCase() !== "webdav") continue;
+    let config = value.config as unknown;
+    if (typeof config === "string") {
+      try {
+        config = JSON.parse(config) as unknown;
+      } catch {
+        continue;
+      }
+    }
+    if (!config || typeof config !== "object") continue;
+    const configValue = config as Record<string, unknown>;
+    const url = String(configValue.url ?? "").trim();
+    if (!url) continue;
+    const passwordValue = String(configValue.password ?? "");
+    byId.set(id, {
+      id,
+      name: String(value.name ?? "WebDAV") || "WebDAV",
+      type: "webdav",
+      config: {
+        url,
+        username: String(configValue.username ?? ""),
+        password: "",
+      },
+      sortNumber: Number(value.sortNumber ?? 0) || 0,
+    });
+    await db.kv.put({ key: `remoteServer:password:${id}`, value: passwordValue });
+    if (!(await db.kv.get("remoteServerId"))) {
+      await db.kv.put({ key: "remoteServerId", value: String(id) });
+    }
+    imported += 1;
+  }
+  await db.kv.put({
+    key: "remoteServers",
+    value: JSON.stringify([...byId.values()]),
+  });
+  return imported;
+}
+
 function jsonText(value: unknown): string {
   return JSON.stringify(value);
 }
@@ -297,6 +386,14 @@ export async function importWebBackup(
     files += 1;
   }
 
+  if (entries.get("servers.json")) {
+    const count = await importLegacyServers(entries.get("servers.json")!, password);
+    if (count > 0) {
+      items += count;
+      files += 1;
+    }
+  }
+
   for (const name of entries.keys()) {
     if (
       ![
@@ -314,6 +411,7 @@ export async function importWebBackup(
         "dictRule.json",
         "dictRules.json",
         "httpTTS.json",
+        "servers.json",
         "config.xml",
       ].includes(name) &&
       !skipped.includes(name)

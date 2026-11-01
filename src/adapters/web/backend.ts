@@ -543,6 +543,11 @@ export function createWebBackend() {
         case COMMANDS.bookUpsert:
           await saveBook(args.book as Book);
           return undefined as T;
+        case COMMANDS.bookSetRemoteOrigin:
+          await db.books.update(argString(args, "bookUrl"), {
+            origin: argString(args, "origin"),
+          });
+          return undefined as T;
         case COMMANDS.bookDelete:
           await deleteBook(argString(args, "bookUrl"));
           return undefined as T;

@@ -76,3 +76,8 @@ pub fn parse_config_xml_json(xml: &str, password: Option<String>) -> Result<Stri
         .collect::<Vec<_>>();
     serde_json::to_string(&entries).map_err(|error| JsValue::from_str(&error.to_string()))
 }
+
+#[wasm_bindgen]
+pub fn decrypt_backup_text(value: &str, password: String) -> Option<String> {
+    backup_core::decrypt_text(value, &password)
+}

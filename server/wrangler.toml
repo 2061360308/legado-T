@@ -1,0 +1,16 @@
+name = "local-reader-server"
+main = "src/cloudflare.ts"
+compatibility_date = "2026-10-29"
+
+[observability]
+enabled = true
+
+# Defaults match the free/pro upload body limit.
+# Override these values for a self-hosted or higher-tier deployment.
+[vars]
+MAX_UPLOAD_BYTES = "104857600"
+MAX_DOWNLOAD_BYTES = "0"
+TIMEOUT_MS = "120000"
+MAX_REDIRECTS = "5"
+ALLOW_PRIVATE_HOSTS = "false"
+CORS_ORIGIN = "*"

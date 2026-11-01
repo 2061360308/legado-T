@@ -161,7 +161,7 @@ function openBookshelfConfig() {
 function onManage(key: string) {
   if (key === "updateToc") message.value = "请在书籍目录中使用“更新目录”";
   else if (key === "import") router.push("/import");
-  else if (key === "remote") message.value = "当前版本不支持远程书籍";
+  else if (key === "remote") router.push("/remote-books");
   else if (key === "addUrl") message.value = "当前版本不支持添加网址";
   else if (key === "arrange") router.push("/arrange-books");
   else if (key === "cache") router.push("/cache-books");

@@ -4,6 +4,7 @@ export const COMMANDS = {
   bookGet: "book_get",
   bookUpsert: "book_upsert",
   bookDelete: "book_delete",
+  bookSetRemoteOrigin: "book_set_remote_origin",
   chapterList: "chapter_list",
   groupList: "group_list",
   groupSave: "group_save",

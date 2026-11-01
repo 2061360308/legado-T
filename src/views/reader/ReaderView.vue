@@ -796,7 +796,7 @@ function scrollByViewport(direction: 1 | -1) {
   }
   if (scrollTop.value <= 2) {
     if (snap.chapterIndex > 0) open(snap.chapterIndex - 1, 2147483647);
-    else showToast("??????");
+    else showToast("已经是第一章");
     return;
   }
   el.scrollTo({
@@ -839,7 +839,7 @@ function nextPage(speed = 300) {
       open(snap.chapterIndex + 1, 0);
       return;
     }
-    showToast("???????");
+    showToast("已经是最后一页");
     return;
   }
   if (useTurnOverlay.value) {
@@ -901,7 +901,7 @@ function prevPage(speed = 300) {
       open(snap.chapterIndex - 1, 2147483647);
       return;
     }
-    showToast("??????");
+    showToast("已经是第一页");
     return;
   }
   if (useTurnOverlay.value) {
@@ -1215,7 +1215,7 @@ function onSelectionAction(key: string) {
       void navigator.share({ text }).catch(() => undefined);
     } else {
       void copySelectionText(current.text);
-      showToast("???????");
+      showToast("已复制选中文本");
     }
   } else if (key === "readAloud") {
     aloudVisible.value = true;

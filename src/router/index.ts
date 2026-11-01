@@ -7,6 +7,11 @@ const routes: RouteRecordRaw[] = [
   { path: "/", name: "bookshelf", component: () => import("@/views/bookshelf/BookshelfView.vue") },
   { path: "/import", name: "import", component: () => import("@/views/import/ImportView.vue") },
   {
+    path: "/remote-books",
+    name: "remote-books",
+    component: () => import("@/views/remote/RemoteBooksView.vue"),
+  },
+  {
     path: "/arrange-books",
     name: "arrange-books",
     component: () => import("@/views/bookshelf/ArrangeBooksView.vue"),

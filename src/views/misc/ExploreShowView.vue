@@ -5,9 +5,10 @@ import EmptyState from "@/components/android/EmptyState.vue";
 
 <template>
   <div class="explore-page">
-    <TitleBar title="鍙戠幇" :back="false" />
+    <TitleBar title="发现" :back="false" />
     <main class="content">
-      <EmptyState icon="ic_bottom_explore_e" text="鍙戠幇椤垫殏鏈帴鍏ヤ功婧愬唴瀹? />
+<EmptyState icon="ic_bottom_explore_e" text="发现页暂未接入书源内容" />
+
     </main>
   </div>
 </template>

@@ -24,6 +24,7 @@ import {
   readWebFile,
   webFileExists,
   writeWebFile,
+  writeWebStream,
 } from "./storage";
 
 const EMPTY_INSETS: SafeAreaInsets = {
@@ -77,6 +78,7 @@ export function createWebPlatform(): Platform {
       async writeFile(path: string, data: Uint8Array<ArrayBuffer>) {
         await writeWebFile(path, data);
       },
+      writeStream: writeWebStream,
       readDir: readWebDir,
       exists: webFileExists,
       async mkdir(path: string) {

@@ -1,6 +1,7 @@
 use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use backup_core::BackupFile;
 use local_reader_lib::data::backup::{export_backup, import_backup};
 use local_reader_lib::data::db;
 use local_reader_lib::data::keyvalue::KeyValue;
@@ -70,6 +71,18 @@ fn export_and_restore_merge_without_chapters() {
     .unwrap();
     KeyValue::set(&conn, "password", "secret").unwrap();
     KeyValue::set(&conn, "themeMode", "1").unwrap();
+    KeyValue::set(
+        &conn,
+        "remoteServers",
+        r#"[{"id":123,"name":"WebDAV","type":"webdav","config":{"url":"https://dav.example.com/","username":"u","password":""},"sortNumber":0}]"#,
+    )
+    .unwrap();
+    KeyValue::set(&conn, "remoteServerId", "123").unwrap();
+    KeyValue::set(&conn, "remoteProxyUrl", "https://proxy.example.com/api/remote").unwrap();
+    KeyValue::set(&conn, "remoteServer:password:123", "webdav-pass").unwrap();
+    KeyValue::set(&conn, "remoteServer:secret:456", "s3-secret").unwrap();
+    KeyValue::set(&conn, "webdavUrl", "https://dav.example.com/").unwrap();
+    KeyValue::set(&conn, "webdavPassword", "backup-dav-pass").unwrap();
 
     let report = export_backup(&conn, &path.to_string_lossy(), Some("123456"), None).unwrap();
     assert!(report.files >= 3);
@@ -98,9 +111,104 @@ fn export_and_restore_merge_without_chapters() {
         KeyValue::get(&restored, "themeMode").unwrap().as_deref(),
         Some("1")
     );
+    assert!(KeyValue::get(&restored, "remoteServers")
+        .unwrap()
+        .unwrap()
+        .contains("WebDAV"));
+    assert_eq!(
+        KeyValue::get(&restored, "remoteServerId").unwrap().as_deref(),
+        Some("123")
+    );
+    assert_eq!(
+        KeyValue::get(&restored, "remoteProxyUrl").unwrap().as_deref(),
+        Some("https://proxy.example.com/api/remote")
+    );
+    assert_eq!(
+        KeyValue::get(&restored, "remoteServer:password:123")
+            .unwrap()
+            .as_deref(),
+        Some("webdav-pass")
+    );
+    assert_eq!(
+        KeyValue::get(&restored, "remoteServer:secret:456")
+            .unwrap()
+            .as_deref(),
+        Some("s3-secret")
+    );
+    assert_eq!(
+        KeyValue::get(&restored, "webdavPassword")
+            .unwrap()
+            .as_deref(),
+        Some("backup-dav-pass")
+    );
     assert!(ChapterRepo::list(&restored, "/tmp/book.txt")
         .unwrap()
         .is_empty());
 
+    fs::remove_dir_all(&dir).ok();
+}
+
+#[test]
+fn remote_server_credentials_are_plaintext_without_backup_password() {
+    let dir = temp_dir();
+    fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("backup-plain.zip");
+    let conn = db::open_in_memory().unwrap();
+    KeyValue::set(&conn, "remoteServer:password:123", "webdav-pass").unwrap();
+    KeyValue::set(&conn, "remoteServer:secret:456", "s3-secret").unwrap();
+    KeyValue::set(&conn, "webdavPassword", "backup-dav-pass").unwrap();
+    export_backup(&conn, &path.to_string_lossy(), None, None).unwrap();
+
+    let restored = db::open_in_memory().unwrap();
+    import_backup(&restored, &path.to_string_lossy(), None, &[]).unwrap();
+    assert_eq!(
+        KeyValue::get(&restored, "remoteServer:password:123")
+            .unwrap()
+            .as_deref(),
+        Some("webdav-pass")
+    );
+    assert_eq!(
+        KeyValue::get(&restored, "remoteServer:secret:456")
+            .unwrap()
+            .as_deref(),
+        Some("s3-secret")
+    );
+    assert_eq!(
+        KeyValue::get(&restored, "webdavPassword")
+            .unwrap()
+            .as_deref(),
+        Some("backup-dav-pass")
+    );
+    fs::remove_dir_all(&dir).ok();
+}
+
+#[test]
+fn imports_kotlin_servers_json_plaintext_and_encrypted() {
+    let dir = temp_dir();
+    fs::create_dir_all(&dir).unwrap();
+    let body = r#"[{"id":77,"name":"Old WebDAV","type":"WEBDAV","config":"{\"url\":\"https://dav.example.com/\",\"username\":\"u\",\"password\":\"p\"}","sortNumber":1}]"#;
+    for (name, password) in [("plain.zip", None), ("encrypted.zip", Some("123456"))] {
+        let content = if let Some(password) = password {
+            backup_core::encrypt_text(body, password).unwrap()
+        } else {
+            body.to_string()
+        };
+        let files = vec![BackupFile {
+            name: "servers.json".into(),
+            bytes: content.into_bytes(),
+        }];
+        let path = dir.join(name);
+        fs::write(&path, backup_core::pack(&files).unwrap()).unwrap();
+        let conn = db::open_in_memory().unwrap();
+        import_backup(&conn, &path.to_string_lossy(), password, &[]).unwrap();
+        let servers = KeyValue::get(&conn, "remoteServers").unwrap().unwrap();
+        assert!(servers.contains("Old WebDAV"), "{servers}");
+        assert_eq!(
+            KeyValue::get(&conn, "remoteServer:password:77")
+                .unwrap()
+                .as_deref(),
+            Some("p")
+        );
+    }
     fs::remove_dir_all(&dir).ok();
 }

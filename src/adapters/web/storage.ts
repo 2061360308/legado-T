@@ -246,6 +246,37 @@ export async function writeWebFile(
   return row;
 }
 
+export async function writeWebStream(
+  path: string,
+  stream: ReadableStream<Uint8Array>,
+): Promise<void> {
+  const value = normalizePath(path);
+  await ensureDirectory(parentPath(value));
+  if (opfsSupported()) {
+    const parent = await opfsParent(value, true);
+    if (parent) {
+      const handle = await parent.dir.getFileHandle(parent.name, { create: true });
+      const writable = await handle.createWritable();
+      await stream.pipeTo(writable);
+      const file = await handle.getFile();
+      await db.files.put({
+        path: value,
+        bookUrl: null,
+        kind: "other",
+        name: baseName(value),
+        size: file.size,
+        mime: file.type || "application/octet-stream",
+        blob: new Blob(),
+        storage: "opfs",
+        updated: nowMs(),
+      });
+      return;
+    }
+  }
+  const blob = await new Response(stream).blob();
+  await writeWebFile(value, blob);
+}
+
 export async function readWebFile(path: string): Promise<Uint8Array<ArrayBuffer>> {
   const blob = await readWebBlob(path);
   return new Uint8Array(await blob.arrayBuffer());

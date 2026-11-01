@@ -272,6 +272,84 @@ fn read_zip_entries(path: &str) -> Result<Vec<(String, String)>> {
         .collect())
 }
 
+fn parse_legacy_servers(text: &str, password: Option<&str>) -> Option<Vec<Value>> {
+    let plain = if text.trim_start().starts_with('[') {
+        text.to_string()
+    } else {
+        backup_core::decrypt_text(text.trim(), password?)?
+    };
+    serde_json::from_str::<Vec<Value>>(&plain).ok()
+}
+
+fn import_legacy_servers(conn: &Connection, text: &str, password: Option<&str>) -> Result<usize> {
+    let Some(values) = parse_legacy_servers(text, password) else {
+        return Ok(0);
+    };
+    let existing = KeyValue::get(conn, "remoteServers")?
+        .and_then(|value| serde_json::from_str::<Vec<Value>>(&value).ok())
+        .unwrap_or_default();
+    let mut merged = existing;
+    let mut imported = 0usize;
+    for value in values {
+        let Some(id) = value.get("id").and_then(Value::as_i64) else {
+            continue;
+        };
+        let kind = value
+            .get("type")
+            .and_then(Value::as_str)
+            .unwrap_or("WEBDAV");
+        if !kind.eq_ignore_ascii_case("WEBDAV") {
+            continue;
+        }
+        let config_value = value.get("config").cloned().unwrap_or(Value::Null);
+        let config = match config_value {
+            Value::String(ref text) => serde_json::from_str::<Value>(text).ok(),
+            Value::Object(_) => Some(config_value),
+            _ => None,
+        };
+        let Some(config) = config else { continue };
+        let url = config.get("url").and_then(Value::as_str).unwrap_or("");
+        if url.trim().is_empty() {
+            continue;
+        }
+        let username = config.get("username").and_then(Value::as_str).unwrap_or("");
+        let server_password = config.get("password").and_then(Value::as_str).unwrap_or("");
+        let name = value
+            .get("name")
+            .and_then(Value::as_str)
+            .filter(|name| !name.trim().is_empty())
+            .unwrap_or("WebDAV");
+        let sort_number = value
+            .get("sortNumber")
+            .and_then(Value::as_i64)
+            .unwrap_or(0);
+        let item = serde_json::json!({
+            "id": id,
+            "name": name,
+            "type": "webdav",
+            "config": {
+                "url": url,
+                "username": username,
+                "password": ""
+            },
+            "sortNumber": sort_number
+        });
+        merged.retain(|entry| entry.get("id").and_then(Value::as_i64) != Some(id));
+        merged.push(item);
+        KeyValue::set(
+            conn,
+            &format!("remoteServer:password:{id}"),
+            server_password,
+        )?;
+        if KeyValue::get(conn, "remoteServerId")?.is_none() {
+            KeyValue::set(conn, "remoteServerId", &id.to_string())?;
+        }
+        imported += 1;
+    }
+    KeyValue::set(conn, "remoteServers", &serde_json::to_string(&merged)?)?;
+    Ok(imported)
+}
+
 fn restore_config(
     conn: &Connection,
     xml: &str,
@@ -459,6 +537,15 @@ pub fn import_backup(
             "local-reader-settings.json" => {
                 settings_json = Some(text);
                 files += 1;
+            }
+            "servers.json" => {
+                let count = import_legacy_servers(conn, &text, password)?;
+                if count == 0 && !text.trim_start().starts_with('[') {
+                    skipped.push(name);
+                } else {
+                    items += count;
+                    files += 1;
+                }
             }
             "config.xml" => {
                 items += restore_config(conn, &text, password, ignore)?;

@@ -99,6 +99,14 @@ fn decrypt_any(text: &str, password: &str) -> Option<Vec<u8>> {
     crypt(&bytes, derive_key_kotlin(password), false)
 }
 
+pub fn encrypt_text(text: &str, password: &str) -> Option<String> {
+    encrypt_kotlin(text.as_bytes(), password)
+}
+
+pub fn decrypt_text(text: &str, password: &str) -> Option<String> {
+    decrypt_any(text, password).and_then(|bytes| String::from_utf8(bytes).ok())
+}
+
 pub fn pack(files: &[BackupFile]) -> Result<Vec<u8>, String> {
     let cursor = Cursor::new(Vec::new());
     let mut zip = ZipWriter::new(cursor);

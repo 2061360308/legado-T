@@ -3,7 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open, save } from "@tauri-apps/plugin-dialog";
-import { exists, mkdir, readDir, readFile, writeFile } from "@tauri-apps/plugin-fs";
+import { create, exists, mkdir, readDir, readFile, writeFile } from "@tauri-apps/plugin-fs";
 import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import { tauriImportPicker } from "./bookImportPicker";
 import type {
@@ -94,6 +94,19 @@ export function createTauriPlatform(): Platform {
     files: {
       readFile,
       writeFile,
+      async writeStream(path: string, stream: ReadableStream<Uint8Array>) {
+        const file = await create(path);
+        const reader = stream.getReader();
+        try {
+          for (;;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            await file.write(value);
+          }
+        } finally {
+          await file.close();
+        }
+      },
       readDir,
       exists,
       mkdir,

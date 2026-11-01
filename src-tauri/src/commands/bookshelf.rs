@@ -52,6 +52,20 @@ pub fn book_move_to_top(state: State<AppState>, book_url: String) -> CmdResult<(
 }
 
 #[tauri::command]
+pub fn book_set_remote_origin(
+    state: State<AppState>,
+    book_url: String,
+    origin: String,
+) -> CmdResult<()> {
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let mut book = BookRepo::get(&conn, &book_url)
+        .map_err(|e| e.to_string())?
+        .ok_or("书籍不存在")?;
+    book.origin = origin;
+    BookRepo::upsert(&conn, &book).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub fn book_set_group(state: State<AppState>, book_url: String, group: u64) -> CmdResult<()> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
     let mut book = BookRepo::get(&conn, &book_url)
