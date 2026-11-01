@@ -133,8 +133,18 @@ async function load() {
   }
 }
 
+const readLabel = computed(() => {
+  const type = book.value?.type ?? 0;
+  if (type & 2) return "播放";
+  if (type & 4) return "看图";
+  if (type & 8) return "打开文件";
+  return "阅读";
+});
+
 function read() {
-  router.push({ path: "/reader", query: { bookUrl: bookUrl.value } });
+  const type = book.value?.type ?? 0;
+  const path = type & 2 ? "/audio" : type & 4 ? "/manga" : type & 8 ? "/file-source" : "/reader";
+  router.push({ path, query: { bookUrl: bookUrl.value } });
 }
 
 function toc() {
@@ -329,7 +339,7 @@ onMounted(load);
 
     <footer class="actions">
       <button @click="removeFromShelf">删除书籍</button>
-      <button class="primary" @click="read">阅读</button>
+      <button class="primary" @click="read">{{ readLabel }}</button>
     </footer>
 
     <PopupMenu v-model="menuVisible" :items="menuItems" :top="54" @select="onMenu" />

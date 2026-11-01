@@ -33,6 +33,12 @@ const routes: RouteRecordRaw[] = [
   },
   { path: "/reader", name: "reader", component: () => import("@/views/reader/ReaderView.vue") },
   { path: "/audio", name: "audio", component: () => import("@/views/audio/AudioPlayView.vue") },
+  { path: "/manga", name: "manga", component: () => import("@/views/reader/MangaView.vue") },
+  {
+    path: "/file-source",
+    name: "file-source",
+    component: () => import("@/views/reader/FileSourceView.vue"),
+  },
   {
     path: "/book-search",
     name: "book-search",

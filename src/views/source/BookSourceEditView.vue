@@ -8,6 +8,8 @@ import {
 import type { BookSource, BookSourceRule } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
+import UrlOptionDialog from "./UrlOptionDialog.vue";
+import QrCodeDialog from "./QrCodeDialog.vue";
 
 type RuleKey = "search" | "explore" | "bookInfo" | "toc" | "content" | "review";
 
@@ -20,6 +22,10 @@ const rawJson = ref("");
 const message = ref("");
 const loading = ref(false);
 const saving = ref(false);
+const urlOptionVisible = ref(false);
+const urlOptionJson = ref("");
+const qrVisible = ref(false);
+const qrText = computed(() => JSON.stringify(draft.value, null, 2));
 
 const tabs: { key: "basic" | RuleKey | "json"; label: string }[] = [
   { key: "basic", label: "基础" },
@@ -172,6 +178,27 @@ function openVariables() {
   void saveAndGo("/book-source-variables");
 }
 
+function applyUrlOption(json: string) {
+  urlOptionJson.value = json;
+}
+
+function appendUrlOption(field: "searchUrl" | "exploreUrl") {
+  if (!urlOptionJson.value.trim()) return;
+  const current = String(draft.value[field] || "").trim();
+  if (!current) {
+    message.value = "请先填写目标 URL";
+    return;
+  }
+  draft.value[field] = `${current},${urlOptionJson.value}`;
+  message.value = "URL 参数已追加";
+}
+
+async function copyUrlOption() {
+  if (!urlOptionJson.value.trim()) return;
+  await navigator.clipboard.writeText(urlOptionJson.value);
+  message.value = "URL 参数已复制";
+}
+
 async function pasteSource() {
   try {
     const text = await navigator.clipboard.readText();
@@ -235,6 +262,7 @@ onMounted(load);
       <button class="mini" @click="openDebug">调试</button>
       <button class="mini" @click="openLogin">登录</button>
       <button class="mini" @click="openVariables">变量</button>
+      <button class="mini" @click="qrVisible = true">二维码</button>
     </div>
 
     <nav class="tabs">
@@ -274,6 +302,16 @@ onMounted(load);
         <div class="row">
           <button @click="pasteSource">粘贴书源</button>
           <button @click="copySource">复制书源</button>
+          <button @click="urlOptionVisible = true">URL 选项</button>
+        </div>
+        <label v-if="urlOptionJson" class="code">
+          URL 参数 JSON
+          <textarea v-model="urlOptionJson" class="small" />
+        </label>
+        <div v-if="urlOptionJson" class="row">
+          <button @click="appendUrlOption('searchUrl')">追加到搜索 URL</button>
+          <button @click="appendUrlOption('exploreUrl')">追加到发现 URL</button>
+          <button @click="copyUrlOption">复制参数</button>
         </div>
       </template>
 
@@ -300,6 +338,12 @@ onMounted(load);
       <p v-if="message" class="message">{{ message }}</p>
       <p v-if="loading" class="loading">加载中…</p>
     </main>
+
+    <UrlOptionDialog
+      v-model="urlOptionVisible"
+      @confirm="applyUrlOption"
+    />
+    <QrCodeDialog v-model="qrVisible" mode="share" :text="qrText" />
   </div>
 </template>
 

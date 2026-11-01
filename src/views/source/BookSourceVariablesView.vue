@@ -7,6 +7,7 @@ import {
   bookSourceGetVariables,
   bookSourceSetVariable,
 } from "@/core/application/bookSources";
+import { platform } from "@/runtime";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 
@@ -57,6 +58,51 @@ function removeRow(index: number) {
   rows.value.splice(index, 1);
 }
 
+async function importVariables() {
+  const path = await platform.dialog.open({
+    multiple: false,
+    filters: [{ name: "变量 JSON", extensions: ["json", "txt"] }],
+  });
+  if (typeof path !== "string" || !path) return;
+  try {
+    const bytes = await platform.files.readFile(path);
+    const parsed = JSON.parse(new TextDecoder("utf-8").decode(bytes)) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("变量文件必须是 JSON 对象");
+    }
+    const entries = Object.entries(parsed as Record<string, unknown>).map(
+      ([key, value]) => ({ key, value: String(value), original: true }),
+    );
+    rows.value = entries;
+    await save();
+    message.value = `已导入 ${entries.length} 个变量`;
+  } catch (error) {
+    message.value = String(error);
+  }
+}
+
+async function exportVariables() {
+  try {
+    const map = Object.fromEntries(
+      rows.value
+        .map((row) => [row.key.trim(), row.value])
+        .filter(([key]) => key),
+    );
+    const path = await platform.dialog.save({
+      defaultPath: "source-variables.json",
+      filters: [{ name: "变量 JSON", extensions: ["json"] }],
+    });
+    if (!path) return;
+    await platform.files.writeFile(
+      path,
+      new TextEncoder().encode(JSON.stringify(map, null, 2)),
+    );
+    message.value = "变量已导出";
+  } catch (error) {
+    message.value = String(error);
+  }
+}
+
 async function save() {
   if (saving.value) return;
   const currentKeys = new Set(
@@ -99,6 +145,10 @@ onMounted(load);
 
     <main class="content">
       <p class="source-name">{{ sourceName }}</p>
+      <div class="row">
+        <button :disabled="loading" @click="importVariables">导入变量</button>
+        <button :disabled="loading" @click="exportVariables">导出变量</button>
+      </div>
       <p v-if="message" class="message">{{ message }}</p>
       <p v-if="loading" class="message">加载中…</p>
 
@@ -142,6 +192,19 @@ onMounted(load);
 .message {
   margin: 0 0 8px;
   color: var(--ac-secondary-text);
+  font-size: 12px;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.row button {
+  border: 1px solid var(--ac-divider);
+  background: transparent;
+  color: var(--ac-primary-text);
+  border-radius: 4px;
+  padding: 6px 10px;
   font-size: 12px;
 }
 .table {

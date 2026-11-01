@@ -1,16 +1,28 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { bookGet, chapterList } from "@/core/application/books";
+import { bookSourceResource } from "@/core/application/bookSources";
+import { readerSaveProgress } from "@/core/application/reader";
+import type { Book, BookChapter } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 
+const route = useRoute();
 const router = useRouter();
+const bookUrl = computed(() => String(route.query.bookUrl || ""));
+const book = ref<Book | null>(null);
+const chapters = ref<BookChapter[]>([]);
+const chapterIndex = ref(0);
+const onlineUrl = ref("");
 const message = ref("");
 const audioRef = ref<HTMLAudioElement | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const fileName = ref("");
 const objectUrl = ref("");
+const onlineMode = computed(() => Boolean(bookUrl.value));
+const audioSrc = computed(() => onlineUrl.value || objectUrl.value);
 const playing = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
@@ -26,6 +38,7 @@ function updateCoverSize() {
 onMounted(() => {
   updateCoverSize();
   window.addEventListener("resize", updateCoverSize);
+  void loadOnline();
 });
 
 const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
@@ -41,6 +54,59 @@ function fmt(seconds: number) {
   if (!Number.isFinite(seconds)) return "00:00";
   const total = Math.max(0, Math.floor(seconds));
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+}
+
+function readableIndex(start: number): number {
+  if (!chapters.value.length) return start;
+  let index = Math.max(0, Math.min(chapters.value.length - 1, start));
+  for (let count = 0; count < chapters.value.length; count += 1) {
+    if (!chapters.value[index]?.isVolume) return chapters.value[index].index;
+    index = (index + 1) % chapters.value.length;
+  }
+  return start;
+}
+
+async function loadOnline() {
+  if (!bookUrl.value) return;
+  try {
+    book.value = await bookGet(bookUrl.value);
+    chapters.value = await chapterList(bookUrl.value);
+    await loadChapter(readableIndex(book.value?.durChapterIndex ?? 0));
+  } catch (error) {
+    message.value = String(error);
+  }
+}
+
+async function loadChapter(index: number) {
+  const chapter = chapters.value.find((item) => item.index === index);
+  if (!chapter) return;
+  message.value = "";
+  onlineUrl.value = "";
+  chapterIndex.value = index;
+  fileName.value = chapter.title;
+  currentTime.value = 0;
+  duration.value = 0;
+  playing.value = false;
+  try {
+    const resource = await bookSourceResource(bookUrl.value, index);
+    onlineUrl.value = resource.url;
+    fileName.value = resource.title || chapter.title;
+    await readerSaveProgress(
+      bookUrl.value,
+      index,
+      0,
+      fileName.value,
+    ).catch(() => undefined);
+  } catch (error) {
+    message.value = String(error);
+  }
+}
+
+async function changeOnlineChapter(delta: number) {
+  const position = chapters.value.findIndex((item) => item.index === chapterIndex.value);
+  const target = position + delta;
+  if (target < 0 || target >= chapters.value.length) return;
+  await loadChapter(readableIndex(target));
 }
 
 function pickFile() {
@@ -64,8 +130,8 @@ function onFile(event: Event) {
 
 function togglePlay() {
   const audio = audioRef.value;
-  if (!audio || !objectUrl.value) {
-    pickFile();
+  if (!audio || !audioSrc.value) {
+    if (!onlineMode.value) pickFile();
     return;
   }
   if (audio.paused) void audio.play();
@@ -109,6 +175,7 @@ function onLoaded() {
 
 function onEnded() {
   playing.value = false;
+  if (onlineMode.value) void changeOnlineChapter(1);
 }
 
 onBeforeUnmount(() => {
@@ -121,14 +188,17 @@ onBeforeUnmount(() => {
 <template>
   <div class="audio-page">
     <div class="bg-mask" />
-    <TitleBar title="音频播放" dark @back="router.back()">
+    <TitleBar :title="book?.name || '音频播放'" dark @back="router.back()">
       <template #actions>
         <button class="speed-badge" @click="cycleSpeed">{{ speed }}x</button>
-        <button aria-label="章节列表" @click="message = '暂无章节列表'">
+        <button
+          aria-label="章节列表"
+          @click="onlineMode ? router.push({ path: '/toc', query: { bookUrl } }) : (message = '暂无章节列表')"
+        >
           <Icon name="ic_chapter_list" :size="24" />
         </button>
-        <button aria-label="更多" @click="message = '更多功能暂未接入'">
-          <Icon name="ic_more_vert" :size="24" />
+        <button aria-label="下一章" :disabled="!onlineMode" @click="changeOnlineChapter(1)">
+          <Icon name="ic_skip_next" :size="24" />
         </button>
       </template>
     </TitleBar>
@@ -140,17 +210,28 @@ onBeforeUnmount(() => {
       </button>
       <div class="cover">
         <CoverImage
-          name="音频"
+          :name="book?.name || '音频'"
+          :author="book?.author || ''"
+          :src="book?.coverUrl || null"
           :width="coverSize"
           :height="coverSize"
           :radius="coverSize / 2"
         />
       </div>
-      <p class="chapter">{{ fileName || "选择本地音频文件" }}</p>
-      <button class="choose" @click="pickFile">{{ fileName ? "更换音频" : "选择音频" }}</button>
-      <input ref="fileInput" class="file-input" type="file" accept="audio/*" @change="onFile" />
+      <p class="chapter">{{ fileName || (onlineMode ? "加载音频中…" : "选择本地音频文件") }}</p>
+      <button v-if="!onlineMode" class="choose" @click="pickFile">
+        {{ fileName ? "更换音频" : "选择音频" }}
+      </button>
+      <input v-if="!onlineMode" ref="fileInput" class="file-input" type="file" accept="audio/*" @change="onFile" />
+      <div v-if="onlineMode && chapters.length" class="chapter-nav">
+        <button :disabled="chapterIndex <= 0" @click="changeOnlineChapter(-1)">上一章</button>
+        <span>{{ chapterIndex + 1 }} / {{ chapters.length }}</span>
+        <button :disabled="chapterIndex >= chapters.length - 1" @click="changeOnlineChapter(1)">下一章</button>
+      </div>
       <audio
         ref="audioRef"
+        :src="audioSrc || undefined"
+        preload="metadata"
         @timeupdate="onTimeUpdate"
         @loadedmetadata="onLoaded"
         @play="playing = true"
@@ -243,6 +324,22 @@ onBeforeUnmount(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.chapter-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+}
+.chapter-nav button {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: transparent;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
 }
 .choose {
   border: 1px solid rgba(255, 255, 255, 0.4);

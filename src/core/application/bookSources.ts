@@ -6,6 +6,9 @@ import type {
   ExploreCategory,
   OnlineBook,
   OnlineChapter,
+  OnlineImage,
+  OnlineImagePage,
+  OnlineResource,
   OnlineSearchResult,
   PayActionResult,
   SourceCheckResult,
@@ -220,6 +223,38 @@ export function bookSourceCheck(
   return invoke<SourceCheckResult[]>(COMMANDS.bookSourceCheck, {
     sourceUrls,
     keyword,
+  });
+}
+
+export function bookSourceResource(
+  bookUrl: string,
+  chapterIndex?: number | null,
+): Promise<OnlineResource> {
+  return invoke<OnlineResource>(COMMANDS.bookSourceResource, {
+    bookUrl,
+    chapterIndex: chapterIndex ?? null,
+  });
+}
+
+export function bookSourceImage(
+  bookUrl: string,
+  chapterIndex?: number | null,
+  url?: string | null,
+): Promise<OnlineImage> {
+  return invoke<OnlineImage>(COMMANDS.bookSourceImage, {
+    bookUrl,
+    chapterIndex: chapterIndex ?? null,
+    url: url ?? null,
+  });
+}
+
+export function bookSourceImages(
+  bookUrl: string,
+  chapterIndex?: number | null,
+): Promise<OnlineImagePage> {
+  return invoke<OnlineImagePage>(COMMANDS.bookSourceImages, {
+    bookUrl,
+    chapterIndex: chapterIndex ?? null,
   });
 }
 

@@ -305,13 +305,21 @@ async function onReSplit() {
   }
 }
 
+function readerPath(): string {
+  const type = book.value?.type ?? 0;
+  if (type & 2) return "/audio";
+  if (type & 4) return "/manga";
+  if (type & 8) return "/file-source";
+  return "/reader";
+}
+
 function openChapter(ch: BookChapter) {
-  router.push({ path: "/reader", query: { bookUrl, chapter: String(ch.index) } });
+  router.push({ path: readerPath(), query: { bookUrl, chapter: String(ch.index) } });
 }
 
 function openBookmark(bookmark: Bookmark) {
   router.push({
-    path: "/reader",
+    path: readerPath(),
     query: {
       bookUrl: bookmark.bookUrl || bookUrl,
       chapter: String(bookmark.chapterIndex ?? 0),

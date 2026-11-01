@@ -14,6 +14,7 @@ import type { BookSource, SourceCheckResult } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
+import QrCodeDialog from "./QrCodeDialog.vue";
 
 const router = useRouter();
 const sources = ref<BookSource[]>([]);
@@ -25,6 +26,7 @@ const checking = ref(false);
 const checkKeyword = ref("斗破");
 const checkResults = ref<SourceCheckResult[]>([]);
 const checkMessage = ref("");
+const qrVisible = ref(false);
 
 const filtered = computed(() => {
   const key = keyword.value.trim().toLowerCase();
@@ -131,6 +133,16 @@ async function runCheck() {
   }
 }
 
+async function importQr(text: string) {
+  try {
+    const count = await bookSourceImport(text);
+    await load();
+    showMessage(`二维码导入 ${count} 个书源`);
+  } catch (error) {
+    showMessage(String(error));
+  }
+}
+
 async function exportSource() {
   if (!sources.value.length) {
     showMessage("暂无可导出的书源");
@@ -165,6 +177,9 @@ onMounted(load);
         </button>
         <button aria-label="新增" @click="edit()">
           <Icon name="ic_add" :size="24" />
+        </button>
+        <button aria-label="二维码导入" @click="qrVisible = true">
+          <Icon name="ic_scan" :size="24" />
         </button>
         <button aria-label="导入" @click="importSource">
           <Icon name="ic_add_online" :size="24" />
@@ -235,6 +250,8 @@ onMounted(load);
         </div>
       </section>
     </div>
+
+    <QrCodeDialog v-model="qrVisible" mode="import" @import="importQr" />
   </div>
 </template>
 

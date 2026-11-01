@@ -878,3 +878,236 @@ pub fn book_source_delete_variable(
     crate::data::source_repo::delete_source_variable(&conn, &book_source_url, &key)
         .map_err(|error| error.to_string())
 }
+
+#[tauri::command(async)]
+pub async fn book_source_resource(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    book_url: String,
+    chapter_index: Option<i32>,
+) -> CmdResult<Value> {
+    let (book, chapters, source) = load_online_context(&state, &book_url)?;
+    let index = chapter_index.unwrap_or(book.dur_chapter_index);
+    let chapter = chapters
+        .iter()
+        .find(|chapter| chapter.index == index)
+        .cloned()
+        .ok_or_else(|| "章节不存在".to_string())?;
+    let mut engine_book = engine_book(&book);
+    let mut engine_chapter = engine_chapter(&book, &chapter);
+    let base_url = book.book_url.clone();
+    let title = chapter.title.clone();
+    let index = chapter.index;
+    let is_vip = chapter.is_vip;
+    let is_pay = chapter.is_pay;
+    tauri::async_runtime::spawn_blocking(move || -> Result<Value, String> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|error| error.to_string())?;
+        let pipeline = create_pipeline(&app)?;
+        let url = runtime
+            .block_on(pipeline.resource(&source, &mut engine_book, &mut engine_chapter, None))
+            .map_err(|error| error.to_string())?;
+        let url = engine_native::upstream::net::absolute_url(&base_url, &url);
+        Ok(serde_json::json!({
+            "url": url,
+            "title": title,
+            "index": index,
+            "isVip": is_vip,
+            "isPay": is_pay,
+        }))
+    })
+    .await
+    .map_err(|error| error.to_string())?
+}
+
+fn image_mime(bytes: &[u8]) -> &'static str {
+    if bytes.starts_with(&[0x89, b'P', b'N', b'G']) {
+        "image/png"
+    } else if bytes.starts_with(&[0xFF, 0xD8]) {
+        "image/jpeg"
+    } else if bytes.starts_with(b"GIF8") {
+        "image/gif"
+    } else if bytes.len() > 12 && &bytes[0..4] == b"RIFF" && &bytes[8..12] == b"WEBP" {
+        "image/webp"
+    } else if bytes.starts_with(b"BM") {
+        "image/bmp"
+    } else if bytes.starts_with(b"<svg") || bytes.starts_with(b"<?xml") {
+        "image/svg+xml"
+    } else {
+        "image/jpeg"
+    }
+}
+
+#[tauri::command(async)]
+pub async fn book_source_image(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    book_url: String,
+    chapter_index: Option<i32>,
+    url: Option<String>,
+) -> CmdResult<Value> {
+    use base64::Engine as _;
+    let (book, chapters, source) = load_online_context(&state, &book_url)?;
+    let index = chapter_index.unwrap_or(book.dur_chapter_index);
+    let chapter = chapters
+        .iter()
+        .find(|chapter| chapter.index == index)
+        .cloned()
+        .ok_or_else(|| "章节不存在".to_string())?;
+    let title = chapter.title.clone();
+    let index = chapter.index;
+    let mut engine_book = engine_book(&book);
+    let mut engine_chapter = engine_chapter(&book, &chapter);
+    let base_url = book.book_url.clone();
+    tauri::async_runtime::spawn_blocking(move || -> Result<Value, String> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|error| error.to_string())?;
+        let pipeline = create_pipeline(&app)?;
+        let resource_url = match url.filter(|value| !value.trim().is_empty()) {
+            Some(url) => url,
+            None => runtime
+                .block_on(pipeline.resource(&source, &mut engine_book, &mut engine_chapter, None))
+                .map_err(|error| error.to_string())?,
+        };
+        let resource_url = engine_native::upstream::net::absolute_url(&base_url, &resource_url);
+        let bytes = runtime
+            .block_on(pipeline.fetch_image(
+                &source,
+                &mut engine_book,
+                &mut engine_chapter,
+                &resource_url,
+                false,
+            ))
+            .map_err(|error| error.to_string())?;
+        let mime = image_mime(&bytes);
+        let encoded = base64::engine::general_purpose::STANDARD.encode(&bytes);
+        Ok(serde_json::json!({
+            "url": resource_url,
+            "title": title,
+            "index": index,
+            "dataUrl": format!("data:{mime};base64,{encoded}"),
+        }))
+    })
+    .await
+    .map_err(|error| error.to_string())?
+}
+
+fn extract_image_rules(html: &str) -> Vec<String> {
+    let pattern = fancy_regex::Regex::new(r#"(?is)<img[^>]+src\s*=\s*["']([^>]*)["']"#)
+        .expect("image regex");
+    let mut images = Vec::new();
+    for captures in pattern.captures_iter(html).flatten() {
+        let Some(value) = captures.get(1) else {
+            continue;
+        };
+        let value = value
+            .as_str()
+            .replace("&quot;", "\"")
+            .replace("&#34;", "\"")
+            .replace("&amp;", "&")
+            .trim()
+            .to_string();
+        if !value.is_empty() && !images.contains(&value) {
+            images.push(value);
+        }
+    }
+    images
+}
+
+#[tauri::command(async)]
+pub async fn book_source_images(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    book_url: String,
+    chapter_index: Option<i32>,
+    url: Option<String>,
+) -> CmdResult<Value> {
+    use base64::Engine as _;
+    let (book, chapters, source) = load_online_context(&state, &book_url)?;
+    let index = chapter_index.unwrap_or(book.dur_chapter_index);
+    let chapter = chapters
+        .iter()
+        .find(|chapter| chapter.index == index)
+        .cloned()
+        .ok_or_else(|| "章节不存在".to_string())?;
+    let title = chapter.title.clone();
+    let index = chapter.index;
+    let mut engine_book = engine_book(&book);
+    let mut engine_chapter = engine_chapter(&book, &chapter);
+    let base_url = book.book_url.clone();
+    tauri::async_runtime::spawn_blocking(move || -> Result<Value, String> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|error| error.to_string())?;
+        let pipeline = create_pipeline(&app)?;
+        let mut rules = Vec::new();
+        if let Ok(html) = runtime.block_on(pipeline.content(
+            &source,
+            &mut engine_book,
+            &mut engine_chapter,
+            None,
+        )) {
+            rules = extract_image_rules(&html);
+        }
+        if rules.is_empty() {
+            let resource = url
+                .filter(|value| !value.trim().is_empty())
+                .or_else(|| {
+                    runtime
+                        .block_on(pipeline.resource(
+                            &source,
+                            &mut engine_book,
+                            &mut engine_chapter,
+                            None,
+                        ))
+                        .ok()
+                })
+                .unwrap_or_default();
+            if !resource.trim().is_empty() {
+                rules.push(resource);
+            }
+        }
+        let mut images = Vec::new();
+        for rule in rules.into_iter().take(80) {
+            let rule = if rule.starts_with("http://") || rule.starts_with("https://") || rule.contains(',') {
+                rule
+            } else {
+                engine_native::upstream::net::absolute_url(&base_url, &rule)
+            };
+            match runtime.block_on(pipeline.fetch_image(
+                &source,
+                &mut engine_book,
+                &mut engine_chapter,
+                &rule,
+                false,
+            )) {
+                Ok(bytes) => {
+                    let mime = image_mime(&bytes);
+                    let encoded = base64::engine::general_purpose::STANDARD.encode(&bytes);
+                    images.push(serde_json::json!({
+                        "url": rule,
+                        "dataUrl": format!("data:{mime};base64,{encoded}"),
+                    }));
+                }
+                Err(error) => {
+                    images.push(serde_json::json!({
+                        "url": rule,
+                        "error": error.to_string(),
+                    }));
+                }
+            }
+        }
+        Ok(serde_json::json!({
+            "title": title,
+            "index": index,
+            "images": images,
+        }))
+    })
+    .await
+    .map_err(|error| error.to_string())?
+}

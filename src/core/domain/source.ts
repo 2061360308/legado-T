@@ -120,6 +120,24 @@ export interface SourceCheckResult {
   error?: string;
 }
 
+export interface OnlineResource {
+  url: string;
+  title: string;
+  index: number;
+  isVip?: boolean;
+  isPay?: boolean;
+}
+
+export interface OnlineImage extends OnlineResource {
+  dataUrl: string;
+}
+
+export interface OnlineImagePage {
+  title: string;
+  index: number;
+  images: { url: string; dataUrl?: string; error?: string }[];
+}
+
 export interface BookReview {
   avatar?: string | null;
   content: string;

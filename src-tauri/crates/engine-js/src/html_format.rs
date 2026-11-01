@@ -17,9 +17,9 @@ static LEAD: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[\n\s]+").unwrap()
 static TAIL: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[\n\s]+$").unwrap());
 static IMG: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)<img[^>]*>").unwrap());
 static IMG_SRC: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r#"(?i)\ssrc\s*=\s*"([^"]*)""#).unwrap());
+    LazyLock::new(|| Regex::new(r#"(?i)\ssrc\s*=\s*"([^>]*)""#).unwrap());
 static IMG_DATA: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r#"(?i)\sdata-[^=>]*=\s*"([^"]*)""#).unwrap());
+    LazyLock::new(|| Regex::new(r#"(?i)\sdata-[^=>]*=\s*"([^>]*)""#).unwrap());
 
 pub fn format_keep_img(html: &str, base_url: Option<&str>) -> String {
     let kept = format_text(html);

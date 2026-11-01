@@ -16,14 +16,19 @@
 - 书籍详情已接入评论、下载地址；阅读器菜单已接入购买/登录本章。
 - 发现页已接入书源列表、分类解析、分类书籍列表、分页、加入书架；支持 JSON、`title::url` 和 `@js` exploreUrl。
 - 书源列表已接入批量搜索检查；书源编辑已接入变量管理（增删改查）。
+- 书源编辑已接入 URL Option 弹窗、二维码分享/扫码/图片导入。
+- 变量页已接入 JSON 批量导入/导出。
+- 图片源已接入多图抓取、漫画阅读页、缩放、章节切换；音频源已接入在线资源播放；文件源已接入文件地址页。
+- 书籍信息/目录按书源类型自动进入文本、音频、图片或文件阅读页。
 - 已验证 `npm run typecheck`、`cargo check -p local-reader`、`npm run tauri:build -- --no-bundle`。
 
 尚未完成：
 
 - `engine-js-wasm` 尚未构建。`rquickjs-sys` 在 `wasm32-unknown-unknown` 需要 wasm clang/wasi-sysroot；当前机器只有 Android NDK clang，缺少 wasm libc 头文件。
 - `engine-web`、Web Worker、Web adapter 未接入。
-- 书源编辑已具备 8 个视图、调试、登录、变量；URL Option、二维码、批量变量导入/导出未完成。
-- 评论、购买、下载已有基础 UI；图片、TTF、音频/图片/文件源的专用阅读 UI 未完成。
+- 书源编辑已具备 8 个视图、调试、登录、变量、URL Option、二维码；变量批量导入/导出已完成。
+- 图片、音频、文件源阅读 UI 已完成基础链路；TTF 字体解密沿用正文引擎的 `queryTTF`，无独立阅读页。
+- 漫画多图/音频/文件源的缓存、下载、图片预加载和失败重试仍可继续完善。
 - Android WebView/CookieManager 未联调。
 
 ## 目标
