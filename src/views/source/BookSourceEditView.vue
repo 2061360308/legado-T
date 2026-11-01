@@ -168,6 +168,10 @@ function openLogin() {
   void saveAndGo("/source-login");
 }
 
+function openVariables() {
+  void saveAndGo("/book-source-variables");
+}
+
 async function pasteSource() {
   try {
     const text = await navigator.clipboard.readText();
@@ -230,6 +234,7 @@ onMounted(load);
       <span class="spacer" />
       <button class="mini" @click="openDebug">调试</button>
       <button class="mini" @click="openLogin">登录</button>
+      <button class="mini" @click="openVariables">变量</button>
     </div>
 
     <nav class="tabs">

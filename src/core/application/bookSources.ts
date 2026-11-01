@@ -3,10 +3,12 @@ import { COMMANDS } from "./commands";
 import type {
   BookReview,
   BookSource,
+  ExploreCategory,
   OnlineBook,
   OnlineChapter,
   OnlineSearchResult,
   PayActionResult,
+  SourceCheckResult,
   WebViewLoginResult,
 } from "@/core/domain";
 
@@ -179,6 +181,46 @@ export function bookSourceSaveCookies(
 
 export function bookSourceClearCookies(sourceUrl: string): Promise<void> {
   return invoke<void>(COMMANDS.bookSourceClearCookies, { sourceUrl });
+}
+
+export function bookSourceDeleteVariable(
+  bookSourceUrl: string,
+  key: string,
+): Promise<void> {
+  return invoke<void>(COMMANDS.bookSourceDeleteVariable, {
+    bookSourceUrl,
+    key,
+  });
+}
+
+export function bookSourceExploreCategories(
+  bookSourceUrl: string,
+): Promise<ExploreCategory[]> {
+  return invoke<ExploreCategory[]>(COMMANDS.bookSourceExploreCategories, {
+    bookSourceUrl,
+  });
+}
+
+export function bookSourceExplore(
+  bookSourceUrl: string,
+  url: string,
+  page = 1,
+): Promise<OnlineSearchResult[]> {
+  return invoke<OnlineSearchResult[]>(COMMANDS.bookSourceExplore, {
+    bookSourceUrl,
+    url,
+    page,
+  });
+}
+
+export function bookSourceCheck(
+  sourceUrls?: string[],
+  keyword = "斗破",
+): Promise<SourceCheckResult[]> {
+  return invoke<SourceCheckResult[]>(COMMANDS.bookSourceCheck, {
+    sourceUrls,
+    keyword,
+  });
 }
 
 export function webviewLogin(

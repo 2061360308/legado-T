@@ -23,6 +23,70 @@ fn load_sources(state: &State<'_, AppState>) -> Result<Vec<BookSource>, String> 
     BookSourceRepo::list(&conn).map_err(|error| error.to_string())
 }
 
+fn explore_category(title: &str, url: &str, style: Option<Value>) -> Option<Value> {
+    let title = title.trim();
+    let url = url.trim();
+    if title.is_empty() && url.is_empty() {
+        return None;
+    }
+    let mut value = serde_json::json!({
+        "title": if title.is_empty() { url } else { title },
+        "url": url,
+    });
+    if let (Some(style), Some(object)) = (style, value.as_object_mut()) {
+        object.insert("style".to_string(), style);
+    }
+    Some(value)
+}
+
+fn explore_categories_from_value(value: Value) -> Vec<Value> {
+    let items = match value {
+        Value::Array(items) => items,
+        Value::Object(_) => vec![value],
+        _ => Vec::new(),
+    };
+    items
+        .into_iter()
+        .filter_map(|item| match item {
+            Value::Object(object) => {
+                let title = object
+                    .get("title")
+                    .or_else(|| object.get("name"))
+                    .and_then(Value::as_str)
+                    .unwrap_or("");
+                let url = object
+                    .get("url")
+                    .or_else(|| object.get("link"))
+                    .and_then(Value::as_str)
+                    .unwrap_or("");
+                explore_category(title, url, object.get("style").cloned())
+            }
+            Value::Array(parts) => {
+                let title = parts.first().and_then(Value::as_str).unwrap_or("");
+                let url = parts.get(1).and_then(Value::as_str).unwrap_or("");
+                explore_category(title, url, None)
+            }
+            Value::String(line) if line.contains('\n') => {
+                explore_categories_from_lines(&line).into_iter().next()
+            }
+            Value::String(line) => {
+                let (title, url) = line.split_once("::")?;
+                explore_category(title, url, None)
+            }
+            _ => None,
+        })
+        .collect()
+}
+
+fn explore_categories_from_lines(raw: &str) -> Vec<Value> {
+    raw.lines()
+        .filter_map(|line| {
+            let (title, url) = line.trim().split_once("::")?;
+            explore_category(title, url, None)
+        })
+        .collect()
+}
+
 #[tauri::command]
 pub fn book_source_list(state: State<'_, AppState>) -> CmdResult<Vec<Value>> {
     load_sources(&state)?
@@ -618,4 +682,199 @@ pub async fn book_source_clear_cookies(
     })
     .await
     .map_err(|error| error.to_string())?
+}
+
+#[tauri::command(async)]
+pub async fn book_source_explore_categories(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    book_source_url: String,
+) -> CmdResult<Vec<Value>> {
+    let source = {
+        let conn = state.conn.lock().map_err(|error| error.to_string())?;
+        BookSourceRepo::get(&conn, &book_source_url)
+            .map_err(|error| error.to_string())?
+            .ok_or_else(|| "书源不存在".to_string())?
+    };
+    let raw = source.explore_url.clone().unwrap_or_default();
+    if raw.trim().is_empty() {
+        return Ok(Vec::new());
+    }
+    tauri::async_runtime::spawn_blocking(move || -> Result<Vec<Value>, String> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|error| error.to_string())?;
+        let pipeline = create_pipeline(&app)?;
+        let trimmed = raw.trim();
+        if trimmed.contains("::")
+            && !trimmed.starts_with('[')
+            && !trimmed.starts_with('{')
+            && !trimmed.starts_with("@js:")
+        {
+            let values = explore_categories_from_lines(trimmed);
+            if !values.is_empty() {
+                return Ok(values);
+            }
+        }
+        let parsed = if let Ok(value) = serde_json::from_str::<Value>(trimmed) {
+            Some(value)
+        } else {
+            let script = trimmed
+                .strip_prefix("@js:")
+                .unwrap_or(trimmed)
+                .trim()
+                .to_string();
+            let request = engine_model::JsRequest {
+                script: &script,
+                source: Some(&source),
+                base_url: &source.book_source_url,
+                page: Some(1),
+                key: None,
+                result: None,
+                result_bytes: None,
+                src: None,
+                response: None,
+                book: None,
+                chapter: None,
+                variables: None,
+            };
+            runtime
+                .block_on(engine_model::JsEvaluator::eval(pipeline.js().as_ref(), request))
+                .ok()
+                .and_then(|text| {
+                    let text = text.trim();
+                    serde_json::from_str::<Value>(text)
+                        .ok()
+                        .or_else(|| {
+                            let values = explore_categories_from_lines(text);
+                            (!values.is_empty()).then_some(Value::Array(values))
+                        })
+                })
+        };
+        let Some(value) = parsed else {
+            return Ok(explore_category("全部", trimmed, None)
+                .into_iter()
+                .collect());
+        };
+        let values = explore_categories_from_value(value);
+        if values.is_empty() {
+            return Ok(explore_category("全部", trimmed, None)
+                .into_iter()
+                .collect());
+        }
+        Ok(values)
+    })
+    .await
+    .map_err(|error| error.to_string())?
+}
+
+#[tauri::command(async)]
+pub async fn book_source_explore(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    book_source_url: String,
+    url: String,
+    page: Option<i32>,
+) -> CmdResult<Vec<Value>> {
+    let source = {
+        let conn = state.conn.lock().map_err(|error| error.to_string())?;
+        BookSourceRepo::get(&conn, &book_source_url)
+            .map_err(|error| error.to_string())?
+            .ok_or_else(|| "书源不存在".to_string())?
+    };
+    let source_url = source.book_source_url.clone();
+    let source_name = source.book_source_name.clone();
+    let page = page.unwrap_or(1).max(1);
+    tauri::async_runtime::spawn_blocking(move || -> Result<Vec<Value>, String> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|error| error.to_string())?;
+        let pipeline = create_pipeline(&app)?;
+        let books = runtime
+            .block_on(pipeline.explore(&source, &url, page))
+            .map_err(|error| error.to_string())?;
+        books
+            .into_iter()
+            .map(|book| {
+                let mut value = serde_json::to_value(book).map_err(|error| error.to_string())?;
+                value["bookSourceUrl"] = Value::String(source_url.clone());
+                value["bookSourceName"] = Value::String(source_name.clone());
+                Ok(value)
+            })
+            .collect()
+    })
+    .await
+    .map_err(|error| error.to_string())?
+}
+
+#[tauri::command(async)]
+pub async fn book_source_check(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    source_urls: Option<Vec<String>>,
+    keyword: Option<String>,
+) -> CmdResult<Vec<Value>> {
+    let mut sources = load_sources(&state)?;
+    if let Some(urls) = source_urls.filter(|items| !items.is_empty()) {
+        sources.retain(|source| urls.iter().any(|url| url == &source.book_source_url));
+    }
+    sources.retain(|source| {
+        source.enabled
+            && source
+                .search_url
+                .as_deref()
+                .map(|value| !value.trim().is_empty())
+                .unwrap_or(false)
+    });
+    if sources.is_empty() {
+        return Ok(Vec::new());
+    }
+    let keyword = keyword.unwrap_or_else(|| "斗破".to_string());
+    tauri::async_runtime::spawn_blocking(move || -> Result<Vec<Value>, String> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|error| error.to_string())?;
+        let pipeline = create_pipeline(&app)?;
+        let mut results = Vec::new();
+        for source in sources {
+            let started = std::time::Instant::now();
+            let name = source.book_source_name.clone();
+            let url = source.book_source_url.clone();
+            match runtime.block_on(pipeline.search(&source, &keyword, 1)) {
+                Ok(books) => results.push(serde_json::json!({
+                    "bookSourceUrl": url,
+                    "bookSourceName": name,
+                    "ok": !books.is_empty(),
+                    "count": books.len(),
+                    "elapsedMs": started.elapsed().as_millis() as u64,
+                    "error": if books.is_empty() { "没有搜索结果" } else { "" },
+                })),
+                Err(error) => results.push(serde_json::json!({
+                    "bookSourceUrl": url,
+                    "bookSourceName": name,
+                    "ok": false,
+                    "count": 0,
+                    "elapsedMs": started.elapsed().as_millis() as u64,
+                    "error": error.to_string(),
+                })),
+            }
+        }
+        Ok(results)
+    })
+    .await
+    .map_err(|error| error.to_string())?
+}
+
+#[tauri::command]
+pub fn book_source_delete_variable(
+    state: State<'_, AppState>,
+    book_source_url: String,
+    key: String,
+) -> CmdResult<()> {
+    let conn = state.conn.lock().map_err(|error| error.to_string())?;
+    crate::data::source_repo::delete_source_variable(&conn, &book_source_url, &key)
+        .map_err(|error| error.to_string())
 }

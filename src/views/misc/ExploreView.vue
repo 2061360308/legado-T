@@ -1,25 +1,57 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { bookSourceList } from "@/core/application/bookSources";
+import type { BookSource } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
-import Icon from "@/components/android/Icon.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
-import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 
 const router = useRouter();
+const sources = ref<BookSource[]>([]);
 const keyword = ref("");
-const hasSources = false;
-const groupMenuVisible = ref(false);
-const groupItems = computed<PopupMenuItem[]>(() => [
-  { key: "empty", label: "暂无分组", muted: true },
-]);
-function onGroupSelect() {
-  groupMenuVisible.value = false;
+const loading = ref(false);
+const message = ref("");
+
+const exploreSources = computed(() =>
+  sources.value.filter(
+    (source) =>
+      source.enabledExplore !== false &&
+      Boolean(String(source.exploreUrl || "").trim()),
+  ),
+);
+
+const filtered = computed(() => {
+  const key = keyword.value.trim().toLowerCase();
+  if (!key) return exploreSources.value;
+  return exploreSources.value.filter((source) => {
+    const name = String(source.bookSourceName || "").toLowerCase();
+    const group = String(source.bookSourceGroup || "").toLowerCase();
+    return name.includes(key) || group.includes(key);
+  });
+});
+
+async function load() {
+  loading.value = true;
+  try {
+    sources.value = await bookSourceList();
+  } catch (error) {
+    message.value = String(error);
+  } finally {
+    loading.value = false;
+  }
 }
 
-function onSearch() {
-  /* 无发现源时搜索无目标 */
+function open(source: BookSource) {
+  router.push({
+    path: "/explore-show",
+    query: {
+      sourceUrl: source.bookSourceUrl,
+      sourceName: source.bookSourceName,
+    },
+  });
 }
+
+onMounted(load);
 </script>
 
 <template>
@@ -30,28 +62,31 @@ function onSearch() {
           <input
             v-model="keyword"
             type="search"
-            placeholder="搜索"
-            @keyup.enter="onSearch"
+            placeholder="搜索书源"
           />
         </label>
       </template>
-      <template #actions>
-        <button aria-label="分组" @click="groupMenuVisible = !groupMenuVisible">
-          <Icon name="ic_groups" :size="24" />
-        </button>
-      </template>
     </TitleBar>
 
-    <PopupMenu v-model="groupMenuVisible" :items="groupItems" @select="onGroupSelect" />
-
-    <main class="explore-list">
+    <p v-if="message" class="message">{{ message }}</p>
+    <p v-if="loading" class="loading">加载中…</p>
+    <main v-else class="explore-list">
       <EmptyState
-        v-if="!hasSources"
+        v-if="!filtered.length"
         icon="ic_bottom_explore_e"
-        text="当前没有发现源哦～"
+        text="当前没有发现源"
         action="去书源管理添加"
         @action="router.push('/book-source')"
       />
+      <button
+        v-for="source in filtered"
+        :key="source.bookSourceUrl"
+        class="explore-item"
+        @click="open(source)"
+      >
+        <span class="source-name">{{ source.bookSourceName || source.bookSourceUrl }}</span>
+        <span class="source-group">{{ source.bookSourceGroup || "未分组" }}</span>
+      </button>
     </main>
   </div>
 </template>
@@ -83,11 +118,36 @@ function onSearch() {
 .search input::placeholder {
   color: rgba(255, 255, 255, 0.65);
 }
+.message,
+.loading {
+  margin: 8px 16px;
+  color: var(--ac-secondary-text);
+  font-size: 12px;
+}
 .explore-list {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
+}
+.explore-item {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  padding: 18px 8px;
+  cursor: pointer;
+}
+.source-name {
+  color: var(--ac-primary-text);
+  font-size: 13px;
+  word-break: break-all;
+}
+.source-group {
+  color: var(--ac-secondary-text);
+  font-size: 11px;
 }
 </style>

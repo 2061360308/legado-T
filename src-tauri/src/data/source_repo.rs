@@ -202,6 +202,18 @@ pub fn set_source_variable(
     Ok(())
 }
 
+pub fn delete_source_variable(
+    conn: &Connection,
+    source_url: &str,
+    key: &str,
+) -> Result<()> {
+    conn.execute(
+        "DELETE FROM source_variables WHERE bookSourceUrl = ?1 AND key = ?2",
+        params![source_url, key],
+    )?;
+    Ok(())
+}
+
 pub fn get_source_variables(conn: &Connection, source_url: &str) -> Result<Value> {
     let mut stmt =
         conn.prepare("SELECT key,value FROM source_variables WHERE bookSourceUrl = ?1")?;

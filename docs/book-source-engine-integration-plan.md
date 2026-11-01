@@ -14,14 +14,16 @@
 - 书源调试页已接入搜索 → 详情 → 目录 → 正文全链路，并显示耗时与错误。
 - 书源登录页已接入 WebView 登录、Cookie 读取/保存/清除。
 - 书籍详情已接入评论、下载地址；阅读器菜单已接入购买/登录本章。
+- 发现页已接入书源列表、分类解析、分类书籍列表、分页、加入书架；支持 JSON、`title::url` 和 `@js` exploreUrl。
+- 书源列表已接入批量搜索检查；书源编辑已接入变量管理（增删改查）。
 - 已验证 `npm run typecheck`、`cargo check -p local-reader`、`npm run tauri:build -- --no-bundle`。
 
 尚未完成：
 
 - `engine-js-wasm` 尚未构建。`rquickjs-sys` 在 `wasm32-unknown-unknown` 需要 wasm clang/wasi-sysroot；当前机器只有 Android NDK clang，缺少 wasm libc 头文件。
 - `engine-web`、Web Worker、Web adapter 未接入。
-- 书源编辑仍为基础 JSON 编辑器，未完成 6 Tab、调试、登录、变量、URL Option。
-- 评论、购买、下载、图片、TTF、音频/图片/文件源 UI 未完成。
+- 书源编辑已具备 8 个视图、调试、登录、变量；URL Option、二维码、批量变量导入/导出未完成。
+- 评论、购买、下载已有基础 UI；图片、TTF、音频/图片/文件源的专用阅读 UI 未完成。
 - Android WebView/CookieManager 未联调。
 
 ## 目标

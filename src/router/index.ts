@@ -59,6 +59,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/source/SourceLoginView.vue"),
   },
   {
+    path: "/book-source-variables",
+    name: "book-source-variables",
+    component: () => import("@/views/source/BookSourceVariablesView.vue"),
+  },
+  {
     path: "/cache-books",
     name: "cache-books",
     component: () => import("@/views/source/CacheBookView.vue"),
@@ -144,6 +149,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/config/AboutView.vue"),
   },
   { path: "/explore", name: "explore", component: () => import("@/views/misc/ExploreView.vue") },
+  {
+    path: "/explore-show",
+    name: "explore-show",
+    component: () => import("@/views/misc/ExploreShowView.vue"),
+  },
   {
     path: "/rss-sources",
     name: "rss-sources",

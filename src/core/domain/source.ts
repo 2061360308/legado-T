@@ -104,6 +104,22 @@ export interface RssSource {
   [key: string]: unknown;
 }
 
+export interface ExploreCategory {
+  title: string;
+  url: string;
+  style?: Record<string, unknown> | null;
+  [key: string]: unknown;
+}
+
+export interface SourceCheckResult {
+  bookSourceUrl: string;
+  bookSourceName: string;
+  ok: boolean;
+  count: number;
+  elapsedMs: number;
+  error?: string;
+}
+
 export interface BookReview {
   avatar?: string | null;
   content: string;
