@@ -5,10 +5,17 @@ export interface RemoteStorage {
   readonly rootPath: string;
   test(): Promise<void>;
   list(path: string): Promise<RemoteEntry[]>;
-  get(path: string): Promise<Response>;
-  put(path: string, data: Blob | Uint8Array, contentType?: string): Promise<void>;
+  get(path: string, signal?: AbortSignal): Promise<Response>;
+  put(
+    path: string,
+    data: Blob | Uint8Array,
+    contentType?: string,
+    signal?: AbortSignal,
+  ): Promise<void>;
   delete(path: string): Promise<void>;
-  childPath(path: string, name: string): string;
+  mkdir(path: string): Promise<void>;
+  move(from: string, to: string): Promise<void>;
+  childPath(path: string, name: string, isDir?: boolean): string;
 }
 
 export type { RemoteHttpTransport, RemoteTransportMode } from "./transport";

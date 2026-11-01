@@ -6,9 +6,12 @@ import Icon from "@/components/android/Icon.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 import {
   addRemoteBooks,
+  createRemoteFolder,
   deleteRemoteEntries,
   listRemoteEntries,
+  moveRemoteEntry,
   refreshRemoteEntry,
+  renameRemoteEntry,
   testRemoteServer,
   uploadBook,
 } from "@/core/application/remoteBooks";
@@ -40,6 +43,12 @@ const query = ref("");
 const loading = ref(false);
 const message = ref("");
 const proxyUrl = ref("");
+const sortKey = ref<"name" | "time">("name");
+const sortAsc = ref(true);
+const operationController = ref<AbortController | null>(null);
+const operationLabel = ref("");
+const operationDone = ref(0);
+const operationTotal = ref(0);
 const BOOK_EXTENSIONS = new Set([
   "txt",
   "epub",
@@ -48,6 +57,7 @@ const BOOK_EXTENSIONS = new Set([
   "mobi",
   "azw",
   "azw3",
+  "zip",
 ]);
 
 function isBookName(name: string): boolean {
@@ -72,9 +82,20 @@ const formRegion = ref("us-east-1");
 const formBucket = ref("");
 const formAccessKey = ref("");
 const formSecretKey = ref("");
+const formSessionToken = ref("");
 const formPrefix = ref("");
 const formPathStyle = ref(false);
 const testing = ref(false);
+const folderDialogVisible = ref(false);
+const folderName = ref("");
+const folderBusy = ref(false);
+const entryActionVisible = ref(false);
+const actionEntry = ref<RemoteEntry | null>(null);
+const renameDialogVisible = ref(false);
+const renameName = ref("");
+const moveDialogVisible = ref(false);
+const moveTarget = ref("");
+const actionBusy = ref(false);
 
 const currentServer = computed(
   () => servers.value.find((server) => server.id === selectedServerId.value) ?? null,
@@ -92,7 +113,12 @@ const filteredEntries = computed(() => {
     .filter((entry) => !keyword || entry.name.toLowerCase().includes(keyword))
     .sort((left, right) => {
       if (left.isDir !== right.isDir) return left.isDir ? -1 : 1;
-      return left.name.localeCompare(right.name, "zh-CN", { numeric: true });
+      const compared =
+        sortKey.value === "time"
+          ? left.modified - right.modified ||
+            left.name.localeCompare(right.name, "zh-CN", { numeric: true })
+          : left.name.localeCompare(right.name, "zh-CN", { numeric: true });
+      return sortAsc.value ? compared : -compared;
     });
 });
 const selectable = computed(() =>
@@ -120,6 +146,112 @@ function formatSize(size: number): string {
 function formatDate(seconds: number): string {
   if (!seconds) return "";
   return new Date(seconds * 1000).toLocaleDateString("zh-CN");
+}
+
+function isAbort(error: unknown): boolean {
+  return (
+    (error instanceof DOMException && error.name === "AbortError") ||
+    String(error).includes("AbortError")
+  );
+}
+
+function beginOperation(label: string, total: number): AbortController {
+  operationController.value?.abort();
+  const controller = new AbortController();
+  operationController.value = controller;
+  operationLabel.value = label;
+  operationDone.value = 0;
+  operationTotal.value = total;
+  return controller;
+}
+
+function endOperation(controller: AbortController) {
+  if (operationController.value !== controller) return;
+  operationController.value = null;
+  operationLabel.value = "";
+  operationDone.value = 0;
+  operationTotal.value = 0;
+}
+
+function cancelOperation() {
+  operationController.value?.abort();
+}
+
+function openCreateFolder() {
+  if (!currentServer.value) return;
+  folderName.value = "";
+  folderDialogVisible.value = true;
+}
+
+async function doCreateFolder() {
+  const server = currentServer.value;
+  const name = folderName.value.trim();
+  if (!server || !name) return;
+  folderBusy.value = true;
+  try {
+    await createRemoteFolder(server, currentPath.value, name);
+    folderDialogVisible.value = false;
+    showMessage("文件夹已创建");
+    await load(currentPath.value);
+  } catch (error) {
+    showMessage(`创建失败：${error}`);
+  } finally {
+    folderBusy.value = false;
+  }
+}
+
+function openEntryActions(entry: RemoteEntry) {
+  actionEntry.value = entry;
+  entryActionVisible.value = true;
+}
+
+function startRename() {
+  if (!actionEntry.value) return;
+  renameName.value = actionEntry.value.name;
+  entryActionVisible.value = false;
+  renameDialogVisible.value = true;
+}
+
+function startMove() {
+  if (!actionEntry.value) return;
+  moveTarget.value = currentPath.value;
+  entryActionVisible.value = false;
+  moveDialogVisible.value = true;
+}
+
+async function doRename() {
+  const server = currentServer.value;
+  const entry = actionEntry.value;
+  const name = renameName.value.trim();
+  if (!server || !entry || !name || name === entry.name) return;
+  actionBusy.value = true;
+  try {
+    await renameRemoteEntry(server, entry, name);
+    renameDialogVisible.value = false;
+    showMessage(`已重命名为 ${name}`);
+    await load(currentPath.value);
+  } catch (error) {
+    showMessage(`重命名失败：${error}`);
+  } finally {
+    actionBusy.value = false;
+  }
+}
+
+async function doMove() {
+  const server = currentServer.value;
+  const entry = actionEntry.value;
+  if (!server || !entry) return;
+  actionBusy.value = true;
+  try {
+    await moveRemoteEntry(server, entry, moveTarget.value.trim());
+    moveDialogVisible.value = false;
+    showMessage(`已移动 ${entry.name}`);
+    await load(currentPath.value);
+  } catch (error) {
+    showMessage(`移动失败：${error}`);
+  } finally {
+    actionBusy.value = false;
+  }
 }
 
 async function loadServers() {
@@ -204,10 +336,19 @@ async function addSelected() {
   const chosen = filteredEntries.value.filter((entry) => selected.value.has(entry.path));
   if (!chosen.length) return;
   loading.value = true;
+  const controller = beginOperation("正在导入", chosen.length);
   try {
-    const results = await addRemoteBooks(server, chosen, 0, (name, index, total) => {
-      showMessage(`正在导入 ${index}/${total}：${name}`);
-    });
+    const results = await addRemoteBooks(
+      server,
+      chosen,
+      0,
+      (name, index, total) => {
+        operationDone.value = index;
+        operationTotal.value = total;
+        showMessage(`正在导入 ${index}/${total}：${name}`);
+      },
+      controller.signal,
+    );
     const failed = results.filter((item) => item.error);
     showMessage(
       failed.length
@@ -215,7 +356,10 @@ async function addSelected() {
         : `已加入书架 ${results.length} 本`,
     );
     await load(currentPath.value);
+  } catch (error) {
+    showMessage(isAbort(error) ? "已取消导入" : String(error));
   } finally {
+    endOperation(controller);
     loading.value = false;
   }
 }
@@ -227,8 +371,13 @@ async function deleteSelected() {
   if (!chosen.length || !confirm(`删除远端 ${chosen.length} 个文件？`)) return;
   loading.value = true;
   try {
-    const count = await deleteRemoteEntries(server, chosen);
-    showMessage(`已删除远端 ${count} 个文件`);
+    const results = await deleteRemoteEntries(server, chosen);
+    const failed = results.filter((item) => item.error);
+    showMessage(
+      failed.length
+        ? `已删除 ${results.length - failed.length} 个，失败 ${failed.length} 个：${failed[0]?.error}`
+        : `已删除远端 ${results.length} 个文件`,
+    );
     await load(currentPath.value);
   } catch (error) {
     showMessage(String(error));
@@ -263,14 +412,17 @@ async function doUpload() {
   const server = currentServer.value;
   if (!server || !uploadBookUrl.value) return;
   uploading.value = true;
+  const controller = beginOperation("正在上传", 1);
   try {
-    await uploadBook(server, uploadBookUrl.value, currentPath.value);
+    await uploadBook(server, uploadBookUrl.value, currentPath.value, controller.signal);
+    operationDone.value = 1;
     uploadDialogVisible.value = false;
     showMessage("上传完成");
     await load(currentPath.value);
   } catch (error) {
-    showMessage(`上传失败：${error}`);
+    showMessage(isAbort(error) ? "已取消上传" : `上传失败：${error}`);
   } finally {
+    endOperation(controller);
     uploading.value = false;
   }
 }
@@ -290,6 +442,7 @@ function openServerDialog(server?: RemoteServer) {
       formBucket.value = server.config.bucket;
       formAccessKey.value = server.config.accessKeyId;
       formSecretKey.value = server.config.secretAccessKey;
+      formSessionToken.value = server.config.sessionToken ?? "";
       formPrefix.value = server.config.prefix ?? "";
       formPathStyle.value = server.config.pathStyle ?? false;
     }
@@ -304,6 +457,7 @@ function openServerDialog(server?: RemoteServer) {
     formBucket.value = "";
     formAccessKey.value = "";
     formSecretKey.value = "";
+    formSessionToken.value = "";
     formPrefix.value = "";
     formPathStyle.value = false;
   }
@@ -320,6 +474,7 @@ function buildServer(): RemoteServer {
           bucket: formBucket.value,
           accessKeyId: formAccessKey.value,
           secretAccessKey: formSecretKey.value,
+          sessionToken: formSessionToken.value.trim() || undefined,
           prefix: formPrefix.value,
           pathStyle: formPathStyle.value,
         }
@@ -397,6 +552,9 @@ onMounted(async () => {
         <button aria-label="代理设置" @click="proxyDialogVisible = true">
           <Icon name="ic_cfg_other" :size="24" />
         </button>
+        <button aria-label="新建文件夹" :disabled="!currentServer" @click="openCreateFolder">
+          <Icon name="ic_create_folder_outline" :size="24" />
+        </button>
         <button aria-label="上传本地书籍" @click="openUpload">
           <Icon name="ic_add_online" :size="24" />
         </button>
@@ -416,6 +574,13 @@ onMounted(async () => {
         编辑
       </button>
     </div>
+    <div class="toolbar sort-bar">
+      <select v-model="sortKey">
+        <option value="name">按名称</option>
+        <option value="time">按时间</option>
+      </select>
+      <button @click="sortAsc = !sortAsc">{{ sortAsc ? "升序" : "降序" }}</button>
+    </div>
 
     <div class="path-bar">
       <span>{{ pathLabel }}</span>
@@ -424,6 +589,14 @@ onMounted(async () => {
 
     <div class="search">
       <input v-model="query" placeholder="搜索远程文件" />
+    </div>
+
+    <div v-if="operationController" class="operation">
+      <span>
+        {{ operationLabel }}
+        <template v-if="operationTotal">{{ operationDone }}/{{ operationTotal }}</template>
+      </span>
+      <button class="danger" @click="cancelOperation">取消</button>
     </div>
 
     <p v-if="message" class="message">{{ message }}</p>
@@ -467,6 +640,13 @@ onMounted(async () => {
         <span v-else-if="!entry.isDir" class="check">
           {{ selected.has(entry.path) ? "✓" : "" }}
         </span>
+        <button
+          class="mini icon-mini"
+          aria-label="更多操作"
+          @click.stop="openEntryActions(entry)"
+        >
+          <Icon name="ic_more_vert" :size="18" />
+        </button>
       </div>
     </div>
 
@@ -506,6 +686,7 @@ onMounted(async () => {
           <label>Prefix<input v-model="formPrefix" placeholder="可选，例如 books/" /></label>
           <label>Access Key<input v-model="formAccessKey" /></label>
           <label>Secret Key<input v-model="formSecretKey" type="password" /></label>
+          <label>Session Token（可选）<input v-model="formSessionToken" type="password" /></label>
           <label class="checkbox"><input v-model="formPathStyle" type="checkbox" /> path-style endpoint</label>
         </template>
         <div class="form-actions">
@@ -548,6 +729,54 @@ onMounted(async () => {
         <button @click="uploadDialogVisible = false">取消</button>
         <button class="accent" :disabled="uploading || !uploadBookUrl" @click="doUpload">
           {{ uploading ? "上传中…" : "上传" }}
+        </button>
+      </template>
+    </AndroidDialog>
+
+    <AndroidDialog v-model="folderDialogVisible" title="新建文件夹" mode="center">
+      <div class="form">
+        <p class="hint">在当前目录创建：{{ pathLabel }}</p>
+        <label>名称<input v-model="folderName" /></label>
+      </div>
+      <template #footer>
+        <button @click="folderDialogVisible = false">取消</button>
+        <button class="accent" :disabled="folderBusy || !folderName.trim()" @click="doCreateFolder">
+          {{ folderBusy ? "创建中…" : "创建" }}
+        </button>
+      </template>
+    </AndroidDialog>
+
+    <AndroidDialog v-model="entryActionVisible" :title="actionEntry?.name ?? '文件操作'" mode="center">
+      <div class="form">
+        <button @click="startRename">重命名</button>
+        <button @click="startMove">移动到目录</button>
+      </div>
+      <template #footer>
+        <button @click="entryActionVisible = false">取消</button>
+      </template>
+    </AndroidDialog>
+
+    <AndroidDialog v-model="renameDialogVisible" title="重命名" mode="center">
+      <div class="form">
+        <label>新名称<input v-model="renameName" /></label>
+      </div>
+      <template #footer>
+        <button @click="renameDialogVisible = false">取消</button>
+        <button class="accent" :disabled="actionBusy || !renameName.trim()" @click="doRename">
+          {{ actionBusy ? "处理中…" : "确定" }}
+        </button>
+      </template>
+    </AndroidDialog>
+
+    <AndroidDialog v-model="moveDialogVisible" title="移动到目录" mode="center">
+      <div class="form">
+        <p class="hint">目标目录使用完整远程地址，例如 s3://bucket/books/ 或 https://dav.example.com/dav/books/</p>
+        <label>目标目录<input v-model="moveTarget" :placeholder="currentPath || '/' " /></label>
+      </div>
+      <template #footer>
+        <button @click="moveDialogVisible = false">取消</button>
+        <button class="accent" :disabled="actionBusy" @click="doMove">
+          {{ actionBusy ? "处理中…" : "移动" }}
         </button>
       </template>
     </AndroidDialog>
@@ -597,6 +826,33 @@ button.danger {
 }
 button:disabled {
   opacity: 0.5;
+}
+.sort-bar {
+  padding-top: 0;
+}
+.sort-bar select {
+  flex: 0 1 130px;
+}
+.operation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 16px 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--ac-divider);
+  border-radius: 4px;
+  color: var(--ac-secondary-text);
+  font-size: 13px;
+}
+.operation span {
+  flex: 1;
+  min-width: 0;
+}
+.icon-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
 }
 .search {
   padding: 0 16px 8px;

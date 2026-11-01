@@ -85,6 +85,7 @@ export class S3Storage implements RemoteStorage {
       method: signed.method,
       headers: signed.headers,
       body: init.body,
+      signal: init.signal,
     });
   }
 
@@ -92,10 +93,11 @@ export class S3Storage implements RemoteStorage {
     prefix: string,
     continuationToken?: string,
     maxKeys = 1000,
+    delimiter: string | null = "/",
   ): Promise<Record<string, unknown>> {
     const url = new URL(this.objectUrl(""));
     url.searchParams.set("list-type", "2");
-    url.searchParams.set("delimiter", "/");
+    if (delimiter) url.searchParams.set("delimiter", delimiter);
     url.searchParams.set("prefix", prefix);
     url.searchParams.set("max-keys", String(maxKeys));
     if (continuationToken) {
@@ -110,6 +112,46 @@ export class S3Storage implements RemoteStorage {
     }
     const xml = await response.text();
     return parser.parse(xml) as Record<string, unknown>;
+  }
+
+  private async listAllKeys(prefix: string): Promise<string[]> {
+    const keys: string[] = [];
+    let token: string | undefined;
+    for (let page = 0; page < 100; page += 1) {
+      const parsed = await this.listPage(prefix, token, 1000, null);
+      const result = (parsed.ListBucketResult ?? {}) as Record<string, unknown>;
+      for (const item of arrayValue(result.Contents) as Record<string, unknown>[]) {
+        const key = textValue(item.Key);
+        if (key) keys.push(key);
+      }
+      const truncated = textValue(result.IsTruncated).toLowerCase() === "true";
+      token = textValue(result.NextContinuationToken) || undefined;
+      if (!truncated || !token) break;
+    }
+    return keys;
+  }
+
+  private async copyKey(fromKey: string, toKey: string): Promise<void> {
+    if (fromKey === toKey) return;
+    const source = `/${this.config.bucket}/${encodeKey(fromKey)}`;
+    const response = await this.signedRequest(this.objectUrl(toKey), {
+      method: "PUT",
+      headers: {
+        "x-amz-copy-source": source,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`S3 ${response.status} ${response.statusText}`.trim());
+    }
+  }
+
+  private async deleteKey(key: string): Promise<void> {
+    const response = await this.signedRequest(this.objectUrl(key), {
+      method: "DELETE",
+    });
+    if (!response.ok && response.status !== 404) {
+      throw new Error(`S3 ${response.status} ${response.statusText}`.trim());
+    }
   }
 
   async test(): Promise<void> {
@@ -172,26 +214,29 @@ export class S3Storage implements RemoteStorage {
     });
   }
 
-  async get(path: string): Promise<Response> {
+  async get(path: string, signal?: AbortSignal): Promise<Response> {
     const { bucket, key } = decodeKey(path);
     if (bucket !== this.config.bucket) {
       throw new Error("S3 bucket does not match server configuration");
     }
     return this.signedRequest(this.objectUrl(key), {
       method: "GET",
+      signal,
     });
   }
 
-  childPath(path: string, name: string): string {
+  childPath(path: string, name: string, isDir = false): string {
     const { bucket, key } = decodeKey(path);
     const prefix = key && !key.endsWith("/") ? `${key}/` : key;
-    return `s3://${bucket}/${prefix}${name}`;
+    const clean = name.replace(/^\/+|\/+$/g, "");
+    return `s3://${bucket}/${prefix}${clean}${isDir ? "/" : ""}`;
   }
 
   async put(
     path: string,
     data: Blob | Uint8Array,
     contentType = "application/octet-stream",
+    signal?: AbortSignal,
   ): Promise<void> {
     const { bucket, key } = decodeKey(path);
     if (bucket !== this.config.bucket) {
@@ -201,6 +246,7 @@ export class S3Storage implements RemoteStorage {
       method: "PUT",
       headers: { "Content-Type": contentType },
       body: data as BodyInit,
+      signal,
     });
     if (!response.ok) {
       throw new Error(`S3 ${response.status} ${response.statusText}`.trim());
@@ -212,11 +258,45 @@ export class S3Storage implements RemoteStorage {
     if (bucket !== this.config.bucket) {
       throw new Error("S3 bucket does not match server configuration");
     }
-    const response = await this.signedRequest(this.objectUrl(key), {
-      method: "DELETE",
-    });
-    if (!response.ok && response.status !== 404) {
-      throw new Error(`S3 ${response.status} ${response.statusText}`.trim());
+    if (key.endsWith("/")) {
+      const keys = await this.listAllKeys(key);
+      for (const item of keys) {
+        await this.deleteKey(item);
+      }
+      return;
     }
+    await this.deleteKey(key);
+  }
+
+  async mkdir(path: string): Promise<void> {
+    const target = path.endsWith("/") ? path : `${path}/`;
+    const { bucket } = decodeKey(target);
+    if (bucket !== this.config.bucket) {
+      throw new Error("S3 bucket does not match server configuration");
+    }
+    await this.put(target, new Uint8Array(), "application/x-directory");
+  }
+
+  async move(from: string, to: string): Promise<void> {
+    if (from === to) return;
+    const source = decodeKey(from);
+    const target = decodeKey(to);
+    if (source.bucket !== this.config.bucket || target.bucket !== this.config.bucket) {
+      throw new Error("S3 bucket does not match server configuration");
+    }
+    if (source.key.endsWith("/")) {
+      const targetPrefix = target.key.endsWith("/") ? target.key : `${target.key}/`;
+      const keys = await this.listAllKeys(source.key);
+      for (const key of keys) {
+        const relative = key.slice(source.key.length);
+        await this.copyKey(key, `${targetPrefix}${relative}`);
+      }
+      for (const key of keys) {
+        await this.deleteKey(key);
+      }
+      return;
+    }
+    await this.copyKey(source.key, target.key);
+    await this.deleteKey(source.key);
   }
 }

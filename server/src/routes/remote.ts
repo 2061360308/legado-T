@@ -20,6 +20,8 @@ const FORWARDED_HEADERS = [
   "x-amz-date",
   "x-amz-content-sha256",
   "x-amz-security-token",
+  "x-amz-copy-source",
+  "x-amz-metadata-directive",
   "x-amz-user-agent",
 ];
 
@@ -37,13 +39,13 @@ function corsHeaders(request: Request, env: Env): Headers {
   headers.set("Vary", "Origin");
   headers.set(
     "Access-Control-Allow-Methods",
-    "GET, HEAD, OPTIONS, PROPFIND, PUT, DELETE, MKCOL",
+    "GET, HEAD, OPTIONS, PROPFIND, PUT, DELETE, MKCOL, MOVE",
   );
   const requested = request.headers.get("access-control-request-headers");
   headers.set(
     "Access-Control-Allow-Headers",
     requested ||
-      "Authorization, Content-Type, Depth, Range, X-Remote-Target, X-Proxy-Token, X-Amz-Date, X-Amz-Content-Sha256, X-Amz-Security-Token",
+      "Authorization, Content-Type, Depth, Range, X-Remote-Target, X-Proxy-Token, X-Amz-Date, X-Amz-Content-Sha256, X-Amz-Security-Token, X-Amz-Copy-Source, X-Amz-Metadata-Directive",
   );
   headers.set(
     "Access-Control-Expose-Headers",

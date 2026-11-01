@@ -16,6 +16,7 @@ const SELECTED_KEY = "remoteServerId";
 const PROXY_URL_KEY = "remoteProxyUrl";
 const PASSWORD_PREFIX = "remoteServer:password:";
 const SECRET_PREFIX = "remoteServer:secret:";
+const TOKEN_PREFIX = "remoteServer:token:";
 
 interface StoredServer {
   id: number;
@@ -47,7 +48,9 @@ async function hydrate(stored: StoredServer): Promise<RemoteServer> {
   const config = { ...stored.config } as RemoteServerConfig;
   if (isS3Config(config)) {
     const secret = await kvGet(`${SECRET_PREFIX}${stored.id}`);
+    const token = await kvGet(`${TOKEN_PREFIX}${stored.id}`);
     (config as S3ServerConfig).secretAccessKey = secret ?? "";
+    (config as S3ServerConfig).sessionToken = token ?? (config as S3ServerConfig).sessionToken ?? "";
   } else {
     const password = await kvGet(`${PASSWORD_PREFIX}${stored.id}`);
     (config as WebDavServerConfig).password = password ?? "";
@@ -59,6 +62,7 @@ function stripSecrets(server: RemoteServer): StoredServer {
   const config = { ...server.config } as RemoteServerConfig;
   if (isS3Config(config)) {
     (config as S3ServerConfig).secretAccessKey = "";
+    (config as S3ServerConfig).sessionToken = "";
   } else {
     (config as WebDavServerConfig).password = "";
   }
@@ -112,10 +116,12 @@ export async function saveRemoteServer(server: RemoteServer): Promise<RemoteServ
   await kvSet(SERVERS_KEY, JSON.stringify(next));
   if (isS3Config(saved.config)) {
     await kvSet(`${SECRET_PREFIX}${id}`, saved.config.secretAccessKey);
+    await kvSet(`${TOKEN_PREFIX}${id}`, saved.config.sessionToken ?? "");
     await kvSet(`${PASSWORD_PREFIX}${id}`, "");
   } else {
     await kvSet(`${PASSWORD_PREFIX}${id}`, saved.config.password);
     await kvSet(`${SECRET_PREFIX}${id}`, "");
+    await kvSet(`${TOKEN_PREFIX}${id}`, "");
   }
   return saved;
 }
@@ -129,6 +135,7 @@ export async function deleteRemoteServer(id: number): Promise<void> {
   );
   await kvSet(`${PASSWORD_PREFIX}${id}`, "");
   await kvSet(`${SECRET_PREFIX}${id}`, "");
+  await kvSet(`${TOKEN_PREFIX}${id}`, "");
   if ((await getSelectedRemoteServerId()) === id) {
     await selectRemoteServer(DEFAULT_REMOTE_SERVER_ID);
   }

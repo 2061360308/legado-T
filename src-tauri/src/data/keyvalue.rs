@@ -88,4 +88,5 @@ pub fn is_whitelisted_key(key: &str) -> bool {
     CONFIG_XML_WHITELIST.contains(&key)
         || key.starts_with("remoteServer:password:")
         || key.starts_with("remoteServer:secret:")
+        || key.starts_with("remoteServer:token:")
 }

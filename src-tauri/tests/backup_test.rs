@@ -81,6 +81,7 @@ fn export_and_restore_merge_without_chapters() {
     KeyValue::set(&conn, "remoteProxyUrl", "https://proxy.example.com/api/remote").unwrap();
     KeyValue::set(&conn, "remoteServer:password:123", "webdav-pass").unwrap();
     KeyValue::set(&conn, "remoteServer:secret:456", "s3-secret").unwrap();
+    KeyValue::set(&conn, "remoteServer:token:456", "s3-token").unwrap();
     KeyValue::set(&conn, "webdavUrl", "https://dav.example.com/").unwrap();
     KeyValue::set(&conn, "webdavPassword", "backup-dav-pass").unwrap();
 
@@ -136,6 +137,12 @@ fn export_and_restore_merge_without_chapters() {
         Some("s3-secret")
     );
     assert_eq!(
+        KeyValue::get(&restored, "remoteServer:token:456")
+            .unwrap()
+            .as_deref(),
+        Some("s3-token")
+    );
+    assert_eq!(
         KeyValue::get(&restored, "webdavPassword")
             .unwrap()
             .as_deref(),
@@ -156,6 +163,7 @@ fn remote_server_credentials_are_plaintext_without_backup_password() {
     let conn = db::open_in_memory().unwrap();
     KeyValue::set(&conn, "remoteServer:password:123", "webdav-pass").unwrap();
     KeyValue::set(&conn, "remoteServer:secret:456", "s3-secret").unwrap();
+    KeyValue::set(&conn, "remoteServer:token:456", "s3-token").unwrap();
     KeyValue::set(&conn, "webdavPassword", "backup-dav-pass").unwrap();
     export_backup(&conn, &path.to_string_lossy(), None, None).unwrap();
 
@@ -172,6 +180,12 @@ fn remote_server_credentials_are_plaintext_without_backup_password() {
             .unwrap()
             .as_deref(),
         Some("s3-secret")
+    );
+    assert_eq!(
+        KeyValue::get(&restored, "remoteServer:token:456")
+            .unwrap()
+            .as_deref(),
+        Some("s3-token")
     );
     assert_eq!(
         KeyValue::get(&restored, "webdavPassword")

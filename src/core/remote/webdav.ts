@@ -64,12 +64,21 @@ export class WebDavStorage implements RemoteStorage {
     return this.transport.request(path, init);
   }
 
-  async test(): Promise<void> {
-    const response = await this.request(this.rootPath, {
+  private async propfind(path: string, depth: string): Promise<Response> {
+    return this.request(path, {
       method: "PROPFIND",
-      headers: this.headers({ Depth: "0", "Content-Type": "application/xml" }),
+      headers: this.headers({ Depth: depth, "Content-Type": "application/xml" }),
       body: PROPFIND_BODY,
     });
+  }
+
+  async test(): Promise<void> {
+    let response = await this.propfind(this.rootPath, "0");
+    if (response.status === 404) {
+      await response.body?.cancel();
+      await this.mkdir(this.rootPath);
+      response = await this.propfind(this.rootPath, "0");
+    }
     if (!response.ok) {
       throw new Error(`WebDAV ${response.status} ${response.statusText}`.trim());
     }
@@ -77,11 +86,7 @@ export class WebDavStorage implements RemoteStorage {
 
   async list(path: string): Promise<RemoteEntry[]> {
     const base = withTrailingSlash(path || this.rootPath);
-    const response = await this.request(base, {
-      method: "PROPFIND",
-      headers: this.headers({ Depth: "1", "Content-Type": "application/xml" }),
-      body: PROPFIND_BODY,
-    });
+    const response = await this.propfind(base, "1");
     if (!response.ok) {
       throw new Error(`WebDAV ${response.status} ${response.statusText}`.trim());
     }
@@ -128,26 +133,31 @@ export class WebDavStorage implements RemoteStorage {
     });
   }
 
-  async get(path: string): Promise<Response> {
+  async get(path: string, signal?: AbortSignal): Promise<Response> {
     return this.request(path, {
       method: "GET",
       headers: this.headers(),
+      signal,
     });
   }
 
-  childPath(path: string, name: string): string {
-    return new URL(encodeURIComponent(name), withTrailingSlash(path)).toString();
+  childPath(path: string, name: string, isDir = false): string {
+    const clean = name.replace(/^\/+|\/+$/g, "");
+    const encoded = `${encodeURIComponent(clean)}${isDir ? "/" : ""}`;
+    return new URL(encoded, withTrailingSlash(path)).toString();
   }
 
   async put(
     path: string,
     data: Blob | Uint8Array,
     contentType = "application/octet-stream",
+    signal?: AbortSignal,
   ): Promise<void> {
     const response = await this.request(path, {
       method: "PUT",
       headers: this.headers({ "Content-Type": contentType }),
       body: data as BodyInit,
+      signal,
     });
     if (!response.ok) {
       throw new Error(`WebDAV ${response.status} ${response.statusText}`.trim());
@@ -160,6 +170,27 @@ export class WebDavStorage implements RemoteStorage {
       headers: this.headers(),
     });
     if (!response.ok && response.status !== 404) {
+      throw new Error(`WebDAV ${response.status} ${response.statusText}`.trim());
+    }
+  }
+
+  async mkdir(path: string): Promise<void> {
+    const response = await this.request(path, {
+      method: "MKCOL",
+      headers: this.headers(),
+    });
+    if (!response.ok && response.status !== 405) {
+      throw new Error(`WebDAV ${response.status} ${response.statusText}`.trim());
+    }
+  }
+
+  async move(from: string, to: string): Promise<void> {
+    if (from === to) return;
+    const response = await this.request(from, {
+      method: "MOVE",
+      headers: this.headers({ Destination: to, Overwrite: "T" }),
+    });
+    if (!response.ok) {
       throw new Error(`WebDAV ${response.status} ${response.statusText}`.trim());
     }
   }
