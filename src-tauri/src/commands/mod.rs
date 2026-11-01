@@ -1,8 +1,11 @@
 pub mod backup;
+pub mod book_source;
 pub mod bookmarks;
 pub mod bookshelf;
 pub mod db;
+pub mod online_reader;
 pub mod read_record;
 pub mod reader;
+pub mod rss;
 pub mod rules;
 pub mod version;

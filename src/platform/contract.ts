@@ -119,7 +119,7 @@ export interface DialogPort {
 }
 
 export interface ImportLocation {
-  kind: "desktop" | "saf" | "web";
+  kind: "desktop" | "saf" | "fsa" | "web";
   token: string;
   rootToken: string;
   name: string;

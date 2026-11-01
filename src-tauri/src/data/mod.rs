@@ -7,4 +7,5 @@ pub mod keyvalue;
 pub mod migration;
 pub mod repositories;
 pub mod rule_io;
+pub mod source_repo;
 pub mod shelf_export;

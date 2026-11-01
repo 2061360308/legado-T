@@ -1,10 +1,23 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watchEffect } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import BottomNav, { type MainTab } from "@/components/android/BottomNav.vue";
+import { syncPwaThemeColor } from "@/pwa";
+import { useThemeStore } from "@/stores/theme";
 
 const route = useRoute();
 const router = useRouter();
+const theme = useThemeStore();
+
+watchEffect(() => {
+  const reader = route.path === "/reader";
+  const appColors = theme.isNight ? theme.globalTokens.night : theme.globalTokens.day;
+  syncPwaThemeColor(
+    reader ? theme.readerColors.bgValue : appColors.primary,
+    reader ? theme.readerColors.bgAlpha : 255,
+    appColors.background,
+  );
+});
 
 const hideNav = [
   "/reader",

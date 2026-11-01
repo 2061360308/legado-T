@@ -104,6 +104,8 @@ function request<T>(payload: Record<string, unknown>): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     const timer = window.setTimeout(() => {
       pending.delete(id);
+      worker?.terminate();
+      worker = null;
       reject(new Error("Reader Worker 超时"));
     }, 15000);
     pending.set(id, {

@@ -4,8 +4,11 @@
 use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::time::UNIX_EPOCH;
+use std::sync::OnceLock;
+use std::time::{Duration, UNIX_EPOCH};
 
+use engine_model::{JsEvaluator, JsRequest};
+use engine_native::upstream::js::JsEngine;
 use rusqlite::Connection;
 use serde::Serialize;
 
@@ -307,38 +310,57 @@ fn analyze_file_name(file_name: &str, script: Option<&str>) -> (Option<String>, 
     (None, String::new())
 }
 
+fn filename_script_engine() -> Option<&'static JsEngine> {
+    static ENGINE: OnceLock<Option<JsEngine>> = OnceLock::new();
+    ENGINE
+        .get_or_init(|| {
+            JsEngine::builder()
+                .memory_limit(64 * 1024 * 1024)
+                .timeout(Duration::from_secs(3))
+                .build()
+                .ok()
+        })
+        .as_ref()
+}
+
 fn run_name_script(script: &str, src: &str) -> Option<(String, String)> {
-    let runtime = rquickjs::Runtime::new().ok()?;
-    runtime.set_memory_limit(64 * 1024 * 1024);
-    runtime.set_max_stack_size(2 * 1024 * 1024);
-    let context = rquickjs::Context::full(&runtime).ok()?;
+    let engine = filename_script_engine()?;
     let wrapped = format!(
-        "{script}\nJSON.stringify({{name: typeof name === 'undefined' ? '' : String(name), author: typeof author === 'undefined' ? '' : String(author)}})"
+        "name = undefined; author = undefined;\n{script}\nJSON.stringify({{name: typeof name === 'undefined' ? '' : String(name), author: typeof author === 'undefined' ? '' : String(author)}})"
     );
-    context.with(|ctx| {
-        ctx.globals().set("src", src).ok()?;
-        let mut options = rquickjs::context::EvalOptions::default();
-        options.strict = false;
-        let json: String = ctx.eval_with_options(wrapped, options).ok()?;
-        let parsed: serde_json::Value = serde_json::from_str(&json).ok()?;
-        let name = parsed
-            .get("name")
-            .and_then(|value| value.as_str())
-            .unwrap_or("")
-            .trim()
-            .to_string();
-        let author = parsed
-            .get("author")
-            .and_then(|value| value.as_str())
-            .unwrap_or("")
-            .trim()
-            .to_string();
-        if name.is_empty() {
-            None
-        } else {
-            Some((name, author))
-        }
-    })
+    let request = JsRequest {
+        script: &wrapped,
+        source: None,
+        base_url: "",
+        page: None,
+        key: None,
+        result: None,
+        result_bytes: None,
+        src: Some(src),
+        response: None,
+        book: None,
+        chapter: None,
+        variables: None,
+    };
+    let json = futures::executor::block_on(engine.eval(request)).ok()?;
+    let parsed: serde_json::Value = serde_json::from_str(&json).ok()?;
+    let name = parsed
+        .get("name")
+        .and_then(|value| value.as_str())
+        .unwrap_or("")
+        .trim()
+        .to_string();
+    let author = parsed
+        .get("author")
+        .and_then(|value| value.as_str())
+        .unwrap_or("")
+        .trim()
+        .to_string();
+    if name.is_empty() {
+        None
+    } else {
+        Some((name, author))
+    }
 }
 
 pub fn save_cover_from_file(

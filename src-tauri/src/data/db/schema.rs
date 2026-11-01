@@ -167,6 +167,75 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             payload TEXT NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS book_sources (
+            bookSourceUrl       TEXT PRIMARY KEY,
+            bookSourceName      TEXT NOT NULL DEFAULT '',
+            bookSourceGroup     TEXT NOT NULL DEFAULT '',
+            bookSourceType      INTEGER NOT NULL DEFAULT 0,
+            enabled             INTEGER NOT NULL DEFAULT 1,
+            enabledExplore      INTEGER NOT NULL DEFAULT 1,
+            enabledCookieJar    INTEGER NOT NULL DEFAULT 0,
+            customOrder         INTEGER NOT NULL DEFAULT 0,
+            weight              INTEGER NOT NULL DEFAULT 0,
+            lastUpdateTime      INTEGER NOT NULL DEFAULT 0,
+            respondTime         INTEGER NOT NULL DEFAULT 0,
+            json                TEXT NOT NULL,
+            updatedAt           INTEGER NOT NULL DEFAULT 0
+        );
+        CREATE INDEX IF NOT EXISTS idx_book_sources_name ON book_sources(bookSourceName);
+        CREATE INDEX IF NOT EXISTS idx_book_sources_group ON book_sources(bookSourceGroup);
+
+        CREATE TABLE IF NOT EXISTS book_source_groups (
+            name       TEXT PRIMARY KEY,
+            sortNumber INTEGER NOT NULL DEFAULT 0
+        );
+
+        CREATE TABLE IF NOT EXISTS rss_sources (
+            sourceUrl       TEXT PRIMARY KEY,
+            sourceName      TEXT NOT NULL DEFAULT '',
+            sourceGroup     TEXT NOT NULL DEFAULT '',
+            enabled         INTEGER NOT NULL DEFAULT 1,
+            customOrder     INTEGER NOT NULL DEFAULT 0,
+            lastUpdateTime  INTEGER NOT NULL DEFAULT 0,
+            json            TEXT NOT NULL,
+            updatedAt       INTEGER NOT NULL DEFAULT 0
+        );
+
+        CREATE TABLE IF NOT EXISTS rss_articles (
+            sourceUrl   TEXT NOT NULL,
+            link        TEXT NOT NULL,
+            sort        TEXT NOT NULL DEFAULT '',
+            title       TEXT NOT NULL DEFAULT '',
+            pubDate     TEXT,
+            description TEXT,
+            content     TEXT,
+            image       TEXT,
+            read        INTEGER NOT NULL DEFAULT 0,
+            favorite    INTEGER NOT NULL DEFAULT 0,
+            variables   TEXT NOT NULL DEFAULT '{}',
+            PRIMARY KEY (sourceUrl, link)
+        );
+
+        CREATE TABLE IF NOT EXISTS source_variables (
+            bookSourceUrl TEXT NOT NULL,
+            key           TEXT NOT NULL,
+            value         TEXT NOT NULL DEFAULT '',
+            PRIMARY KEY (bookSourceUrl, key)
+        );
+
+        CREATE TABLE IF NOT EXISTS search_history (
+            keyword  TEXT PRIMARY KEY,
+            lastUsed INTEGER NOT NULL DEFAULT 0
+        );
+
+        CREATE TABLE IF NOT EXISTS chapter_contents (
+            bookUrl      TEXT NOT NULL,
+            chapterIndex INTEGER NOT NULL,
+            content      TEXT NOT NULL DEFAULT '',
+            updatedAt    INTEGER NOT NULL DEFAULT 0,
+            PRIMARY KEY (bookUrl, chapterIndex)
+        );
+
         CREATE TABLE IF NOT EXISTS kv (
             key   TEXT PRIMARY KEY,
             value TEXT NOT NULL DEFAULT ''
@@ -177,7 +246,13 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
     ensure_column(conn, "books", "sourcePath", "TEXT")?;
     ensure_column(conn, "books", "sourceHash", "TEXT")?;
     ensure_column(conn, "books", "originalPath", "TEXT")?;
+    ensure_column(conn, "books", "variables", "TEXT")?;
+    ensure_column(conn, "books", "wordCount", "TEXT")?;
+    ensure_column(conn, "books", "imageStyle", "TEXT")?;
     ensure_column(conn, "chapters", "tocLevel", "INTEGER NOT NULL DEFAULT 0")?;
+    ensure_column(conn, "chapters", "baseUrl", "TEXT")?;
+    ensure_column(conn, "chapters", "bookUrl", "TEXT")?;
+    ensure_column(conn, "chapters", "variables", "TEXT")?;
     Ok(())
 }
 

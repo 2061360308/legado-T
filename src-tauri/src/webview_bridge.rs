@@ -2,7 +2,7 @@ use std::sync::mpsc;
 use std::sync::Arc;
 use std::time::Duration;
 
-use legado_core::{BoxFuture, Error as CoreError, Result as CoreResult, WebViewBridge, WebViewRequest, WebViewResponse};
+use engine_model::{BoxFuture, Error as CoreError, Result as CoreResult, WebViewBridge, WebViewRequest, WebViewResponse};
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, WebviewUrl, WebviewWindowBuilder};
 
@@ -240,12 +240,12 @@ pub async fn webview_login(
 
 #[tauri::command]
 pub async fn webview_engine_probe(app: AppHandle, url: String) -> Result<String, String> {
-    let pipeline = legado_engine::Pipeline::new_with_webview(Some(Arc::new(
+    let pipeline = engine_native::Pipeline::new_with_webview(Some(Arc::new(
         TauriWebViewBridge::new(app),
     )))
     .map_err(|error| error.to_string())?;
-    let ctx = legado_engine::upstream::net::UrlContext::new(&url);
-    let rule = legado_engine::upstream::net::UrlRule::parse(
+    let ctx = engine_native::upstream::net::UrlContext::new(&url);
+    let rule = engine_native::upstream::net::UrlRule::parse(
         &format!("{url},{{\"webView\":true}}"),
         &ctx,
     )
@@ -278,32 +278,32 @@ pub fn execute_pay_action(
         Noop,
     }
 
-    let source: legado_engine::upstream::core::BookSource =
+    let source: engine_native::upstream::core::BookSource =
         serde_json::from_value(source).map_err(|error| error.to_string())?;
-    let mut book: legado_engine::upstream::core::Book =
+    let mut book: engine_native::upstream::core::Book =
         serde_json::from_value(book).map_err(|error| error.to_string())?;
-    let mut chapter: legado_engine::upstream::core::BookChapter =
+    let mut chapter: engine_native::upstream::core::BookChapter =
         serde_json::from_value(chapter).map_err(|error| error.to_string())?;
     let runtime = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .map_err(|error| error.to_string())?;
     let outcome: Outcome = runtime.block_on(async {
-        let pipeline = legado_engine::Pipeline::new().map_err(|error| error.to_string())?;
+        let pipeline = engine_native::Pipeline::new().map_err(|error| error.to_string())?;
         match pipeline
             .pay_action(&source, &mut book, &mut chapter)
             .await
             .map_err(|error| error.to_string())?
         {
-            legado_engine::PayActionResult::Url(url) => Ok::<Outcome, String>(Outcome::Url(url)),
-            legado_engine::PayActionResult::Success => {
+            engine_native::PayActionResult::Url(url) => Ok::<Outcome, String>(Outcome::Url(url)),
+            engine_native::PayActionResult::Success => {
                 let chapters = pipeline
                     .chapters(&source, &mut book)
                     .await
                     .map_err(|error| error.to_string())?;
                 Ok(Outcome::Success(chapters.len()))
             }
-            legado_engine::PayActionResult::Noop => Ok::<Outcome, String>(Outcome::Noop),
+            engine_native::PayActionResult::Noop => Ok::<Outcome, String>(Outcome::Noop),
         }
     })?;
     match outcome {
@@ -344,11 +344,11 @@ pub async fn webview_audit_sources(
             .map_err(|error| error.to_string())?;
         runtime.block_on(async move {
             let bridge = Arc::new(TauriWebViewBridge::new(app));
-            let pipeline = legado_engine::Pipeline::new_with_webview(Some(bridge))
+            let pipeline = engine_native::Pipeline::new_with_webview(Some(bridge))
                 .map_err(|error| error.to_string())?;
             let mut out = Vec::new();
             for value in sources {
-                let source: legado_engine::upstream::core::BookSource =
+                let source: engine_native::upstream::core::BookSource =
                     serde_json::from_value(value).map_err(|error| error.to_string())?;
                 let Some(book_url) = book_map.get(&source.book_source_url).cloned() else {
                     continue;
@@ -358,7 +358,7 @@ pub async fn webview_audit_sources(
                     "url": source.book_source_url,
                     "bookUrl": book_url,
                 });
-                let mut book = legado_engine::upstream::core::Book {
+                let mut book = engine_native::upstream::core::Book {
                     book_url: book_url.clone(),
                     origin: source.book_source_url.clone(),
                     origin_name: source.book_source_name.clone(),

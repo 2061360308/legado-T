@@ -113,7 +113,13 @@ export async function importTxtBytes(
     };
   }
   const rules = await db.txtTocRules.toArray();
-  const analyzed = await analyzeTxtInWorker(bytes, charset ?? "", rules, true);
+  let analyzed;
+  try {
+    analyzed = await analyzeTxtInWorker(bytes, charset ?? "", rules, true);
+  } catch {
+    // A bad/slow optional TOC rule must not make the whole book unimportable.
+    analyzed = await analyzeTxtInWorker(bytes, charset ?? "", [], true);
+  }
   if (!analyzed.chapters.length) {
     return {
       path: name,

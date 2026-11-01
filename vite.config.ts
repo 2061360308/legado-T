@@ -29,7 +29,7 @@ function pwaHtmlPlugin(target: string) {
           },
           {
             tag: "meta",
-            attrs: { name: "theme-color", content: "#3f6f5f" },
+            attrs: { name: "theme-color", content: "#039BE5" },
             injectTo: "head" as const,
           },
           {

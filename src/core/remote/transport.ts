@@ -1,5 +1,22 @@
 export type RemoteTransportMode = "unknown" | "direct" | "proxy";
 
+function isAbortError(error: unknown): boolean {
+  if (
+    error instanceof DOMException &&
+    (error.name === "AbortError" || error.name === "TimeoutError")
+  ) {
+    return true;
+  }
+  if (
+    error instanceof Error &&
+    (error.name === "AbortError" || error.name === "TimeoutError")
+  ) {
+    return true;
+  }
+  const text = String(error);
+  return text.includes("AbortError") || text.includes("TimeoutError");
+}
+
 export interface RemoteHttpTransport {
   readonly mode: RemoteTransportMode;
   request(target: string, init?: RequestInit): Promise<Response>;
@@ -29,6 +46,7 @@ export class RemoteTransport implements RemoteHttpTransport {
       this.currentMode = "direct";
       return response;
     } catch (error) {
+      if (isAbortError(error)) throw error;
       if (!this.options.proxyUrl) throw error;
       if (this.currentMode === "direct") throw error;
       const response = await this.proxyRequest(target, init);

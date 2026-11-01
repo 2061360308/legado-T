@@ -3,7 +3,7 @@ import type { RemoteEntry, RemoteServerType } from "@/core/domain";
 export interface RemoteStorage {
   readonly type: RemoteServerType;
   readonly rootPath: string;
-  test(): Promise<void>;
+  test(signal?: AbortSignal): Promise<void>;
   list(path: string): Promise<RemoteEntry[]>;
   get(path: string, signal?: AbortSignal): Promise<Response>;
   put(

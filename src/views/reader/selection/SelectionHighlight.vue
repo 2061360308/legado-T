@@ -12,8 +12,16 @@ const props = withDefaults(
     scrollTop?: number;
     offsetX?: number;
     color?: string;
+    contentTop?: number;
+    contentBottom?: number;
   }>(),
-  { scrollTop: 0, offsetX: 0, color: "rgba(255, 213, 79, 0.38)" },
+  {
+    scrollTop: 0,
+    offsetX: 0,
+    color: "rgba(255, 213, 79, 0.38)",
+    contentTop: 0,
+    contentBottom: 0,
+  },
 );
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -31,15 +39,34 @@ function draw() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, props.width, props.height);
   ctx.fillStyle = props.color;
+  const topLimit = Math.max(0, props.contentTop ?? 0);
+  const bottomLimit = Math.min(props.height, props.height - (props.contentBottom ?? 0));
   for (const rect of selectionRects(props.page, props.selection)) {
     const y = rect.y - (props.scrollTop ?? 0);
-    if (y + rect.height < 0 || y > props.height) continue;
-    ctx.fillRect(rect.x + (props.offsetX ?? 0), y, rect.width, rect.height);
+    const drawTop = Math.max(y, topLimit);
+    const drawBottom = Math.min(y + rect.height, bottomLimit);
+    if (drawBottom <= drawTop) continue;
+    ctx.fillRect(
+      rect.x + (props.offsetX ?? 0),
+      drawTop,
+      rect.width,
+      drawBottom - drawTop,
+    );
   }
 }
 
 watch(
-  () => [props.page, props.selection, props.width, props.height, props.scrollTop, props.offsetX, props.color],
+  () => [
+    props.page,
+    props.selection,
+    props.width,
+    props.height,
+    props.scrollTop,
+    props.offsetX,
+    props.color,
+    props.contentTop,
+    props.contentBottom,
+  ],
   draw,
   { deep: true },
 );

@@ -157,7 +157,7 @@ pub fn import_txt(
     .map_err(|e| e.to_string())
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub fn import_book(
     state: State<AppState>,
     path: String,
@@ -179,7 +179,7 @@ pub fn import_book(
     .map_err(|e| e.to_string())
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub fn local_import_list(
     state: State<AppState>,
     path: String,
@@ -188,7 +188,7 @@ pub fn local_import_list(
     local_import::list_dir(&conn, &path).map_err(|e| e.to_string())
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub fn local_import_scan(
     state: State<AppState>,
     path: String,
@@ -197,7 +197,7 @@ pub fn local_import_scan(
     local_import::scan_dir(&conn, &path).map_err(|e| e.to_string())
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub fn local_import_import(
     state: State<AppState>,
     paths: Vec<String>,
@@ -216,12 +216,12 @@ pub fn local_import_import(
     ))
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub fn local_import_archive_list(path: String) -> CmdResult<Vec<local_import::ArchiveEntry>> {
     local_import::archive_list(&path).map_err(|e| e.to_string())
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub fn local_import_archive_import(
     state: State<AppState>,
     path: String,
@@ -243,7 +243,7 @@ pub fn local_import_archive_import(
     .map_err(|e| e.to_string())
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub fn local_import_reimport(
     state: State<AppState>,
     path: String,
@@ -286,6 +286,9 @@ pub fn book_file_size(state: State<AppState>, book_url: String) -> CmdResult<i64
     let Some(book) = book else {
         return Ok(0);
     };
+    if !book.is_local() && book.source_path.is_none() {
+        return Ok(0);
+    }
     Ok(state
         .storage
         .storage_size(&book)
@@ -300,8 +303,16 @@ pub fn book_clear_cache(state: State<AppState>, book_url: String) -> CmdResult<(
     let Some(book) = book else {
         return Ok(());
     };
+    if !book.is_local() && book.source_path.is_none() {
+        conn.execute(
+            "DELETE FROM kv WHERE key LIKE ?1",
+            [format!("chapterOverride:{}:%", book.book_url)],
+        )
+        .map_err(|e| e.to_string())?;
+        return Ok(());
+    }
     if import_service::is_cached_book(&book, &state.storage) {
-        return Err("该格式的章节缓存是阅读所必需的，请使用“更新目录”重新解析".into());
+        return Err("该格式新章节缓存由阅读器管理，请使用“更新目录”或“新章节”".into());
     }
     state.storage.clear_cache(&book).map_err(|e| e.to_string())
 }

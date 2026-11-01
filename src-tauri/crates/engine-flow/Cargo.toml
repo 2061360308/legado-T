@@ -1,0 +1,19 @@
+[package]
+name = "engine-flow"
+version = "0.1.0"
+edition = "2024"
+description = "书源链路：搜索 / 发现 / 详情 / 目录 / 正文"
+license = "AGPL-3.0"
+repository = "https://gitea.slcomplex.party/OpenToGithub/legado-rust-engine-code"
+keywords = ["legado", "book-source", "scraper"]
+categories = ["web-programming", "parsing"]
+
+[dependencies]
+engine-model.workspace = true
+engine-js.workspace = true
+engine-http-native.workspace = true
+engine-replace.workspace = true
+engine-rule.workspace = true
+engine-regex.workspace = true
+serde_json.workspace = true
+tracing.workspace = true

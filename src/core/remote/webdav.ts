@@ -64,20 +64,25 @@ export class WebDavStorage implements RemoteStorage {
     return this.transport.request(path, init);
   }
 
-  private async propfind(path: string, depth: string): Promise<Response> {
+  private async propfind(
+    path: string,
+    depth: string,
+    signal?: AbortSignal,
+  ): Promise<Response> {
     return this.request(path, {
       method: "PROPFIND",
       headers: this.headers({ Depth: depth, "Content-Type": "application/xml" }),
       body: PROPFIND_BODY,
+      signal,
     });
   }
 
-  async test(): Promise<void> {
-    let response = await this.propfind(this.rootPath, "0");
+  async test(signal?: AbortSignal): Promise<void> {
+    let response = await this.propfind(this.rootPath, "0", signal);
     if (response.status === 404) {
       await response.body?.cancel();
       await this.mkdir(this.rootPath);
-      response = await this.propfind(this.rootPath, "0");
+      response = await this.propfind(this.rootPath, "0", signal);
     }
     if (!response.ok) {
       throw new Error(`WebDAV ${response.status} ${response.statusText}`.trim());

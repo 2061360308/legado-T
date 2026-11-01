@@ -4,6 +4,8 @@ import { useRouter } from "vue-router";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
+import ServerConfigDialog from "@/views/remote/dialogs/ServerConfigDialog.vue";
+import ServersDialog from "@/views/remote/dialogs/ServersDialog.vue";
 import {
   addRemoteBooks,
   createRemoteFolder,
@@ -12,7 +14,6 @@ import {
   moveRemoteEntry,
   refreshRemoteEntry,
   renameRemoteEntry,
-  testRemoteServer,
   uploadBook,
 } from "@/core/application/remoteBooks";
 import { bookList } from "@/core/application/books";
@@ -21,16 +22,13 @@ import {
   getRemoteProxyUrl,
   getSelectedRemoteServerId,
   listRemoteServers,
-  saveRemoteServer,
   selectRemoteServer,
   setRemoteProxyUrl,
 } from "@/core/application/remoteServers";
-import type {
-  RemoteEntry,
-  RemoteServer,
-  RemoteServerType,
-  S3ServerConfig,
-  WebDavServerConfig,
+import {
+  DEFAULT_REMOTE_SERVER_ID,
+  type RemoteEntry,
+  type RemoteServer,
 } from "@/core/domain";
 
 const router = useRouter();
@@ -65,27 +63,14 @@ function isBookName(name: string): boolean {
   return index >= 0 && BOOK_EXTENSIONS.has(name.slice(index + 1).toLowerCase());
 }
 
-const serverDialogVisible = ref(false);
+const serverListVisible = ref(false);
+const serverConfigVisible = ref(false);
 const proxyDialogVisible = ref(false);
 const uploadDialogVisible = ref(false);
 const uploadBookUrl = ref("");
 const localBooks = ref<{ bookUrl: string; name: string }[]>([]);
 const uploading = ref(false);
 const editingServer = ref<RemoteServer | null>(null);
-const formType = ref<RemoteServerType>("webdav");
-const formName = ref("");
-const formUrl = ref("");
-const formUsername = ref("");
-const formPassword = ref("");
-const formEndpoint = ref("");
-const formRegion = ref("us-east-1");
-const formBucket = ref("");
-const formAccessKey = ref("");
-const formSecretKey = ref("");
-const formSessionToken = ref("");
-const formPrefix = ref("");
-const formPathStyle = ref(false);
-const testing = ref(false);
 const folderDialogVisible = ref(false);
 const folderName = ref("");
 const folderBusy = ref(false);
@@ -283,12 +268,6 @@ async function load(path?: string) {
   }
 }
 
-async function onServerChange() {
-  await selectRemoteServer(selectedServerId.value);
-  stack.value = [];
-  await load();
-}
-
 async function onRefresh() {
   await load(currentPath.value);
 }
@@ -336,7 +315,7 @@ async function addSelected() {
   const chosen = filteredEntries.value.filter((entry) => selected.value.has(entry.path));
   if (!chosen.length) return;
   loading.value = true;
-  const controller = beginOperation("正在导入", chosen.length);
+  const controller = beginOperation("正在下载并导入", chosen.length);
   try {
     const results = await addRemoteBooks(
       server,
@@ -427,106 +406,45 @@ async function doUpload() {
   }
 }
 
-function openServerDialog(server?: RemoteServer) {
+async function openServerList() {
+  await loadServers();
+  serverListVisible.value = true;
+}
+
+function openServerConfig(server?: RemoteServer) {
   editingServer.value = server ?? null;
-  if (server) {
-    formType.value = server.type;
-    formName.value = server.name;
-    if ("url" in server.config) {
-      formUrl.value = server.config.url;
-      formUsername.value = server.config.username;
-      formPassword.value = server.config.password;
-    } else {
-      formEndpoint.value = server.config.endpoint;
-      formRegion.value = server.config.region;
-      formBucket.value = server.config.bucket;
-      formAccessKey.value = server.config.accessKeyId;
-      formSecretKey.value = server.config.secretAccessKey;
-      formSessionToken.value = server.config.sessionToken ?? "";
-      formPrefix.value = server.config.prefix ?? "";
-      formPathStyle.value = server.config.pathStyle ?? false;
-    }
-  } else {
-    formType.value = "webdav";
-    formName.value = "";
-    formUrl.value = "";
-    formUsername.value = "";
-    formPassword.value = "";
-    formEndpoint.value = "";
-    formRegion.value = "us-east-1";
-    formBucket.value = "";
-    formAccessKey.value = "";
-    formSecretKey.value = "";
-    formSessionToken.value = "";
-    formPrefix.value = "";
-    formPathStyle.value = false;
-  }
-  serverDialogVisible.value = true;
+  serverConfigVisible.value = true;
 }
 
-function buildServer(): RemoteServer {
-  const id = editingServer.value?.id ?? Date.now();
-  const config: WebDavServerConfig | S3ServerConfig =
-    formType.value === "s3"
-      ? {
-          endpoint: formEndpoint.value,
-          region: formRegion.value,
-          bucket: formBucket.value,
-          accessKeyId: formAccessKey.value,
-          secretAccessKey: formSecretKey.value,
-          sessionToken: formSessionToken.value.trim() || undefined,
-          prefix: formPrefix.value,
-          pathStyle: formPathStyle.value,
-        }
-      : {
-          url: formUrl.value,
-          username: formUsername.value,
-          password: formPassword.value,
-        };
-  return {
-    id,
-    name: formName.value.trim() || (formType.value === "s3" ? "S3" : "WebDAV"),
-    type: formType.value,
-    config,
-    sortNumber: editingServer.value?.sortNumber ?? Date.now(),
-  };
-}
-
-async function saveServer() {
-  try {
-    const saved = await saveRemoteServer(buildServer());
-    serverDialogVisible.value = false;
-    await selectRemoteServer(saved.id);
-    await loadServers();
-    selectedServerId.value = saved.id;
+async function onServerSaved(saved: RemoteServer) {
+  await loadServers();
+  if (saved.id === selectedServerId.value) {
     stack.value = [];
     await load();
-  } catch (error) {
-    showMessage(String(error));
   }
 }
 
-async function removeServer() {
-  const server = editingServer.value;
-  if (!server || server.id === -1) return;
-  if (!confirm(`删除服务器「${server.name}」？`)) return;
-  await deleteRemoteServer(server.id);
-  serverDialogVisible.value = false;
-  await loadServers();
+async function onServerSelect(id: number) {
+  await selectRemoteServer(id);
+  selectedServerId.value = id;
   stack.value = [];
   await load();
 }
 
-async function testServer() {
-  testing.value = true;
-  try {
-    await testRemoteServer(buildServer());
-    showMessage("连接成功");
-  } catch (error) {
-    showMessage(`连接失败：${error}`);
-  } finally {
-    testing.value = false;
-  }
+async function onServerDefault() {
+  await selectRemoteServer(DEFAULT_REMOTE_SERVER_ID);
+  selectedServerId.value = DEFAULT_REMOTE_SERVER_ID;
+  stack.value = [];
+  await load();
+}
+
+async function onServerDelete(server: RemoteServer) {
+  if (server.id === DEFAULT_REMOTE_SERVER_ID) return;
+  if (!confirm(`删除服务器「${server.name}」？`)) return;
+  await deleteRemoteServer(server.id);
+  await loadServers();
+  stack.value = [];
+  await load();
 }
 
 async function saveProxy() {
@@ -546,8 +464,8 @@ onMounted(async () => {
   <div class="remote-page">
     <TitleBar title="远程书籍" @back="router.back()">
       <template #actions>
-        <button aria-label="新增服务器" @click="openServerDialog()">
-          <Icon name="ic_add" :size="24" />
+        <button aria-label="服务器配置" @click="openServerList">
+          <Icon name="ic_outline_cloud_24" :size="24" />
         </button>
         <button aria-label="代理设置" @click="proxyDialogVisible = true">
           <Icon name="ic_cfg_other" :size="24" />
@@ -564,15 +482,14 @@ onMounted(async () => {
       </template>
     </TitleBar>
 
-    <div class="toolbar">
-      <select v-model.number="selectedServerId" @change="onServerChange">
-        <option v-for="server in servers" :key="server.id" :value="server.id">
-          {{ server.name }} · {{ server.type === "s3" ? "S3" : "WebDAV" }}
-        </option>
-      </select>
-      <button :disabled="selectedServerId === -1" @click="openServerDialog(currentServer ?? undefined)">
-        编辑
+    <div class="toolbar server-bar">
+      <button class="server-current" @click="openServerList">
+        <Icon name="ic_outline_cloud_24" :size="20" />
+        <span>{{ currentServer?.name ?? "未配置服务器" }}</span>
       </button>
+      <span v-if="currentServer" class="server-type">
+        {{ currentServer.type === "s3" ? "S3" : "WEBDAV" }}
+      </span>
     </div>
     <div class="toolbar sort-bar">
       <select v-model="sortKey">
@@ -600,9 +517,9 @@ onMounted(async () => {
     </div>
 
     <p v-if="message" class="message">{{ message }}</p>
-    <p v-if="loading" class="loading">加载中…</p>
+    <p v-if="loading" class="loading">正在下载并导入…</p>
     <p v-else-if="!servers.length" class="empty">
-      还没有 WebDAV 或 S3 服务器，请点击右上角添加。
+      还没有 WebDAV 或 S3 服务器，请点击右上角服务器配置添加。
     </p>
     <p v-else-if="!filteredEntries.length" class="empty">当前目录为空。</p>
 
@@ -661,44 +578,22 @@ onMounted(async () => {
       </button>
     </footer>
 
-    <AndroidDialog
-      v-model="serverDialogVisible"
-      :title="editingServer ? '编辑服务器' : '新增服务器'"
-      mode="center"
-    >
-      <div class="form">
-        <label>类型
-          <select v-model="formType">
-            <option value="webdav">WebDAV</option>
-            <option value="s3">S3</option>
-          </select>
-        </label>
-        <label>名称<input v-model="formName" /></label>
-        <template v-if="formType === 'webdav'">
-          <label>服务器地址<input v-model="formUrl" placeholder="https://dav.example.com/dav/" /></label>
-          <label>账号<input v-model="formUsername" /></label>
-          <label>密码<input v-model="formPassword" type="password" /></label>
-        </template>
-        <template v-else>
-          <label>Endpoint<input v-model="formEndpoint" placeholder="https://s3.us-east-1.amazonaws.com" /></label>
-          <label>Region<input v-model="formRegion" /></label>
-          <label>Bucket<input v-model="formBucket" /></label>
-          <label>Prefix<input v-model="formPrefix" placeholder="可选，例如 books/" /></label>
-          <label>Access Key<input v-model="formAccessKey" /></label>
-          <label>Secret Key<input v-model="formSecretKey" type="password" /></label>
-          <label>Session Token（可选）<input v-model="formSessionToken" type="password" /></label>
-          <label class="checkbox"><input v-model="formPathStyle" type="checkbox" /> path-style endpoint</label>
-        </template>
-        <div class="form-actions">
-          <button :disabled="testing" @click="testServer">测试连接</button>
-          <button v-if="editingServer && editingServer.id !== -1" class="danger" @click="removeServer">删除</button>
-        </div>
-      </div>
-      <template #footer>
-        <button @click="serverDialogVisible = false">取消</button>
-        <button class="accent" @click="saveServer">保存</button>
-      </template>
-    </AndroidDialog>
+    <ServersDialog
+      v-model="serverListVisible"
+      :servers="servers"
+      :selected-id="selectedServerId"
+      @add="openServerConfig()"
+      @edit="openServerConfig"
+      @delete="onServerDelete"
+      @select="onServerSelect"
+      @default="onServerDefault"
+    />
+
+    <ServerConfigDialog
+      v-model="serverConfigVisible"
+      :server="editingServer"
+      @saved="onServerSaved"
+    />
 
     <AndroidDialog v-model="proxyDialogVisible" title="WebDAV/S3 代理" mode="center">
       <div class="form">
@@ -799,6 +694,26 @@ onMounted(async () => {
 .toolbar select {
   flex: 1;
   min-width: 0;
+}
+.server-bar {
+  gap: 10px;
+}
+.server-current {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+.server-current span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.server-type {
+  color: var(--ac-secondary-text);
+  font-size: 12px;
 }
 .path-bar {
   color: var(--ac-secondary-text);
@@ -949,10 +864,6 @@ button:disabled {
 }
 .form label.checkbox input {
   width: auto;
-}
-.form-actions {
-  display: flex;
-  gap: 8px;
 }
 .hint {
   margin: 0;

@@ -37,6 +37,10 @@ export interface RemoteDeleteResult {
 
 const transports = new Map<string, RemoteTransport>();
 
+async function remoteProxyUrl(): Promise<string> {
+  return platform.capabilities.webdavProxy ? getRemoteProxyUrl() : "";
+}
+
 function createStorage(server: RemoteServer, proxyUrl: string): RemoteStorage {
   const key = `${server.id}:${server.type}:${proxyUrl}`;
   let transport = transports.get(key);
@@ -98,16 +102,19 @@ function abortError(): DOMException {
   return new DOMException("操作已取消", "AbortError");
 }
 
-export async function testRemoteServer(server: RemoteServer): Promise<void> {
-  const storage = createStorage(server, await getRemoteProxyUrl());
-  await storage.test();
+export async function testRemoteServer(
+  server: RemoteServer,
+  signal?: AbortSignal,
+): Promise<void> {
+  const storage = createStorage(server, await remoteProxyUrl());
+  await storage.test(signal);
 }
 
 export async function listRemoteEntries(
   server: RemoteServer,
   path?: string | null,
 ): Promise<RemoteEntry[]> {
-  const storage = createStorage(server, await getRemoteProxyUrl());
+  const storage = createStorage(server, await remoteProxyUrl());
   await storage.test();
   const [entries, books] = await Promise.all([
     storage.list(path || storage.rootPath),
@@ -208,7 +215,7 @@ export async function addRemoteBooks(
   onProgress?: (name: string, index: number, total: number) => void,
   signal?: AbortSignal,
 ): Promise<RemoteAddResult[]> {
-  const storage = createStorage(server, await getRemoteProxyUrl());
+  const storage = createStorage(server, await remoteProxyUrl());
   await storage.test();
   const files = entries.filter((entry) => !entry.isDir);
   const results: RemoteAddResult[] = [];
@@ -247,7 +254,7 @@ export async function deleteRemoteEntries(
   server: RemoteServer,
   entries: RemoteEntry[],
 ): Promise<RemoteDeleteResult[]> {
-  const storage = createStorage(server, await getRemoteProxyUrl());
+  const storage = createStorage(server, await remoteProxyUrl());
   await storage.test();
   const results: RemoteDeleteResult[] = [];
   for (const entry of entries) {
@@ -267,7 +274,7 @@ export async function uploadBook(
   directoryPath: string,
   signal?: AbortSignal,
 ): Promise<string> {
-  const storage = createStorage(server, await getRemoteProxyUrl());
+  const storage = createStorage(server, await remoteProxyUrl());
   await storage.test();
   const book = await bookGet(bookUrl);
   if (!book) throw new Error("书籍不存在");
@@ -287,7 +294,7 @@ export async function createRemoteFolder(
   parent: string,
   name: string,
 ): Promise<string> {
-  const storage = createStorage(server, await getRemoteProxyUrl());
+  const storage = createStorage(server, await remoteProxyUrl());
   await storage.test();
   const target = storage.childPath(parent || storage.rootPath, cleanName(name), true);
   await storage.mkdir(target);
@@ -329,7 +336,7 @@ export async function renameRemoteEntry(
   entry: RemoteEntry,
   name: string,
 ): Promise<string> {
-  const storage = createStorage(server, await getRemoteProxyUrl());
+  const storage = createStorage(server, await remoteProxyUrl());
   await storage.test();
   const parent = parentPath(entry.path) || storage.rootPath;
   const target = storage.childPath(parent, cleanName(name), entry.isDir);
@@ -343,7 +350,7 @@ export async function moveRemoteEntry(
   entry: RemoteEntry,
   targetDirectory: string,
 ): Promise<string> {
-  const storage = createStorage(server, await getRemoteProxyUrl());
+  const storage = createStorage(server, await remoteProxyUrl());
   await storage.test();
   const target = storage.childPath(
     targetDirectory || storage.rootPath,

@@ -111,11 +111,11 @@ function formatDate(ts: number): string {
   });
 }
 
-function showToast(text: string) {
+function showToast(text: string, duration = 1800) {
   message.value = text;
   window.setTimeout(() => {
     if (message.value === text) message.value = "";
-  }, 1800);
+  }, duration);
 }
 
 async function loadDirectory(token: string): Promise<boolean> {
@@ -272,7 +272,18 @@ async function importArchive() {
 }
 
 async function importSelected() {
-  if (!selectedCount.value || loading.value || !location.value) return;
+  if (!selectedCount.value) {
+    showToast("请先选择要导入的文件");
+    return;
+  }
+  if (loading.value) {
+    showToast("正在处理，请稍候");
+    return;
+  }
+  if (!location.value) {
+    showToast("请先选择文件夹");
+    return;
+  }
   loading.value = true;
   let prepared: PreparedImport | undefined;
   try {
@@ -293,11 +304,17 @@ async function importSelected() {
     const failed = results.filter((item) => item.error).length;
     const skipped = prepared.skipped ? `，跳过 ${prepared.skipped} 个` : "";
     const duplicateText = duplicates ? `，已存在 ${duplicates} 本` : "";
-    showToast(failed ? `成功 ${ok} 本，失败 ${failed} 本${duplicateText}${skipped}` : `已添加 ${ok} 本到书架${duplicateText}${skipped}`);
+    const firstError = results.find((item) => item.error)?.error;
+    showToast(
+      failed
+        ? `导入失败：${firstError || `成功 ${ok} 本，失败 ${failed} 本`}${duplicateText}${skipped}`
+        : `已添加 ${ok} 本到书架${duplicateText}${skipped}`,
+      5000,
+    );
     selected.value = new Set();
     await loadDirectory(currentToken.value);
   } catch (error) {
-    showToast(String(error));
+    showToast(String(error), 5000);
   } finally {
     if (prepared) await platform.importPicker.cleanupPreparedImport(prepared);
     loading.value = false;

@@ -2,29 +2,46 @@
 import { onMounted, ref, watch } from "vue";
 import type { LayoutPage } from "@/core/domain";
 import { getCachedPageImage, preloadPageImages } from "./drawPage";
-import { drawInfoBar, type InfoBarPayload } from "../infoBar";
+import {
+  drawInfoBar,
+  measureInfoBarHeights,
+  type InfoBarPayload,
+} from "../infoBar";
+
+export interface ScrollCanvasChapter {
+  index: number;
+  page: LayoutPage;
+  baseY: number;
+}
 
 const props = withDefaults(
   defineProps<{
-    page: LayoutPage | null;
+    page?: LayoutPage | null;
+    chapters?: ScrollCanvasChapter[];
     width: number;
     height: number;
     scrollTop: number;
     background?: string;
+    barBackground?: string;
     backgroundImage?: HTMLImageElement | null;
     backgroundAlpha?: number;
     textColor?: string;
     highlightLine?: number;
+    highlightChapter?: number | null;
     fontFamily?: string;
     underline?: boolean;
     infoBar?: InfoBarPayload | null;
   }>(),
   {
+    page: null,
+    chapters: () => [],
     background: "#f7f1e3",
+    barBackground: "#f7f1e3",
     backgroundImage: null,
     backgroundAlpha: 1,
     textColor: "#2f2a24",
     highlightLine: -1,
+    highlightChapter: null,
     fontFamily: 'system-ui, "Microsoft YaHei", "PingFang SC", sans-serif',
     underline: false,
     infoBar: undefined,
@@ -45,7 +62,13 @@ function scheduleDraw() {
 function draw() {
   const canvas = canvasRef.value;
   if (!canvas) return;
-  preloadPageImages(props.page, scheduleDraw);
+  const chapters: ScrollCanvasChapter[] =
+    props.chapters.length > 0
+      ? props.chapters
+      : props.page
+        ? [{ index: 0, page: props.page, baseY: 0 }]
+        : [];
+  for (const chapter of chapters) preloadPageImages(chapter.page, scheduleDraw);
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
@@ -83,15 +106,20 @@ function draw() {
     ctx.restore();
   }
 
-  const page = props.page;
-  if (page) {
-    const top = props.scrollTop;
-    const bottom = top + props.height;
+  const top = props.scrollTop;
+  const bottom = top + props.height;
+  for (const chapter of chapters) {
+    const page = chapter.page;
+    const baseY = chapter.baseY;
+    const highlighted =
+      props.highlightChapter == null || props.highlightChapter === chapter.index;
     ctx.save();
-    ctx.translate(0, -top);
+    ctx.translate(0, baseY - top);
     page.lines.forEach((line, index) => {
-      if (line.y + line.height < top - 80 || line.y > bottom + 80) return;
-      if (index === props.highlightLine) {
+      if (line.y + line.height < top - baseY - 80 || line.y > bottom - baseY + 80) {
+        return;
+      }
+      if (highlighted && index === props.highlightLine) {
         ctx.fillStyle = "rgba(255, 213, 79, 0.35)";
         ctx.fillRect(line.x - 2, line.y - 2, line.width + 4, line.height);
       }
@@ -116,6 +144,15 @@ function draw() {
   }
 
   if (props.infoBar) {
+    const heights = measureInfoBarHeights(props.infoBar.style);
+    if (heights.header > 0) {
+      ctx.fillStyle = props.barBackground;
+      ctx.fillRect(0, 0, props.width, heights.header);
+    }
+    if (heights.footer > 0) {
+      ctx.fillStyle = props.barBackground;
+      ctx.fillRect(0, props.height - heights.footer, props.width, heights.footer);
+    }
     drawInfoBar(ctx, props.infoBar, props.width, props.height);
   }
 }
@@ -123,15 +160,18 @@ function draw() {
 watch(
   () => [
     props.page,
+    props.chapters,
     props.width,
     props.height,
     props.scrollTop,
     props.highlightLine,
+    props.highlightChapter,
     props.underline,
     props.infoBar,
     props.backgroundImage,
     props.backgroundAlpha,
     props.background,
+    props.barBackground,
     props.textColor,
     props.fontFamily,
   ],

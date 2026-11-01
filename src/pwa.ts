@@ -1,6 +1,44 @@
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 const LOCAL_RESET_PARAM = "pwa-reset";
 
+function hexToRgb(color: string): [number, number, number] | null {
+  const value = color.trim().replace(/^#/, "");
+  if (!/^[0-9a-f]{6}$/i.test(value)) return null;
+  return [
+    parseInt(value.slice(0, 2), 16),
+    parseInt(value.slice(2, 4), 16),
+    parseInt(value.slice(4, 6), 16),
+  ];
+}
+
+function solidThemeColor(color: string, alpha: number, backdrop: string): string {
+  const foreground = hexToRgb(color);
+  if (!foreground || alpha >= 255) return color;
+  const background = hexToRgb(backdrop) ?? [255, 255, 255];
+  const ratio = Math.max(0, Math.min(255, alpha)) / 255;
+  const channels = foreground.map((channel, index) =>
+    Math.round(channel * ratio + background[index] * (1 - ratio)),
+  );
+  return `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+}
+
+export function syncPwaThemeColor(
+  color: string,
+  alpha = 255,
+  backdrop = "#ffffff",
+): void {
+  if (typeof document === "undefined") return;
+  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (!meta) {
+    if (import.meta.env.MODE !== "web") return;
+    meta = document.createElement("meta");
+    meta.name = "theme-color";
+    document.head.appendChild(meta);
+  }
+  const value = solidThemeColor(color, alpha, backdrop);
+  if (meta.content !== value) meta.content = value;
+}
+
 async function clearLocalPwa(): Promise<boolean> {
   const controlled = Boolean(navigator.serviceWorker.controller);
   const registrations = await navigator.serviceWorker.getRegistrations();

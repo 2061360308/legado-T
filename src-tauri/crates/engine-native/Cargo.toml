@@ -1,0 +1,24 @@
+[package]
+name = "engine-native"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Legado 3.0 book source rule engine (standalone)"
+
+[dependencies]
+regex.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+engine-model.workspace = true
+engine-flow.workspace = true
+engine-js.workspace = true
+engine-http-native.workspace = true
+engine-regex.workspace = true
+engine-replace.workspace = true
+engine-rule.workspace = true
+engine-rss.workspace = true
+tokio.workspace = true

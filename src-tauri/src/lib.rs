@@ -1,6 +1,7 @@
 pub mod commands;
 pub mod data;
 pub mod domain;
+pub mod engine;
 pub mod error;
 pub mod platform;
 pub mod state;
@@ -98,6 +99,7 @@ pub fn run() {
             commands::read_record::read_record_delete,
             commands::read_record::read_record_clear,
             commands::reader::reader_open,
+            commands::online_reader::online_reader_open,
             commands::reader::reader_save_progress,
             commands::reader::reader_effective_rules,
             commands::reader::reader_save_chapter_content,
@@ -128,6 +130,36 @@ pub fn run() {
             commands::bookmarks::bookmark_delete,
             commands::backup::backup_export,
             commands::backup::backup_import,
+            commands::book_source::book_source_list,
+            commands::book_source::book_source_get,
+            commands::book_source::book_source_save,
+            commands::book_source::book_source_delete,
+            commands::book_source::book_source_set_enabled,
+            commands::book_source::book_source_set_explore_enabled,
+            commands::book_source::book_source_import,
+            commands::book_source::book_source_export,
+            commands::book_source::book_source_groups,
+            commands::book_source::book_source_search_history,
+            commands::book_source::book_source_set_variable,
+            commands::book_source::book_source_get_variables,
+            commands::book_source::book_source_search,
+            commands::book_source::book_source_info,
+            commands::book_source::book_source_toc,
+            commands::book_source::book_source_content,
+            commands::book_source::book_source_add_to_shelf,
+            commands::book_source::book_source_refresh,
+            commands::book_source::book_source_reviews,
+            commands::book_source::book_source_download_urls,
+            commands::book_source::book_source_pay,
+            commands::book_source::book_source_save_cookies,
+            commands::book_source::book_source_clear_cookies,
+            commands::rss::rss_source_list,
+            commands::rss::rss_source_save,
+            commands::rss::rss_source_delete,
+            commands::rss::rss_source_import,
+            commands::rss::rss_source_export,
+            commands::rss::rss_articles,
+            commands::rss::rss_content,
             webview_bridge::webview_fetch,
             webview_bridge::webview_login,
             webview_bridge::webview_engine_probe,

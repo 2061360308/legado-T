@@ -94,6 +94,7 @@ export class S3Storage implements RemoteStorage {
     continuationToken?: string,
     maxKeys = 1000,
     delimiter: string | null = "/",
+    signal?: AbortSignal,
   ): Promise<Record<string, unknown>> {
     const url = new URL(this.objectUrl(""));
     url.searchParams.set("list-type", "2");
@@ -106,6 +107,7 @@ export class S3Storage implements RemoteStorage {
     const response = await this.signedRequest(url.toString(), {
       method: "GET",
       headers: { Accept: "application/xml" },
+      signal,
     });
     if (!response.ok) {
       throw new Error(`S3 ${response.status} ${response.statusText}`.trim());
@@ -154,8 +156,14 @@ export class S3Storage implements RemoteStorage {
     }
   }
 
-  async test(): Promise<void> {
-    const parsed = await this.listPage(decodeKey(this.rootPath).key, undefined, 1);
+  async test(signal?: AbortSignal): Promise<void> {
+    const parsed = await this.listPage(
+      decodeKey(this.rootPath).key,
+      undefined,
+      1,
+      "/",
+      signal,
+    );
     if (!parsed.ListBucketResult) {
       throw new Error("S3 ListObjectsV2 response is invalid");
     }

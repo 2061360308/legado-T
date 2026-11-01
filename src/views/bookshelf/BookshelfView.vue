@@ -120,6 +120,16 @@ function selectGroup(id: number) {
   load();
 }
 
+function onTabsWheel(event: WheelEvent) {
+  const tabs = event.currentTarget as HTMLElement | null;
+  if (!tabs || tabs.scrollWidth <= tabs.clientWidth) return;
+  const delta =
+    Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+  if (!delta) return;
+  event.preventDefault();
+  tabs.scrollLeft += delta;
+}
+
 function openBook(book: Book) {
   router.push({ path: "/reader", query: { bookUrl: book.bookUrl } });
 }
@@ -227,7 +237,12 @@ onMounted(async () => {
       @back="backToRoot"
     >
       <template #content>
-        <div v-if="!folderStyle" class="tabs" data-id="view_pager_bookshelf">
+        <div
+          v-if="!folderStyle"
+          class="tabs"
+          data-id="view_pager_bookshelf"
+          @wheel="onTabsWheel"
+        >
           <button
             v-for="group in groups"
             :key="group.id"
@@ -345,10 +360,21 @@ onMounted(async () => {
   font-size: 12px;
   text-align: center;
 }
+.bookshelf-page :deep(.title-bar .titles) {
+  flex: 0 0 auto;
+  max-width: 45%;
+}
+.bookshelf-page :deep(.title-bar .actions) {
+  margin-left: auto;
+}
 .tabs {
   display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
   gap: 4px;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 .tabs::-webkit-scrollbar {

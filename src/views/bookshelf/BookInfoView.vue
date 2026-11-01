@@ -3,6 +3,11 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { platform } from "@/runtime";
 import {
+  bookSourceDownloadUrls,
+  bookSourceRefresh,
+  bookSourceReviews,
+} from "@/core/application/bookSources";
+import {
   bookClearCache,
   bookCoverRefresh,
   bookDelete,
@@ -15,7 +20,7 @@ import {
   chapterWordCounts,
   groupList,
 } from "@/core/application/books";
-import type { Book, BookChapter, BookGroup } from "@/core/domain";
+import type { Book, BookChapter, BookGroup, BookReview } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
@@ -32,8 +37,20 @@ const fileSize = ref(0);
 const wordCount = ref(0);
 const menuVisible = ref(false);
 const groupDialogVisible = ref(false);
+const reviewsVisible = ref(false);
+const reviewsLoading = ref(false);
+const reviews = ref<BookReview[]>([]);
+const downloadVisible = ref(false);
+const downloadLoading = ref(false);
+const downloadUrls = ref<string[]>([]);
 const message = ref("");
 
+const isOnline = computed(
+  () =>
+    Boolean(book.value) &&
+    !book.value?.sourcePath &&
+    /^https?:\/\//i.test(String(book.value?.origin || "")),
+);
 const displayCover = computed(() => book.value?.customCoverUrl || book.value?.coverUrl || "");
 const displayIntro = computed(() => book.value?.customIntro || book.value?.intro || "暂无简介");
 const backgroundSrc = computed(() => {
@@ -70,6 +87,12 @@ const kindTags = computed(() => {
 });
 const menuItems = computed<PopupMenuItem[]>(() => [
   { key: "edit", label: "编辑书籍信息", icon: "ic_edit" },
+  ...(isOnline.value
+    ? [
+        { key: "reviews", label: "查看评论", icon: "ic_cfg_about" },
+        { key: "downloads", label: "下载地址", icon: "ic_download" },
+      ]
+    : []),
   { key: "share", label: "分享", icon: "ic_share" },
   { key: "refresh", label: "刷新", icon: "ic_refresh_black_24dp" },
   { key: "top", label: "置顶", icon: "ic_book_last" },
@@ -124,7 +147,11 @@ function edit() {
 
 async function onMenu(key: string) {
   if (key === "edit") edit();
-  else if (key === "share") {
+  else if (key === "reviews") {
+    await showReviews();
+  } else if (key === "downloads") {
+    await showDownloads();
+  } else if (key === "share") {
     const text = `${book.value?.name || ""} ${book.value?.author || ""}`.trim();
     if (navigator.share) await navigator.share({ title: book.value?.name, text }).catch(() => undefined);
     else {
@@ -132,8 +159,13 @@ async function onMenu(key: string) {
       showToast("已复制书籍信息");
     }
   } else if (key === "refresh") {
-    await load();
-    showToast("已刷新");
+    try {
+      if (isOnline.value) await bookSourceRefresh(bookUrl.value);
+      await load();
+      showToast("已刷新");
+    } catch (error) {
+      showToast(String(error));
+    }
   } else if (key === "top") {
     await bookMoveToTop(bookUrl.value);
     showToast("已置顶");
@@ -166,6 +198,45 @@ async function onMenu(key: string) {
   } else if (key === "log") {
     showToast("日志暂未接入");
   }
+}
+
+async function showReviews() {
+  if (!isOnline.value) return;
+  reviewsVisible.value = true;
+  reviewsLoading.value = true;
+  reviews.value = [];
+  try {
+    reviews.value = await bookSourceReviews(
+      bookUrl.value,
+      book.value?.durChapterIndex ?? 0,
+    );
+    if (!reviews.value.length) showToast("暂无评论");
+  } catch (error) {
+    showToast(String(error));
+  } finally {
+    reviewsLoading.value = false;
+  }
+}
+
+async function showDownloads() {
+  if (!isOnline.value) return;
+  downloadVisible.value = true;
+  downloadLoading.value = true;
+  downloadUrls.value = [];
+  try {
+    downloadUrls.value = await bookSourceDownloadUrls(bookUrl.value);
+    if (!downloadUrls.value.length) showToast("没有可下载地址");
+  } catch (error) {
+    showToast(String(error));
+  } finally {
+    downloadLoading.value = false;
+  }
+}
+
+async function copyDownloadUrls() {
+  if (!downloadUrls.value.length) return;
+  await navigator.clipboard.writeText(downloadUrls.value.join("\n"));
+  showToast("下载地址已复制");
 }
 
 async function removeFromShelf() {
@@ -268,6 +339,46 @@ onMounted(load);
       :group-id="book.group ?? 0"
       @confirm="saveGroup"
     />
+
+    <div
+      v-if="reviewsVisible"
+      class="reviews-overlay"
+      @click.self="reviewsVisible = false"
+    >
+      <section class="reviews-panel">
+        <header>
+          <span>评论</span>
+          <button @click="reviewsVisible = false">关闭</button>
+        </header>
+        <p v-if="reviewsLoading" class="reviews-empty">加载中…</p>
+        <p v-else-if="!reviews.length" class="reviews-empty">暂无评论</p>
+        <article v-for="(review, index) in reviews" :key="index" class="review">
+          <p class="review-content">{{ review.content }}</p>
+          <p class="review-meta">{{ review.postTime || "" }}</p>
+        </article>
+      </section>
+    </div>
+
+    <div
+      v-if="downloadVisible"
+      class="reviews-overlay"
+      @click.self="downloadVisible = false"
+    >
+      <section class="reviews-panel">
+        <header>
+          <span>下载地址</span>
+          <span class="header-actions">
+            <button @click="copyDownloadUrls">复制</button>
+            <button @click="downloadVisible = false">关闭</button>
+          </span>
+        </header>
+        <p v-if="downloadLoading" class="reviews-empty">加载中…</p>
+        <p v-else-if="!downloadUrls.length" class="reviews-empty">没有可下载地址</p>
+        <p v-for="(url, index) in downloadUrls" :key="index" class="download-url">
+          {{ url }}
+        </p>
+      </section>
+    </div>
 
     <p v-if="message" class="toast">{{ message }}</p>
   </div>
@@ -412,6 +523,69 @@ onMounted(load);
 .actions button.primary {
   background: var(--ac-primary);
   color: #fff;
+}
+.reviews-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, 0.45);
+}
+.reviews-panel {
+  width: 100%;
+  max-height: 72vh;
+  overflow-y: auto;
+  background: var(--ac-background);
+  border-radius: 12px 12px 0 0;
+  padding: 10px 16px calc(16px + env(safe-area-inset-bottom));
+}
+.reviews-panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  color: var(--ac-primary-text);
+  font-size: 15px;
+}
+.reviews-panel header button {
+  border: none;
+  background: transparent;
+  color: var(--ac-primary);
+  font-size: 13px;
+}
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+.download-url {
+  margin: 0;
+  padding: 6px 0;
+  border-top: 1px solid var(--ac-divider);
+  color: var(--ac-secondary-text);
+  font-size: 12px;
+  word-break: break-all;
+}
+.reviews-empty {
+  margin: 12px 0;
+  color: var(--ac-secondary-text);
+  font-size: 13px;
+}
+.review {
+  padding: 10px 0;
+  border-top: 1px solid var(--ac-divider);
+}
+.review-content {
+  margin: 0;
+  color: var(--ac-primary-text);
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.review-meta {
+  margin: 4px 0 0;
+  color: var(--ac-secondary-text);
+  font-size: 11px;
 }
 .toast {
   position: fixed;

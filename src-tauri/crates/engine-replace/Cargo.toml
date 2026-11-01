@@ -1,0 +1,13 @@
+[package]
+name = "engine-replace"
+version = "0.1.0"
+edition = "2024"
+description = "替换净化"
+license = "AGPL-3.0"
+repository = "https://gitea.slcomplex.party/OpenToGithub/legado-rust-engine-code"
+keywords = ["text", "replace", "sanitize"]
+categories = ["text-processing"]
+
+[dependencies]
+engine-model.workspace = true
+engine-regex.workspace = true

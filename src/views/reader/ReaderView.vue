@@ -9,6 +9,7 @@ import {
   readerSaveProgress,
 } from "@/core/application/reader";
 import { bookGet, bookUpsert, reSplitBook } from "@/core/application/books";
+import { bookSourcePay } from "@/core/application/bookSources";
 import { bookmarkAdd } from "@/core/application/bookmarks";
 import { readRecordAddTime } from "@/core/application/readRecords";
 import { kvGet, kvSet } from "@/core/application/config";
@@ -147,6 +148,7 @@ const moreMenuItems = computed<PopupMenuItem[]>(() => {
   }
   items.push({ key: "imageStyle", label: "图片样式" });
   items.push({ key: "updateToc", label: "更新目录" });
+  if (isOnline.value) items.push({ key: "pay", label: "购买/登录本章" });
   items.push({ key: "effective", label: "起效的替换" });
   items.push({ key: "log", label: "日志", muted: true });
   items.push({ key: "help", label: "帮助" });
@@ -179,8 +181,8 @@ function imageAt(x: number, y: number): string | null {
       item.image &&
       target.x >= item.x &&
       target.x <= item.x + item.width &&
-      y >= item.y &&
-      y <= item.y + item.height,
+      target.localY >= item.y &&
+      target.localY <= item.y + item.height,
   );
   return line?.image?.src ?? null;
 }
@@ -220,7 +222,7 @@ const selectionMenuStyle = computed(() => {
   if (!page || !value) return {};
   const box = selectionBounds(page, value);
   if (!box) return {};
-  const offset = scrollMode.value ? scrollTop.value : 0;
+  const offset = selectionScrollTop.value;
   const xOffset = selectionOffsetX.value;
   const menuWidth = expandedSelectionMenu.value ? Math.min(320, viewWidth.value - 16) : 236;
   const menuHeight = expandedSelectionMenu.value ? 88 : 44;
@@ -242,7 +244,7 @@ const selectionHandleStyle = computed(() => {
   if (!page || !value) return null;
   const handles = selectionHandlesFor(page, value);
   if (!handles) return null;
-  const offset = scrollMode.value ? scrollTop.value : 0;
+  const offset = selectionScrollTop.value;
   return {
     start: {
       left: `${handles.start.x + selectionOffsetX.value - 7}px`,
@@ -291,12 +293,50 @@ const scrollRef = ref<HTMLElement | null>(null);
 const scrollTop = ref(0);
 let scrollSaveTimer: number | undefined;
 
+interface ScrollChapter {
+  index: number;
+  snapshot: ReaderSnapshot;
+  page: LayoutPage;
+  baseY: number;
+  height: number;
+}
+
+const scrollChapters = ref<ScrollChapter[]>([]);
+const scrollLoads = new Map<number, Promise<ScrollChapter | null>>();
+
+const scrollTotalHeight = computed(() => {
+  const last = scrollChapters.value[scrollChapters.value.length - 1];
+  return last ? last.baseY + last.height : viewHeight.value;
+});
+
+function scrollChapterAt(y: number): ScrollChapter | null {
+  const list = scrollChapters.value;
+  if (!list.length) return null;
+  return (
+    list.find((item) => y >= item.baseY && y < item.baseY + item.height) ??
+    list[list.length - 1]
+  );
+}
+
+const currentScrollChapter = computed(() =>
+  scrollMode.value ? scrollChapterAt(scrollTop.value + 1) : null,
+);
+
 const currentPage = computed(() => {
   const snap = snapshot.value;
   if (!snap) return null;
-  if (scrollMode.value) return snap.pages[0] ?? null;
+  if (scrollMode.value) {
+    return currentScrollChapter.value?.page ?? snap.pages[0] ?? null;
+  }
   return snap.pages[snap.pageIndex] ?? null;
 });
+
+const scrollPageBaseY = computed(() =>
+  scrollMode.value ? currentScrollChapter.value?.baseY ?? 0 : 0,
+);
+const selectionScrollTop = computed(() =>
+  scrollMode.value ? scrollTop.value - scrollPageBaseY.value : 0,
+);
 
 const rightPage = computed(() => {
   const snap = snapshot.value;
@@ -305,7 +345,12 @@ const rightPage = computed(() => {
 });
 
 const scrollHeight = computed(() =>
-  Math.max(viewHeight.value, currentPage.value?.height ?? viewHeight.value),
+  Math.max(
+    viewHeight.value,
+    scrollMode.value
+      ? scrollTotalHeight.value
+      : currentPage.value?.height ?? viewHeight.value,
+  ),
 );
 
 const anyDialogOpen = computed(() => activeDialog.value !== "");
@@ -405,6 +450,8 @@ const infoBarStyle = computed(() =>
     dividerColor: currentDividerColor(),
   }),
 );
+const infoBarHeights = computed(() => measureInfoBarHeights(infoBarStyle.value));
+const readerBarBackground = computed(() => theme.readerColors.bgValue);
 
 function infoPayloadFor(page: LayoutPage | null): InfoBarPayload | null {
   const snap = snapshot.value;
@@ -562,6 +609,106 @@ function measureViewport() {
   viewHeight.value = Math.max(240, window.innerHeight);
 }
 
+function makeScrollChapter(index: number, snap: ReaderSnapshot): ScrollChapter | null {
+  const page = snap.pages[0];
+  if (!page) return null;
+  return {
+    index,
+    snapshot: snap,
+    page,
+    baseY: 0,
+    height: Math.max(1, page.height || viewHeight.value),
+  };
+}
+
+function loadScrollChapter(index: number): Promise<ScrollChapter | null> {
+  const existing = scrollChapters.value.find((item) => item.index === index);
+  if (existing) return Promise.resolve(existing);
+  const pending = scrollLoads.get(index);
+  if (pending) return pending;
+  const task = readerOpen(bookUrl.value, index, 0, buildStyle())
+    .then((next) => makeScrollChapter(index, next))
+    .catch(() => null)
+    .finally(() => scrollLoads.delete(index));
+  scrollLoads.set(index, task);
+  return task;
+}
+
+async function appendScrollChapter(index: number): Promise<boolean> {
+  const total = snapshot.value?.totalChapters ?? 0;
+  if (index < 0 || index >= total) return false;
+  if (scrollChapters.value.some((item) => item.index === index)) return true;
+  const item = await loadScrollChapter(index);
+  if (!item) return false;
+  const list = scrollChapters.value;
+  if (list.some((entry) => entry.index === index)) return true;
+  const last = list[list.length - 1];
+  item.baseY = last ? last.baseY + last.height : 0;
+  scrollChapters.value = [...list, item];
+  return true;
+}
+
+async function prependScrollChapter(index: number): Promise<boolean> {
+  if (index < 0) return false;
+  if (scrollChapters.value.some((item) => item.index === index)) return true;
+  const item = await loadScrollChapter(index);
+  if (!item) return false;
+  const list = scrollChapters.value;
+  if (list.some((entry) => entry.index === index)) return true;
+  item.baseY = 0;
+  scrollChapters.value = [
+    item,
+    ...list.map((entry) => ({ ...entry, baseY: entry.baseY + item.height })),
+  ];
+  scrollTop.value += item.height;
+  if (scrollRef.value) scrollRef.value.scrollTop = scrollTop.value;
+  return true;
+}
+
+function ensureScrollAround(): void {
+  const list = scrollChapters.value;
+  if (!list.length) return;
+  const threshold = viewHeight.value * 0.8;
+  const first = list[0];
+  const last = list[list.length - 1];
+  if (scrollTop.value + viewHeight.value >= scrollTotalHeight.value - threshold) {
+    void appendScrollChapter(last.index + 1);
+  }
+  if (scrollTop.value <= threshold) {
+    void prependScrollChapter(first.index - 1);
+  }
+}
+
+function syncScrollChapter(): void {
+  const item = currentScrollChapter.value;
+  if (item && snapshot.value?.chapterIndex !== item.index) {
+    snapshot.value = item.snapshot;
+  }
+}
+
+function scrollToChapter(item: ScrollChapter, atEnd = false): void {
+  const target = item.baseY + (atEnd ? Math.max(0, item.height - viewHeight.value) : 0);
+  scrollTop.value = target;
+  if (scrollRef.value) scrollRef.value.scrollTop = target;
+  syncScrollChapter();
+}
+
+async function initScrollBuffer(
+  next: ReaderSnapshot,
+  chapterPos: number | null,
+): Promise<void> {
+  const item = makeScrollChapter(next.chapterIndex, next);
+  if (!item) return;
+  scrollChapters.value = [item];
+  await nextTick();
+  scrollTop.value =
+    chapterPos === 2147483647
+      ? Math.max(0, item.height - viewHeight.value)
+      : next.scrollOffset ?? 0;
+  if (scrollRef.value) scrollRef.value.scrollTop = scrollTop.value;
+  void appendScrollChapter(item.index + 1);
+}
+
 async function open(chapterIndex: number | null = null, chapterPos: number | null = null) {
   clearSelection();
   if (!bookUrl.value) {
@@ -571,18 +718,15 @@ async function open(chapterIndex: number | null = null, chapterPos: number | nul
   loading.value = true;
   error.value = "";
   try {
-    snapshot.value = await readerOpen(bookUrl.value, chapterIndex, chapterPos, buildStyle());
-    if (snapshot.value.marginFellBack) {
+    const next = await readerOpen(bookUrl.value, chapterIndex, chapterPos, buildStyle());
+    snapshot.value = next;
+    if (next.marginFellBack) {
       showToast("边距过大，已回退默认边距");
     }
     if (scrollMode.value) {
-      await nextTick();
-      scrollTop.value =
-        chapterPos === 2147483647
-          ? Math.max(0, scrollHeight.value - viewHeight.value)
-          : snapshot.value.scrollOffset ?? 0;
-      if (scrollRef.value) scrollRef.value.scrollTop = scrollTop.value;
+      await initScrollBuffer(next, chapterPos);
     } else {
+      scrollChapters.value = [];
       scrollTop.value = 0;
     }
     persistProgress();
@@ -626,9 +770,10 @@ function seekScroll(value: number) {
 }
 
 function scrollCharPos(): number {
-  const page = currentPage.value;
+  const chapter = currentScrollChapter.value;
+  const page = chapter?.page ?? currentPage.value;
   if (!page || page.lines.length === 0) return 0;
-  const y = scrollTop.value + 1;
+  const y = Math.max(0, scrollTop.value - (chapter?.baseY ?? 0)) + 1;
   const line =
     page.lines.find((item) => item.y + item.height > y) ?? page.lines[page.lines.length - 1];
   return line.startChar;
@@ -637,15 +782,19 @@ function scrollCharPos(): number {
 function persistProgress() {
   const snap = snapshot.value;
   if (!snap) return;
+  const chapter = scrollMode.value ? currentScrollChapter.value : null;
   const page = snap.pages[snap.pageIndex];
   const pos = scrollMode.value
     ? scrollCharPos()
     : page
       ? page.startChar
       : snap.pageStartChar;
-  readerSaveProgress(bookUrl.value, snap.chapterIndex, pos, snap.chapterTitle).catch(
-    () => undefined,
-  );
+  readerSaveProgress(
+    bookUrl.value,
+    chapter?.index ?? snap.chapterIndex,
+    pos,
+    chapter?.snapshot.chapterTitle ?? snap.chapterTitle,
+  ).catch(() => undefined);
 }
 
 const turnActive = ref(false);
@@ -777,30 +926,55 @@ function scrollBehavior(): ScrollBehavior {
   return settingBool("noAnimScrollPage", false) ? "auto" : "smooth";
 }
 
-function scrollByViewport(direction: 1 | -1) {
+async function scrollByViewport(direction: 1 | -1) {
   const el = scrollRef.value;
   const snap = snapshot.value;
   if (!el || !snap) return;
-  const max = Math.max(0, scrollHeight.value - viewHeight.value);
+  const top = el.scrollTop;
+  const max = Math.max(0, scrollTotalHeight.value - viewHeight.value);
   if (direction > 0) {
-    if (scrollTop.value >= max - 2) {
-      if (snap.chapterIndex + 1 < snap.totalChapters) open(snap.chapterIndex + 1, 0);
-      else showToast("已复制选中文本");
+    if (top >= max - 2) {
+      const last = scrollChapters.value[scrollChapters.value.length - 1];
+      if (last && last.index + 1 < snap.totalChapters) {
+        const loaded = await appendScrollChapter(last.index + 1);
+        if (loaded) {
+          const nextMax = Math.max(0, scrollTotalHeight.value - viewHeight.value);
+          const target = Math.min(
+            nextMax,
+            Math.max(top, max + viewHeight.value * 0.9),
+          );
+          el.scrollTo({ top: target, behavior: scrollBehavior() });
+        }
+      } else {
+        showToast("已经是最后一章");
+      }
       return;
     }
     el.scrollTo({
-      top: Math.min(max, scrollTop.value + viewHeight.value * 0.9),
+      top: Math.min(max, top + viewHeight.value * 0.9),
       behavior: scrollBehavior(),
     });
     return;
   }
-  if (scrollTop.value <= 2) {
-    if (snap.chapterIndex > 0) open(snap.chapterIndex - 1, 2147483647);
-    else showToast("已经是第一章");
+  if (top <= 2) {
+    const first = scrollChapters.value[0];
+    if (first && first.index > 0) {
+      const before = scrollTotalHeight.value;
+      const loaded = await prependScrollChapter(first.index - 1);
+      if (loaded) {
+        const added = scrollTotalHeight.value - before;
+        el.scrollTo({
+          top: Math.max(0, added - viewHeight.value * 0.9),
+          behavior: scrollBehavior(),
+        });
+      }
+    } else {
+      showToast("已经是第一章");
+    }
     return;
   }
   el.scrollTo({
-    top: Math.max(0, scrollTop.value - viewHeight.value * 0.9),
+    top: Math.max(0, top - viewHeight.value * 0.9),
     behavior: scrollBehavior(),
   });
 }
@@ -808,6 +982,8 @@ function scrollByViewport(direction: 1 | -1) {
 function onScroll(event: Event) {
   const el = event.currentTarget as HTMLElement;
   scrollTop.value = el.scrollTop;
+  syncScrollChapter();
+  ensureScrollAround();
   window.clearTimeout(scrollSaveTimer);
   scrollSaveTimer = window.setTimeout(() => persistProgress(), 400);
 }
@@ -816,7 +992,7 @@ function nextPage(speed = 300) {
   const snap = snapshot.value;
   if (!snap) return;
   if (scrollMode.value) {
-    scrollByViewport(1);
+    void scrollByViewport(1);
     return;
   }
   if (doublePageActive.value) {
@@ -878,7 +1054,7 @@ function prevPage(speed = 300) {
   const snap = snapshot.value;
   if (!snap) return;
   if (scrollMode.value) {
-    scrollByViewport(-1);
+    void scrollByViewport(-1);
     return;
   }
   if (doublePageActive.value) {
@@ -946,9 +1122,28 @@ function jumpPage(index: number) {
   persistProgress();
 }
 
-function changeChapter(delta: number) {
+async function changeChapter(delta: number) {
   const snap = snapshot.value;
   if (!snap) return;
+  if (scrollMode.value) {
+    const current = currentScrollChapter.value?.index ?? snap.chapterIndex;
+    const target = current + delta;
+    if (target < 0 || target >= snap.totalChapters) {
+      showToast(delta > 0 ? "已经是最后一章" : "已经是第一章");
+      return;
+    }
+    let item = scrollChapters.value.find((entry) => entry.index === target);
+    if (!item) {
+      if (delta > 0) {
+        if (!(await appendScrollChapter(target))) return;
+      } else if (!(await prependScrollChapter(target))) {
+        return;
+      }
+      item = scrollChapters.value.find((entry) => entry.index === target);
+    }
+    if (item) scrollToChapter(item);
+    return;
+  }
   if (useTurnOverlay.value) {
     startChapterTurn(delta > 0 ? "next" : "prev");
     return;
@@ -1039,13 +1234,29 @@ function pointerOffset(event: PointerEvent) {
 }
 
 function pageAtPoint(x: number, y: number) {
+  if (scrollMode.value) {
+    const chapter = scrollChapterAt(y);
+    return {
+      page: chapter?.page ?? currentPage.value,
+      x,
+      localY: chapter ? y - chapter.baseY : y,
+      offsetX: 0,
+      index: 0,
+    };
+  }
   if (doublePageActive.value) {
     if (x < layoutWidth.value) {
-      return { page: currentPage.value, x, offsetX: 0, index: 0 };
+      return { page: currentPage.value, x, localY: y, offsetX: 0, index: 0 };
     }
-    return { page: rightPage.value, x: x - layoutWidth.value, offsetX: layoutWidth.value, index: 1 };
+    return {
+      page: rightPage.value,
+      x: x - layoutWidth.value,
+      localY: y,
+      offsetX: layoutWidth.value,
+      index: 1,
+    };
   }
-  return { page: currentPage.value, x, offsetX: 0, index: 0 };
+  return { page: currentPage.value, x, localY: y, offsetX: 0, index: 0 };
 }
 
 function clearLongPress() {
@@ -1078,7 +1289,7 @@ function beginLongPress(event: PointerEvent) {
     const point = pointerOffset(event);
     const target = pageAtPoint(point.x, point.y);
     if (!target.page) return;
-    const hit = hitTestText(target.page, target.x, point.y);
+    const hit = hitTestText(target.page, target.x, target.localY);
     if (!hit) return;
     const word = wordSelection(target.page, hit.line, hit.char);
     if (!word) return;
@@ -1122,7 +1333,7 @@ function onSelectionHandleMove(event: PointerEvent) {
   const point = pointerOffset(event);
   const target = pageAtPoint(point.x, point.y);
   if (!target.page || target.page !== page) return;
-  const hit = hitTestText(page, target.x, point.y);
+  const hit = hitTestText(page, target.x, target.localY);
   if (!hit) return;
   if (which === "start") {
     updateSelection(page, hit, current.end);
@@ -1178,7 +1389,8 @@ function jumpToText(keyword: string) {
         const page = currentPage.value;
         const line = page?.lines.find((item) => pos >= item.startChar && pos < item.endChar);
         if (line) {
-          scrollTop.value = Math.max(0, line.y - 20);
+          const baseY = currentScrollChapter.value?.baseY ?? 0;
+          scrollTop.value = Math.max(0, baseY + line.y - 20);
           if (scrollRef.value) scrollRef.value.scrollTop = scrollTop.value;
           return true;
         }
@@ -1324,7 +1536,7 @@ function onPointerMove(event: PointerEvent) {
     const point = pointerOffset(event);
     const target = pageAtPoint(point.x, point.y);
     if (!target.page || target.page !== selectedPage) return;
-    const hit = hitTestText(selectedPage, target.x, point.y);
+    const hit = hitTestText(selectedPage, target.x, target.localY);
     if (hit) updateSelection(selectedPage, current.start, hit);
     return;
   }
@@ -1729,6 +1941,7 @@ function onMoreSelect(key: string) {
   else if (key === "replace" || key === "effective") activeDialog.value = "effective";
   else if (key === "useReplaceRule") void toggleUseReplaceRule();
   else if (key === "updateToc") void refreshToc();
+  else if (key === "pay") void payChapter();
   else if (key === "reverse") void reverseContent();
   else if (key === "sameTitleRemoved") void toggleKeepDuplicateTitle();
   else if (key === "reSegment") void toggleReSegment();
@@ -1736,6 +1949,31 @@ function onMoreSelect(key: string) {
   else if (key === "imageStyle") imageStyleVisible.value = true;
   else if (key === "log") logVisible.value = true;
   else if (key === "help") helpVisible.value = true;
+}
+
+async function payChapter() {
+  const snap = snapshot.value;
+  if (!snap) return;
+  if (!/^https?:/i.test(snap.book.bookUrl)) {
+    showToast("仅在线书籍支持购买");
+    return;
+  }
+  try {
+    const result = await bookSourcePay(snap.book.bookUrl, snap.chapterIndex);
+    if (result.result === "url") {
+      showToast("已打开购买/登录页面");
+      return;
+    }
+    if (result.result === "success") {
+      await readerInvalidateBook(snap.book.bookUrl);
+      showToast("购买成功，正在重新加载本章");
+      await open(snap.chapterIndex, currentPage.value?.startChar ?? 0);
+      return;
+    }
+    showToast("当前章节无需购买或没有购买规则");
+  } catch (error) {
+    showToast(String(error));
+  }
 }
 
 function onChangeSource() {
@@ -2015,14 +2253,17 @@ onBeforeUnmount(() => {
       <ScrollReaderCanvas
         class="scroll-canvas"
         :page="currentPage"
+        :chapters="scrollChapters"
         :width="viewWidth"
         :height="viewHeight"
         :scroll-top="scrollTop"
         :background="readerBackground"
+        :bar-background="readerBarBackground"
         :background-image="readerImage"
         :background-alpha="readerBackgroundAlpha"
         :text-color="readerTextColor"
         :highlight-line="highlightLine"
+        :highlight-chapter="snapshot.chapterIndex"
         :font-family="prefs.fontFamily"
         :underline="readerUnderline"
         :info-bar="currentInfoBar"
@@ -2121,8 +2362,10 @@ onBeforeUnmount(() => {
         :selection="selection"
         :width="doublePageActive ? layoutWidth : viewWidth"
         :height="viewHeight"
-        :scroll-top="scrollTop"
+        :scroll-top="selectionScrollTop"
         :offset-x="selectionOffsetX"
+        :content-top="scrollMode ? infoBarHeights.header : 0"
+        :content-bottom="scrollMode ? infoBarHeights.footer : 0"
       />
       <template v-if="selection && selectionHandleStyle">
         <button

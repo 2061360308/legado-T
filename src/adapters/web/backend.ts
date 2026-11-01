@@ -31,6 +31,7 @@ import {
   shelfBooksInWorker,
 } from "./readerEngineClient";
 import { exportWebBackup, importWebBackup } from "./backupService";
+import defaultTxtTocRules from "./defaultTxtTocRules.json";
 import {
   archiveList,
 
@@ -202,6 +203,35 @@ async function saveTxtTocRule(rule: TxtTocRule): Promise<TxtTocRule> {
   };
   await db.txtTocRules.put(saved);
   return saved;
+}
+
+const bundledTxtTocRules = (defaultTxtTocRules as TxtTocRule[]).map((rule) => ({
+  ...rule,
+  enable: rule.enable ?? true,
+}));
+
+let defaultTxtTocRulesReady: Promise<void> | null = null;
+
+async function ensureDefaultTxtTocRules(): Promise<void> {
+  if (!defaultTxtTocRulesReady) {
+    defaultTxtTocRulesReady = (async () => {
+      if ((await db.txtTocRules.count()) > 0) return;
+      await db.txtTocRules.bulkPut(bundledTxtTocRules);
+    })().catch((error) => {
+      defaultTxtTocRulesReady = null;
+      throw error;
+    });
+  }
+  await defaultTxtTocRulesReady;
+}
+
+async function restoreDefaultTxtTocRules(): Promise<number> {
+  await db.transaction("rw", db.txtTocRules, async () => {
+    await db.txtTocRules.clear();
+    await db.txtTocRules.bulkPut(bundledTxtTocRules);
+  });
+  defaultTxtTocRulesReady = Promise.resolve();
+  return bundledTxtTocRules.length;
 }
 
 async function importTxtTocRules(json: string): Promise<DiffReport> {
@@ -389,8 +419,20 @@ async function openReader(
   chapterPos: number | null,
   style: LayoutStyle,
 ): Promise<ReaderSnapshot> {
-  const book = await db.books.get(bookUrl);
+  let book = await db.books.get(bookUrl);
   if (!book) throw new Error("书籍不存在");
+  if (!book.tocUrl && book.sourcePath && /\.txt$/i.test(book.sourcePath)) {
+    const migrationKey = `txtTocMigration:${bookUrl}`;
+    if (!(await db.kv.get(migrationKey))) {
+      await db.kv.put({ key: migrationKey, value: "1" });
+      try {
+        await resplitBook(bookUrl, null, book.charset ?? null);
+        book = (await db.books.get(bookUrl)) ?? book;
+      } catch {
+        // Keep the existing chapters if migration cannot parse this file.
+      }
+    }
+  }
   const chapters = await listChapters(bookUrl);
   if (!chapters.length) throw new Error("书籍没有章节");
   const target = Math.min(
@@ -532,6 +574,7 @@ async function resplitBook(
 export function createWebBackend() {
   return {
     async invoke<T>(command: string, args: Args = {}): Promise<T> {
+      await ensureDefaultTxtTocRules();
       switch (command) {
         case COMMANDS.appVersion:
           return "0.1.0-web" as T;
@@ -599,7 +642,7 @@ export function createWebBackend() {
           return undefined as T;
         }
         case COMMANDS.txtTocRuleRestoreDefault:
-          return 0 as T;
+          return (await restoreDefaultTxtTocRules()) as T;
         case COMMANDS.txtTocRuleImport:
           return (await importTxtTocRules(argString(args, "json"))) as T;
         case COMMANDS.txtTocRuleExport: {

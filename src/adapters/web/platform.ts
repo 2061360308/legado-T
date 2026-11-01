@@ -54,7 +54,7 @@ export function createWebPlatform(): Platform {
       typeof navigator !== "undefined" &&
       typeof navigator.storage?.getDirectory === "function",
     sqliteWasm: false,
-    webdavProxy: false,
+    webdavProxy: true,
   };
 
   return {

@@ -8,6 +8,7 @@ use crate::txt::TxtTocRule;
 const MAX_LENGTH_WITH_TOC: usize = 102_400;
 const MAX_LENGTH_WITHOUT_TOC: usize = 10 * 1024;
 const INTRO_MAX_CHARS: usize = 500;
+const RULE_PROBE_CHARS: usize = 100_000;
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -82,13 +83,14 @@ fn pick_rule(text: &str, rules: &[TxtTocRule]) -> Option<(String, String)> {
     let mut best: Option<(usize, String, String)> = None;
     let mut ordered: Vec<&TxtTocRule> = rules.iter().filter(|rule| rule.enable).collect();
     ordered.sort_by(|a, b| b.serial_number.cmp(&a.serial_number));
+    let probe: String = text.chars().take(RULE_PROBE_CHARS).collect();
     for rule in ordered {
         let Some(regex) = compile(&rule.rule) else {
             continue;
         };
         let mut start = 0usize;
         let mut count = 0usize;
-        for item in regex.find_iter(text).flatten() {
+        for item in regex.find_iter(&probe).flatten() {
             if start == 0 || item.start().saturating_sub(start) > 1000 {
                 count += 1;
                 start = item.end();

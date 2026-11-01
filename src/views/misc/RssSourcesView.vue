@@ -1,37 +1,105 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { platform } from "@/runtime";
+import {
+  rssSourceDelete,
+  rssSourceExport,
+  rssSourceImport,
+  rssSourceList,
+} from "@/core/application/rss";
+import type { RssSource } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
-import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 
 const router = useRouter();
+const sources = ref<RssSource[]>([]);
 const keyword = ref("");
-const hasSources = false;
-
-interface RssSource {
-  sourceUrl: string;
-  sourceName: string;
-}
-
-const sources: RssSource[] = [];
-const activeMenu = ref<"favorites" | "groups" | "">("");
-const menuVisible = computed({
-  get: () => activeMenu.value !== "",
-  set: (value: boolean) => {
-    if (!value) activeMenu.value = "";
-  },
-});
-const menuItems = computed<PopupMenuItem[]>(() =>
-  activeMenu.value === "favorites"
-    ? [{ key: "empty", label: "暂无收藏", muted: true }]
-    : [{ key: "empty", label: "暂无分组", muted: true }],
-);
+const loading = ref(false);
 const message = ref("");
-function onMenuSelect() {
-  activeMenu.value = "";
+
+const filtered = computed(() => {
+  const key = keyword.value.trim().toLowerCase();
+  if (!key) return sources.value;
+  return sources.value.filter((source) => {
+    const name = String(source.sourceName || "").toLowerCase();
+    const group = String(source.sourceGroup || "").toLowerCase();
+    return name.includes(key) || group.includes(key);
+  });
+});
+
+function showMessage(text: string) {
+  message.value = text;
+  window.setTimeout(() => {
+    if (message.value === text) message.value = "";
+  }, 2500);
 }
+
+async function load() {
+  loading.value = true;
+  try {
+    sources.value = await rssSourceList();
+  } catch (error) {
+    showMessage(String(error));
+  } finally {
+    loading.value = false;
+  }
+}
+
+function open(source: RssSource) {
+  router.push({
+    path: "/rss-articles",
+    query: { sourceUrl: source.sourceUrl, sourceName: source.sourceName },
+  });
+}
+
+async function importSource() {
+  const path = await platform.dialog.open({
+    multiple: false,
+    filters: [{ name: "RSS 源 JSON", extensions: ["json", "txt"] }],
+  });
+  if (typeof path !== "string" || !path) return;
+  try {
+    const bytes = await platform.files.readFile(path);
+    const count = await rssSourceImport(new TextDecoder("utf-8").decode(bytes));
+    await load();
+    showMessage(`已导入 ${count} 个订阅源`);
+  } catch (error) {
+    showMessage(String(error));
+  }
+}
+
+async function exportSource() {
+  if (!sources.value.length) {
+    showMessage("暂无可导出的订阅源");
+    return;
+  }
+  try {
+    const json = await rssSourceExport();
+    const path = await platform.dialog.save({
+      defaultPath: "rss-sources.json",
+      filters: [{ name: "RSS 源 JSON", extensions: ["json"] }],
+    });
+    if (!path) return;
+    await platform.files.writeFile(path, new TextEncoder().encode(json));
+    showMessage("订阅源已导出");
+  } catch (error) {
+    showMessage(String(error));
+  }
+}
+
+async function remove(source: RssSource) {
+  if (!confirm(`删除订阅源「${source.sourceName || source.sourceUrl}」？`)) return;
+  try {
+    await rssSourceDelete(source.sourceUrl);
+    sources.value = sources.value.filter((item) => item.sourceUrl !== source.sourceUrl);
+  } catch (error) {
+    showMessage(String(error));
+  }
+}
+
+onMounted(load);
 </script>
 
 <template>
@@ -43,34 +111,37 @@ function onMenuSelect() {
         </label>
       </template>
       <template #actions>
-        <button aria-label="收藏" @click="activeMenu = 'favorites'">
-          <Icon name="ic_star" :size="24" />
+        <button aria-label="导入" @click="importSource">
+          <Icon name="ic_add_online" :size="24" />
         </button>
-        <button aria-label="分组" @click="activeMenu = 'groups'">
-          <Icon name="ic_groups" :size="24" />
-        </button>
-        <button aria-label="设置" @click="message = 'RSS 设置暂未实现'">
-          <Icon name="ic_settings" :size="24" />
+        <button aria-label="导出" @click="exportSource">
+          <Icon name="ic_share" :size="24" />
         </button>
       </template>
     </TitleBar>
 
-    <PopupMenu v-model="menuVisible" :items="menuItems" @select="onMenuSelect" />
     <p v-if="message" class="message">{{ message }}</p>
-
-    <main class="rss-grid">
-      <template v-if="hasSources">
-        <button v-for="source in sources" :key="source.sourceUrl" class="rss-item">
-          <span class="rss-name">{{ source.sourceName }}</span>
-        </button>
-      </template>
+    <p v-if="loading" class="loading">加载中…</p>
+    <main v-else class="rss-grid">
       <EmptyState
-        v-else
+        v-if="!filtered.length"
         icon="ic_bottom_rss_e"
         text="RSS 源目前为空！"
-        action="去书源管理添加"
-        @action="router.push('/book-source')"
+        action="导入订阅源"
+        @action="importSource"
       />
+      <template v-else>
+        <button
+          v-for="source in filtered"
+          :key="source.sourceUrl"
+          class="rss-item"
+          @click="open(source)"
+          @contextmenu.prevent="remove(source)"
+        >
+          <span class="rss-name">{{ source.sourceName || source.sourceUrl }}</span>
+          <span v-if="source.sourceGroup" class="rss-group">{{ source.sourceGroup }}</span>
+        </button>
+      </template>
     </main>
   </div>
 </template>
@@ -102,6 +173,12 @@ function onMenuSelect() {
 .search input::placeholder {
   color: rgba(255, 255, 255, 0.65);
 }
+.message,
+.loading {
+  margin: 8px 16px;
+  font-size: 13px;
+  color: var(--ac-secondary-text);
+}
 .rss-grid {
   flex: 1;
   min-height: 0;
@@ -112,8 +189,10 @@ function onMenuSelect() {
 }
 .rss-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   padding: 18px 8px;
   border: none;
   background: transparent;
@@ -123,5 +202,10 @@ function onMenuSelect() {
   font-size: 13px;
   color: var(--ac-primary-text);
   text-align: center;
+  word-break: break-all;
+}
+.rss-group {
+  font-size: 11px;
+  color: var(--ac-secondary-text);
 }
 </style>

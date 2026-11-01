@@ -1,3 +1,4 @@
+import { bookGet } from "./books";
 import { invoke } from "./backend";
 import {
   COMMANDS,
@@ -7,18 +8,26 @@ import {
   type ReplaceRule,
 } from "./bindings";
 
-export function readerOpen(
+export async function readerOpen(
   bookUrl: string,
   chapterIndex: number | null,
   chapterPos: number | null,
   style: LayoutStyle,
 ): Promise<ReaderSnapshot> {
-  return invoke<ReaderSnapshot>(COMMANDS.readerOpen, {
-    bookUrl,
-    chapterIndex,
-    chapterPos,
-    style,
-  });
+  const book = await bookGet(bookUrl);
+  const online =
+    book !== null &&
+    !book.sourcePath &&
+    /^https?:\/\//i.test(String(book.origin || ""));
+  return invoke<ReaderSnapshot>(
+    online ? COMMANDS.onlineReaderOpen : COMMANDS.readerOpen,
+    {
+      bookUrl,
+      chapterIndex,
+      chapterPos,
+      style,
+    },
+  );
 }
 
 export function readerSaveProgress(
