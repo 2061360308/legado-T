@@ -3,6 +3,7 @@ param(
     [string]$Target = "all",
     [string]$ApiLevel = "24",
     [switch]$Release,
+    [switch]$SizeOptimized,
     [switch]$SkipFrontend,
     [switch]$SkipVerify
 )
@@ -193,6 +194,17 @@ $env:PATH = "$toolchainBin;$env:PATH"
 $infos = Get-TargetInfo
 $targetKeys = if ($Target -eq "all") { @("arm64", "x86_64") } else { @($Target) }
 
+if ($SizeOptimized -and -not $Release) {
+    Fail "-SizeOptimized requires -Release."
+}
+if ($SizeOptimized) {
+    $env:CARGO_PROFILE_RELEASE_LTO = "true"
+    $env:CARGO_PROFILE_RELEASE_CODEGEN_UNITS = "1"
+    $env:CARGO_PROFILE_RELEASE_OPT_LEVEL = "z"
+    $env:CARGO_PROFILE_RELEASE_PANIC = "abort"
+    $env:CARGO_PROFILE_RELEASE_STRIP = "symbols"
+}
+
 Write-Output "Java:     $javaHome"
 Write-Output "SDK:      $androidHome"
 Write-Output "NDK:      $ndkHome"
@@ -293,7 +305,7 @@ try {
         ":app:rustBuildArm$variant",
         ":app:rustBuildX86$variant"
     )
-    $gradleArgs = $tasks
+    $gradleArgs = @($tasks)
     foreach ($task in $excludeTasks) {
         $gradleArgs += @("-x", $task)
     }
@@ -354,7 +366,9 @@ try {
                 }
             }
 
-            if ($apksigner -and (Test-Path $apksigner)) {
+            if ($apk.Name -match "unsigned") {
+                Write-Output "Unsigned APK, skipping signature verification: $($apk.FullName)"
+            } elseif ($apksigner -and (Test-Path $apksigner)) {
                 & $apksigner verify $apk.FullName
                 if ($LASTEXITCODE -ne 0) {
                     Fail "APK signature verification failed: $($apk.FullName)"

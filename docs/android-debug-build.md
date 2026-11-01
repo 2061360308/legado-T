@@ -19,6 +19,40 @@
 
 Debug APK 保留完整 Rust 调试符号，且 `.so` 在 APK 中按未压缩方式存储，因此单 ABI 包接近 390 MiB。需要发布体积时应使用 release 构建并按 ABI 拆分，不要直接用 debug APK 分发。
 
+## Release 体积实测
+
+使用 `-Release -SizeOptimized` 构建，arm64 实测：
+
+| 产物 | 体积 |
+|---|---:|
+| arm64 Release APK | **22.9 MiB** |
+| x86_64 Release APK | **25.5 MiB** |
+| universal Release APK | **45.8 MiB** |
+| arm64 Release `.so` | **20.25 MiB** |
+| arm64 Debug `.so` | 397.6 MB |
+| arm64 Debug APK | 387.8 MiB |
+
+`-SizeOptimized` 会为 Cargo release 设置：
+
+```text
+CARGO_PROFILE_RELEASE_LTO=true
+CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+CARGO_PROFILE_RELEASE_OPT_LEVEL=z
+CARGO_PROFILE_RELEASE_PANIC=abort
+CARGO_PROFILE_RELEASE_STRIP=symbols
+```
+
+命令：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 `
+  -Target all -Release -SizeOptimized
+```
+
+Release APK 默认是 `*-release-unsigned.apk`，脚本会跳过签名校验。安装或分发前必须配置签名。
+
+体积从约 388 MiB 降到约 23 MiB，主要来自移除调试符号、LTO 和尺寸优化，不是业务代码被删除。该配置优先体积，尚未在真机/模拟器上完整验证 PDF、EPUB、JS 规则等运行时行为。
+
 ## 推荐：一条命令构建
 
 ```powershell
@@ -31,6 +65,12 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 -Target all
 ```powershell
 .\scripts\build-android.ps1 -Target arm64
 .\scripts\build-android.ps1 -Target x86_64
+```
+
+构建体积优先的 Release：
+
+```powershell
+.\scripts\build-android.ps1 -Target all -Release -SizeOptimized
 ```
 
 脚本会自动：
