@@ -61,10 +61,16 @@ export default defineConfig(({ mode }) => {
       : env.TAURI_ENV_PLATFORM === "android"
         ? "android"
         : "pc";
+  const buildId =
+    process.env.VITE_BUILD_ID?.trim() ||
+    new Date().toISOString().replace(/\D/g, "").slice(0, 14);
 
   return {
     plugins: [vue(), pwaHtmlPlugin(target)],
     clearScreen: false,
+    define: {
+      __BUILD_ID__: JSON.stringify(buildId),
+    },
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
