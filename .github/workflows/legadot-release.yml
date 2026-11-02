@@ -1,0 +1,308 @@
+name: LegadoT Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - VERSION
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: legadot-release
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.read.outputs.version }}
+      tag: ${{ steps.read.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        shell: bash
+        run: |
+          version="$(tr -d '\r\n[:space:]' < VERSION)"
+          version="${version#v}"
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-+].*)?$ ]]; then
+            echo "VERSION must be semver, got: $version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=release-$version" >> "$GITHUB_OUTPUT"
+
+  wasm:
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown,wasm32-wasip1
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - name: Install wasm-bindgen
+        run: |
+          if ! command -v wasm-bindgen >/dev/null 2>&1; then
+            cargo install wasm-bindgen-cli --version 0.2.100 --locked
+          fi
+      - name: Install WASI SDK
+        shell: bash
+        run: |
+          curl -fL -o "$RUNNER_TEMP/wasi-sdk.tar.gz" \
+            "https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-34/wasi-sdk-34.0-x86_64-linux.tar.gz"
+          mkdir -p "$RUNNER_TEMP/wasi-sdk"
+          tar -xzf "$RUNNER_TEMP/wasi-sdk.tar.gz" -C "$RUNNER_TEMP/wasi-sdk" --strip-components=1
+          echo "WASI_SDK=$RUNNER_TEMP/wasi-sdk" >> "$GITHUB_ENV"
+          echo "LIBCLANG_PATH=$RUNNER_TEMP/wasi-sdk/bin" >> "$GITHUB_ENV"
+      - name: Build wasm
+        run: |
+          npm ci
+          node scripts/apply-version.mjs
+          npm run build:wasm
+      - name: Package wasm
+        shell: bash
+        run: |
+          cd src/adapters/web/wasm
+          zip -r "$GITHUB_WORKSPACE/LegadoT-wasm.zip" \
+            pkg shelf ebook rbook backup engine/engine_js_wasm.wasm
+          cd "$GITHUB_WORKSPACE"
+          sha256sum LegadoT-wasm.zip > LegadoT-wasm.zip.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: legadot-wasm
+          path: |
+            LegadoT-wasm.zip
+            LegadoT-wasm.zip.sha256
+          if-no-files-found: error
+
+  android:
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      CARGO_PROFILE_RELEASE_LTO: "true"
+      CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "1"
+      CARGO_PROFILE_RELEASE_OPT_LEVEL: "z"
+      CARGO_PROFILE_RELEASE_PANIC: "abort"
+      CARGO_PROFILE_RELEASE_STRIP: "symbols"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK and NDK
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager --install "platforms;android-37" "ndk;27.0.12077973"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> "$GITHUB_ENV"
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> "$GITHUB_ENV"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,x86_64-linux-android
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - name: Install libclang
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libclang-dev
+          libclang_path="$(find /usr/lib -path '*/libclang.so' | head -n 1)"
+          if [ -z "$libclang_path" ]; then
+            echo "libclang.so not found" >&2
+            exit 1
+          fi
+          echo "LIBCLANG_PATH=$(dirname "$libclang_path")" >> "$GITHUB_ENV"
+      - name: Configure Android signing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          test -n "$ANDROID_KEYSTORE_BASE64"
+          test -n "$ANDROID_KEYSTORE_PASSWORD"
+          test -n "$ANDROID_KEY_ALIAS"
+          test -n "$ANDROID_KEY_PASSWORD"
+          keystore="src-tauri/gen/android/app/local-reader-release.jks"
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$keystore"
+          cat > src-tauri/gen/android/app/key.properties <<EOF
+          storeFile=local-reader-release.jks
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          keyPassword=$ANDROID_KEY_PASSWORD
+          EOF
+      - name: Build Android APKs
+        run: |
+          npm ci
+          node scripts/apply-version.mjs
+          npx tauri android build \
+            --apk \
+            --split-per-abi \
+            --target aarch64 x86_64 \
+            --ci
+      - name: Collect Android APKs
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          find src-tauri/gen/android/app/build/outputs/apk \
+            -name '*-release.apk' -print0 |
+            while IFS= read -r -d '' apk; do
+              case "$apk" in
+                *arm64*|*aarch64*) abi="arm64-v8a" ;;
+                *x86_64*|*x64*) abi="x86_64" ;;
+                *) continue ;;
+              esac
+              cp "$apk" "artifacts/LegadoT-${VERSION}-android-${abi}.apk"
+            done
+          test -f "artifacts/LegadoT-${VERSION}-android-arm64-v8a.apk"
+          test -f "artifacts/LegadoT-${VERSION}-android-x86_64.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: legadot-android
+          path: artifacts/*.apk
+          if-no-files-found: error
+
+  windows:
+    needs: version
+    runs-on: windows-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - name: Build Windows executable
+        run: |
+          npm ci
+          npm run build:pc
+      - name: Package Windows zip
+        shell: pwsh
+        run: |
+          $stage = Join-Path $PWD "windows-stage"
+          Remove-Item $stage -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Force (Join-Path $stage "pdfium") | Out-Null
+          Copy-Item "src-tauri/target/release/local-reader.exe" (Join-Path $stage "LegadoT.exe")
+          Copy-Item -Recurse "src-tauri/resources/defaultData" (Join-Path $stage "defaultData")
+          Copy-Item "src-tauri/resources/pdfium/pdfium.dll" (Join-Path $stage "pdfium/pdfium.dll")
+          Compress-Archive -Path (Join-Path $stage "*") -DestinationPath "LegadoT-$env:VERSION-windows-x64.zip" -Force
+      - uses: actions/upload-artifact@v4
+        with:
+          name: legadot-windows
+          path: LegadoT-${{ needs.version.outputs.version }}-windows-x64.zip
+          if-no-files-found: error
+
+  linux:
+    needs: version
+    runs-on: ubuntu-22.04
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            libssl-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libxdo-dev
+      - name: Build Linux packages
+        run: |
+          npm ci
+          npm run build:pc
+      - name: Collect Linux packages
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          appimage="$(find src-tauri/target/release/bundle/appimage -name '*.AppImage' | head -n 1)"
+          deb="$(find src-tauri/target/release/bundle/deb -name '*.deb' | head -n 1)"
+          test -n "$appimage"
+          test -n "$deb"
+          cp "$appimage" "artifacts/LegadoT-${VERSION}-linux-x64.AppImage"
+          cp "$deb" "artifacts/LegadoT-${VERSION}-linux-x64.deb"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: legadot-linux
+          path: artifacts/*
+          if-no-files-found: error
+
+  release:
+    needs: [version, wasm, android, windows, linux]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      TAG: ${{ needs.version.outputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Generate checksums
+        shell: bash
+        run: |
+          cd artifacts
+          sha256sum * > SHA256SUMS.txt
+      - name: Create or reuse release
+        shell: bash
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists"
+          else
+            gh release create "$TAG" \
+              --target "$GITHUB_SHA" \
+              --title "LegadoT $VERSION" \
+              --generate-notes
+          fi
+      - name: Upload release assets
+        shell: bash
+        run: gh release upload "$TAG" artifacts/* --clobber

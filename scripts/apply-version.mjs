@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const versionFile = resolve(root, "..", "VERSION");
+const versionFile = resolve(root, "VERSION");
 const rawVersion = readFileSync(versionFile, "utf8").trim().replace(/^v/i, "");
 const match = rawVersion.match(/^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/);
 if (!match) {
