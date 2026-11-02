@@ -210,11 +210,38 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             description TEXT,
             content     TEXT,
             image       TEXT,
+            "group"     TEXT NOT NULL DEFAULT '默认分组',
             read        INTEGER NOT NULL DEFAULT 0,
             favorite    INTEGER NOT NULL DEFAULT 0,
+            "order"     INTEGER NOT NULL DEFAULT 0,
             variables   TEXT NOT NULL DEFAULT '{}',
             PRIMARY KEY (sourceUrl, link)
         );
+        CREATE INDEX IF NOT EXISTS idx_rss_articles_sort ON rss_articles(sourceUrl, sort, "order");
+
+        CREATE TABLE IF NOT EXISTS rss_stars (
+            origin      TEXT NOT NULL,
+            link        TEXT NOT NULL,
+            sort        TEXT NOT NULL DEFAULT '',
+            title       TEXT NOT NULL DEFAULT '',
+            starTime    INTEGER NOT NULL DEFAULT 0,
+            pubDate     TEXT,
+            description TEXT,
+            content     TEXT,
+            image       TEXT,
+            "group"     TEXT NOT NULL DEFAULT '默认分组',
+            variables   TEXT NOT NULL DEFAULT '{}',
+            PRIMARY KEY (origin, link)
+        );
+        CREATE INDEX IF NOT EXISTS idx_rss_stars_group ON rss_stars("group", starTime);
+
+        CREATE TABLE IF NOT EXISTS rss_read_records (
+            record      TEXT PRIMARY KEY,
+            title       TEXT,
+            readTime    INTEGER NOT NULL DEFAULT 0,
+            read        INTEGER NOT NULL DEFAULT 1
+        );
+        CREATE INDEX IF NOT EXISTS idx_rss_read_records_time ON rss_read_records(readTime);
 
         CREATE TABLE IF NOT EXISTS source_variables (
             bookSourceUrl TEXT NOT NULL,
@@ -253,6 +280,8 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
     ensure_column(conn, "chapters", "baseUrl", "TEXT")?;
     ensure_column(conn, "chapters", "bookUrl", "TEXT")?;
     ensure_column(conn, "chapters", "variables", "TEXT")?;
+    ensure_column(conn, "rss_articles", "group", "TEXT NOT NULL DEFAULT '默认分组'")?;
+    ensure_column(conn, "rss_articles", "order", "INTEGER NOT NULL DEFAULT 0")?;
     Ok(())
 }
 

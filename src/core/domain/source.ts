@@ -92,15 +92,37 @@ export interface RssSource {
   sourceName: string;
   sourceGroup?: string | null;
   sourceIcon?: string;
+  sourceComment?: string | null;
   enabled: boolean;
   customOrder: number;
   lastUpdateTime: number;
   sortUrl?: string | null;
+  singleUrl?: boolean;
+  articleStyle?: number;
   ruleArticles?: string | null;
   ruleNextPage?: string | null;
+  ruleTitle?: string | null;
+  rulePubDate?: string | null;
+  ruleDescription?: string | null;
+  ruleImage?: string | null;
+  ruleLink?: string | null;
   ruleContent?: string | null;
   header?: string | null;
   loginUrl?: string | null;
+  loginUi?: string | null;
+  loginCheckJs?: string | null;
+  coverDecodeJs?: string | null;
+  variableComment?: string | null;
+  enabledCookieJar?: boolean | null;
+  concurrentRate?: string | null;
+  jsLib?: string | null;
+  enableJs?: boolean;
+  loadWithBaseUrl?: boolean;
+  style?: string | null;
+  injectJs?: string | null;
+  contentWhitelist?: string | null;
+  contentBlacklist?: string | null;
+  shouldOverrideUrlLoading?: string | null;
   [key: string]: unknown;
 }
 
@@ -167,10 +189,36 @@ export interface RssArticle {
   sort: string;
   title: string;
   link: string;
+  order?: number;
+  group?: string;
+  read?: boolean;
   pubDate?: string | null;
   description?: string | null;
   content?: string | null;
   image?: string | null;
   variable?: Record<string, string>;
+  [key: string]: unknown;
+}
+
+export interface RssStar {
+  origin: string;
+  link: string;
+  sort: string;
+  title: string;
+  starTime: number;
+  pubDate?: string | null;
+  description?: string | null;
+  content?: string | null;
+  image?: string | null;
+  group: string;
+  variable?: Record<string, string>;
+  [key: string]: unknown;
+}
+
+export interface RssReadRecord {
+  record: string;
+  title?: string | null;
+  readTime?: number | null;
+  read: boolean;
   [key: string]: unknown;
 }

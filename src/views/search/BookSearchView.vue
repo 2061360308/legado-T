@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import {
   bookSourceAddToShelf,
   bookSourceSearch,
@@ -13,6 +13,7 @@ import CoverImage from "@/components/android/CoverImage.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 
 const HISTORY_KEY = "local-reader:search-history";
+const route = useRoute();
 const router = useRouter();
 const keyword = ref("");
 const menuVisible = ref(false);
@@ -53,7 +54,8 @@ async function search() {
   searching.value = true;
   message.value = "";
   try {
-    const found = await bookSourceSearch(key);
+    const sourceUrl = String(route.query.sourceUrl || "");
+    const found = await bookSourceSearch(key, sourceUrl ? [sourceUrl] : undefined);
     results.value = found;
     const failures = found.filter((item) => item.error);
     if (!found.length) message.value = "没有找到结果";

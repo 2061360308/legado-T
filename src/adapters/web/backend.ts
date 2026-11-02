@@ -1326,7 +1326,10 @@ export function createWebBackend() {
         case COMMANDS.rssSourceList:
           return (await rssSources.listRssSources()) as T;
         case COMMANDS.rssSourceSave:
-          await rssSources.saveRssSource(args.source as RssSource);
+          await rssSources.saveRssSource(
+            args.source as RssSource,
+            (args.oldSourceUrl as string | null | undefined) ?? null,
+          );
           return undefined as T;
         case COMMANDS.rssSourceDelete:
           await rssSources.deleteRssSource(argString(args, "sourceUrl"));
@@ -1342,6 +1345,65 @@ export function createWebBackend() {
             argString(args, "sortUrl"),
             argNumber(args, "page") || 1,
           )) as T;
+        case COMMANDS.rssArticleList:
+          return (await rssSources.rssArticleList(
+            argString(args, "sourceUrl"),
+            argString(args, "sortName"),
+          )) as T;
+        case COMMANDS.rssArticleClear:
+          await rssSources.rssArticleClear(
+            (args.sourceUrl as string | null | undefined) ?? null,
+            (args.sortName as string | null | undefined) ?? null,
+          );
+          return undefined as T;
+        case COMMANDS.rssStarList:
+          return (await rssSources.rssStarList(
+            (args.group as string | null | undefined) ?? null,
+          )) as T;
+        case COMMANDS.rssStarGroups:
+          return (await rssSources.rssStarGroups()) as T;
+        case COMMANDS.rssStarGet:
+          return (await rssSources.rssStarGet(
+            argString(args, "origin"),
+            argString(args, "link"),
+          )) as T;
+        case COMMANDS.rssStarSave:
+          await rssSources.rssStarSave(
+            args.article as RssArticle,
+            (args.group as string | null | undefined) ?? null,
+          );
+          return undefined as T;
+        case COMMANDS.rssStarUpdate:
+          await rssSources.rssStarUpdate(
+            argString(args, "origin"),
+            argString(args, "link"),
+            (args.title as string | null | undefined) ?? null,
+            (args.group as string | null | undefined) ?? null,
+          );
+          return undefined as T;
+        case COMMANDS.rssStarDelete:
+          await rssSources.rssStarDelete(
+            argString(args, "origin"),
+            argString(args, "link"),
+          );
+          return undefined as T;
+        case COMMANDS.rssStarDeleteGroup:
+          await rssSources.rssStarDeleteGroup(argString(args, "group"));
+          return undefined as T;
+        case COMMANDS.rssStarClear:
+          await rssSources.rssStarClear();
+          return undefined as T;
+        case COMMANDS.rssReadRecordAdd:
+          await rssSources.rssReadRecordAdd(
+            argString(args, "record"),
+            (args.title as string | null | undefined) ?? null,
+          );
+          return undefined as T;
+        case COMMANDS.rssReadRecordList:
+          return (await rssSources.rssReadRecordList()) as T;
+        case COMMANDS.rssReadRecordClear:
+          await rssSources.rssReadRecordClear();
+          return undefined as T;
         case COMMANDS.rssContent:
           return (await rssSources.rssContent(
             argString(args, "sourceUrl"),

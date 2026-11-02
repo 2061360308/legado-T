@@ -7,26 +7,36 @@ import {
   bookSourceSaveCookies,
   webviewLogin,
 } from "@/core/application/bookSources";
-import type { BookSource, WebViewLoginResult } from "@/core/domain";
+import { rssSourceList } from "@/core/application/rss";
+import type { BookSource, RssSource, WebViewLoginResult } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 
 const route = useRoute();
 const router = useRouter();
 const sourceUrl = computed(() => String(route.query.url || ""));
-const source = ref<BookSource | null>(null);
+const sourceType = computed(() => String(route.query.type || "bookSource"));
+const source = ref<BookSource | RssSource | null>(null);
 const loginUrl = ref("");
 const waitSeconds = ref(60);
 const running = ref(false);
 const message = ref("");
 const result = ref<WebViewLoginResult | null>(null);
+const sourceLabel = computed(() => {
+  if (!source.value) return sourceUrl.value;
+  if ("bookSourceName" in source.value) return source.value.bookSourceName;
+  return source.value.sourceName;
+});
 
 async function load() {
   if (!sourceUrl.value) return;
   try {
-    source.value = await bookSourceGet(sourceUrl.value);
-    loginUrl.value = String(
-      source.value?.loginUrl || source.value?.bookSourceUrl || sourceUrl.value,
-    );
+    if (sourceType.value === "rss") {
+      source.value =
+        (await rssSourceList()).find((item) => item.sourceUrl === sourceUrl.value) ?? null;
+    } else {
+      source.value = await bookSourceGet(sourceUrl.value);
+    }
+    loginUrl.value = String(source.value?.loginUrl || sourceUrl.value);
   } catch (error) {
     message.value = String(error);
   }
@@ -70,9 +80,9 @@ onMounted(load);
 
 <template>
   <div class="login-page">
-    <TitleBar title="书源登录" @back="router.back()" />
+    <TitleBar :title="sourceType === 'rss' ? '订阅源登录' : '书源登录'" @back="router.back()" />
     <main class="content">
-      <p class="source-name">{{ source?.bookSourceName || sourceUrl }}</p>
+      <p class="source-name">{{ sourceLabel }}</p>
       <label>
         登录地址
         <input v-model="loginUrl" placeholder="https://example.com/login" />

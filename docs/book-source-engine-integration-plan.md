@@ -25,6 +25,9 @@
 已完成：
 
 - 原生主链路、书源编辑 8 视图、调试、登录、变量、URL Option、二维码、发现、批量检查、图片/音频/文件阅读器均已落地。
+- 发现页已对齐 Kotlin：书源展开分类、分组筛选、长按菜单、发现结果分页/书架标记。
+- 订阅页已对齐 Kotlin：订阅主页、订阅源管理/编辑、分类文章三样式、RSS 阅读、收藏、阅读记录、规则订阅、订阅源调试。
+- RSS 文章缓存、收藏、阅读记录已接入原生 SQLite 和 Web IndexedDB。
 - Web wasm 引擎使用 `wasm32-wasip1` + rquickjs bindgen，导出书源搜索/发现/详情/目录/正文/评论/下载地址/购买/资源与 RSS ABI。
 - Web 已接入 IndexedDB 书源/RSS/变量/搜索历史、导入导出、启停、搜索、详情、目录、正文、在线阅读、发现、分类、检查、评论、下载地址、购买、资源、图片抓取和 RSS 列表/正文。
 - Web 引擎已加入 `jsLib`、书源变量、Cookie、内存 cache、RuleRunner，并迁移到 Web Worker；同步 XHR 不再阻塞主线程。
@@ -42,6 +45,7 @@
 - Android WebView/CookieManager 仍需真机联调；Web 运行时明确不支持 WebView 登录。
 - Android MediaSession 已接入锁屏播放/暂停/停止，但仍需真机验证通知按钮与后台恢复行为。
 - 字典独立查词页、日志/帮助、部分导出选项仍未接入；离线缓存已支持按书/全部下载在线章节。
+- RSS 默认规则导入、分组管理弹窗、订阅源编辑的自动补全仍为简化实现。
 - Android Release APK 仍未签名，发布前需要配置签名。
 - Web wasm 首次加载约 9.1 MB，后续可继续做体积优化。
 

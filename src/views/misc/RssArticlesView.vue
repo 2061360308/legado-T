@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { rssArticles, rssContent, rssSourceList } from "@/core/application/rss";
+import {
+  rssArticleClear,
+  rssArticles,
+  rssReadRecordAdd,
+  rssSourceList,
+  rssSourceSave,
+} from "@/core/application/rss";
 import type { RssArticle, RssSource } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
+import Icon from "@/components/android/Icon.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
+import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
+import RssReadRecordDialog from "./RssReadRecordDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -12,104 +21,252 @@ const sourceUrl = computed(() => String(route.query.sourceUrl || ""));
 const sourceName = computed(() => String(route.query.sourceName || "订阅"));
 const source = ref<RssSource | null>(null);
 const articles = ref<RssArticle[]>([]);
+const activeSort = ref(0);
+const page = ref(1);
+const next = ref<string | null>(null);
 const loading = ref(false);
+const refreshing = ref(false);
 const message = ref("");
-const active = ref<RssArticle | null>(null);
-const content = ref("");
-const contentLoading = ref(false);
+const menuVisible = ref(false);
+const readRecordVisible = ref(false);
+let pullStart = 0;
+let pulling = false;
 
-function stripHtml(value: string): string {
-  const doc = new DOMParser().parseFromString(value, "text/html");
-  doc.querySelectorAll("script,style").forEach((node) => node.remove());
-  return (doc.body.textContent || "").replace(/\n{3,}/g, "\n\n").trim();
+const sortList = computed(() => {
+  const raw = String(source.value?.sortUrl || "").trim();
+  if (!raw || raw.startsWith("@js:") || raw.startsWith("<js>")) {
+    return [{ name: "", url: sourceUrl.value }];
+  }
+  const result: { name: string; url: string }[] = [];
+  for (const line of raw.split(/(?:&&|\n)+/)) {
+    const [name = "", url = ""] = line.split("::");
+    if (!url) continue;
+    result.push({
+      name,
+      url: url.startsWith("{{") ? url : absoluteUrl(sourceUrl.value, url),
+    });
+  }
+  return result.length ? result : [{ name: "", url: sourceUrl.value }];
+});
+
+const currentSort = computed(() => sortList.value[activeSort.value] ?? sortList.value[0]);
+const articleStyle = computed(() => Number(source.value?.articleStyle ?? 0));
+
+const menuItems = computed<PopupMenuItem[]>(() => [
+  ...(String(source.value?.loginUrl || "").trim()
+    ? [{ key: "login", label: "登录" }]
+    : []),
+  { key: "refreshSort", label: "刷新分类缓存" },
+  { key: "variables", label: "设置源变量" },
+  { key: "editSource", label: "编辑订阅源" },
+  { key: "switchLayout", label: "切换布局" },
+  { key: "readRecord", label: "阅读记录" },
+  { key: "clear", label: "清空文章" },
+]);
+
+function absoluteUrl(base: string, url: string): string {
+  try {
+    return new URL(url, base).toString();
+  } catch {
+    return url;
+  }
 }
 
-async function load() {
-  if (!sourceUrl.value) return;
+function showMessage(text: string) {
+  message.value = text;
+  window.setTimeout(() => {
+    if (message.value === text) message.value = "";
+  }, 2600);
+}
+
+async function loadSource() {
+  const list = await rssSourceList();
+  source.value = list.find((item) => item.sourceUrl === sourceUrl.value) ?? null;
+  if (!source.value) throw new Error("订阅源不存在");
+}
+
+async function loadPage(target = 1) {
+  if (!source.value || !currentSort.value) return;
   loading.value = true;
   message.value = "";
   try {
-    const list = await rssSourceList();
-    source.value = list.find((item) => item.sourceUrl === sourceUrl.value) ?? null;
-    const page = await rssArticles(
+    const result = await rssArticles(
       sourceUrl.value,
-      "",
-      String(source.value?.sortUrl || sourceUrl.value),
-      1,
+      currentSort.value.name,
+      currentSort.value.url,
+      target,
     );
-    articles.value = page.articles || [];
+    articles.value = result.articles || [];
+    next.value = result.next ?? null;
+    page.value = target;
   } catch (error) {
     message.value = String(error);
   } finally {
     loading.value = false;
+    refreshing.value = false;
   }
 }
 
-async function openArticle(article: RssArticle) {
-  active.value = article;
-  content.value = "";
-  if (article.content) {
-    content.value = stripHtml(article.content);
-    return;
+async function refresh() {
+  if (refreshing.value) return;
+  refreshing.value = true;
+  await loadPage(1);
+}
+
+async function loadMore() {
+  if (loading.value || !next.value) return;
+  await loadPage(page.value + 1);
+}
+
+function selectSort(index: number) {
+  if (activeSort.value === index) return;
+  activeSort.value = index;
+  articles.value = [];
+  next.value = null;
+  void loadPage(1);
+}
+
+function openArticle(article: RssArticle) {
+  void rssReadRecordAdd(article.link, article.title).catch(() => undefined);
+  article.read = true;
+  router.push({
+    path: "/rss-read",
+    query: {
+      sourceUrl: sourceUrl.value,
+      title: article.title,
+      link: article.link,
+      origin: article.origin || sourceUrl.value,
+      sort: currentSort.value?.name || "",
+    },
+  });
+}
+
+async function onMenu(key: string) {
+  if (key === "login") {
+    router.push({ path: "/source-login", query: { type: "rss", url: sourceUrl.value } });
+  } else if (key === "refreshSort") {
+    await refresh();
+  } else if (key === "variables") {
+    router.push({ path: "/book-source-variables", query: { type: "rss", url: sourceUrl.value } });
+  } else if (key === "editSource") {
+    router.push({ path: "/rss-source-edit", query: { sourceUrl: sourceUrl.value } });
+  } else if (key === "switchLayout") {
+    if (!source.value) return;
+    const style = (Number(source.value.articleStyle ?? 0) + 1) % 3;
+    source.value = { ...source.value, articleStyle: style };
+    await rssSourceSave(source.value);
+  } else if (key === "readRecord") {
+    readRecordVisible.value = true;
+  } else if (key === "clear") {
+    if (!confirm("清空当前订阅源文章缓存？")) return;
+    await rssArticleClear(sourceUrl.value, null);
+    articles.value = [];
+    await loadPage(1);
   }
-  contentLoading.value = true;
+}
+
+function onScroll(event: Event) {
+  const element = event.currentTarget as HTMLElement;
+  if (element.scrollHeight - element.scrollTop - element.clientHeight < 180) {
+    void loadMore();
+  }
+}
+
+function onPullStart(event: PointerEvent) {
+  const element = event.currentTarget as HTMLElement;
+  if (element.scrollTop <= 0) {
+    pulling = true;
+    pullStart = event.clientY;
+  }
+}
+
+function onPullMove(event: PointerEvent) {
+  if (!pulling) return;
+  if (event.clientY - pullStart > 80) {
+    pulling = false;
+    void refresh();
+  }
+}
+
+function onPullEnd() {
+  pulling = false;
+}
+
+onMounted(async () => {
   try {
-    const html = await rssContent(
-      sourceUrl.value,
-      article,
-      source.value?.ruleContent ?? null,
-    );
-    content.value = stripHtml(html) || article.description || "暂无正文";
+    await loadSource();
+    await loadPage(1);
   } catch (error) {
-    content.value = String(error);
-  } finally {
-    contentLoading.value = false;
+    message.value = String(error);
   }
-}
-
-function closeArticle() {
-  active.value = null;
-  content.value = "";
-}
-
-onMounted(load);
+});
 </script>
 
 <template>
   <div class="rss-articles-page">
-    <TitleBar :title="sourceName" @back="router.push('/rss-sources')" />
+    <TitleBar :title="source?.sourceName || sourceName" @back="router.push('/rss-sources')">
+      <template #actions>
+        <button aria-label="刷新" :disabled="refreshing" @click="refresh">
+          <Icon name="ic_refresh_black_24dp" :size="24" />
+        </button>
+        <button aria-label="更多" @click="menuVisible = true">
+          <Icon name="ic_more_vert" :size="24" />
+        </button>
+      </template>
+    </TitleBar>
+
+    <PopupMenu v-model="menuVisible" :items="menuItems" @select="onMenu" />
+    <div v-if="sortList.length > 1" class="tabs">
+      <button
+        v-for="(sort, index) in sortList"
+        :key="`${sort.name}-${sort.url}`"
+        :class="{ active: activeSort === index }"
+        @click="selectSort(index)"
+      >
+        {{ sort.name || "全部" }}
+      </button>
+    </div>
+
     <p v-if="message" class="message">{{ message }}</p>
-    <p v-if="loading" class="loading">加载中…</p>
-    <main v-else class="list">
+    <p v-if="refreshing" class="refresh-tip">正在刷新…</p>
+    <main
+      class="list"
+      :class="`style-${articleStyle}`"
+      @scroll.passive="onScroll"
+      @pointerdown="onPullStart"
+      @pointermove="onPullMove"
+      @pointerup="onPullEnd"
+      @pointercancel="onPullEnd"
+    >
       <EmptyState
-        v-if="!articles.length"
+        v-if="!articles.length && !loading"
         icon="ic_bottom_rss_e"
         text="暂无文章"
       />
-      <button
-        v-for="article in articles"
-        :key="article.link || article.title"
+      <article
+        v-for="(article, index) in articles"
+        :key="`${article.origin}-${article.link}-${index}`"
         class="article"
+        :class="{ read: article.read }"
         @click="openArticle(article)"
       >
-        <span class="title">{{ article.title || article.link }}</span>
-        <span v-if="article.pubDate" class="date">{{ article.pubDate }}</span>
-        <span v-if="article.description" class="desc">{{ stripHtml(article.description) }}</span>
-      </button>
+        <div v-if="article.image" class="image-wrap">
+          <img :src="article.image" alt="" loading="lazy" />
+        </div>
+        <div class="text">
+          <p class="title">{{ article.title || article.link }}</p>
+          <p v-if="article.pubDate" class="date">{{ article.pubDate }}</p>
+        </div>
+      </article>
+      <div v-if="articles.length" class="load-more" @click="loadMore">
+        <span v-if="loading">加载中…</span>
+        <span v-else-if="!next">没有更多了</span>
+        <span v-else>加载更多</span>
+      </div>
+      <div v-else-if="loading" class="load-more">加载中…</div>
     </main>
 
-    <div v-if="active" class="overlay">
-      <header class="overlay-bar">
-        <button class="back" @click="closeArticle">返回</button>
-        <span class="overlay-title">{{ active.title }}</span>
-      </header>
-      <article class="content">
-        <p v-if="contentLoading">加载中…</p>
-        <template v-else>
-          <p v-for="(line, index) in content.split('\n')" :key="index">{{ line }}</p>
-        </template>
-      </article>
-    </div>
+    <RssReadRecordDialog v-model="readRecordVisible" />
   </div>
 </template>
 
@@ -121,10 +278,29 @@ onMounted(load);
   min-height: 0;
   background: var(--ac-background);
 }
-.message,
-.loading {
-  margin: 8px 16px;
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--ac-divider);
+}
+.tabs button {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: var(--ac-secondary-text);
+  padding: 11px 14px;
   font-size: 13px;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+.tabs button.active {
+  color: var(--ac-primary);
+  border-bottom-color: var(--ac-primary);
+}
+.message,
+.refresh-tip {
+  margin: 8px 16px;
+  font-size: 12px;
   color: var(--ac-secondary-text);
 }
 .list {
@@ -133,73 +309,88 @@ onMounted(load);
   overflow-y: auto;
 }
 .article {
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  gap: 10px;
   padding: 12px 16px;
-  border: none;
   border-bottom: 1px solid var(--ac-divider);
-  background: transparent;
-  text-align: left;
   cursor: pointer;
 }
-.title {
-  font-size: 15px;
+.article:active {
+  background: var(--ac-transparent-10);
+}
+.article .image-wrap {
+  flex: none;
+  order: 2;
+}
+.article .image-wrap img {
+  width: 110px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.article .text {
+  flex: 1;
+  min-width: 0;
+}
+.article .title {
+  margin: 0;
   color: var(--ac-primary-text);
-}
-.date {
-  font-size: 11px;
-  color: var(--ac-secondary-text);
-}
-.desc {
-  font-size: 12px;
-  color: var(--ac-secondary-text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  display: flex;
+.article .date {
+  margin: 8px 0 0;
+  color: var(--ac-secondary-text);
+  font-size: 12px;
+  font-style: italic;
+}
+.article.read .title {
+  color: var(--ac-secondary-text);
+}
+.style-1 .article {
   flex-direction: column;
-  background: var(--ac-background);
 }
-.overlay-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  color: var(--ac-primary-text);
+.style-1 .article .image-wrap {
+  order: 0;
 }
-.back {
-  border: none;
-  background: transparent;
-  color: var(--ac-primary-text);
-  font-size: 14px;
+.style-1 .article .image-wrap img {
+  width: 100%;
+  height: 220px;
 }
-.overlay-title {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.style-1 .article .title {
   font-size: 15px;
+  padding-top: 4px;
 }
-.content {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding: 8px 20px 40px;
-  color: var(--ac-primary-text);
-  font-size: 17px;
-  line-height: 1.8;
-  white-space: pre-wrap;
+.list.style-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
 }
-.content p {
-  margin: 0 0 0.6em;
+.style-2 .article {
+  flex-direction: column;
+  padding: 8px;
+  border-bottom: none;
+}
+.style-2 .article .image-wrap {
+  order: 0;
+}
+.style-2 .article .image-wrap img {
+  width: 100%;
+  height: 180px;
+}
+.style-2 .article .title {
+  font-size: 13px;
+}
+.load-more {
+  padding: 16px;
+  text-align: center;
+  color: var(--ac-secondary-text);
+  font-size: 12px;
+  cursor: pointer;
 }
 </style>

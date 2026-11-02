@@ -4,9 +4,9 @@ import { useRoute, useRouter } from "vue-router";
 import {
   bookSourceAddToShelf,
   bookSourceExplore,
-  bookSourceExploreCategories,
 } from "@/core/application/bookSources";
-import type { ExploreCategory, OnlineSearchResult } from "@/core/domain";
+import { bookList } from "@/core/application/books";
+import type { OnlineSearchResult } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
@@ -14,58 +14,96 @@ import EmptyState from "@/components/android/EmptyState.vue";
 const route = useRoute();
 const router = useRouter();
 const sourceUrl = computed(() => String(route.query.sourceUrl || ""));
-const sourceName = computed(() => String(route.query.sourceName || "发现"));
-const categories = ref<ExploreCategory[]>([]);
-const active = ref<ExploreCategory | null>(null);
+const exploreUrl = computed(() => String(route.query.exploreUrl || ""));
+const title = computed(
+  () =>
+    String(route.query.categoryTitle || "") ||
+    String(route.query.sourceName || "发现"),
+);
 const results = ref<OnlineSearchResult[]>([]);
 const loading = ref(false);
 const message = ref("");
-const page = ref(1);
+const page = ref(0);
+const hasMore = ref(true);
 const adding = ref("");
+const shelfKeys = ref(new Set<string>());
 
-async function loadCategories() {
-  if (!sourceUrl.value) return;
+function shelfKey(name: string, author: string): string {
+  return `${name || ""}\u0000${author || ""}`;
+}
+
+async function loadShelf() {
   try {
-    categories.value = await bookSourceExploreCategories(sourceUrl.value);
-    const first = categories.value.find((item) => String(item.url || "").trim());
-    if (first) {
-      active.value = first;
-      await loadPage(1);
-    }
-  } catch (error) {
-    message.value = String(error);
+    const books = await bookList();
+    shelfKeys.value = new Set(
+      books.flatMap((book) => [
+        shelfKey(book.name, book.author),
+        `url:${book.bookUrl}`,
+      ]),
+    );
+  } catch {
+    shelfKeys.value = new Set();
   }
 }
 
-async function loadPage(next: number) {
-  if (!active.value) return;
-  const url = String(active.value.url || "").trim();
-  if (!url) return;
+function inShelf(item: OnlineSearchResult): boolean {
+  if (item.bookUrl && shelfKeys.value.has(`url:${item.bookUrl}`)) return true;
+  return shelfKeys.value.has(shelfKey(String(item.name || ""), String(item.author || "")));
+}
+
+async function loadPage(next: number, append = false) {
+  if (!sourceUrl.value || !exploreUrl.value || loading.value) return;
   loading.value = true;
   message.value = "";
   try {
-    page.value = Math.max(1, next);
-    results.value = await bookSourceExplore(sourceUrl.value, url, page.value);
+    const list = await bookSourceExplore(sourceUrl.value, exploreUrl.value, next);
+    page.value = next;
+    if (append) {
+      const existing = new Set(results.value.map((item) => item.bookUrl || item.name));
+      const fresh = list.filter((item) => {
+        const key = item.bookUrl || item.name;
+        if (existing.has(key)) return false;
+        existing.add(key);
+        return true;
+      });
+      results.value = [...results.value, ...fresh];
+      hasMore.value = fresh.length > 0;
+    } else {
+      results.value = list;
+      hasMore.value = list.length > 0;
+    }
+    if (!list.length) hasMore.value = false;
   } catch (error) {
     message.value = String(error);
-    results.value = [];
+    hasMore.value = false;
   } finally {
     loading.value = false;
   }
 }
 
-async function selectCategory(category: ExploreCategory) {
-  if (!String(category.url || "").trim()) return;
-  active.value = category;
-  results.value = [];
-  await loadPage(1);
+async function loadMore(force = false) {
+  if (loading.value) return;
+  if (!force && !hasMore.value) return;
+  await loadPage(page.value + 1, true);
 }
 
-async function addToShelf(item: OnlineSearchResult) {
+function onScroll(event: Event) {
+  const element = event.currentTarget as HTMLElement;
+  if (element.scrollHeight - element.scrollTop - element.clientHeight < 160) {
+    void loadMore();
+  }
+}
+
+async function openBook(item: OnlineSearchResult) {
   if (!item.bookUrl || adding.value) return;
+  if (inShelf(item)) {
+    router.push({ path: "/book-info", query: { bookUrl: item.bookUrl } });
+    return;
+  }
   adding.value = item.bookUrl;
   try {
     const book = await bookSourceAddToShelf(sourceUrl.value, item.bookUrl);
+    await loadShelf();
     router.push({ path: "/book-info", query: { bookUrl: book.bookUrl } });
   } catch (error) {
     message.value = String(error);
@@ -74,61 +112,56 @@ async function addToShelf(item: OnlineSearchResult) {
   }
 }
 
-onMounted(loadCategories);
+onMounted(async () => {
+  await loadShelf();
+  await loadPage(1);
+});
 </script>
 
 <template>
   <div class="explore-show">
-    <TitleBar :title="sourceName" @back="router.push('/explore')" />
-
-    <div v-if="categories.length" class="categories">
-      <button
-        v-for="category in categories"
-        :key="`${category.title}-${category.url}`"
-        class="category"
-        :class="{
-          active: active?.title === category.title && active?.url === category.url,
-          disabled: !String(category.url || '').trim(),
-        }"
-        @click="selectCategory(category)"
-      >
-        {{ category.title }}
-      </button>
-    </div>
+    <TitleBar :title="title" @back="router.push('/explore')" />
 
     <p v-if="message" class="message">{{ message }}</p>
-    <p v-if="loading" class="loading">加载中…</p>
-
-    <main v-else class="result-list">
+    <main class="result-list" @scroll.passive="onScroll">
       <EmptyState
-        v-if="!results.length"
+        v-if="!results.length && !loading"
         icon="ic_bottom_explore_e"
         text="该分类暂无书籍"
       />
-      <article v-for="(item, index) in results" :key="`${item.bookUrl}-${index}`" class="book">
-        <CoverImage
-          :name="String(item.name || '')"
-          :author="String(item.author || '')"
-          :src="item.coverUrl ? String(item.coverUrl) : null"
-          :width="68"
-          :height="94"
-        />
+      <article
+        v-for="(item, index) in results"
+        :key="`${item.bookUrl}-${index}`"
+        class="book"
+        @click="openBook(item)"
+      >
+        <div class="cover-wrap">
+          <CoverImage
+            :name="String(item.name || '')"
+            :author="String(item.author || '')"
+            :src="item.coverUrl ? String(item.coverUrl) : null"
+            :width="80"
+            :height="110"
+          />
+          <span v-if="inShelf(item)" class="shelf-dot" />
+        </div>
         <div class="book-main">
           <p class="book-name">{{ item.name || "未命名" }}</p>
-          <p class="book-meta">{{ item.author || "未知作者" }}<template v-if="item.kind"> · {{ item.kind }}</template></p>
-          <p v-if="item.latestChapterTitle" class="book-meta">最新：{{ item.latestChapterTitle }}</p>
+          <p class="book-meta">{{ item.author || "未知作者" }}</p>
+          <p v-if="item.kind" class="book-kind">{{ item.kind }}</p>
+          <p v-if="item.latestChapterTitle" class="book-meta">
+            最新：{{ item.latestChapterTitle }}
+          </p>
           <p v-if="item.intro" class="book-intro">{{ item.intro }}</p>
         </div>
-        <button class="add" :disabled="!item.bookUrl || adding === item.bookUrl" @click="addToShelf(item)">
-          加入书架
-        </button>
       </article>
 
-      <div v-if="results.length" class="pager">
-        <button :disabled="page <= 1 || loading" @click="loadPage(page - 1)">上一页</button>
-        <span>第 {{ page }} 页</span>
-        <button :disabled="loading" @click="loadPage(page + 1)">下一页</button>
+      <div v-if="results.length" class="load-more" @click="loadMore(true)">
+        <span v-if="loading">加载中…</span>
+        <span v-else-if="!hasMore">没有更多了</span>
+        <span v-else>加载更多</span>
       </div>
+      <div v-else-if="loading" class="load-more">加载中…</div>
     </main>
   </div>
 </template>
@@ -141,34 +174,9 @@ onMounted(loadCategories);
   min-height: 0;
   background: var(--ac-background);
 }
-.categories {
-  display: flex;
-  gap: 6px;
-  padding: 6px 10px;
-  overflow-x: auto;
-  border-bottom: 1px solid var(--ac-divider);
-}
-.category {
-  flex: none;
-  border: none;
-  background: var(--ac-transparent-10);
-  color: var(--ac-primary-text);
-  border-radius: 14px;
-  padding: 5px 12px;
-  font-size: 12px;
-  white-space: nowrap;
-}
-.category.active {
-  background: var(--ac-primary);
-  color: #fff;
-}
-.category.disabled {
-  opacity: 0.4;
-}
-.message,
-.loading {
+.message {
   margin: 8px 16px;
-  color: var(--ac-secondary-text);
+  color: var(--ac-error);
   font-size: 12px;
 }
 .result-list {
@@ -181,6 +189,23 @@ onMounted(loadCategories);
   gap: 10px;
   padding: 10px 14px;
   border-bottom: 1px solid var(--ac-divider);
+  cursor: pointer;
+}
+.book:active {
+  background: var(--ac-transparent-10);
+}
+.cover-wrap {
+  position: relative;
+  flex: none;
+}
+.shelf-dot {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4caf50;
 }
 .book-main {
   flex: 1;
@@ -189,12 +214,23 @@ onMounted(loadCategories);
 .book-name {
   margin: 0 0 3px;
   color: var(--ac-primary-text);
-  font-size: 15px;
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .book-meta {
   margin: 0 0 2px;
   color: var(--ac-secondary-text);
-  font-size: 11px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.book-kind {
+  margin: 0 0 2px;
+  color: var(--ac-primary);
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -209,30 +245,11 @@ onMounted(loadCategories);
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.add {
-  align-self: center;
-  flex: none;
-  border: 1px solid var(--ac-primary);
-  background: transparent;
-  color: var(--ac-primary);
-  border-radius: 4px;
-  padding: 5px 8px;
-  font-size: 12px;
-}
-.pager {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 12px;
+.load-more {
+  padding: 16px;
+  text-align: center;
   color: var(--ac-secondary-text);
   font-size: 12px;
-}
-.pager button {
-  border: 1px solid var(--ac-divider);
-  background: transparent;
-  color: var(--ac-primary-text);
-  border-radius: 4px;
-  padding: 5px 10px;
+  cursor: pointer;
 }
 </style>

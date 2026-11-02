@@ -1,4 +1,4 @@
-import Dexie, { type Table } from "dexie";
+﻿import Dexie, { type Table } from "dexie";
 import type {
   Book,
   BookChapter,
@@ -10,7 +10,10 @@ import type {
   ReadRecord,
   ReaderBlock,
   ReplaceRule,
+  RssArticle,
+  RssReadRecord,
   RssSource,
+  RssStar,
   TxtTocRule,
 } from "@/core/domain";
 
@@ -72,6 +75,9 @@ export class ReaderDatabase extends Dexie {
   bookSources!: Table<BookSource, string>;
   sourceVariables!: Table<SourceVariableRow, [string, string]>;
   rssSources!: Table<RssSource, string>;
+  rssArticles!: Table<RssArticle, [string, string]>;
+  rssStars!: Table<RssStar, [string, string]>;
+  rssReadRecords!: Table<RssReadRecord, string>;
   files!: Table<FileRow, string>;
 
   constructor() {
@@ -152,6 +158,27 @@ export class ReaderDatabase extends Dexie {
       bookSources: "bookSourceUrl, bookSourceName, bookSourceGroup, customOrder",
       sourceVariables: "[bookSourceUrl+key], bookSourceUrl",
       rssSources: "sourceUrl, sourceName, sourceGroup, customOrder",
+    });
+    this.version(6).stores({
+      books: "bookUrl, order, durChapterTime, syncTime, group",
+      chapters: "key, bookUrl, [bookUrl+index]",
+      chapterContents: "key, bookUrl",
+      chapterBlocks: "key, bookUrl",
+      groups: "groupId, order",
+      kv: "key",
+      bookmarks: "time, bookUrl, bookName",
+      readRecords: "[deviceId+bookName], deviceId, lastRead",
+      txtTocRules: "id, serialNumber",
+      replaceRules: "id, sortOrder",
+      dictRules: "name, sortNumber",
+      httpTts: "id, name",
+      files: "path, bookUrl, kind, size",
+      bookSources: "bookSourceUrl, bookSourceName, bookSourceGroup, customOrder",
+      sourceVariables: "[bookSourceUrl+key], bookSourceUrl",
+      rssSources: "sourceUrl, sourceName, sourceGroup, customOrder",
+      rssArticles: "[origin+link], origin, sort, order",
+      rssStars: "[origin+link], origin, group, starTime",
+      rssReadRecords: "record, readTime",
     });
   }
 }

@@ -7,6 +7,7 @@ import {
   bookSourceGetVariables,
   bookSourceSetVariable,
 } from "@/core/application/bookSources";
+import { rssSourceList } from "@/core/application/rss";
 import { platform } from "@/runtime";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
@@ -20,6 +21,7 @@ interface VariableRow {
 const route = useRoute();
 const router = useRouter();
 const sourceUrl = computed(() => String(route.query.url || ""));
+const sourceType = computed(() => String(route.query.type || "bookSource"));
 const sourceName = ref("");
 const rows = ref<VariableRow[]>([]);
 const originalKeys = ref<string[]>([]);
@@ -31,11 +33,19 @@ async function load() {
   if (!sourceUrl.value) return;
   loading.value = true;
   try {
-    const [source, variables] = await Promise.all([
-      bookSourceGet(sourceUrl.value),
+    const [variables, sourceNameValue] = await Promise.all([
       bookSourceGetVariables(sourceUrl.value),
+      sourceType.value === "rss"
+        ? rssSourceList().then(
+            (list) =>
+              list.find((item) => item.sourceUrl === sourceUrl.value)?.sourceName ||
+              sourceUrl.value,
+          )
+        : bookSourceGet(sourceUrl.value).then(
+            (source) => source?.bookSourceName || sourceUrl.value,
+          ),
     ]);
-    sourceName.value = source?.bookSourceName || sourceUrl.value;
+    sourceName.value = sourceNameValue;
     const entries = Object.entries(variables || {});
     originalKeys.value = entries.map(([key]) => key);
     rows.value = entries.map(([key, value]) => ({
@@ -135,7 +145,7 @@ onMounted(load);
 
 <template>
   <div class="variables-page">
-    <TitleBar title="书源变量" @back="router.back()">
+    <TitleBar :title="sourceType === 'rss' ? '订阅源变量' : '书源变量'" @back="router.back()">
       <template #actions>
         <button aria-label="保存" :disabled="saving || loading" @click="save">
           <Icon name="ic_save" :size="24" />

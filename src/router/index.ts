@@ -171,6 +171,36 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/misc/RssArticlesView.vue"),
   },
   {
+    path: "/rss-read",
+    name: "rss-read",
+    component: () => import("@/views/misc/ReadRssView.vue"),
+  },
+  {
+    path: "/rss-favorites",
+    name: "rss-favorites",
+    component: () => import("@/views/misc/RssFavoritesView.vue"),
+  },
+  {
+    path: "/rss-source-manage",
+    name: "rss-source-manage",
+    component: () => import("@/views/misc/RssSourceManageView.vue"),
+  },
+  {
+    path: "/rss-source-edit",
+    name: "rss-source-edit",
+    component: () => import("@/views/misc/RssSourceEditView.vue"),
+  },
+  {
+    path: "/rss-source-debug",
+    name: "rss-source-debug",
+    component: () => import("@/views/misc/RssSourceDebugView.vue"),
+  },
+  {
+    path: "/rule-sub",
+    name: "rule-sub",
+    component: () => import("@/views/misc/RuleSubView.vue"),
+  },
+  {
     path: "/legacy",
     name: "legacy",
     component: () => import("@/views/legacy/LegacyGalleryView.vue"),
