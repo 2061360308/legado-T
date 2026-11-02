@@ -247,7 +247,7 @@ fn run(
     Ok(())
 }
 
-fn build_context(runtime: &Runtime, host: &Rc<Host>, lib: Option<&str>) -> Result<Context> {
+pub(crate) fn build_context(runtime: &Runtime, host: &Rc<Host>, lib: Option<&str>) -> Result<Context> {
     let context =
         Context::full(runtime).map_err(|error| Error::Js(format!("建 JS 上下文失败: {error}")))?;
     context.with(|ctx| {
@@ -267,20 +267,20 @@ fn eval_script(context: &Context, host: &Rc<Host>, script: &str) -> Result<Evalu
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum JsKind {
+pub enum JsKind {
     Text,
     Null,
     Other,
 }
 
-pub(crate) struct Evaluated {
+pub struct Evaluated {
     pub value: String,
     pub items: Option<Vec<String>>,
     pub kind: JsKind,
     pub response: Option<engine_model::HttpResponse>,
 }
 
-fn eval_in_ctx(ctx: &Ctx<'_>, host: &Rc<Host>, script: &str) -> Result<Evaluated> {
+pub(crate) fn eval_in_ctx(ctx: &Ctx<'_>, host: &Rc<Host>, script: &str) -> Result<Evaluated> {
     crate::host::bind_eval(ctx, host)
         .map_err(|error| Error::Js(format!("绑定求值变量失败: {error}")))?;
     let _guard = CtxGuard::set(ctx);

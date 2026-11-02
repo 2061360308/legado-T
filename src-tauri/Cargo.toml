@@ -6,12 +6,18 @@ members = [
     "crates/engine-rule",
     "crates/engine-replace",
     "crates/engine-js",
+    "crates/engine-js-wasm",
     "crates/engine-http-native",
     "crates/engine-flow",
     "crates/engine-rss",
     "crates/engine-native",
     "crates/reader-core",
     "crates/backup-core",
+]
+exclude = [
+    "crates/ebook-wasm",
+    "crates/rbook-wasm",
+    "crates/backup-wasm",
 ]
 
 [workspace.package]

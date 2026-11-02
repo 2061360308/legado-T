@@ -1,5 +1,7 @@
 use engine_model::{BoxFuture, HttpResponse, Result};
-use engine_http_native::{HttpClient, UrlRule};
+#[cfg(feature = "native")]
+use engine_http_native::HttpClient;
+use engine_http_native::UrlRule;
 
 pub trait PageFetcher: Send + Sync {
     fn fetch_rule<'a>(&'a self, rule: &'a UrlRule) -> BoxFuture<'a, Result<HttpResponse>>;
@@ -22,6 +24,7 @@ pub trait PageFetcher: Send + Sync {
     }
 }
 
+#[cfg(feature = "native")]
 impl PageFetcher for HttpClient {
     fn fetch_rule<'a>(&'a self, rule: &'a UrlRule) -> BoxFuture<'a, Result<HttpResponse>> {
         Box::pin(async move { self.send_rule(rule).await })

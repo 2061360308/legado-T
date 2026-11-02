@@ -12,6 +12,9 @@ pub mod rules;
 pub(crate) mod ttf;
 pub mod worker;
 
+#[cfg(target_arch = "wasm32")]
+pub mod wasm;
+
 use std::sync::Arc;
 use std::time::Duration;
 

@@ -11,6 +11,7 @@ src/adapters/web/wasm/ebook
 src/adapters/web/wasm/rbook
 src/adapters/web/wasm/backup
 src/adapters/web/wasm/shelf
+src/adapters/web/wasm/engine/*.wasm
 server/.wrangler
 
 .DS_Store

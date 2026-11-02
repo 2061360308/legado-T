@@ -8,10 +8,14 @@ repository = "https://gitea.slcomplex.party/OpenToGithub/legado-rust-engine-code
 keywords = ["rss", "atom", "feed"]
 categories = ["parser-implementations", "web-programming"]
 
+[features]
+default = ["native"]
+native = ["engine-flow/native", "engine-http-native/native"]
+
 [dependencies]
-engine-flow.workspace = true
+engine-flow = { workspace = true, default-features = false }
 engine-model.workspace = true
-engine-http-native.workspace = true
+engine-http-native = { workspace = true, default-features = false }
 engine-rule.workspace = true
 engine-regex.workspace = true
 quick-xml.workspace = true

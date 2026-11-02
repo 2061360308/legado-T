@@ -382,6 +382,42 @@ fn list_books_directory<R: Runtime>(
 }
 
 #[tauri::command]
+fn scan_books_directory<R: Runtime>(
+    app: AppHandle<R>,
+    tree_uri: String,
+    document_id: String,
+) -> Result<Vec<SafEntry>, String> {
+    #[cfg(mobile)]
+    {
+        app.state::<mobile::ReaderPlatform<R>>()
+            .scan_books_directory(tree_uri, document_id)
+    }
+    #[cfg(not(mobile))]
+    {
+        let _ = (app, tree_uri, document_id);
+        Err("SAF directory import is only available on Android".to_string())
+    }
+}
+
+#[tauri::command]
+fn delete_saf_documents<R: Runtime>(
+    app: AppHandle<R>,
+    tree_uri: String,
+    document_ids: Vec<String>,
+) -> Result<i64, String> {
+    #[cfg(mobile)]
+    {
+        app.state::<mobile::ReaderPlatform<R>>()
+            .delete_saf_documents(tree_uri, document_ids)
+    }
+    #[cfg(not(mobile))]
+    {
+        let _ = (app, tree_uri, document_ids);
+        Err("SAF directory import is only available on Android".to_string())
+    }
+}
+
+#[tauri::command]
 fn prepare_books_import<R: Runtime>(
     app: AppHandle<R>,
     tree_uri: String,
@@ -429,6 +465,8 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             set_reader_key_mode,
             pick_books_directory,
             list_books_directory,
+            scan_books_directory,
+            delete_saf_documents,
             prepare_books_import,
             cleanup_saf_import,
         ])

@@ -8,10 +8,14 @@ repository = "https://gitea.slcomplex.party/OpenToGithub/legado-rust-engine-code
 keywords = ["legado", "book-source", "scraper"]
 categories = ["web-programming", "parsing"]
 
+[features]
+default = ["native"]
+native = ["engine-http-native/native"]
+
 [dependencies]
 engine-model.workspace = true
 engine-js.workspace = true
-engine-http-native.workspace = true
+engine-http-native = { workspace = true, default-features = false }
 engine-replace.workspace = true
 engine-rule.workspace = true
 engine-regex.workspace = true

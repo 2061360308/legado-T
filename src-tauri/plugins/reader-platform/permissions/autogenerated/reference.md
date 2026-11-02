@@ -20,6 +20,8 @@ Reader platform capabilities
 - `allow-set-web-view-cookie`
 - `allow-pick-books-directory`
 - `allow-list-books-directory`
+- `allow-scan-books-directory`
+- `allow-delete-saf-documents`
 - `allow-prepare-books-import`
 - `allow-cleanup-saf-import`
 
@@ -54,6 +56,32 @@ Enables the cleanup_saf_import command without any pre-configured scope.
 <td>
 
 Denies the cleanup_saf_import command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:allow-delete-saf-documents`
+
+</td>
+<td>
+
+Enables the delete_saf_documents command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:deny-delete-saf-documents`
+
+</td>
+<td>
+
+Denies the delete_saf_documents command without any pre-configured scope.
 
 </td>
 </tr>
@@ -262,6 +290,32 @@ Enables the prepare_books_import command without any pre-configured scope.
 <td>
 
 Denies the prepare_books_import command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:allow-scan-books-directory`
+
+</td>
+<td>
+
+Enables the scan_books_directory command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:deny-scan-books-directory`
+
+</td>
+<td>
+
+Denies the scan_books_directory command without any pre-configured scope.
 
 </td>
 </tr>

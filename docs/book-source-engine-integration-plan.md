@@ -22,14 +22,26 @@
 - 书籍信息/目录按书源类型自动进入文本、音频、图片或文件阅读页。
 - 已验证 `npm run typecheck`、`cargo check -p local-reader`、`npm run tauri:build -- --no-bundle`。
 
+已完成：
+
+- 原生主链路、书源编辑 8 视图、调试、登录、变量、URL Option、二维码、发现、批量检查、图片/音频/文件阅读器均已落地。
+- Web wasm 引擎使用 `wasm32-wasip1` + rquickjs bindgen，导出书源搜索/发现/详情/目录/正文/评论/下载地址/购买/资源与 RSS ABI。
+- Web 已接入 IndexedDB 书源/RSS/变量/搜索历史、导入导出、启停、搜索、详情、目录、正文、在线阅读、发现、分类、检查、评论、下载地址、购买、资源、图片抓取和 RSS 列表/正文。
+- Web 引擎已加入 `jsLib`、书源变量、Cookie、内存 cache、RuleRunner，并迁移到 Web Worker；同步 XHR 不再阻塞主线程。
+- 原生 WebView 已传递 User-Agent/Cookie，并通过初始化脚本同步 Cookie。
+- Android SAF 已注册扫描/删除命令，并支持 ZIP 文件。
+- 同源代理增加重定向上限、重定向目标复检、上传/下载大小检查。
+- 新增 `npm run check:engine-wasm` wasm 导出与基础 ABI 冒烟测试。
+- Android arm64 Release APK 构建成功（23.5 MiB）。
+
 尚未完成：
 
-- `engine-js-wasm` 尚未构建。`rquickjs-sys` 在 `wasm32-unknown-unknown` 需要 wasm clang/wasi-sysroot；当前机器只有 Android NDK clang，缺少 wasm libc 头文件。
-- `engine-web`、Web Worker、Web adapter 未接入。
-- 书源编辑已具备 8 个视图、调试、登录、变量、URL Option、二维码；变量批量导入/导出已完成。
-- 图片、音频、文件源阅读 UI 已完成基础链路；TTF 字体解密沿用正文引擎的 `queryTTF`，无独立阅读页。
-- 漫画多图/音频/文件源的缓存、下载、图片预加载和失败重试仍可继续完善。
-- Android WebView/CookieManager 未联调。
+- Android WebView/CookieManager 仍需真机联调；Web 运行时明确不支持 WebView 登录。
+- Web 图片源暂未执行 `imageDecode` 规则，图片抓取走同源代理。
+- Android 后台朗读/锁屏控制仍未实现前台服务与 MediaSession。
+- Tauri CSP 仍为 `null`，发布前需要收紧。
+- 日志、帮助、书单导入、字典规则页、缓存书籍下载全部/导出等 UI 仍为占位或未接入。
+- Android Release APK 仍未签名，x86_64/universal 未在本轮回归。
 
 ## 目标
 

@@ -1,0 +1,20 @@
+[package]
+name = "engine-js-wasm"
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+engine-flow = { path = "../engine-flow", default-features = false }
+engine-http-native = { path = "../engine-http-native", default-features = false }
+engine-js = { path = "../engine-js" }
+engine-model = { path = "../engine-model" }
+engine-rule = { path = "../engine-rule" }
+engine-rss = { path = "../engine-rss", default-features = false }
+futures.workspace = true
+http.workspace = true
+serde.workspace = true
+serde_json.workspace = true

@@ -42,6 +42,19 @@ function unsupported(command: string): never {
   throw new Error(`${command} is not implemented in the web runtime yet`);
 }
 
+function downloadBytes(path: string, data: Uint8Array<ArrayBuffer>) {
+  const name = baseName(path) || "download";
+  const blob = new Blob([data]);
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = name;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+
 export function createWebPlatform(): Platform {
   let cachedInfo: PlatformInfo | null = null;
   const capabilities: PlatformCapabilities = {
@@ -77,6 +90,7 @@ export function createWebPlatform(): Platform {
       readFile: readWebFile,
       async writeFile(path: string, data: Uint8Array<ArrayBuffer>) {
         await writeWebFile(path, data);
+        if (path.startsWith(`${WEB_ROOT}/exports/`)) downloadBytes(path, data);
       },
       writeStream: writeWebStream,
       readDir: readWebDir,

@@ -165,6 +165,14 @@ async function handleEngineFetch(c: Context<{ Bindings: Env }>): Promise<Respons
   }
 
   const limits = resolveLimits(c.env);
+  const declaredUpload = Number(request.headers.get("content-length") ?? "0");
+  if (
+    limits.maxUploadBytes > 0 &&
+    Number.isFinite(declaredUpload) &&
+    declaredUpload > limits.maxUploadBytes
+  ) {
+    return errorResponse(c, 413, "request body is too large");
+  }
   const controller = new AbortController();
   const timer =
     limits.timeoutMs > 0
@@ -185,7 +193,46 @@ async function handleEngineFetch(c: Context<{ Bindings: Env }>): Promise<Respons
       signal: controller.signal,
       duplex: "half",
     };
-    const upstream = await fetch(target, init);
+    let current = target;
+    let redirects = 0;
+    let upstream: Response;
+    for (;;) {
+      upstream = await fetch(current, {
+        ...init,
+        redirect: "manual",
+        method: redirects === 0 ? init.method : "GET",
+        body: redirects === 0 ? init.body : undefined,
+      });
+      if (
+        upstream.status >= 300 &&
+        upstream.status < 400 &&
+        upstream.headers.has("location")
+      ) {
+        if (redirects >= limits.maxRedirects) {
+          return errorResponse(c, 502, "too many redirects");
+        }
+        const location = upstream.headers.get("location");
+        if (!location) break;
+        try {
+          current = validateTarget(
+            new URL(location, current).toString(),
+            c.env,
+          );
+        } catch (error) {
+          return errorResponse(c, 400, (error as Error).message);
+        }
+        redirects += 1;
+        continue;
+      }
+      break;
+    }
+
+    if (limits.maxDownloadBytes > 0) {
+      const declared = Number(upstream.headers.get("content-length") ?? "0");
+      if (Number.isFinite(declared) && declared > limits.maxDownloadBytes) {
+        return errorResponse(c, 413, "upstream response is too large");
+      }
+    }
 
     const headers = new Headers(upstream.headers);
     headers.delete("set-cookie");

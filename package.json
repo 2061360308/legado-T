@@ -9,6 +9,7 @@
     "dev:web": "vite --mode web",
     "build": "vue-tsc --noEmit && vite build",
     "build:wasm": "node scripts/build-wasm.mjs",
+    "check:engine-wasm": "node scripts/check-engine-wasm.mjs",
     "build:web": "npm run build:wasm && vue-tsc --noEmit && vite build --mode web",
     "preview": "vite preview",
     "preview:web": "vite preview --mode web",

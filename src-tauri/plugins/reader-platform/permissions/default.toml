@@ -17,6 +17,8 @@ permissions = [
   "allow-set-web-view-cookie",
   "allow-pick-books-directory",
   "allow-list-books-directory",
+  "allow-scan-books-directory",
+  "allow-delete-saf-documents",
   "allow-prepare-books-import",
   "allow-cleanup-saf-import",
 ]

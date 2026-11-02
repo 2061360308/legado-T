@@ -5,6 +5,7 @@ import type {
   BookGroup,
   Bookmark,
   BookSearchResult,
+  BookSource,
   DictRule,
   DiffEntry,
   DiffReport,
@@ -13,6 +14,8 @@ import type {
   ReadRecord,
   ReaderSnapshot,
   ReplaceRule,
+  RssArticle,
+  RssSource,
   TxtTocRule,
 } from "@/core/domain";
 import {
@@ -31,6 +34,8 @@ import {
   shelfBooksInWorker,
 } from "./readerEngineClient";
 import { exportWebBackup, importWebBackup } from "./backupService";
+import * as bookSources from "./bookSources";
+import * as rssSources from "./rssSources";
 import defaultTxtTocRules from "./defaultTxtTocRules.json";
 import {
   archiveList,
@@ -936,6 +941,34 @@ export function createWebBackend() {
           if (!row) throw new Error("章节内容不存在");
           return row.content as T;
         }
+        case COMMANDS.onlineReaderOpen: {
+          const bookUrl = argString(args, "bookUrl");
+          const book = await db.books.get(bookUrl);
+          if (!book) throw new Error("书籍不存在");
+          const chapters = await listChapters(bookUrl);
+          if (!chapters.length) throw new Error("书籍没有章节");
+          const target = Math.min(
+            Math.max(
+              args.chapterIndex == null ? book.durChapterIndex ?? 0 : argNumber(args, "chapterIndex"),
+              0,
+            ),
+            chapters.length - 1,
+          );
+          const content = await bookSources.sourceChapterContent(bookUrl, target);
+          if (!content.trim()) throw new Error("章节正文为空");
+          await db.chapterContents.put({
+            key: chapterKey(bookUrl, target),
+            bookUrl,
+            index: target,
+            content,
+          });
+          return (await openReader(
+            bookUrl,
+            target,
+            args.chapterPos == null ? null : argNumber(args, "chapterPos"),
+            (args.style as LayoutStyle | undefined) ?? DEFAULT_STYLE,
+          )) as T;
+        }
         case COMMANDS.readerOpen:
           return (await openReader(
             argString(args, "bookUrl"),
@@ -1074,6 +1107,219 @@ export function createWebBackend() {
             (args.password as string | null | undefined) ?? null,
             argArray<string>(args, "ignore"),
           )) as T;
+        case COMMANDS.bookSourceList:
+          return (await bookSources.listBookSources()) as T;
+        case COMMANDS.bookSourceGet:
+          return (await bookSources.getBookSource(argString(args, "bookSourceUrl"))) as T;
+        case COMMANDS.bookSourceSave:
+          await bookSources.saveBookSource(args.source as BookSource);
+          return undefined as T;
+        case COMMANDS.bookSourceDelete:
+          await bookSources.deleteBookSource(argString(args, "bookSourceUrl"));
+          return undefined as T;
+        case COMMANDS.bookSourceSetEnabled:
+          await bookSources.setBookSourceEnabled(
+            argString(args, "bookSourceUrl"),
+            argBoolean(args, "enabled"),
+          );
+          return undefined as T;
+        case COMMANDS.bookSourceSetExploreEnabled:
+          await bookSources.setBookSourceExploreEnabled(
+            argString(args, "bookSourceUrl"),
+            argBoolean(args, "enabled"),
+          );
+          return undefined as T;
+        case COMMANDS.bookSourceImport:
+          return (await bookSources.importBookSources(argString(args, "json"))) as T;
+        case COMMANDS.bookSourceExport:
+          return (await bookSources.exportBookSources()) as T;
+        case COMMANDS.bookSourceGroups:
+          return (await bookSources.bookSourceGroups()) as T;
+        case COMMANDS.bookSourceSearchHistory:
+          return (await bookSources.listSourceSearchHistory(argNumber(args, "limit") || 20)) as T;
+        case COMMANDS.bookSourceSetVariable:
+          await bookSources.setSourceVariable(
+            argString(args, "bookSourceUrl"),
+            argString(args, "key"),
+            argString(args, "value"),
+          );
+          return undefined as T;
+        case COMMANDS.bookSourceDeleteVariable:
+          await bookSources.deleteSourceVariable(
+            argString(args, "bookSourceUrl"),
+            argString(args, "key"),
+          );
+          return undefined as T;
+        case COMMANDS.bookSourceGetVariables:
+          return (await bookSources.getSourceVariables(argString(args, "bookSourceUrl"))) as T;
+        case COMMANDS.bookSourceSearch:
+          return (await bookSources.searchBookSources(
+            argString(args, "keyword"),
+            args.sourceUrls as string[] | undefined,
+            argNumber(args, "page") || 1,
+          )) as T;
+        case COMMANDS.bookSourceInfo:
+          return (await bookSources.sourceBookInfo(
+            argString(args, "bookSourceUrl"),
+            argString(args, "bookUrl"),
+          )) as T;
+        case COMMANDS.bookSourceToc:
+          return (await bookSources.sourceBookToc(
+            argString(args, "bookSourceUrl"),
+            args.book,
+          )) as T;
+        case COMMANDS.bookSourceContent:
+          return (await bookSources.sourceBookContent(
+            argString(args, "bookSourceUrl"),
+            args.book,
+            args.chapter,
+            (args.nextChapterUrl as string | null | undefined) ?? null,
+          )) as T;
+        case COMMANDS.bookSourceExploreCategories:
+          return (await bookSources.exploreCategories(argString(args, "bookSourceUrl"))) as T;
+        case COMMANDS.bookSourceExplore:
+          return (await bookSources.sourceExplore(
+            argString(args, "bookSourceUrl"),
+            argString(args, "url"),
+            argNumber(args, "page") || 1,
+          )) as T;
+        case COMMANDS.bookSourceCheck:
+          return (await bookSources.checkBookSources(
+            args.sourceUrls as string[] | undefined,
+            argString(args, "keyword") || "斗破",
+          )) as T;
+        case COMMANDS.bookSourceAddToShelf: {
+          const sourceUrl = argString(args, "bookSourceUrl");
+          const info = (await bookSources.sourceBookInfo(
+            sourceUrl,
+            argString(args, "bookUrl"),
+          )) as Record<string, unknown>;
+          const source = await bookSources.getBookSource(sourceUrl);
+          if (!source) throw new Error("书源不存在");
+          const chapters = (await bookSources.sourceBookToc(sourceUrl, info)) as Record<
+            string,
+            unknown
+          >[];
+          const book: Book = {
+            bookUrl: String(info.bookUrl ?? argString(args, "bookUrl")),
+            name: String(info.name ?? ""),
+            author: String(info.author ?? ""),
+            origin: sourceUrl,
+            originName: source.bookSourceName,
+            type: 1 << Math.max(0, Math.min(3, source.bookSourceType ?? 0)),
+            group: argNumber(args, "group"),
+            tocUrl: String(info.tocUrl ?? ""),
+            intro: (info.intro as string | null | undefined) ?? null,
+            kind: (info.kind as string | null | undefined) ?? null,
+            coverUrl: (info.coverUrl as string | null | undefined) ?? null,
+            latestChapterTitle:
+              (info.latestChapterTitle as string | null | undefined) ?? null,
+            totalChapterNum: chapters.length,
+            canUpdate: true,
+            syncTime: nowSeconds(),
+          };
+          await saveBook(book);
+          await db.transaction("rw", db.chapters, async () => {
+            await db.chapters.where("bookUrl").equals(book.bookUrl).delete();
+            await db.chapters.bulkPut(
+              chapters.map((chapter, index) => ({
+                ...(chapter as unknown as BookChapter),
+                index: Number(chapter.index ?? index),
+                key: chapterKey(book.bookUrl, Number(chapter.index ?? index)),
+                bookUrl: book.bookUrl,
+              })),
+            );
+          });
+          return info as T;
+        }
+        case COMMANDS.bookSourceRefresh: {
+          const book = await db.books.get(argString(args, "bookUrl"));
+          if (!book?.origin) throw new Error("书籍不存在");
+          const info = (await bookSources.sourceBookInfo(book.origin, book.bookUrl)) as Record<
+            string,
+            unknown
+          >;
+          await db.books.put({
+            ...book,
+            name: String(info.name ?? book.name),
+            author: String(info.author ?? book.author),
+            intro: (info.intro as string | null | undefined) ?? book.intro,
+            kind: (info.kind as string | null | undefined) ?? book.kind,
+            coverUrl: (info.coverUrl as string | null | undefined) ?? book.coverUrl,
+            tocUrl: String(info.tocUrl ?? book.tocUrl ?? ""),
+            latestChapterTitle:
+              (info.latestChapterTitle as string | null | undefined) ?? book.latestChapterTitle,
+            totalChapterNum:
+              Number(info.totalChapterNum ?? book.totalChapterNum ?? 0) || book.totalChapterNum,
+            syncTime: nowSeconds(),
+          });
+          return info as T;
+        }
+        case COMMANDS.bookSourceReviews:
+          return (await bookSources.sourceReviews(
+            argString(args, "bookUrl"),
+            args.chapterIndex == null ? null : argNumber(args, "chapterIndex"),
+          )) as T;
+        case COMMANDS.bookSourceDownloadUrls:
+          return (await bookSources.sourceDownloadUrls(argString(args, "bookUrl"))) as T;
+        case COMMANDS.bookSourcePay:
+          return (await bookSources.sourcePay(
+            argString(args, "bookUrl"),
+            args.chapterIndex == null ? null : argNumber(args, "chapterIndex"),
+          )) as T;
+        case COMMANDS.bookSourceResource:
+          return (await bookSources.sourceResource(
+            argString(args, "bookUrl"),
+            args.chapterIndex == null ? null : argNumber(args, "chapterIndex"),
+          )) as T;
+        case COMMANDS.bookSourceImage:
+          return (await bookSources.sourceImage(
+            argString(args, "bookUrl"),
+            args.chapterIndex == null ? null : argNumber(args, "chapterIndex"),
+            (args.url as string | null | undefined) ?? null,
+          )) as T;
+        case COMMANDS.bookSourceImages:
+          return (await bookSources.sourceImages(
+            argString(args, "bookUrl"),
+            args.chapterIndex == null ? null : argNumber(args, "chapterIndex"),
+          )) as T;
+        case COMMANDS.bookSourceSaveCookies:
+          return (await bookSources.saveSourceCookies(
+            argString(args, "sourceUrl"),
+            argArray<string>(args, "cookies"),
+            (args.cookieUrl as string | null | undefined) ?? null,
+          )) as T;
+        case COMMANDS.bookSourceClearCookies:
+          await bookSources.clearSourceCookies(argString(args, "sourceUrl"));
+          return undefined as T;
+        case COMMANDS.rssSourceList:
+          return (await rssSources.listRssSources()) as T;
+        case COMMANDS.rssSourceSave:
+          await rssSources.saveRssSource(args.source as RssSource);
+          return undefined as T;
+        case COMMANDS.rssSourceDelete:
+          await rssSources.deleteRssSource(argString(args, "sourceUrl"));
+          return undefined as T;
+        case COMMANDS.rssSourceImport:
+          return (await rssSources.importRssSources(argString(args, "json"))) as T;
+        case COMMANDS.rssSourceExport:
+          return (await rssSources.exportRssSources()) as T;
+        case COMMANDS.rssArticles:
+          return (await rssSources.rssArticles(
+            argString(args, "sourceUrl"),
+            argString(args, "sortName"),
+            argString(args, "sortUrl"),
+            argNumber(args, "page") || 1,
+          )) as T;
+        case COMMANDS.rssContent:
+          return (await rssSources.rssContent(
+            argString(args, "sourceUrl"),
+            args.article as RssArticle,
+            (args.ruleContent as string | null | undefined) ?? null,
+          )) as T;
+        case COMMANDS.webviewLogin:
+        case COMMANDS.webviewFetch:
+          throw new Error("Web 运行时不支持 Android WebView 登录/抓取");
         default:
           throw new Error(`Web 端未知命令：${command}`);
       }

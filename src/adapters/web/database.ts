@@ -4,11 +4,13 @@ import type {
   BookChapter,
   BookGroup,
   Bookmark,
+  BookSource,
   DictRule,
   HttpTts,
   ReadRecord,
   ReaderBlock,
   ReplaceRule,
+  RssSource,
   TxtTocRule,
 } from "@/core/domain";
 
@@ -36,6 +38,12 @@ export interface ChapterBlocksRow {
   blocks: ReaderBlock[];
 }
 
+export interface SourceVariableRow {
+  bookSourceUrl: string;
+  key: string;
+  value: string;
+}
+
 export interface FileRow {
   path: string;
   bookUrl?: string | null;
@@ -61,6 +69,9 @@ export class ReaderDatabase extends Dexie {
   replaceRules!: Table<ReplaceRule, number>;
   dictRules!: Table<DictRule, string>;
   httpTts!: Table<HttpTts, number>;
+  bookSources!: Table<BookSource, string>;
+  sourceVariables!: Table<SourceVariableRow, [string, string]>;
+  rssSources!: Table<RssSource, string>;
   files!: Table<FileRow, string>;
 
   constructor() {
@@ -106,6 +117,41 @@ export class ReaderDatabase extends Dexie {
       dictRules: "name, sortNumber",
       httpTts: "id, name",
       files: "path, bookUrl, kind, size",
+    });
+    this.version(4).stores({
+      books: "bookUrl, order, durChapterTime, syncTime, group",
+      chapters: "key, bookUrl, [bookUrl+index]",
+      chapterContents: "key, bookUrl",
+      chapterBlocks: "key, bookUrl",
+      groups: "groupId, order",
+      kv: "key",
+      bookmarks: "time, bookUrl, bookName",
+      readRecords: "[deviceId+bookName], deviceId, lastRead",
+      txtTocRules: "id, serialNumber",
+      replaceRules: "id, sortOrder",
+      dictRules: "name, sortNumber",
+      httpTts: "id, name",
+      files: "path, bookUrl, kind, size",
+      bookSources: "bookSourceUrl, bookSourceName, bookSourceGroup, customOrder",
+      sourceVariables: "[bookSourceUrl+key], bookSourceUrl",
+    });
+    this.version(5).stores({
+      books: "bookUrl, order, durChapterTime, syncTime, group",
+      chapters: "key, bookUrl, [bookUrl+index]",
+      chapterContents: "key, bookUrl",
+      chapterBlocks: "key, bookUrl",
+      groups: "groupId, order",
+      kv: "key",
+      bookmarks: "time, bookUrl, bookName",
+      readRecords: "[deviceId+bookName], deviceId, lastRead",
+      txtTocRules: "id, serialNumber",
+      replaceRules: "id, sortOrder",
+      dictRules: "name, sortNumber",
+      httpTts: "id, name",
+      files: "path, bookUrl, kind, size",
+      bookSources: "bookSourceUrl, bookSourceName, bookSourceGroup, customOrder",
+      sourceVariables: "[bookSourceUrl+key], bookSourceUrl",
+      rssSources: "sourceUrl, sourceName, sourceGroup, customOrder",
     });
   }
 }

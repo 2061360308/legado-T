@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::sync::mpsc;
 use std::sync::Arc;
 use std::time::Duration;
@@ -29,7 +30,7 @@ impl WebViewBridge for TauriWebViewBridge {
     fn fetch<'a>(&'a self, request: WebViewRequest) -> BoxFuture<'a, CoreResult<WebViewResponse>> {
         let app = self.app.clone();
         Box::pin(async move {
-            let response = fetch_inner(&app, request.url, request.web_js, request.delay_ms)
+            let response = fetch_inner(&app, request.url, request.web_js, request.delay_ms, request.headers)
                 .await
                 .map_err(CoreError::Other)?;
             Ok(WebViewResponse {
@@ -134,14 +135,32 @@ async fn fetch_inner(
     url: String,
     web_js: Option<String>,
     delay_ms: u64,
+    headers: BTreeMap<String, String>,
 ) -> Result<WebViewBridgeResponse, String> {
     let target: tauri::Url = url.parse().map_err(|error| format!("invalid url: {error}"))?;
     let label = bridge_label("webview-fetch");
-    let window = WebviewWindowBuilder::new(app, &label, WebviewUrl::External(target))
+    let mut builder = WebviewWindowBuilder::new(app, &label, WebviewUrl::External(target))
         .title("WebView")
-        .visible(false)
-        .build()
-        .map_err(|error| error.to_string())?;
+        .visible(false);
+    if let Some(user_agent) = headers
+        .iter()
+        .find(|(name, _)| name.eq_ignore_ascii_case("user-agent"))
+        .map(|(_, value)| value)
+    {
+        builder = builder.user_agent(user_agent);
+    }
+    if let Some(cookie) = headers
+        .iter()
+        .find(|(name, _)| name.eq_ignore_ascii_case("cookie"))
+        .map(|(_, value)| value)
+    {
+        let script = format!(
+            "document.cookie = {};",
+            serde_json::to_string(cookie).map_err(|error| error.to_string())?
+        );
+        builder = builder.initialization_script(&script);
+    }
+    let window = builder.build().map_err(|error| error.to_string())?;
 
     sleep_ms(delay_ms).await;
 
@@ -187,7 +206,7 @@ pub async fn webview_fetch(
     web_js: Option<String>,
     delay_ms: u64,
 ) -> Result<WebViewBridgeResponse, String> {
-    fetch_inner(&app, url, web_js, delay_ms).await
+    fetch_inner(&app, url, web_js, delay_ms, BTreeMap::new()).await
 }
 
 #[tauri::command]

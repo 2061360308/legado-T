@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use http::header::{ACCEPT_ENCODING, CONTENT_TYPE, COOKIE, USER_AGENT};
 use engine_model::{
-    BoxFuture, CookieStore, Error, HttpFetcher, HttpRequest, HttpResponse, JsRequest, Result,
+    BoxFuture, CookieStore, Error, HttpFetcher, HttpRequest, HttpResponse, Result,
     WebViewBridge, WebViewRequest,
 };
 use reqwest::header::{HeaderMap as ReqHeaderMap, HeaderValue as ReqHeaderValue};
@@ -12,7 +12,9 @@ use reqwest::header::{HeaderMap as ReqHeaderMap, HeaderValue as ReqHeaderValue};
 use crate::cookie::{MemoryCookieStore, merge_cookies};
 use crate::encode;
 use crate::rate::RateLimiter;
-use crate::url::{DEFAULT_USER_AGENT, UrlContext, UrlRule};
+use crate::url::{DEFAULT_USER_AGENT, UrlRule};
+#[cfg(test)]
+use crate::url::UrlContext;
 
 #[derive(Clone)]
 pub struct HttpClientBuilder {
@@ -524,35 +526,6 @@ impl HttpFetcher for HttpClient {
     ) -> BoxFuture<'_, Result<HttpResponse>> {
         Box::pin(async move { self.send_js(request, rate.as_deref(), &rate_key).await })
     }
-}
-
-pub async fn check_login(
-    js: &str,
-    response: HttpResponse,
-    ctx: &UrlContext<'_>,
-) -> Result<HttpResponse> {
-    if js.trim().is_empty() {
-        return Ok(response);
-    }
-    let Some(evaluator) = ctx.js else {
-        return Err(Error::Js("loginCheckJs 需要 JsEvaluator（M3 接上）".into()));
-    };
-    evaluator
-        .eval_response(JsRequest {
-            script: js,
-            source: ctx.source,
-            base_url: ctx.base_url,
-            page: ctx.page,
-            key: ctx.key,
-            result: Some(&response.text),
-            result_bytes: None,
-            src: None,
-            response: Some(&response),
-            book: None,
-            chapter: None,
-            variables: None,
-        })
-        .await
 }
 
 #[cfg(test)]

@@ -176,6 +176,38 @@ impl<R: Runtime> ReaderPlatform<R> {
             .map_err(|error| error.to_string())
     }
 
+    pub fn scan_books_directory(
+        &self,
+        tree_uri: String,
+        document_id: String,
+    ) -> Result<Vec<SafEntry>, String> {
+        self.0
+            .run_mobile_plugin(
+                "scanBooksDirectory",
+                SafListArgs {
+                    tree_uri,
+                    document_id,
+                },
+            )
+            .map_err(|error| error.to_string())
+    }
+
+    pub fn delete_saf_documents(
+        &self,
+        tree_uri: String,
+        document_ids: Vec<String>,
+    ) -> Result<i64, String> {
+        self.0
+            .run_mobile_plugin(
+                "deleteSafDocuments",
+                SafDeleteArgs {
+                    tree_uri,
+                    document_ids,
+                },
+            )
+            .map_err(|error| error.to_string())
+    }
+
     pub fn prepare_books_import(
         &self,
         tree_uri: String,
@@ -228,6 +260,14 @@ struct SafListArgs {
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 struct SafPrepareArgs {
+    tree_uri: String,
+    document_ids: Vec<String>,
+}
+
+#[cfg(mobile)]
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct SafDeleteArgs {
     tree_uri: String,
     document_ids: Vec<String>,
 }

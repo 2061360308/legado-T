@@ -120,7 +120,7 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
     private val supportedExtensions = setOf(
-        "txt", "epub", "pdf", "umd", "mobi", "azw3", "azw"
+        "txt", "epub", "pdf", "umd", "mobi", "azw3", "azw", "zip"
     )
     private var readerActive = false
     private var volumeKeyEnabled = false
