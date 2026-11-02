@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { platform } from "@/runtime";
+import { fetchRemoteText } from "@/utils/remoteFetch";
 import {
   rssSourceDelete,
   rssSourceImport,
@@ -299,9 +300,7 @@ async function importOnline() {
   const url = importOnlineUrl.value.trim();
   if (!url) return;
   try {
-    const response = await platform.http.fetch(url);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const count = await rssSourceImport(await response.text());
+    const count = await rssSourceImport(await fetchRemoteText(url));
     importOnlineVisible.value = false;
     importOnlineUrl.value = "";
     await load();

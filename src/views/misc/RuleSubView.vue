@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { platform } from "@/runtime";
 import { kvGet, kvSet } from "@/core/application/config";
+import { fetchRemoteText } from "@/utils/remoteFetch";
 import { bookSourceImport } from "@/core/application/bookSources";
 import { rssSourceImport } from "@/core/application/rss";
 import { replaceRuleImport } from "@/core/application/rules";
@@ -98,9 +98,7 @@ async function removeItem(item: RuleSub) {
 async function openItem(item: RuleSub) {
   if (!item.url) return;
   try {
-    const response = await platform.http.fetch(item.url);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const text = await response.text();
+    const text = await fetchRemoteText(item.url);
     if (item.type === 0) {
       const count = await bookSourceImport(text);
       showMessage(`已导入 ${count} 个书源`);

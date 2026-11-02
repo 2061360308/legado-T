@@ -5,9 +5,12 @@ import {
   rssArticleClear,
   rssArticles,
   rssReadRecordAdd,
+  rssSortUrls,
   rssSourceList,
   rssSourceSave,
+  type RssSort,
 } from "@/core/application/rss";
+import { platform } from "@/runtime";
 import type { RssArticle, RssSource } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
@@ -32,28 +35,13 @@ const readRecordVisible = ref(false);
 let pullStart = 0;
 let pulling = false;
 
-const sortList = computed(() => {
-  const raw = String(source.value?.sortUrl || "").trim();
-  if (!raw || raw.startsWith("@js:") || raw.startsWith("<js>")) {
-    return [{ name: "", url: sourceUrl.value }];
-  }
-  const result: { name: string; url: string }[] = [];
-  for (const line of raw.split(/(?:&&|\n)+/)) {
-    const [name = "", url = ""] = line.split("::");
-    if (!url) continue;
-    result.push({
-      name,
-      url: url.startsWith("{{") ? url : absoluteUrl(sourceUrl.value, url),
-    });
-  }
-  return result.length ? result : [{ name: "", url: sourceUrl.value }];
-});
+const sortList = ref<RssSort[]>([]);
 
 const currentSort = computed(() => sortList.value[activeSort.value] ?? sortList.value[0]);
 const articleStyle = computed(() => Number(source.value?.articleStyle ?? 0));
 
 const menuItems = computed<PopupMenuItem[]>(() => [
-  ...(String(source.value?.loginUrl || "").trim()
+  ...(platform.capabilities.webview && String(source.value?.loginUrl || "").trim()
     ? [{ key: "login", label: "登录" }]
     : []),
   { key: "refreshSort", label: "刷新分类缓存" },
@@ -63,14 +51,6 @@ const menuItems = computed<PopupMenuItem[]>(() => [
   { key: "readRecord", label: "阅读记录" },
   { key: "clear", label: "清空文章" },
 ]);
-
-function absoluteUrl(base: string, url: string): string {
-  try {
-    return new URL(url, base).toString();
-  } catch {
-    return url;
-  }
-}
 
 function showMessage(text: string) {
   message.value = text;
@@ -83,6 +63,13 @@ async function loadSource() {
   const list = await rssSourceList();
   source.value = list.find((item) => item.sourceUrl === sourceUrl.value) ?? null;
   if (!source.value) throw new Error("订阅源不存在");
+  try {
+    sortList.value = await rssSortUrls(sourceUrl.value);
+  } catch (error) {
+    sortList.value = [{ name: "", url: sourceUrl.value }];
+    message.value = String(error);
+  }
+  activeSort.value = 0;
 }
 
 async function loadPage(target = 1) {
@@ -143,6 +130,10 @@ function openArticle(article: RssArticle) {
 
 async function onMenu(key: string) {
   if (key === "login") {
+    if (!platform.capabilities.webview) {
+      showMessage("当前运行时不支持 WebView 登录");
+      return;
+    }
     router.push({ path: "/source-login", query: { type: "rss", url: sourceUrl.value } });
   } else if (key === "refreshSort") {
     await refresh();

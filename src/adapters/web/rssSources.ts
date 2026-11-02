@@ -5,7 +5,11 @@ import type {
   RssStar,
 } from "@/core/domain";
 import { db } from "./database";
-import { rssArticles as rssArticlesWasm, rssContent as rssContentWasm } from "./wasm/engine/engineWasm";
+import {
+  evalEngine,
+  rssArticles as rssArticlesWasm,
+  rssContent as rssContentWasm,
+} from "./wasm/engine/engineWasm";
 
 export interface RssArticlePage {
   articles: RssArticle[];
@@ -50,12 +54,31 @@ export async function saveRssSource(
       await db.rssArticles.delete([article.origin, article.link]);
       await db.rssArticles.put({ ...article, origin: url });
     }
+    const variables = await db.sourceVariables
+      .where("bookSourceUrl")
+      .equals(oldUrl)
+      .toArray();
+    for (const row of variables) {
+      await db.sourceVariables.delete([row.bookSourceUrl, row.key]);
+      await db.sourceVariables.put({ ...row, bookSourceUrl: url });
+    }
     await db.rssSources.delete(oldUrl);
   }
   await db.rssSources.put(normalize({ ...source, sourceUrl: url }));
 }
 
 export async function deleteRssSource(sourceUrl: string): Promise<void> {
+  const articles = await db.rssArticles.where("origin").equals(sourceUrl).toArray();
+  await db.rssArticles.bulkDelete(
+    articles.map((article) => [article.origin, article.link] as [string, string]),
+  );
+  const variables = await db.sourceVariables
+    .where("bookSourceUrl")
+    .equals(sourceUrl)
+    .toArray();
+  await db.sourceVariables.bulkDelete(
+    variables.map((row) => [row.bookSourceUrl, row.key] as [string, string]),
+  );
   await db.rssSources.delete(sourceUrl);
 }
 
@@ -75,6 +98,48 @@ export async function importRssSources(json: string): Promise<number> {
 
 export async function exportRssSources(): Promise<string> {
   return JSON.stringify(await listRssSources(), null, 2);
+}
+
+function absoluteUrl(base: string, url: string): string {
+  if (url.startsWith("{{")) return url;
+  try {
+    return new URL(url, base).toString();
+  } catch {
+    return url;
+  }
+}
+
+function parseSortUrls(text: string, base: string): { name: string; url: string }[] {
+  const result: { name: string; url: string }[] = [];
+  for (const line of text.split(/(?:&&|\n)+/)) {
+    const value = line.trim();
+    if (!value) continue;
+    const separator = value.indexOf("::");
+    const name = separator >= 0 ? value.slice(0, separator).trim() : "";
+    const url = separator >= 0 ? value.slice(separator + 2).trim() : value;
+    if (!url) continue;
+    result.push({ name, url: absoluteUrl(base, url) });
+  }
+  return result.length ? result : [{ name: "", url: base }];
+}
+
+export async function rssSortUrls(sourceUrl: string): Promise<{ name: string; url: string }[]> {
+  const source = await db.rssSources.get(sourceUrl);
+  if (!source) throw new Error("RSS 源不存在");
+  const raw = String(source.sortUrl || "").trim();
+  const lower = raw.toLowerCase();
+  if (!lower.startsWith("@js:") && !lower.startsWith("<js>")) {
+    return parseSortUrls(raw, source.sourceUrl);
+  }
+  const script = lower.startsWith("@js:")
+    ? raw.slice(4).trim()
+    : raw.slice(4, raw.lastIndexOf("</") >= 0 ? raw.lastIndexOf("</") : raw.length).trim();
+  const text = await evalEngine({
+    script,
+    baseUrl: source.sourceUrl,
+    sourceJson: JSON.stringify(normalize(source)),
+  });
+  return parseSortUrls(text, source.sourceUrl);
 }
 
 export async function rssArticles(

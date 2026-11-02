@@ -63,6 +63,7 @@ export function createWebPlatform(): Platform {
     systemBars: false,
     volumeKeys: false,
     backgroundAudio: false,
+    webview: false,
     opfs:
       typeof navigator !== "undefined" &&
       typeof navigator.storage?.getDirectory === "function",

@@ -42,10 +42,11 @@
 
 尚未完成：
 
-- Android WebView/CookieManager 仍需真机联调；Web 运行时明确不支持 WebView 登录。
-- Android MediaSession 已接入锁屏播放/暂停/停止，但仍需真机验证通知按钮与后台恢复行为。
-- 字典独立查词页、日志/帮助、部分导出选项仍未接入；离线缓存已支持按书/全部下载在线章节。
+- Android WebView/CookieManager 仍需真机联调；Web 运行时已隐藏 WebView 登录入口。
+- Android MediaSession 已接入锁屏播放/暂停/停止，并补充 Android 13 通知运行时权限，但仍需真机验证通知按钮与后台恢复行为。
+- 日志/帮助、部分导出选项仍未接入；离线缓存已支持按书/全部下载在线章节。
 - RSS 默认规则导入、分组管理弹窗、订阅源编辑的自动补全仍为简化实现。
+- RSS 源删除级联、Web 源变量迁移、JS 动态 sortUrl、Web 在线导入代理、独立字典查词页已完成。
 - Android Release APK 仍未签名，发布前需要配置签名。
 - Web wasm 首次加载约 9.1 MB，后续可继续做体积优化。
 

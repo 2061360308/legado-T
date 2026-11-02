@@ -8,6 +8,7 @@ import {
   webviewLogin,
 } from "@/core/application/bookSources";
 import { rssSourceList } from "@/core/application/rss";
+import { platform } from "@/runtime";
 import type { BookSource, RssSource, WebViewLoginResult } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 
@@ -45,6 +46,10 @@ async function load() {
 async function login() {
   const target = loginUrl.value.trim();
   if (!target || running.value) return;
+  if (!platform.capabilities.webview) {
+    message.value = "当前运行时不支持 WebView 登录";
+    return;
+  }
   running.value = true;
   message.value = "";
   result.value = null;

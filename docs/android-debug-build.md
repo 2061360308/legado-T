@@ -25,7 +25,7 @@ Debug APK 保留完整 Rust 调试符号，且 `.so` 在 APK 中按未压缩方�
 
 | 产物 | 体积 |
 |---|---:|
-| arm64 Release APK | **23.6 MiB** |
+| arm64 Release APK | **23.7 MiB** |
 | x86_64 Release APK | **26.5 MiB** |
 | universal Release APK | **47.4 MiB** |
 | arm64 Release `.so` | **20.25 MiB** |

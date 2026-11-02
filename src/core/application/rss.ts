@@ -12,6 +12,11 @@ export interface RssArticlePage {
   next?: string | null;
 }
 
+export interface RssSort {
+  name: string;
+  url: string;
+}
+
 export function rssSourceList(): Promise<RssSource[]> {
   return invoke<RssSource[]>(COMMANDS.rssSourceList);
 }
@@ -36,6 +41,10 @@ export function rssSourceImport(json: string): Promise<number> {
 
 export function rssSourceExport(): Promise<string> {
   return invoke<string>(COMMANDS.rssSourceExport);
+}
+
+export function rssSortUrls(sourceUrl: string): Promise<RssSort[]> {
+  return invoke<RssSort[]>(COMMANDS.rssSortUrls, { sourceUrl });
 }
 
 export function rssArticles(

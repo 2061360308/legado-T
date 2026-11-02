@@ -69,6 +69,7 @@ export interface PlatformCapabilities {
   systemBars: boolean;
   volumeKeys: boolean;
   backgroundAudio: boolean;
+  webview: boolean;
   opfs: boolean;
   sqliteWasm: boolean;
   webdavProxy: boolean;

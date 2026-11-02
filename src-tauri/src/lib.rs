@@ -166,6 +166,7 @@ pub fn run() {
             commands::rss::rss_source_delete,
             commands::rss::rss_source_import,
             commands::rss::rss_source_export,
+            commands::rss::rss_sort_urls,
             commands::rss::rss_articles,
             commands::rss::rss_article_list,
             commands::rss::rss_article_clear,

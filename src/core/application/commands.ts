@@ -87,6 +87,7 @@ export const COMMANDS = {
   rssSourceDelete: "rss_source_delete",
   rssSourceImport: "rss_source_import",
   rssSourceExport: "rss_source_export",
+  rssSortUrls: "rss_sort_urls",
   rssArticles: "rss_articles",
   rssArticleList: "rss_article_list",
   rssArticleClear: "rss_article_clear",

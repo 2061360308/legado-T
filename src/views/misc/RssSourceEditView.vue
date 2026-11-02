@@ -6,6 +6,7 @@ import {
   rssSourceSave,
 } from "@/core/application/rss";
 import { bookSourceClearCookies } from "@/core/application/bookSources";
+import { platform } from "@/runtime";
 import type { RssSource } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
@@ -38,7 +39,9 @@ const tabs: { key: TabKey; label: string }[] = [
 const menuItems = computed<PopupMenuItem[]>(() => [
   { key: "save", label: "保存" },
   { key: "debug", label: "调试" },
-  { key: "login", label: "登录" },
+  ...(platform.capabilities.webview && String(draft.value.loginUrl || "").trim()
+    ? [{ key: "login", label: "登录" }]
+    : []),
   { key: "variables", label: "设置源变量" },
   { key: "clearCookie", label: "清除 Cookie" },
   { key: "autoComplete", label: "自动补全", checked: autoComplete.value },
@@ -148,6 +151,10 @@ async function onMenu(key: string) {
   else if (key === "debug") {
     await saveAndGo("/rss-source-debug", { sourceUrl: draft.value.sourceUrl });
   } else if (key === "login") {
+    if (!platform.capabilities.webview) {
+      showMessage("当前运行时不支持 WebView 登录");
+      return;
+    }
     await saveAndGo("/source-login", { type: "rss" });
   } else if (key === "variables") {
     await saveAndGo("/book-source-variables", { type: "rss" });

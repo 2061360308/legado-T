@@ -1338,6 +1338,8 @@ export function createWebBackend() {
           return (await rssSources.importRssSources(argString(args, "json"))) as T;
         case COMMANDS.rssSourceExport:
           return (await rssSources.exportRssSources()) as T;
+        case COMMANDS.rssSortUrls:
+          return (await rssSources.rssSortUrls(argString(args, "sourceUrl"))) as T;
         case COMMANDS.rssArticles:
           return (await rssSources.rssArticles(
             argString(args, "sourceUrl"),

@@ -1,13 +1,49 @@
-use engine_model::{RssArticle, RssSource};
+use engine_model::{JsRequest, RssArticle, RssSource};
 use rusqlite::{params, OptionalExtension};
 use serde_json::{json, Value};
 use tauri::{AppHandle, State};
+use url::Url;
 
 use crate::data::source_repo::RssSourceRepo;
 use crate::engine::create_pipeline;
 use crate::state::AppState;
 
 type CmdResult<T> = std::result::Result<T, String>;
+
+fn absolute_url(base: &str, value: &str) -> String {
+    if value.starts_with("{{") {
+        return value.to_string();
+    }
+    Url::parse(base)
+        .and_then(|base| base.join(value))
+        .map(|url| url.to_string())
+        .unwrap_or_else(|_| value.to_string())
+}
+
+fn parse_sort_urls(text: &str, base: &str) -> Vec<Value> {
+    let mut out = Vec::new();
+    for line in text.split("&&").flat_map(|value| value.split('\n')) {
+        let line = line.trim();
+        if line.is_empty() {
+            continue;
+        }
+        let (name, url) = line
+            .split_once("::")
+            .map(|(name, url)| (name.trim(), url.trim()))
+            .unwrap_or(("", line));
+        if url.is_empty() {
+            continue;
+        }
+        out.push(json!({
+            "name": name,
+            "url": absolute_url(base, url),
+        }));
+    }
+    if out.is_empty() {
+        out.push(json!({ "name": "", "url": base }));
+    }
+    out
+}
 
 fn value_string(value: &Value, key: &str) -> String {
     value
@@ -183,6 +219,16 @@ pub fn rss_source_save(
 #[tauri::command]
 pub fn rss_source_delete(state: State<'_, AppState>, source_url: String) -> CmdResult<()> {
     let conn = state.conn.lock().map_err(|error| error.to_string())?;
+    conn.execute(
+        "DELETE FROM rss_articles WHERE sourceUrl = ?1",
+        params![source_url],
+    )
+    .map_err(|error| error.to_string())?;
+    conn.execute(
+        "DELETE FROM source_variables WHERE bookSourceUrl = ?1",
+        params![source_url],
+    )
+    .map_err(|error| error.to_string())?;
     RssSourceRepo::delete(&conn, &source_url).map_err(|error| error.to_string())
 }
 
@@ -208,6 +254,66 @@ pub fn rss_source_import(state: State<'_, AppState>, json: String) -> CmdResult<
 pub fn rss_source_export(state: State<'_, AppState>) -> CmdResult<String> {
     let sources = load_sources(&state)?;
     serde_json::to_string_pretty(&sources).map_err(|error| error.to_string())
+}
+
+#[tauri::command(async)]
+pub async fn rss_sort_urls(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    source_url: String,
+) -> CmdResult<Vec<Value>> {
+    let source = {
+        let conn = state.conn.lock().map_err(|error| error.to_string())?;
+        RssSourceRepo::list(&conn)
+            .map_err(|error| error.to_string())?
+            .into_iter()
+            .find(|source| source.source_url == source_url)
+            .ok_or_else(|| "RSS 源不存在".to_string())?
+    };
+    let raw = source.sort_url.clone().unwrap_or_default();
+    let trimmed = raw.trim();
+    let lower = trimmed.to_lowercase();
+    if !lower.starts_with("@js:") && !lower.starts_with("<js>") {
+        return Ok(parse_sort_urls(trimmed, &source.source_url));
+    }
+    let script = if lower.starts_with("@js:") {
+        trimmed[4..].trim().to_string()
+    } else {
+        let end = trimmed.rfind("</").unwrap_or(trimmed.len());
+        trimmed[4..end].trim().to_string()
+    };
+    let base_url = source.source_url.clone();
+    let source_for_js = source.clone();
+    let text = tauri::async_runtime::spawn_blocking(move || -> Result<String, String> {
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|error| error.to_string())?;
+        let pipeline = create_pipeline(&app)?;
+        let request = JsRequest {
+            script: &script,
+            source: Some(&source_for_js),
+            base_url: &base_url,
+            page: None,
+            key: None,
+            result: None,
+            result_bytes: None,
+            src: None,
+            response: None,
+            book: None,
+            chapter: None,
+            variables: None,
+        };
+        runtime
+            .block_on(engine_model::JsEvaluator::eval(
+                pipeline.js().as_ref(),
+                request,
+            ))
+            .map_err(|error| error.to_string())
+    })
+    .await
+    .map_err(|error| error.to_string())??;
+    Ok(parse_sort_urls(&text, &source.source_url))
 }
 
 #[tauri::command]

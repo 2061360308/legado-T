@@ -9,6 +9,7 @@ import {
   rssStarGet,
   rssStarSave,
 } from "@/core/application/rss";
+import { platform } from "@/runtime";
 import type { RssArticle, RssSource, RssStar } from "@/core/domain";
 import { sanitizeHtml } from "@/utils/ruleQuery";
 import TitleBar from "@/components/android/TitleBar.vue";
@@ -38,7 +39,7 @@ const menuItems = computed<PopupMenuItem[]>(() => [
   { key: "star", label: "收藏" },
   { key: "share", label: "分享" },
   { key: "aloud", label: speaking.value ? "停止朗读" : "朗读" },
-  ...(String(source.value?.loginUrl || "").trim()
+  ...(platform.capabilities.webview && String(source.value?.loginUrl || "").trim()
     ? [{ key: "login", label: "登录" }]
     : []),
   { key: "browser", label: "浏览器打开" },
@@ -162,6 +163,10 @@ async function onMenu(key: string) {
     }
   } else if (key === "aloud") toggleAloud();
   else if (key === "login") {
+    if (!platform.capabilities.webview) {
+      message.value = "当前运行时不支持 WebView 登录";
+      return;
+    }
     router.push({ path: "/source-login", query: { type: "rss", url: sourceUrl.value } });
   } else if (key === "browser") {
     window.open(article.value?.link || link.value, "_blank", "noopener,noreferrer");

@@ -2753,6 +2753,7 @@ dependencies = [
  "tauri-plugin-reader-platform",
  "thiserror 1.0.69",
  "tokio",
+ "url",
  "zip 0.6.6",
 ]
 

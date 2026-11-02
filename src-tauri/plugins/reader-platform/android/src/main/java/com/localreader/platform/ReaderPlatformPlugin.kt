@@ -1,5 +1,6 @@
 package com.localreader.platform
 
+import android.Manifest
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.ComponentName
@@ -30,6 +31,8 @@ import androidx.core.view.WindowInsetsCompat
 import app.tauri.annotation.ActivityCallback
 import app.tauri.annotation.Command
 import app.tauri.annotation.InvokeArg
+import app.tauri.annotation.Permission
+import app.tauri.annotation.PermissionCallback
 import app.tauri.annotation.TauriPlugin
 import app.tauri.plugin.Invoke
 import app.tauri.plugin.JSArray
@@ -123,7 +126,14 @@ class SafDeleteArgs {
     var documentIds: Array<String> = emptyArray()
 }
 
-@TauriPlugin
+@TauriPlugin(
+    permissions = [
+        Permission(
+            alias = "notifications",
+            strings = [Manifest.permission.POST_NOTIFICATIONS]
+        )
+    ]
+)
 class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
     private val handler = Handler(Looper.getMainLooper())
     private val clearKeepScreenOn = Runnable {
@@ -138,6 +148,8 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
     private var disableReturnKey = false
     private var webView: WebView? = null
     private var originalWindowCallback: Window.Callback? = null
+    private var pendingAudioTitle = ""
+    private var pendingAudioPlaying = true
     private var mediaReceiverRegistered = false
     private val mediaCommandReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -207,16 +219,46 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
     fun startBackgroundAudio(invoke: Invoke) {
         try {
             val args = invoke.parseArgs(BackgroundAudioArgs::class.java)
-            val intent = Intent(activity, BackgroundAudioService::class.java).apply {
-                action = BackgroundAudioService.ACTION_START
-                putExtra(BackgroundAudioService.EXTRA_TITLE, args.title)
-                putExtra(BackgroundAudioService.EXTRA_PLAYING, args.playing)
+            if (
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(
+                    activity,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                pendingAudioTitle = args.title
+                pendingAudioPlaying = args.playing
+                requestPermissionForAliases(
+                    arrayOf("notifications"),
+                    invoke,
+                    "notificationPermissionResult"
+                )
+                return
             }
-            ContextCompat.startForegroundService(activity, intent)
+            startAudioService(args.title, args.playing)
             invoke.resolve()
         } catch (error: Exception) {
             invoke.reject(error.message ?: "startBackgroundAudio failed")
         }
+    }
+
+    @PermissionCallback
+    fun notificationPermissionResult(invoke: Invoke) {
+        try {
+            startAudioService(pendingAudioTitle, pendingAudioPlaying)
+            invoke.resolve()
+        } catch (error: Exception) {
+            invoke.reject(error.message ?: "startBackgroundAudio failed")
+        }
+    }
+
+    private fun startAudioService(title: String, playing: Boolean) {
+        val intent = Intent(activity, BackgroundAudioService::class.java).apply {
+            action = BackgroundAudioService.ACTION_START
+            putExtra(BackgroundAudioService.EXTRA_TITLE, title)
+            putExtra(BackgroundAudioService.EXTRA_PLAYING, playing)
+        }
+        ContextCompat.startForegroundService(activity, intent)
     }
 
     @Command

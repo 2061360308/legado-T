@@ -70,6 +70,7 @@ export function createTauriPlatform(): Platform {
     systemBars: false,
     volumeKeys: false,
     backgroundAudio: false,
+    webview: true,
     opfs: false,
     sqliteWasm: false,
     webdavProxy: false,
