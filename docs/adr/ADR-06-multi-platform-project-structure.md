@@ -2,7 +2,7 @@
 
 ## 状态
 
-已定案（待实施）。
+已实施。
 
 相关执行计划：`docs/web-migration-plan.md`。
 

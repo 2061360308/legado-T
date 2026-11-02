@@ -2,7 +2,7 @@
 
 ## 状态
 
-待执行。
+已实施，部分浏览器/真机能力仍需验证。
 
 相关架构决策：`docs/adr/ADR-06-multi-platform-project-structure.md`。
 
@@ -25,11 +25,10 @@
 
 ## 当前基线
 
-- 前端 `src/api` 直接调用 Tauri `invoke`。
-- 后端数据层依赖 `rusqlite`，文件层依赖 `BookStorage`。
+- 前端通过 `src/core/application` 和 `src/runtime.ts` 调用平台适配层。
+- PC/Android 数据层依赖 `rusqlite`，Web 数据层依赖 IndexedDB。
 - Android 原生能力位于 `src-tauri/plugins/reader-platform`。
-- 现有备份只导出 JSON 元数据，不包含书文件、封面、字体。
-- Web 端尚无运行时适配器、IndexedDB 数据层和 WASM 构建。
+- Web 已具备运行时适配器、IndexedDB 数据层和 WASM 构建。
 
 ## 核心决策
 

@@ -1,6 +1,8 @@
 # Android Debug APK 从头构建
 
 > 常用命令见 `docs/commands.md`。日常调试/发布优先使用 `npm run android:debug`、`npm run android:release`。
+>
+> 默认构建 `arm64-v8a + x86_64`，使用 `-Target split`；universal 仅在显式使用 `-Target all` 时生成。
 
 本文记录 Windows 下从零构建 `local-reader` Android Debug APK 的步骤、已知问题和当前体积原因。
 
@@ -48,7 +50,7 @@ CARGO_PROFILE_RELEASE_STRIP=symbols
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 `
-  -Target all -Release -SizeOptimized
+  -Target split -Release -SizeOptimized
 ```
 
 Release APK 已配置本机签名，输出为 `*-release.apk`。签名配置读取 `src-tauri/gen/android/app/key.properties`，keystore 保存于 `C:\Users\20613\.local\share\local-reader\keystore\local-reader-release.jks`。`key.properties` 已被 gitignore，不提交仓库。
@@ -58,8 +60,8 @@ Release APK 已配置本机签名，输出为 `*-release.apk`。签名配置读�
 ## 推荐：一条命令构建
 
 ```powershell
-cd C:\Users\20613\Desktop\legado\local-reader
-powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 -Target all
+cd <repo-root>
+powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 -Target split
 ```
 
 只构建单 ABI：
@@ -72,7 +74,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 -Target all
 构建体积优先的 Release：
 
 ```powershell
-.\scripts\build-android.ps1 -Target all -Release -SizeOptimized
+.\scripts\build-android.ps1 -Target split -Release -SizeOptimized
 ```
 
 脚本会自动：
@@ -111,7 +113,7 @@ $env:LIBCLANG_PATH = "C:\Users\20613\.pyenv\pyenv-win\versions\3.13.13\Lib\site-
 ### 1. 构建前端
 
 ```powershell
-cd C:\Users\20613\Desktop\legado\local-reader
+cd <repo-root>
 npm run build
 ```
 

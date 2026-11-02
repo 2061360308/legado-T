@@ -14,6 +14,18 @@ src/adapters/web/wasm/shelf
 src/adapters/web/wasm/engine/*.wasm
 server/.wrangler
 
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+key.properties
+.env
+.env.*
+!.env.example
+.dev.vars
+
 .DS_Store
 .vscode/*
 !.vscode/extensions.json

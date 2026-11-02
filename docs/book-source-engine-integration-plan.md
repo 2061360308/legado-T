@@ -20,7 +20,7 @@
 - 变量页已接入 JSON 批量导入/导出。
 - 图片源已接入多图抓取、漫画阅读页、缩放、章节切换；音频源已接入在线资源播放；文件源已接入文件地址页。
 - 书籍信息/目录按书源类型自动进入文本、音频、图片或文件阅读页。
-- 已验证 `npm run typecheck`、`cargo check -p local-reader`、`npm run tauri:build -- --no-bundle`。
+- 已验证 `npm run typecheck`、`cargo check -p local-reader`、`npm run build:pc`。
 
 已完成：
 
@@ -38,7 +38,7 @@
 - Web 书源导出、书架导出、缓存书籍导出和书单导入已接入。
 - 同源代理增加重定向上限、重定向目标复检、上传/下载大小检查。
 - 新增 `npm run check:engine-wasm` wasm 导出与基础 ABI 冒烟测试。
-- Android arm64/x86_64/universal Release APK 均构建成功。
+- Android arm64-v8a / x86_64 Release APK 构建成功；universal 仅作为手动可选产物。
 
 尚未完成：
 
@@ -47,7 +47,7 @@
 - 日志/帮助、部分导出选项仍未接入；离线缓存已支持按书/全部下载在线章节。
 - RSS 默认规则导入、分组管理弹窗、订阅源编辑的自动补全仍为简化实现。
 - RSS 源删除级联、Web 源变量迁移、JS 动态 sortUrl、Web 在线导入代理、独立字典查词页已完成。
-- Android Release APK 仍未签名，发布前需要配置签名。
+- Android Release APK 已支持本地 `key.properties` 签名和 CI Secrets 签名。
 - Web wasm 首次加载约 9.1 MB，后续可继续做体积优化。
 
 ## 目标
@@ -689,7 +689,7 @@ npm run build:web
 Android：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 -Target all -Release -SizeOptimized
+powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 -Target split -Release -SizeOptimized
 ```
 
 `scripts/build-wasm.mjs` 产物：
@@ -717,8 +717,8 @@ engine-js-wasm -> src/adapters/web/wasm/engine/engine_js_wasm.wasm
 
 ## 风险
 
-1. rquickjs wasm 尚未落地，必须先做 spike。
-2. `wasm32-unknown-unknown` 与 `wasm-rquickjs` 的 `wasm32-wasip2` 目标不同。
+1. `engine-js-wasm` 已使用 `wasm32-wasip1` + WASI SDK；其余 wasm 使用 `wasm32-unknown-unknown`。
+2. 两类 wasm 目标不同，构建脚本必须分别处理。
 3. 同步 API 需要同步 XHR 或 Atomics 桥接。
 4. Web 必须同源代理，独立代理域会遇到 CORS/preflight/credentials 问题。
 5. WebView 源在 Web 明确禁用。
