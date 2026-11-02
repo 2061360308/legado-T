@@ -1,7 +1,4 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
-import navigationGraph from "@/design/reports/navigation-graph.json";
-
-const shellStart = (navigationGraph as { start?: string }).start ?? "activity_welcome";
 
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "bookshelf", component: () => import("@/views/bookshelf/BookshelfView.vue") },
@@ -216,49 +213,6 @@ const routes: RouteRecordRaw[] = [
     path: "/rule-sub",
     name: "rule-sub",
     component: () => import("@/views/misc/RuleSubView.vue"),
-  },
-  {
-    path: "/legacy",
-    name: "legacy",
-    component: () => import("@/views/legacy/LegacyGalleryView.vue"),
-    meta: { keepAlive: false },
-  },
-  {
-    path: "/generated",
-    name: "generated",
-    component: () => import("@/views/legacy/GeneratedGalleryView.vue"),
-    meta: { keepAlive: false },
-  },
-  {
-    path: "/generated/:kind/:name",
-    name: "generated-xml",
-    component: () => import("@/views/legacy/GeneratedXmlPage.vue"),
-    meta: { keepAlive: false },
-  },
-  { path: "/shell", redirect: `/shell/${shellStart}` },
-  {
-    path: "/shell/:name",
-    name: "shell",
-    component: () => import("@/views/legacy/AppShellView.vue"),
-    meta: { keepAlive: false },
-  },
-  {
-    path: "/legacy/menu/:name",
-    name: "legacy-menu",
-    component: () => import("@/views/legacy/LegacyMenuPage.vue"),
-    meta: { keepAlive: false },
-  },
-  {
-    path: "/legacy/pref/:name",
-    name: "legacy-pref",
-    component: () => import("@/views/legacy/LegacyPrefPage.vue"),
-    meta: { keepAlive: false },
-  },
-  {
-    path: "/legacy/:name",
-    name: "legacy-layout",
-    component: () => import("@/views/legacy/LegacyLayoutPage.vue"),
-    meta: { keepAlive: false },
   },
 ];
 

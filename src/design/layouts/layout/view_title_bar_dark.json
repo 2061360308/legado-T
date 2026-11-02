@@ -1,9 +1,0 @@
-{
-  "tag": "Toolbar",
-  "attrs": {
-    "id": "toolbar",
-    "layout_width": "match_parent",
-    "layout_height": "wrap_content"
-  },
-  "children": []
-}

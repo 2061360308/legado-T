@@ -1,9 +1,0 @@
-{
-  "tag": "ImageView",
-  "attrs": {
-    "id": "preview",
-    "layout_width": 48,
-    "layout_height": 48
-  },
-  "children": []
-}
