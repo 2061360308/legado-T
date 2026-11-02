@@ -1,5 +1,7 @@
 # Legado 3.0 Rust 规则引擎对比报告
 
+> 历史快照报告：以下提交号、外部路径和统计仅代表 2026-10-29 的调研状态，不代表当前 LegadoT 仓库状态。
+
 - 对比日期：2026-10-29
 - Kotlin 基线：`C:\Users\20613\Desktop\legado`，提交 `dfb2fdd`
 - 目标项目：`C:\Users\20613\Desktop\legado\local-reader`

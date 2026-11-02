@@ -20,3 +20,5 @@ npm run android:ui
 ```
 
 本项目整体按 GPL-3.0 兼容方式分发。
+
+注意：`src-tauri/crates/engine-*` 中的书源引擎 crate 在 `Cargo.toml` 中声明 `AGPL-3.0`。分发这些 crate 时需同时遵守 AGPL-3.0；项目许可证口径后续需统一确认。
