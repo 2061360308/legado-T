@@ -8,6 +8,7 @@ license = "AGPL-3.0"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+base64.workspace = true
 engine-flow = { path = "../engine-flow", default-features = false }
 engine-http-native = { path = "../engine-http-native", default-features = false }
 engine-js = { path = "../engine-js" }

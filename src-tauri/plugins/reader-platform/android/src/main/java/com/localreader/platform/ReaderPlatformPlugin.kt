@@ -20,6 +20,7 @@ import android.view.WindowManager
 import android.webkit.CookieManager
 import android.webkit.WebView
 import androidx.activity.result.ActivityResult
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -82,6 +83,11 @@ class ReaderKeyModeArgs {
     var volumeKeyEnabled: Boolean = false
     var keyPageOnLongPress: Boolean = false
     var disableReturnKey: Boolean = false
+}
+
+@InvokeArg
+class BackgroundAudioArgs {
+    var title: String = ""
 }
 
 @InvokeArg
@@ -182,6 +188,31 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
             invoke.resolve()
         } catch (ex: Exception) {
             invoke.reject(ex.message)
+        }
+    }
+
+    @Command
+    fun startBackgroundAudio(invoke: Invoke) {
+        try {
+            val args = invoke.parseArgs(BackgroundAudioArgs::class.java)
+            val intent = Intent(activity, BackgroundAudioService::class.java).apply {
+                action = BackgroundAudioService.ACTION_START
+                putExtra(BackgroundAudioService.EXTRA_TITLE, args.title)
+            }
+            ContextCompat.startForegroundService(activity, intent)
+            invoke.resolve()
+        } catch (error: Exception) {
+            invoke.reject(error.message ?: "startBackgroundAudio failed")
+        }
+    }
+
+    @Command
+    fun stopBackgroundAudio(invoke: Invoke) {
+        try {
+            activity.stopService(Intent(activity, BackgroundAudioService::class.java))
+            invoke.resolve()
+        } catch (error: Exception) {
+            invoke.reject(error.message ?: "stopBackgroundAudio failed")
         }
     }
 

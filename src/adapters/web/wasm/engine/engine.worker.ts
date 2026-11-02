@@ -32,6 +32,13 @@ async function run(op: string, args: unknown[]): Promise<unknown> {
         args[2] as string,
         (args[3] as string | null | undefined) ?? null,
       );
+    case "image":
+      return core.sourceImage(
+        args[0] as string,
+        args[1] as string,
+        args[2] as string,
+        (args[3] as string | null | undefined) ?? null,
+      );
     case "rssArticles":
       return core.rssArticles(
         args[0] as string,

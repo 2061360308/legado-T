@@ -98,6 +98,16 @@ type WasmExports = {
     nextUrlPtr: number,
     nextUrlLen: number,
   ): number;
+  engine_source_image(
+    sourcePtr: number,
+    sourceLen: number,
+    bookPtr: number,
+    bookLen: number,
+    chapterPtr: number,
+    chapterLen: number,
+    urlPtr: number,
+    urlLen: number,
+  ): number;
   engine_rss_articles(
     sourcePtr: number,
     sourceLen: number,
@@ -542,6 +552,29 @@ export function sourceResource(
         chapter.len,
         next.ptr,
         next.len,
+      ),
+    (value) => value,
+  );
+}
+
+export function sourceImage(
+  sourceJson: string,
+  bookJson: string,
+  chapterJson: string,
+  url?: string | null,
+): Promise<string> {
+  return callWithText(
+    [sourceJson, bookJson, chapterJson, url ?? ""],
+    (exports, [source, book, chapter, target]) =>
+      exports.engine_source_image(
+        source.ptr,
+        source.len,
+        book.ptr,
+        book.len,
+        chapter.ptr,
+        chapter.len,
+        target.ptr,
+        target.len,
       ),
     (value) => value,
   );

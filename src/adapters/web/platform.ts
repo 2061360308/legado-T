@@ -199,6 +199,8 @@ export function createWebPlatform(): Platform {
       return { cancelled: false, path: target, name: picked.file.name };
     },
     async setReaderKeyMode() {},
+    async startBackgroundAudio() {},
+    async stopBackgroundAudio() {},
     async pickSafDirectory(): Promise<SafDirectoryLocation> {
       return unsupported("pickSafDirectory");
     },

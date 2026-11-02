@@ -37,11 +37,10 @@
 尚未完成：
 
 - Android WebView/CookieManager 仍需真机联调；Web 运行时明确不支持 WebView 登录。
-- Web 图片源暂未执行 `imageDecode` 规则，图片抓取走同源代理。
-- Android 后台朗读/锁屏控制仍未实现前台服务与 MediaSession。
-- Tauri CSP 仍为 `null`，发布前需要收紧。
+- Android 后台音频已接入前台服务和通知停止按钮，但尚未接入完整 MediaSession 锁屏播放/暂停控制。
 - 日志、帮助、书单导入、字典规则页、缓存书籍下载全部/导出等 UI 仍为占位或未接入。
-- Android Release APK 仍未签名，x86_64/universal 未在本轮回归。
+- Android Release APK 仍未签名，发布前需要配置签名。
+- Web wasm 首次加载约 9.1 MB，后续可继续做体积优化。
 
 ## 目标
 

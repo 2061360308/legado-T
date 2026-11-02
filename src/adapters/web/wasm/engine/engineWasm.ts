@@ -103,6 +103,15 @@ export function sourceContent(
   return request<string>("content", [sourceJson, bookJson, chapterJson, nextUrl ?? null]);
 }
 
+export function sourceImage(
+  sourceJson: string,
+  bookJson: string,
+  chapterJson: string,
+  url?: string | null,
+): Promise<string> {
+  return request<string>("image", [sourceJson, bookJson, chapterJson, url ?? null]);
+}
+
 export function rssArticles(
   sourceJson: string,
   sortName: string,

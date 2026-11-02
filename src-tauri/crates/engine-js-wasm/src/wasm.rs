@@ -829,6 +829,72 @@ pub extern "C" fn engine_source_resource(
     })
 }
 
+fn image_mime(bytes: &[u8]) -> &'static str {
+    if bytes.starts_with(&[0x89, b'P', b'N', b'G']) {
+        "image/png"
+    } else if bytes.starts_with(&[0xFF, 0xD8]) {
+        "image/jpeg"
+    } else if bytes.starts_with(b"GIF8") {
+        "image/gif"
+    } else if bytes.len() > 12 && &bytes[0..4] == b"RIFF" && &bytes[8..12] == b"WEBP" {
+        "image/webp"
+    } else if bytes.starts_with(b"BM") {
+        "image/bmp"
+    } else if bytes.starts_with(b"<svg") || bytes.starts_with(b"<?xml") {
+        "image/svg+xml"
+    } else {
+        "image/jpeg"
+    }
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn engine_source_image(
+    source_ptr: *const u8,
+    source_len: usize,
+    book_ptr: *const u8,
+    book_len: usize,
+    chapter_ptr: *const u8,
+    chapter_len: usize,
+    url_ptr: *const u8,
+    url_len: usize,
+) -> i32 {
+    use base64::Engine as _;
+    let source = match source_arg(source_ptr, source_len) {
+        Ok(value) => value,
+        Err(error) => return set_error(error),
+    };
+    let mut book = match book_arg(book_ptr, book_len) {
+        Ok(value) => value,
+        Err(error) => return set_error(error),
+    };
+    let mut chapter = match chapter_arg(chapter_ptr, chapter_len) {
+        Ok(value) => value,
+        Err(error) => return set_error(error),
+    };
+    let url = match text_arg(url_ptr, url_len) {
+        Ok(value) => value,
+        Err(error) => return set_error(error),
+    };
+    run_text(|| {
+        let pipeline = pipeline();
+        let resource = if url.trim().is_empty() {
+            block_on(pipeline.resource(&source, &mut book, &mut chapter, None))?
+        } else {
+            url
+        };
+        let bytes = block_on(pipeline.fetch_image(
+            &source,
+            &mut book,
+            &mut chapter,
+            &resource,
+            false,
+        ))?;
+        let mime = image_mime(&bytes);
+        let encoded = base64::engine::general_purpose::STANDARD.encode(&bytes);
+        Ok(format!("data:{mime};base64,{encoded}"))
+    })
+}
+
 #[unsafe(no_mangle)]
 pub extern "C" fn engine_rss_articles(
     source_ptr: *const u8,

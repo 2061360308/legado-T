@@ -154,6 +154,18 @@ impl<R: Runtime> ReaderPlatform<R> {
             .map_err(|error| error.to_string())
     }
 
+    pub fn start_background_audio(&self, title: String) -> Result<(), String> {
+        self.0
+            .run_mobile_plugin("startBackgroundAudio", BackgroundAudioArgs { title })
+            .map_err(|error| error.to_string())
+    }
+
+    pub fn stop_background_audio(&self) -> Result<(), String> {
+        self.0
+            .run_mobile_plugin("stopBackgroundAudio", ())
+            .map_err(|error| error.to_string())
+    }
+
     pub fn pick_books_directory(&self) -> Result<SafDirectoryLocation, String> {
         self.0
             .run_mobile_plugin("pickBooksDirectory", ())
@@ -239,6 +251,13 @@ struct ReaderKeyModeArgs {
     volume_key_enabled: bool,
     key_page_on_long_press: bool,
     disable_return_key: bool,
+}
+
+#[cfg(mobile)]
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct BackgroundAudioArgs {
+    title: String,
 }
 
 #[cfg(mobile)]

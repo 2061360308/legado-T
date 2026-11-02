@@ -16,6 +16,8 @@ Reader platform capabilities
 - `allow-pick-image`
 - `allow-pick-font-file`
 - `allow-set-reader-key-mode`
+- `allow-start-background-audio`
+- `allow-stop-background-audio`
 - `allow-get-web-view-cookie`
 - `allow-set-web-view-cookie`
 - `allow-pick-books-directory`
@@ -550,6 +552,58 @@ Enables the set_web_view_cookie command without any pre-configured scope.
 <td>
 
 Denies the set_web_view_cookie command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:allow-start-background-audio`
+
+</td>
+<td>
+
+Enables the start_background_audio command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:deny-start-background-audio`
+
+</td>
+<td>
+
+Denies the start_background_audio command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:allow-stop-background-audio`
+
+</td>
+<td>
+
+Enables the stop_background_audio command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`reader-platform:deny-stop-background-audio`
+
+</td>
+<td>
+
+Denies the stop_background_audio command without any pre-configured scope.
 
 </td>
 </tr>

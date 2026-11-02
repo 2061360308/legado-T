@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { platform } from "@/runtime";
+import { bookSourceExport } from "@/core/application/bookSources";
 import {
   bookAddGroup,
   bookBatchAddGroup,
@@ -130,9 +132,24 @@ async function setCanUpdate(value: boolean) {
   message.value = `已${value ? "启用" : "禁用"} ${count} 本书的更新`;
 }
 
+async function exportSources() {
+  try {
+    const json = await bookSourceExport();
+    const path = await platform.dialog.save({
+      defaultPath: "book-sources.json",
+      filters: [{ name: "书源 JSON", extensions: ["json"] }],
+    });
+    if (!path) return;
+    await platform.files.writeFile(path, new TextEncoder().encode(json));
+    message.value = "书源已导出";
+  } catch (error) {
+    message.value = String(error);
+  }
+}
+
 function onMenu(key: string) {
   if (key === "groups") router.push("/group-manage");
-  else if (key === "exportSources") message.value = "导出书源暂未接入";
+  else if (key === "exportSources") void exportSources();
   else if (key === "openDetail") {
     openDetailOnTitle.value = !openDetailOnTitle.value;
     localStorage.setItem("arrange:open-detail-on-title", openDetailOnTitle.value ? "1" : "0");

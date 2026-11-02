@@ -28,6 +28,7 @@ authors = ["local-reader"]
 
 [workspace.dependencies]
 aes = "0.8"
+base64 = "0.23"
 bytes = "1"
 cbc = "0.1"
 chardetng = "0"

@@ -120,6 +120,7 @@ for (const name of [
   "engine_source_info",
   "engine_source_toc",
   "engine_source_content",
+  "engine_source_image",
   "engine_rss_articles",
   "engine_rss_content",
 ]) {

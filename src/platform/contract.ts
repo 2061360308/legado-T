@@ -202,6 +202,8 @@ export interface Platform {
     keyPageOnLongPress: boolean;
     disableReturnKey: boolean;
   }): Promise<void>;
+  startBackgroundAudio(title: string): Promise<void>;
+  stopBackgroundAudio(): Promise<void>;
   pickSafDirectory(): Promise<SafDirectoryLocation>;
   listSafDirectory(treeUri: string, documentId: string): Promise<SafEntry[]>;
   scanSafDirectory(treeUri: string, documentId: string): Promise<SafEntry[]>;

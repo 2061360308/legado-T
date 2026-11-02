@@ -9,6 +9,7 @@ import {
   setSourceVariables,
   sourceContent,
   sourceDownloadUrls as sourceDownloadUrlsWasm,
+  sourceImage as sourceImageWasm,
   sourceInfo,
   sourcePay as sourcePayWasm,
   sourceResource as sourceResourceWasm,
@@ -533,43 +534,6 @@ export async function sourceResource(
   };
 }
 
-function sourceHeader(source: { header?: string | null }): Record<string, string> {
-  const raw = source.header?.trim();
-  if (!raw) return {};
-  try {
-    const value = JSON.parse(raw) as unknown;
-    if (!value || typeof value !== "object" || Array.isArray(value)) return {};
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([key, item]) => [
-        key,
-        String(item),
-      ]),
-    );
-  } catch {
-    return {};
-  }
-}
-
-async function fetchProxied(url: string, source: { header?: string | null }): Promise<Blob> {
-  const response = await fetch("/api/engine/fetch", {
-    headers: {
-      "X-Remote-Target": url,
-      ...sourceHeader(source),
-    },
-  });
-  if (!response.ok) throw new Error(`图片请求失败：${response.status}`);
-  return response.blob();
-}
-
-function blobToDataUrl(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result ?? ""));
-    reader.onerror = () => reject(reader.error ?? new Error("图片读取失败"));
-    reader.readAsDataURL(blob);
-  });
-}
-
 function imageUrls(html: string, baseUrl: string): string[] {
   const urls: string[] = [];
   const pattern = /<img[^>]+src\s*=\s*["']([^"']+)["']/gi;
@@ -612,12 +576,17 @@ export async function sourceImage(
       return resource;
     }
   })();
-  const blob = await fetchProxied(absolute, context.source);
+  const dataUrl = await sourceImageWasm(
+    JSON.stringify(context.source),
+    JSON.stringify(context.engineBook),
+    JSON.stringify(context.engineChapter),
+    absolute,
+  );
   return {
     url: absolute,
     title: context.chapter.title,
     index: context.chapter.index,
-    dataUrl: await blobToDataUrl(blob),
+    dataUrl,
   };
 }
 
@@ -653,8 +622,13 @@ export async function sourceImages(
   const images: { url: string; dataUrl?: string; error?: string }[] = [];
   for (const url of urls.slice(0, 80)) {
     try {
-      const blob = await fetchProxied(url, context.source);
-      images.push({ url, dataUrl: await blobToDataUrl(blob) });
+      const dataUrl = await sourceImageWasm(
+        JSON.stringify(context.source),
+        JSON.stringify(context.engineBook),
+        JSON.stringify(context.engineChapter),
+        url,
+      );
+      images.push({ url, dataUrl });
     } catch (error) {
       images.push({
         url,

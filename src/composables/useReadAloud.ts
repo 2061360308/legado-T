@@ -188,6 +188,7 @@ export function useReadAloud(hooks: AloudHooks) {
       if (index.value >= paragraphs.length) {
         speaking.value = false;
         stopTimer(false);
+        void platform.stopBackgroundAudio().catch(() => undefined);
         hooks.onFinished();
         return;
       }
@@ -227,6 +228,7 @@ export function useReadAloud(hooks: AloudHooks) {
         if (consecutiveErrors >= 5) {
           speaking.value = false;
           stopTimer(false);
+          void platform.stopBackgroundAudio().catch(() => undefined);
           error.value = "连续合成失败，已暂停朗读";
           return;
         }
@@ -252,6 +254,7 @@ export function useReadAloud(hooks: AloudHooks) {
     index.value = indexForChar(hooks.getPageStart());
     speaking.value = true;
     paused.value = false;
+    void platform.startBackgroundAudio("正在朗读").catch(() => undefined);
     runToken += 1;
     const token = runToken;
     if (timerMinutes.value > 0) {
@@ -284,6 +287,7 @@ export function useReadAloud(hooks: AloudHooks) {
     runToken += 1;
     cancelCurrent();
     stopTimer(false);
+    void platform.stopBackgroundAudio().catch(() => undefined);
   }
 
   function skip(delta: number) {

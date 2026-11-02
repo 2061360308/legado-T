@@ -535,10 +535,34 @@
           "markdownDescription": "Denies the set_web_view_cookie command without any pre-configured scope."
         },
         {
-          "description": "Reader platform capabilities\n#### This default permission set includes:\n\n- `allow-platform-info`\n- `allow-get-safe-area-insets`\n- `allow-set-keep-screen-on`\n- `allow-set-screen-orientation`\n- `allow-set-cutout-mode`\n- `allow-set-system-bars`\n- `allow-set-system-bar-style`\n- `allow-set-text-zoom`\n- `allow-set-launcher-icon`\n- `allow-pick-image`\n- `allow-pick-font-file`\n- `allow-set-reader-key-mode`\n- `allow-get-web-view-cookie`\n- `allow-set-web-view-cookie`\n- `allow-pick-books-directory`\n- `allow-list-books-directory`\n- `allow-scan-books-directory`\n- `allow-delete-saf-documents`\n- `allow-prepare-books-import`\n- `allow-cleanup-saf-import`",
+          "description": "Enables the start_background_audio command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-start-background-audio",
+          "markdownDescription": "Enables the start_background_audio command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the start_background_audio command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-start-background-audio",
+          "markdownDescription": "Denies the start_background_audio command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the stop_background_audio command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-stop-background-audio",
+          "markdownDescription": "Enables the stop_background_audio command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the stop_background_audio command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-stop-background-audio",
+          "markdownDescription": "Denies the stop_background_audio command without any pre-configured scope."
+        },
+        {
+          "description": "Reader platform capabilities\n#### This default permission set includes:\n\n- `allow-platform-info`\n- `allow-get-safe-area-insets`\n- `allow-set-keep-screen-on`\n- `allow-set-screen-orientation`\n- `allow-set-cutout-mode`\n- `allow-set-system-bars`\n- `allow-set-system-bar-style`\n- `allow-set-text-zoom`\n- `allow-set-launcher-icon`\n- `allow-pick-image`\n- `allow-pick-font-file`\n- `allow-set-reader-key-mode`\n- `allow-start-background-audio`\n- `allow-stop-background-audio`\n- `allow-get-web-view-cookie`\n- `allow-set-web-view-cookie`\n- `allow-pick-books-directory`\n- `allow-list-books-directory`\n- `allow-scan-books-directory`\n- `allow-delete-saf-documents`\n- `allow-prepare-books-import`\n- `allow-cleanup-saf-import`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Reader platform capabilities\n#### This default permission set includes:\n\n- `allow-platform-info`\n- `allow-get-safe-area-insets`\n- `allow-set-keep-screen-on`\n- `allow-set-screen-orientation`\n- `allow-set-cutout-mode`\n- `allow-set-system-bars`\n- `allow-set-system-bar-style`\n- `allow-set-text-zoom`\n- `allow-set-launcher-icon`\n- `allow-pick-image`\n- `allow-pick-font-file`\n- `allow-set-reader-key-mode`\n- `allow-get-web-view-cookie`\n- `allow-set-web-view-cookie`\n- `allow-pick-books-directory`\n- `allow-list-books-directory`\n- `allow-scan-books-directory`\n- `allow-delete-saf-documents`\n- `allow-prepare-books-import`\n- `allow-cleanup-saf-import`"
+          "markdownDescription": "Reader platform capabilities\n#### This default permission set includes:\n\n- `allow-platform-info`\n- `allow-get-safe-area-insets`\n- `allow-set-keep-screen-on`\n- `allow-set-screen-orientation`\n- `allow-set-cutout-mode`\n- `allow-set-system-bars`\n- `allow-set-system-bar-style`\n- `allow-set-text-zoom`\n- `allow-set-launcher-icon`\n- `allow-pick-image`\n- `allow-pick-font-file`\n- `allow-set-reader-key-mode`\n- `allow-start-background-audio`\n- `allow-stop-background-audio`\n- `allow-get-web-view-cookie`\n- `allow-set-web-view-cookie`\n- `allow-pick-books-directory`\n- `allow-list-books-directory`\n- `allow-scan-books-directory`\n- `allow-delete-saf-documents`\n- `allow-prepare-books-import`\n- `allow-cleanup-saf-import`"
         }
       ]
     }

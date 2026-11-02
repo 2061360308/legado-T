@@ -351,6 +351,33 @@ fn set_reader_key_mode<R: Runtime>(
 }
 
 #[tauri::command]
+fn start_background_audio<R: Runtime>(app: AppHandle<R>, title: String) -> Result<(), String> {
+    #[cfg(mobile)]
+    {
+        app.state::<mobile::ReaderPlatform<R>>()
+            .start_background_audio(title)
+    }
+    #[cfg(not(mobile))]
+    {
+        let _ = (app, title);
+        Ok(())
+    }
+}
+
+#[tauri::command]
+fn stop_background_audio<R: Runtime>(app: AppHandle<R>) -> Result<(), String> {
+    #[cfg(mobile)]
+    {
+        app.state::<mobile::ReaderPlatform<R>>().stop_background_audio()
+    }
+    #[cfg(not(mobile))]
+    {
+        let _ = app;
+        Ok(())
+    }
+}
+
+#[tauri::command]
 fn pick_books_directory<R: Runtime>(app: AppHandle<R>) -> Result<SafDirectoryLocation, String> {
     #[cfg(mobile)]
     {
@@ -463,6 +490,8 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             set_launcher_icon,
             pick_image,
             set_reader_key_mode,
+            start_background_audio,
+            stop_background_audio,
             pick_books_directory,
             list_books_directory,
             scan_books_directory,

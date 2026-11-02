@@ -13,6 +13,8 @@ permissions = [
   "allow-pick-image",
   "allow-pick-font-file",
   "allow-set-reader-key-mode",
+  "allow-start-background-audio",
+  "allow-stop-background-audio",
   "allow-get-web-view-cookie",
   "allow-set-web-view-cookie",
   "allow-pick-books-directory",
