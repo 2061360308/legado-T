@@ -1,8 +1,11 @@
 package com.localreader.platform
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -88,6 +91,7 @@ class ReaderKeyModeArgs {
 @InvokeArg
 class BackgroundAudioArgs {
     var title: String = ""
+    var playing: Boolean = true
 }
 
 @InvokeArg
@@ -134,10 +138,18 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
     private var disableReturnKey = false
     private var webView: WebView? = null
     private var originalWindowCallback: Window.Callback? = null
+    private var mediaReceiverRegistered = false
+    private val mediaCommandReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val command = intent?.getStringExtra(BackgroundAudioService.EXTRA_COMMAND) ?: return
+            emitMediaEvent(command)
+        }
+    }
 
     override fun load(webView: WebView) {
         this.webView = webView
         installKeyInterceptor()
+        installMediaReceiver()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -198,6 +210,7 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
             val intent = Intent(activity, BackgroundAudioService::class.java).apply {
                 action = BackgroundAudioService.ACTION_START
                 putExtra(BackgroundAudioService.EXTRA_TITLE, args.title)
+                putExtra(BackgroundAudioService.EXTRA_PLAYING, args.playing)
             }
             ContextCompat.startForegroundService(activity, intent)
             invoke.resolve()
@@ -228,6 +241,17 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
         } catch (error: Exception) {
             invoke.reject(error.message ?: "setReaderKeyMode failed")
         }
+    }
+
+    private fun installMediaReceiver() {
+        if (mediaReceiverRegistered) return
+        ContextCompat.registerReceiver(
+            activity,
+            mediaCommandReceiver,
+            IntentFilter(BackgroundAudioService.ACTION_COMMAND),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+        mediaReceiverRegistered = true
     }
 
     private fun installKeyInterceptor() {
@@ -277,6 +301,13 @@ class ReaderPlatformPlugin(private val activity: Activity) : Plugin(activity) {
         payload.put("key", key)
         payload.put("repeat", repeat)
         val script = "window.dispatchEvent(new CustomEvent('" + eventName + "',{detail:" + payload.toString() + "}))"
+        webView?.post { webView?.evaluateJavascript(script, null) }
+    }
+
+    private fun emitMediaEvent(action: String) {
+        val payload = JSObject()
+        payload.put("action", action)
+        val script = "window.dispatchEvent(new CustomEvent('reader-media',{detail:" + payload.toString() + "}))"
         webView?.post { webView?.evaluateJavascript(script, null) }
     }
 

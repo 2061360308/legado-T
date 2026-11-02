@@ -100,6 +100,7 @@ pub fn run() {
             commands::read_record::read_record_clear,
             commands::reader::reader_open,
             commands::online_reader::online_reader_open,
+            commands::online_reader::online_reader_download,
             commands::reader::reader_save_progress,
             commands::reader::reader_effective_rules,
             commands::reader::reader_save_chapter_content,

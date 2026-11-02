@@ -31,7 +31,7 @@
 - 原生 WebView 已传递 User-Agent/Cookie，并通过初始化脚本同步 Cookie。
 - Android SAF 已注册扫描/删除命令，并支持 ZIP 文件。
 - Web 图片已通过 wasm `imageDecode` 链路输出 data URL。
-- Android 朗读已接入前台服务与通知停止按钮，CSP 已从 `null` 收紧。
+- Android 朗读已接入前台服务、通知播放/暂停/停止与 MediaSession 锁屏控制，CSP 已从 `null` 收紧。
 - Web 书源导出、书架导出、缓存书籍导出和书单导入已接入。
 - 同源代理增加重定向上限、重定向目标复检、上传/下载大小检查。
 - 新增 `npm run check:engine-wasm` wasm 导出与基础 ABI 冒烟测试。
@@ -40,8 +40,8 @@
 尚未完成：
 
 - Android WebView/CookieManager 仍需真机联调；Web 运行时明确不支持 WebView 登录。
-- Android 后台音频已接入前台服务和通知停止按钮，但尚未接入完整 MediaSession 锁屏播放/暂停控制。
-- 字典规则页、日志/帮助、部分导出选项仍未接入。
+- Android MediaSession 已接入锁屏播放/暂停/停止，但仍需真机验证通知按钮与后台恢复行为。
+- 字典独立查词页、日志/帮助、部分导出选项仍未接入；离线缓存已支持按书/全部下载在线章节。
 - Android Release APK 仍未签名，发布前需要配置签名。
 - Web wasm 首次加载约 9.1 MB，后续可继续做体积优化。
 
@@ -672,23 +672,26 @@ POST /api/engine/fetch
 ## 构建与验证
 
 ```powershell
-cargo test --workspace
-cargo check -p engine-web --target wasm32-unknown-unknown
+$env:WASI_SDK = "C:\path\to\wasi-sdk"
+cargo check --workspace
 npm run typecheck
+npm run check:engine-wasm
 npm run build:web
-npm run tauri:build -- --no-bundle
 ```
+
+`npm run build:web` 需要 `WASI_SDK`。缺少 SDK 时构建会直接失败；仅构建不含书源引擎的 Web 包时才设置 `ALLOW_MISSING_ENGINE_WASM=1`。
 
 Android：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 -Target all
+powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 -Target all -Release -SizeOptimized
 ```
 
-`scripts/build-wasm.mjs` 增加：
+`scripts/build-wasm.mjs` 产物：
 
 ```text
-engine-web -> src/adapters/web/wasm/engine-web
+reader-core / ebook-wasm / rbook-wasm / backup-wasm -> src/adapters/web/wasm/*
+engine-js-wasm -> src/adapters/web/wasm/engine/engine_js_wasm.wasm
 ```
 
 验证内容：

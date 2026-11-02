@@ -30,6 +30,16 @@ export async function readerOpen(
   );
 }
 
+export function onlineReaderDownload(
+  bookUrl: string,
+  chapterIndexes?: number[],
+): Promise<number> {
+  return invoke<number>(COMMANDS.onlineReaderDownload, {
+    bookUrl,
+    chapterIndexes: chapterIndexes ?? null,
+  });
+}
+
 export function readerSaveProgress(
   bookUrl: string,
   chapterIndex: number,

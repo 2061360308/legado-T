@@ -59,6 +59,74 @@ fn find_chapter(chapters: &[AppChapter], index: i32) -> Result<AppChapter, Strin
 }
 
 #[tauri::command(async)]
+pub async fn online_reader_download(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    book_url: String,
+    chapter_indexes: Option<Vec<i32>>,
+) -> CmdResult<i32> {
+    let (book, source, chapters) = {
+        let conn = state.conn.lock().map_err(|error| error.to_string())?;
+        let book = BookRepo::get(&conn, &book_url)
+            .map_err(|error| error.to_string())?
+            .ok_or_else(|| "书籍不存在".to_string())?;
+        if book.origin.trim().is_empty() {
+            return Err("书籍没有关联书源".to_string());
+        }
+        let mut chapters = ChapterRepo::list(&conn, &book_url).map_err(|error| error.to_string())?;
+        if let Some(indexes) = chapter_indexes.as_ref() {
+            chapters.retain(|chapter| indexes.contains(&chapter.index));
+        }
+        chapters.retain(|chapter| !chapter.is_volume);
+        let source = BookSourceRepo::get(&conn, &book.origin)
+            .map_err(|error| error.to_string())?
+            .ok_or_else(|| "书源不存在".to_string())?;
+        (book, source, chapters)
+    };
+
+    let mut downloaded = 0;
+    for chapter in chapters {
+        let cached = {
+            let conn = state.conn.lock().map_err(|error| error.to_string())?;
+            KeyValue::get(&conn, &override_key(&book_url, chapter.index))
+                .map_err(|error| error.to_string())?
+        };
+        if cached.is_some() {
+            continue;
+        }
+        let mut engine_book = engine_book(&book);
+        let mut engine_chapter = engine_chapter(&book, &chapter);
+        let source_for_fetch = source.clone();
+        let app_for_fetch = app.clone();
+        let content = tauri::async_runtime::spawn_blocking(move || -> Result<String, String> {
+            let runtime = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .map_err(|error| error.to_string())?;
+            let pipeline = create_pipeline(&app_for_fetch)?;
+            runtime
+                .block_on(pipeline.content(
+                    &source_for_fetch,
+                    &mut engine_book,
+                    &mut engine_chapter,
+                    None,
+                ))
+                .map_err(|error| error.to_string())
+        })
+        .await
+        .map_err(|error| error.to_string())??;
+        if content.trim().is_empty() {
+            continue;
+        }
+        let conn = state.conn.lock().map_err(|error| error.to_string())?;
+        KeyValue::set(&conn, &override_key(&book_url, chapter.index), &content)
+            .map_err(|error| error.to_string())?;
+        downloaded += 1;
+    }
+    Ok(downloaded)
+}
+
+#[tauri::command(async)]
 pub async fn online_reader_open(
     app: AppHandle,
     state: State<'_, AppState>,

@@ -351,15 +351,19 @@ fn set_reader_key_mode<R: Runtime>(
 }
 
 #[tauri::command]
-fn start_background_audio<R: Runtime>(app: AppHandle<R>, title: String) -> Result<(), String> {
+fn start_background_audio<R: Runtime>(
+    app: AppHandle<R>,
+    title: String,
+    playing: Option<bool>,
+) -> Result<(), String> {
     #[cfg(mobile)]
     {
         app.state::<mobile::ReaderPlatform<R>>()
-            .start_background_audio(title)
+            .start_background_audio(title, playing.unwrap_or(true))
     }
     #[cfg(not(mobile))]
     {
-        let _ = (app, title);
+        let _ = (app, title, playing);
         Ok(())
     }
 }

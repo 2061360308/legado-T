@@ -19,6 +19,7 @@ export const COMMANDS = {
   readRecordClear: "read_record_clear",
   readerOpen: "reader_open",
   onlineReaderOpen: "online_reader_open",
+  onlineReaderDownload: "online_reader_download",
   readerSaveProgress: "reader_save_progress",
   readerEffectiveRules: "reader_effective_rules",
   readerSaveChapterContent: "reader_save_chapter_content",

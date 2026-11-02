@@ -254,7 +254,7 @@ export function useReadAloud(hooks: AloudHooks) {
     index.value = indexForChar(hooks.getPageStart());
     speaking.value = true;
     paused.value = false;
-    void platform.startBackgroundAudio("正在朗读").catch(() => undefined);
+    void platform.startBackgroundAudio("正在朗读", true).catch(() => undefined);
     runToken += 1;
     const token = runToken;
     if (timerMinutes.value > 0) {
@@ -269,6 +269,7 @@ export function useReadAloud(hooks: AloudHooks) {
     paused.value = true;
     if (window.speechSynthesis) window.speechSynthesis.pause();
     currentAudio?.pause();
+    void platform.startBackgroundAudio("正在朗读", false).catch(() => undefined);
   }
 
   function resume() {
@@ -279,6 +280,7 @@ export function useReadAloud(hooks: AloudHooks) {
     paused.value = false;
     if (window.speechSynthesis) window.speechSynthesis.resume();
     currentAudio?.play().catch(() => undefined);
+    void platform.startBackgroundAudio("正在朗读", true).catch(() => undefined);
   }
 
   function stop() {

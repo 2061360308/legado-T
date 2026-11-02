@@ -969,6 +969,37 @@ export function createWebBackend() {
             (args.style as LayoutStyle | undefined) ?? DEFAULT_STYLE,
           )) as T;
         }
+        case COMMANDS.onlineReaderDownload: {
+          const bookUrl = argString(args, "bookUrl");
+          const book = await db.books.get(bookUrl);
+          if (!book) throw new Error("书籍不存在");
+          const indexes = Array.isArray(args.chapterIndexes)
+            ? new Set((args.chapterIndexes as number[]).map((value) => Number(value)))
+            : null;
+          const chapters = await listChapters(bookUrl);
+          let downloaded = 0;
+          for (const chapter of chapters) {
+            if (chapter.isVolume) continue;
+            if (indexes && !indexes.has(chapter.index)) continue;
+            const key = chapterKey(bookUrl, chapter.index);
+            if (await db.chapterContents.get(key)) continue;
+            try {
+              const content = await bookSources.sourceChapterContent(bookUrl, chapter.index);
+              if (!content.trim()) continue;
+              await db.chapterContents.put({
+                key,
+                bookUrl,
+                index: chapter.index,
+                content,
+              });
+              await db.chapterBlocks.delete(key);
+              downloaded += 1;
+            } catch {
+              // Skip chapters that the source cannot download.
+            }
+          }
+          return downloaded as T;
+        }
         case COMMANDS.readerOpen:
           return (await openReader(
             argString(args, "bookUrl"),

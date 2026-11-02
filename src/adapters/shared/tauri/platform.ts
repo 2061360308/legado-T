@@ -236,8 +236,8 @@ export function createTauriPlatform(): Platform {
     async setReaderKeyMode(options) {
       await pluginInvoke<void>("set_reader_key_mode", options);
     },
-    async startBackgroundAudio(title) {
-      await pluginInvoke<void>("start_background_audio", { title });
+    async startBackgroundAudio(title, playing = true) {
+      await pluginInvoke<void>("start_background_audio", { title, playing });
     },
     async stopBackgroundAudio() {
       await pluginInvoke<void>("stop_background_audio");

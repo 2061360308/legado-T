@@ -154,9 +154,9 @@ impl<R: Runtime> ReaderPlatform<R> {
             .map_err(|error| error.to_string())
     }
 
-    pub fn start_background_audio(&self, title: String) -> Result<(), String> {
+    pub fn start_background_audio(&self, title: String, playing: bool) -> Result<(), String> {
         self.0
-            .run_mobile_plugin("startBackgroundAudio", BackgroundAudioArgs { title })
+            .run_mobile_plugin("startBackgroundAudio", BackgroundAudioArgs { title, playing })
             .map_err(|error| error.to_string())
     }
 
@@ -258,6 +258,7 @@ struct ReaderKeyModeArgs {
 #[serde(rename_all = "camelCase")]
 struct BackgroundAudioArgs {
     title: String,
+    playing: bool,
 }
 
 #[cfg(mobile)]

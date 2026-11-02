@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import type { ReaderSnapshot } from "@/core/domain";
 import { useReaderPrefsStore } from "@/stores/readerPrefs";
@@ -86,6 +86,18 @@ function togglePlay() {
   }
 }
 
+function onMediaCommand(event: Event) {
+  const action = (event as CustomEvent<{ action?: string }>).detail?.action;
+  if (action === "play") {
+    if (!aloud.speaking.value) aloud.start();
+    else if (aloud.paused.value) aloud.resume();
+  } else if (action === "pause") {
+    aloud.pause();
+  } else if (action === "stop") {
+    stopAll();
+  }
+}
+
 function updateRateProgress(value: number) {
   const next = Math.min(45, Math.max(0, value));
   prefs.patch({ readAloudRate: (next + 5) / 10 });
@@ -168,7 +180,12 @@ watch(
   },
 );
 
-onBeforeUnmount(() => aloud.stop());
+onMounted(() => window.addEventListener("reader-media", onMediaCommand));
+
+onBeforeUnmount(() => {
+  window.removeEventListener("reader-media", onMediaCommand);
+  aloud.stop();
+});
 </script>
 
 <template>

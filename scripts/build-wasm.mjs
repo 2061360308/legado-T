@@ -43,8 +43,15 @@ function build(crateName, outDir, extraArgs = []) {
 function buildEngine() {
   const wasiSdk = process.env.WASI_SDK;
   if (!wasiSdk) {
-    console.warn("WASI_SDK is not set; skipping engine-js-wasm.");
-    return;
+    const message =
+      "WASI_SDK is required to build engine-js-wasm. " +
+      "Set WASI_SDK to a wasi-sdk installation, or set " +
+      "ALLOW_MISSING_ENGINE_WASM=1 to build a Web bundle without book sources.";
+    if (process.env.ALLOW_MISSING_ENGINE_WASM === "1") {
+      console.warn(message);
+      return;
+    }
+    throw new Error(message);
   }
   const srcTauri = resolve(root, "src-tauri");
   const env = {

@@ -9,6 +9,7 @@ import {
   groupList,
   readChapter,
 } from "@/core/application/books";
+import { onlineReaderDownload } from "@/core/application/reader";
 import { platform } from "@/runtime";
 import type { Book, BookGroup } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
@@ -86,6 +87,55 @@ async function clearCache(book: Book) {
   }
 }
 
+function isOnlineBook(book: Book): boolean {
+  return !book.sourcePath && /^https?:\/\//i.test(String(book.origin || ""));
+}
+
+async function downloadBook(book: Book) {
+  if (!isOnlineBook(book)) {
+    message.value = "本地书籍无需下载";
+    return;
+  }
+  busy.value = book.bookUrl;
+  try {
+    const count = await onlineReaderDownload(book.bookUrl);
+    await load();
+    message.value = count
+      ? `已下载《${book.name}》${count} 章`
+      : `《${book.name}》没有需要下载的章节`;
+  } catch (e) {
+    message.value = String(e);
+  } finally {
+    busy.value = "";
+  }
+}
+
+async function downloadAll() {
+  const selected = filtered.value.filter((item) => isOnlineBook(item.book));
+  if (!selected.length) {
+    message.value = "没有可下载的在线书籍";
+    return;
+  }
+  busy.value = "download-all";
+  let total = 0;
+  let failed = 0;
+  try {
+    for (let i = 0; i < selected.length; i++) {
+      const book = selected[i].book;
+      message.value = `正在下载 ${i + 1}/${selected.length}：《${book.name}》`;
+      try {
+        total += await onlineReaderDownload(book.bookUrl);
+      } catch {
+        failed += 1;
+      }
+    }
+    await load();
+    message.value = `已下载 ${total} 章${failed ? `，${failed} 本书失败` : ""}`;
+  } finally {
+    busy.value = "";
+  }
+}
+
 function onGroupMenu(key: string) {
   groupFilter.value = Number(key);
 }
@@ -135,7 +185,7 @@ async function exportAll() {
 
 function onMenu(key: string) {
   if (key === "replace") router.push("/replace");
-  else if (key === "download") message.value = "请先打开书籍缓存章节，再使用导出";
+  else if (key === "download") void downloadAll();
   else if (key === "exportAll") void exportAll();
   else if (key === "log") message.value = "日志暂未接入";
   else message.value = "该导出选项暂未接入";
@@ -148,7 +198,11 @@ onMounted(load);
   <div class="cache-page">
     <TitleBar title="离线缓存" @back="router.back()">
       <template #actions>
-        <button aria-label="下载全部" @click="message = '下载全部暂未接入'">
+        <button
+          aria-label="下载全部"
+          :disabled="busy === 'download-all'"
+          @click="downloadAll"
+        >
           <Icon name="ic_play_24dp" :size="24" />
         </button>
         <button aria-label="分组" @click="groupVisible = true">
@@ -170,7 +224,12 @@ onMounted(load);
           <span class="author">{{ item.book.author || "未知作者" }}</span>
           <span class="status">缓存大小：{{ formatSize(item.size) }}</span>
         </div>
-        <button class="icon-button" aria-label="下载" @click="message = '下载暂未接入'">
+        <button
+          class="icon-button"
+          aria-label="下载"
+          :disabled="busy === item.book.bookUrl"
+          @click="downloadBook(item.book)"
+        >
           <Icon name="ic_play_24dp" :size="22" />
         </button>
         <button class="export" :disabled="busy === 'all'" @click="exportBook(item.book)">
