@@ -3,6 +3,7 @@ pub mod book_source;
 pub mod bookmarks;
 pub mod bookshelf;
 pub mod db;
+pub mod logs;
 pub mod online_reader;
 pub mod read_record;
 pub mod reader;

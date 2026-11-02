@@ -1,0 +1,8 @@
+{
+  "bundle": {
+    "resources": {
+      "resources/defaultData/*": "defaultData/",
+      "resources/pdfium/libpdfium.so": "pdfium/"
+    }
+  }
+}

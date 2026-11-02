@@ -1,33 +1,59 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import type { TxtTocRule } from "@/core/domain";
 import {
   txtTocRuleDelete,
-  txtTocRuleExport,
   txtTocRuleImport,
   txtTocRuleReorder,
   txtTocRuleRestoreDefault,
   txtTocRuleSave,
   txtTocRules,
 } from "@/core/application/rules";
+import { fetchRemoteText } from "@/utils/remoteFetch";
+import { saveTextFile } from "@/utils/fileSave";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
+import RuleRow from "@/components/android/RuleRow.vue";
+import SelectActionBar from "@/components/android/SelectActionBar.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
+import OnlineImportDialog from "@/views/misc/OnlineImportDialog.vue";
+import QrCodeDialog from "@/views/source/QrCodeDialog.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const menuItems: PopupMenuItem[] = [
   { key: "import", label: "导入本地", icon: "ic_import" },
-  { key: "export", label: "导出规则", icon: "ic_export" },
+  { key: "importOnline", label: "在线导入", icon: "ic_import" },
+  { key: "importQr", label: "二维码导入", icon: "ic_scan" },
   { key: "restore", label: "恢复默认规则", icon: "ic_import" },
   { key: "help", label: "帮助", icon: "ic_help", muted: true },
 ];
+const selectionMenuItems: PopupMenuItem[] = [
+  { key: "enable", label: "启用" },
+  { key: "disable", label: "禁用" },
+  { key: "export", label: "导出选中" },
+];
+const ruleMenuItems: PopupMenuItem[] = [
+  { key: "top", label: "置顶" },
+  { key: "bottom", label: "置底" },
+  { key: "delete", label: "删除", danger: true },
+];
+
 const rules = ref<TxtTocRule[]>([]);
+const selected = ref(new Set<number>());
 const editing = ref(false);
 const menuVisible = ref(false);
-const ruleMenu = ref<{ rule: TxtTocRule; index: number } | null>(null);
+const moreVisible = ref(false);
+const moreRule = ref<TxtTocRule | null>(null);
+const moreTop = ref(52);
+const moreRight = ref(8);
 const importInput = ref<HTMLInputElement | null>(null);
+const onlineVisible = ref(false);
+const qrVisible = ref(false);
 const message = ref("");
 const form = ref<TxtTocRule>(emptyRule());
 
@@ -37,10 +63,19 @@ function emptyRule(): TxtTocRule {
 
 function notify(text: string) {
   message.value = text;
+  window.setTimeout(() => {
+    if (message.value === text) message.value = "";
+  }, 2500);
 }
+
+const selectedRules = computed(() =>
+  rules.value.filter((rule) => selected.value.has(rule.id)),
+);
 
 async function load() {
   rules.value = await txtTocRules();
+  const alive = new Set(rules.value.map((rule) => rule.id));
+  selected.value = new Set([...selected.value].filter((id) => alive.has(id)));
 }
 
 function startCreate() {
@@ -54,8 +89,21 @@ function startEdit(rule: TxtTocRule) {
   editing.value = true;
 }
 
-function showRuleMenu(rule: TxtTocRule, index: number) {
-  ruleMenu.value = { rule, index };
+function setSelected(rule: TxtTocRule, value: boolean) {
+  const next = new Set(selected.value);
+  if (value) next.add(rule.id);
+  else next.delete(rule.id);
+  selected.value = next;
+}
+
+function selectAll(value: boolean) {
+  selected.value = value ? new Set(rules.value.map((rule) => rule.id)) : new Set();
+}
+
+function revertSelection() {
+  selected.value = new Set(
+    rules.value.filter((rule) => !selected.value.has(rule.id)).map((rule) => rule.id),
+  );
 }
 
 async function save() {
@@ -68,42 +116,78 @@ async function save() {
     notify("规则已保存");
     editing.value = false;
     await load();
-  } catch (e) {
-    notify(String(e));
+  } catch (error) {
+    notify(String(error));
   }
 }
 
 async function toggle(rule: TxtTocRule) {
-  await txtTocRuleSave({ ...rule, enable: !rule.enable });
+  await txtTocRuleSave({ ...rule, enable: rule.enable === false });
+  await load();
+}
+
+async function setSelectedEnabled(enabled: boolean) {
+  for (const rule of selectedRules.value) {
+    if ((rule.enable !== false) === enabled) continue;
+    await txtTocRuleSave({ ...rule, enable: enabled });
+  }
   await load();
 }
 
 async function remove(rule: TxtTocRule) {
   if (!confirm(`删除规则「${rule.name}」？`)) return;
   await txtTocRuleDelete(rule.id);
+  selected.value.delete(rule.id);
   notify("规则已删除");
   await load();
 }
 
-async function move(index: number, delta: number) {
-  const target = index + delta;
-  if (target < 0 || target >= rules.value.length) return;
-  const ids = rules.value.map((r) => r.id);
-  [ids[index], ids[target]] = [ids[target], ids[index]];
+async function deleteSelected() {
+  if (!selectedRules.value.length) return;
+  if (!confirm(`删除选中的 ${selectedRules.value.length} 条目录规则？`)) return;
+  for (const rule of selectedRules.value) await txtTocRuleDelete(rule.id);
+  selected.value = new Set();
+  notify("规则已删除");
+  await load();
+}
+
+async function reorder(ids: number[]) {
   await txtTocRuleReorder(ids);
   await load();
 }
 
-function onMenuSelect(key: string) {
-  if (key === "import") importInput.value?.click();
-  else if (key === "export") onExport();
-  else if (key === "restore") restoreDefault();
-  else if (key === "help") notify("帮助暂未实现");
+async function move(rule: TxtTocRule, toTop: boolean) {
+  const ids = rules.value.map((item) => item.id);
+  const index = ids.indexOf(rule.id);
+  if (index < 0) return;
+  ids.splice(index, 1);
+  if (toTop) ids.unshift(rule.id);
+  else ids.push(rule.id);
+  await reorder(ids);
+}
+
+async function moveSelected(toTop: boolean) {
+  if (!selectedRules.value.length) return;
+  const selectedIds = new Set(selectedRules.value.map((rule) => rule.id));
+  const chosen = rules.value.filter((rule) => selectedIds.has(rule.id));
+  const rest = rules.value.filter((rule) => !selectedIds.has(rule.id));
+  const next = toTop ? [...chosen, ...rest] : [...rest, ...chosen];
+  await reorder(next.map((rule) => rule.id));
+}
+
+async function exportSelected() {
+  if (!selectedRules.value.length) return;
+  const saved = await saveTextFile(
+    "txtTocRule.json",
+    JSON.stringify(selectedRules.value, null, 2),
+    "目录规则 JSON",
+  );
+  if (saved) notify("规则已导出");
 }
 
 async function restoreDefault() {
   menuVisible.value = false;
-  if (!confirm("恢复默认 26 条目录规则？当前自定义规则将被覆盖。")) return;
+  if (!confirm("恢复默认目录规则？当前自定义规则将被覆盖。")) return;
   const count = await txtTocRuleRestoreDefault();
   notify(`已恢复 ${count} 条默认规则`);
   await load();
@@ -116,27 +200,64 @@ async function onImport(event: Event) {
   menuVisible.value = false;
   try {
     const report = await txtTocRuleImport(await file.text());
-    const added = report.entries.filter((e) => e.status === "new").length;
-    const updated = report.entries.filter((e) => e.status === "updated").length;
+    const added = report.entries.filter((entry) => entry.status === "new").length;
+    const updated = report.entries.filter((entry) => entry.status === "updated").length;
     notify(`导入完成：新增 ${added}，更新 ${updated}`);
     await load();
-  } catch (e) {
-    notify(String(e));
+  } catch (error) {
+    notify(String(error));
   } finally {
     input.value = "";
   }
 }
 
-async function onExport() {
-  menuVisible.value = false;
-  const json = await txtTocRuleExport();
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "txtTocRule.json";
-  a.click();
-  URL.revokeObjectURL(url);
+async function importOnline(url: string) {
+  try {
+    const report = await txtTocRuleImport(await fetchRemoteText(url));
+    notify(`在线导入完成：共 ${report.entries.length} 条`);
+    await load();
+  } catch (error) {
+    notify(String(error));
+  }
+}
+
+async function importQr(text: string) {
+  try {
+    const report = await txtTocRuleImport(text);
+    notify(`二维码导入完成：共 ${report.entries.length} 条`);
+    await load();
+  } catch (error) {
+    notify(String(error));
+  }
+}
+
+function onMenuSelect(key: string) {
+  if (key === "import") importInput.value?.click();
+  else if (key === "importOnline") onlineVisible.value = true;
+  else if (key === "importQr") qrVisible.value = true;
+  else if (key === "restore") restoreDefault();
+  else if (key === "help") notify("帮助暂未接入");
+}
+
+function openMore(rule: TxtTocRule, event: MouseEvent) {
+  moreRule.value = rule;
+  moreTop.value = Math.min(event.clientY, window.innerHeight - 180);
+  moreRight.value = Math.max(8, window.innerWidth - event.clientX);
+  moreVisible.value = true;
+}
+
+async function onRuleMenu(key: string) {
+  const rule = moreRule.value;
+  if (!rule) return;
+  if (key === "top") await move(rule, true);
+  else if (key === "bottom") await move(rule, false);
+  else if (key === "delete") await remove(rule);
+}
+
+async function onSelectionMenu(key: string) {
+  if (key === "enable") await setSelectedEnabled(true);
+  else if (key === "disable") await setSelectedEnabled(false);
+  else if (key === "export") await exportSelected();
 }
 
 onMounted(load);
@@ -149,7 +270,7 @@ onMounted(load);
         <button aria-label="新增" @click="startCreate">
           <Icon name="ic_add" :size="24" />
         </button>
-        <button aria-label="更多" @click="menuVisible = !menuVisible">
+        <button aria-label="更多" @click="menuVisible = true">
           <Icon name="ic_more_vert" :size="24" />
         </button>
       </template>
@@ -163,36 +284,42 @@ onMounted(load);
       @change="onImport"
     />
     <PopupMenu v-model="menuVisible" :items="menuItems" @select="onMenuSelect" />
+    <PopupMenu
+      v-model="moreVisible"
+      :items="ruleMenuItems"
+      :top="moreTop"
+      :right="moreRight"
+      @select="onRuleMenu"
+    />
 
     <p v-if="message" class="message">{{ message }}</p>
 
-    <main class="rule-list">
-      <div v-for="(rule, index) in rules" :key="rule.id" class="rule-row">
-        <label class="row-check">
-          <input type="checkbox" :checked="rule.enable" @change="toggle(rule)" />
-        </label>
-        <div class="rule-text">
-          <p class="rule-name">{{ rule.name }}</p>
-          <p class="rule-example">{{ rule.example || rule.rule }}</p>
-        </div>
-        <button class="icon-btn" aria-label="编辑" @click="startEdit(rule)">
-          <Icon name="ic_edit" :size="22" />
-        </button>
-        <button class="icon-btn" aria-label="更多" @click="menuVisible = false; showRuleMenu(rule, index)">
-          <Icon name="ic_more_vert" :size="22" />
-        </button>
-      </div>
+    <main ref="listRef" class="rule-list">
+      <RuleRow
+        v-for="rule in rules"
+        :key="rule.id"
+        :name="rule.name"
+        :subtitle="rule.example || ''"
+        :enabled="rule.enable !== false"
+        :selected="selected.has(rule.id)"
+        @update:selected="setSelected(rule, $event)"
+        @toggle="toggle(rule)"
+        @edit="startEdit(rule)"
+        @more="openMore(rule, $event)"
+      />
       <p v-if="rules.length === 0" class="empty">暂无目录规则</p>
     </main>
 
-    <div v-if="ruleMenu" class="popup-mask" @click.self="ruleMenu = null">
-      <div class="popup-menu">
-        <button @click="move(ruleMenu.index, -1); ruleMenu = null">上移</button>
-        <button @click="move(ruleMenu.index, 1); ruleMenu = null">下移</button>
-        <button class="danger" @click="remove(ruleMenu.rule); ruleMenu = null">删除</button>
-        <button @click="ruleMenu = null">取消</button>
-      </div>
-    </div>
+    <SelectActionBar
+      :count="selectedRules.length"
+      :total="rules.length"
+      main-text="删除"
+      :menu-items="selectionMenuItems"
+      @select-all="selectAll"
+      @revert="revertSelection"
+      @main="deleteSelected"
+      @menu="onSelectionMenu"
+    />
 
     <AndroidDialog
       v-model="editing"
@@ -213,6 +340,13 @@ onMounted(load);
         <button class="btn primary" @click="save">保存</button>
       </template>
     </AndroidDialog>
+
+    <OnlineImportDialog
+      v-model="onlineVisible"
+      title="在线导入目录规则"
+      @confirm="importOnline"
+    />
+    <QrCodeDialog v-model="qrVisible" mode="import" @import="importQr" />
   </div>
 </template>
 
@@ -221,6 +355,7 @@ onMounted(load);
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
   background: var(--ac-background);
 }
 .hidden-input {
@@ -233,105 +368,8 @@ onMounted(load);
 }
 .rule-list {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
-}
-.rule-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--ac-divider);
-}
-.rule-text {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.rule-name {
-  margin: 0;
-  font-size: 15px;
-  color: var(--ac-primary-text);
-}
-.rule-example {
-  margin: 0;
-  font-size: 12px;
-  color: var(--ac-secondary-text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.row-check input {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--ac-primary);
-}
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border: none;
-  background: transparent;
-  color: var(--ac-secondary-text);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: 50%;
-}
-.icon-btn:hover {
-  background: var(--ac-transparent-10);
-}
-.popup-mask {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-}
-.popup-menu {
-  position: absolute;
-  top: 52px;
-  right: 8px;
-  min-width: 180px;
-  background: var(--ac-background);
-  border-radius: 2px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.24);
-  display: flex;
-  flex-direction: column;
-  padding: 4px 0;
-}
-.popup-menu button,
-.popup-menu label {
-  border: none;
-  background: transparent;
-  color: var(--ac-primary-text);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  font-size: 14px;
-  text-align: left;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.popup-menu button:hover,
-.popup-menu label:hover {
-  background: var(--ac-transparent-10);
-}
-.popup-menu label {
-  position: relative;
-  overflow: hidden;
-}
-.popup-menu label input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-.popup-menu .danger {
-  color: var(--ac-error);
-}
-.popup-menu .muted {
-  color: var(--ac-secondary-text);
 }
 .form {
   display: flex;

@@ -13,8 +13,8 @@ fn temp_dir() -> std::path::PathBuf {
     std::env::temp_dir().join(format!("local_reader_import_test_{stamp}"))
 }
 
-#[test]
-fn lists_and_imports_with_filename_script() {
+#[tokio::test]
+async fn lists_and_imports_with_filename_script() {
     let dir = temp_dir();
     let books = dir.join("books");
     let nested = books.join("nested");

@@ -64,6 +64,26 @@ export function bookSourceSearchHistory(limit = 20): Promise<string[]> {
   return invoke<string[]>(COMMANDS.bookSourceSearchHistory, { limit });
 }
 
+export function bookSourceSearchHistorySave(keyword: string): Promise<void> {
+  return invoke<void>(COMMANDS.bookSourceSearchHistorySave, { keyword });
+}
+
+export function bookSourceSearchHistoryDelete(keyword: string): Promise<void> {
+  return invoke<void>(COMMANDS.bookSourceSearchHistoryDelete, { keyword });
+}
+
+export function bookSourceSearchHistoryClear(): Promise<void> {
+  return invoke<void>(COMMANDS.bookSourceSearchHistoryClear);
+}
+
+export function bookSourceSearchStart(): Promise<void> {
+  return invoke<void>(COMMANDS.bookSourceSearchStart);
+}
+
+export function bookSourceSearchCancel(): Promise<void> {
+  return invoke<void>(COMMANDS.bookSourceSearchCancel);
+}
+
 export function bookSourceSetVariable(
   bookSourceUrl: string,
   key: string,
@@ -88,11 +108,23 @@ export function bookSourceSearch(
   keyword: string,
   sourceUrls?: string[],
   page = 1,
+  recordHistory = true,
 ): Promise<OnlineSearchResult[]> {
   return invoke<OnlineSearchResult[]>(COMMANDS.bookSourceSearch, {
     keyword,
     sourceUrls,
     page,
+    recordHistory,
+  });
+}
+
+export function bookSourceSearchPreview(
+  bookSourceUrl: string,
+  bookUrl: string,
+): Promise<OnlineSearchResult | null> {
+  return invoke<OnlineSearchResult | null>(COMMANDS.bookSourceSearchPreview, {
+    bookSourceUrl,
+    bookUrl,
   });
 }
 
@@ -138,6 +170,20 @@ export function bookSourceAddToShelf(
   return invoke<OnlineBook>(COMMANDS.bookSourceAddToShelf, {
     bookSourceUrl,
     bookUrl,
+    group,
+  });
+}
+
+export function bookSourceAddPrepared(
+  bookSourceUrl: string,
+  book: OnlineBook,
+  chapters: OnlineChapter[],
+  group = 0,
+): Promise<OnlineBook> {
+  return invoke<OnlineBook>(COMMANDS.bookSourceAddPrepared, {
+    bookSourceUrl,
+    book,
+    chapters,
     group,
   });
 }

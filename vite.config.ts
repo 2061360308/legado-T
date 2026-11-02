@@ -64,6 +64,13 @@ export default defineConfig(({ mode }) => {
   const buildId =
     process.env.VITE_BUILD_ID?.trim() ||
     new Date().toISOString().replace(/\D/g, "").slice(0, 14);
+  const apiTarget = env.VITE_API_PROXY_TARGET || "http://127.0.0.1:3000";
+  const apiProxy = {
+    "/api": {
+      target: apiTarget,
+      changeOrigin: true,
+    },
+  };
 
   return {
     plugins: [vue(), pwaHtmlPlugin(target)],
@@ -93,6 +100,10 @@ export default defineConfig(({ mode }) => {
       watch: {
         ignored: ["**/src-tauri/**"],
       },
+      proxy: apiProxy,
+    },
+    preview: {
+      proxy: apiProxy,
     },
     envPrefix: ["VITE_", "TAURI_ENV_*"],
     build: {

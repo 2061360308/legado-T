@@ -8,6 +8,7 @@ export interface PopupMenuItem {
   danger?: boolean;
   muted?: boolean;
   checked?: boolean;
+  disabled?: boolean;
 }
 
 withDefaults(
@@ -15,11 +16,13 @@ withDefaults(
     modelValue: boolean;
     items: PopupMenuItem[];
     top?: number;
+    bottom?: number;
     right?: number;
     minWidth?: number;
   }>(),
   {
     top: 52,
+    bottom: undefined,
     right: 8,
     minWidth: 180,
   },
@@ -40,12 +43,18 @@ function choose(key: string) {
   <div v-if="modelValue" class="popup-mask" @click.self="emit('update:modelValue', false)">
     <div
       class="popup-menu"
-      :style="{ top: `${top}px`, right: `${right}px`, minWidth: `${minWidth}px` }"
+      :style="{
+        top: bottom == null ? `${top}px` : undefined,
+        bottom: bottom == null ? undefined : `${bottom}px`,
+        right: `${right}px`,
+        minWidth: `${minWidth}px`,
+      }"
     >
       <button
         v-for="item in items"
         :key="item.key"
-        :class="{ danger: item.danger, muted: item.muted }"
+        :class="{ danger: item.danger, muted: item.muted, disabled: item.disabled }"
+        :disabled="item.disabled"
         @click="choose(item.key)"
       >
         <Icon v-if="item.icon" :name="item.icon" :size="20" />
@@ -71,7 +80,8 @@ function choose(key: string) {
   padding: 4px 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
 }
 button {
   border: none;
@@ -94,6 +104,14 @@ button.danger {
 }
 button.muted {
   color: var(--ac-secondary-text);
+}
+button.disabled {
+  color: var(--ac-secondary-text);
+  opacity: 0.45;
+  cursor: default;
+}
+button.disabled:hover {
+  background: transparent;
 }
 .popup-label {
   flex: 1;

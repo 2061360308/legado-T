@@ -1,6 +1,7 @@
 ﻿<script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import type { Bookmark } from "@/core/domain";
 import { bookmarkDelete, bookmarkList } from "@/core/application/bookmarks";
 import TitleBar from "@/components/android/TitleBar.vue";
@@ -9,6 +10,8 @@ import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vu
 import BookmarkDialog from "@/views/reader/dialogs/BookmarkDialog.vue";
 
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const bookmarks = ref<Bookmark[]>([]);
 const message = ref("");
 const editing = ref<Bookmark | null>(null);
@@ -101,7 +104,7 @@ onMounted(load);
     </TitleBar>
     <PopupMenu v-model="menuVisible" :items="menuItems" :top="54" @select="onMenu" />
     <p v-if="message" class="message">{{ message }}</p>
-    <main class="list">
+    <main ref="listRef" class="list">
       <section v-for="group in grouped" :key="group.title" class="bookmark-group">
         <h2 class="group-title">{{ group.title }}</h2>
         <div v-for="bookmark in group.items" :key="bookmark.time" class="bookmark-row">

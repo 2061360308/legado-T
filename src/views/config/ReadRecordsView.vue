@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import { bookList } from "@/core/application/books";
 import { readRecordClear, readRecordDelete, readRecordList } from "@/core/application/readRecords";
 import type { Book, ReadRecord } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
+import SearchBar from "@/components/android/SearchBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import { useReaderPrefsStore } from "@/stores/readerPrefs";
 
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const prefs = useReaderPrefsStore();
 const records = ref<ReadRecord[]>([]);
 const books = ref<Book[]>([]);
@@ -100,12 +104,9 @@ onMounted(load);
 
 <template>
   <div class="records-page">
-    <TitleBar title="阅读记录" @back="router.back()">
+    <TitleBar search-only @back="router.back()">
       <template #content>
-        <label class="search-box">
-          <Icon name="ic_search_hint" :size="18" />
-          <input v-model="keyword" placeholder="搜索书名、作者" />
-        </label>
+        <SearchBar v-model="keyword" placeholder="搜索书名、作者" />
       </template>
       <template #actions>
         <button aria-label="更多" @click="menuVisible = true">
@@ -122,7 +123,7 @@ onMounted(load);
     </div>
 
     <p v-if="message" class="message">{{ message }}</p>
-    <main class="list">
+    <main ref="listRef" class="list">
       <div v-for="item in filtered" :key="`${item.deviceId}-${item.bookName}`" class="record-row">
         <button class="record" @click="open(item)">
           <span class="name">{{ item.bookName }}</span>
@@ -148,31 +149,6 @@ onMounted(load);
   display: flex;
   flex-direction: column;
   background: var(--ac-background);
-}
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  width: 100%;
-  height: 30px;
-  margin: 10px 0;
-  padding: 0 10px;
-  border-radius: 15px;
-  background: rgba(255, 255, 255, 0.16);
-  color: inherit;
-}
-.search-box input {
-  flex: 1;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: inherit;
-  font-size: 13px;
-}
-.search-box input::placeholder {
-  color: inherit;
-  opacity: 0.75;
 }
 .summary-row {
   display: flex;

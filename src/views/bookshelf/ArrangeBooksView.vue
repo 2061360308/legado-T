@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import { platform } from "@/runtime";
 import { bookSourceExport } from "@/core/application/bookSources";
 import {
@@ -14,11 +15,14 @@ import {
 } from "@/core/application/books";
 import type { Book, BookGroup } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
+import SearchBar from "@/components/android/SearchBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import GroupSelectDialog from "./GroupSelectDialog.vue";
 
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const books = ref<Book[]>([]);
 const groups = ref<BookGroup[]>([]);
 const selected = ref<Set<string>>(new Set());
@@ -200,9 +204,9 @@ onMounted(load);
 
 <template>
   <div class="arrange-page">
-    <TitleBar title="书架管理" @back="router.back()">
+    <TitleBar search-only @back="router.back()">
       <template #content>
-        <input v-model="keyword" class="search" placeholder="搜索书名/作者" />
+        <SearchBar v-model="keyword" placeholder="搜索书名/作者" />
       </template>
       <template #actions>
         <button aria-label="更多" @click="menuVisible = true">
@@ -212,7 +216,7 @@ onMounted(load);
     </TitleBar>
     <PopupMenu v-model="menuVisible" :items="menuItems" :top="54" @select="onMenu" />
     <p v-if="message" class="message">{{ message }}</p>
-    <main class="list">
+    <main ref="listRef" class="list">
       <div v-for="book in filtered" :key="book.bookUrl" class="book-row">
         <label class="check">
           <input
@@ -278,20 +282,6 @@ onMounted(load);
   display: flex;
   flex-direction: column;
   background: var(--ac-background);
-}
-.search {
-  flex: 1;
-  min-width: 0;
-  margin: 0 8px;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
-  outline: none;
-}
-.search::placeholder {
-  color: rgba(255, 255, 255, 0.6);
 }
 .message {
   margin: 6px 16px 0;

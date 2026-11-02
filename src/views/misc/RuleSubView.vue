@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import { kvGet, kvSet } from "@/core/application/config";
 import { fetchRemoteText } from "@/utils/remoteFetch";
 import { bookSourceImport } from "@/core/application/bookSources";
@@ -21,6 +22,8 @@ interface RuleSub {
 const STORAGE_KEY = "rss:ruleSubs";
 const TYPE_LABELS = ["书源", "RSS 源", "替换规则"];
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const items = ref<RuleSub[]>([]);
 const loading = ref(false);
 const message = ref("");
@@ -144,7 +147,7 @@ onMounted(load);
 
     <p v-if="message" class="message">{{ message }}</p>
     <p v-if="loading" class="loading">加载中…</p>
-    <main v-else class="list">
+    <main v-else ref="listRef" class="list">
       <div
         v-for="(item, index) in sorted"
         :key="item.id"

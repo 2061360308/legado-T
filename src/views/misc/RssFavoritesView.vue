@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import {
   rssStarClear,
   rssStarDelete,
@@ -15,6 +16,8 @@ import EmptyState from "@/components/android/EmptyState.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const groups = ref<string[]>([]);
 const activeGroup = ref("");
 const stars = ref<RssStar[]>([]);
@@ -140,7 +143,7 @@ onMounted(load);
 
     <p v-if="message" class="message">{{ message }}</p>
     <p v-if="loading" class="loading">加载中…</p>
-    <main v-else class="list">
+    <main v-else ref="listRef" class="list">
       <EmptyState
         v-if="!stars.length"
         icon="ic_star_border"

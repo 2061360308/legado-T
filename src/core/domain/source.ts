@@ -51,6 +51,8 @@ export interface OnlineSearchResult {
   bookSourceUrl?: string;
   bookSourceName?: string;
   error?: string;
+  originCount?: number;
+  origins?: string[];
   [key: string]: unknown;
 }
 

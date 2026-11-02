@@ -123,6 +123,7 @@ tauri-plugin-reader-platform = { path = "plugins/reader-platform" }
 reader-core = { path = "crates/reader-core", features = ["ebook", "epub"] }
 backup-core = { path = "crates/backup-core" }
 engine-model = { path = "crates/engine-model" }
+engine-http-native = { path = "crates/engine-http-native" }
 engine-native = { path = "crates/engine-native" }
 tokio = { version = "1", features = ["rt", "time"] }
 

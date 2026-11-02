@@ -30,6 +30,23 @@ pub fn book_list(state: State<AppState>) -> CmdResult<Vec<Book>> {
 }
 
 #[tauri::command]
+pub fn book_search(state: State<AppState>, keyword: String) -> CmdResult<Vec<Book>> {
+    let key = keyword.trim().to_lowercase();
+    if key.is_empty() {
+        return Ok(Vec::new());
+    }
+    let conn = state.conn.lock().map_err(|e| e.to_string())?;
+    let mut books = BookRepo::list(&conn).map_err(|e| e.to_string())?;
+    books.retain(|book| {
+        book.name.to_lowercase().contains(&key) || book.author.to_lowercase().contains(&key)
+    });
+    for book in &mut books {
+        state.storage.hydrate_book(book);
+    }
+    Ok(books)
+}
+
+#[tauri::command]
 pub fn book_get(state: State<AppState>, book_url: String) -> CmdResult<Option<Book>> {
     let conn = state.conn.lock().map_err(|e| e.to_string())?;
     let mut book = BookRepo::get(&conn, &book_url).map_err(|e| e.to_string())?;

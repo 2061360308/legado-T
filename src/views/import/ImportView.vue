@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import {
   localImportArchiveImport,
   localImportArchiveList,
@@ -12,11 +13,14 @@ import { kvGet, kvSet } from "@/core/application/config";
 import type { ImportEntry, ImportLocation, PreparedImport } from "@/platform/contract";
 import { platform } from "@/runtime";
 import TitleBar from "@/components/android/TitleBar.vue";
+import SearchBar from "@/components/android/SearchBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 
 const router = useRouter();
+const fileAreaRef = ref<HTMLElement | null>(null);
+useScrollMemory(fileAreaRef);
 const location = ref<ImportLocation | null>(null);
 const stack = ref<{ token: string; name: string }[]>([]);
 const entries = ref<ImportEntry[]>([]);
@@ -392,12 +396,9 @@ onMounted(async () => {
 
 <template>
   <div class="import-page">
-    <TitleBar title="" :back="true" @back="router.back()">
+    <TitleBar search-only :back="true" @back="router.back()">
       <template #content>
-        <label class="search-box">
-          <Icon name="ic_search_hint" :size="18" />
-          <input v-model="query" placeholder="搜索 本地书籍" />
-        </label>
+        <SearchBar v-model="query" placeholder="搜索 本地书籍" />
       </template>
       <template #actions>
         <button aria-label="选择文件夹" @click="chooseFolder">
@@ -427,7 +428,7 @@ onMounted(async () => {
     <div v-if="loading || scanning" class="progress-bar" data-id="refresh_progress_bar" />
     <p v-if="message" class="toast">{{ message }}</p>
 
-    <main class="file-area">
+    <main ref="fileAreaRef" class="file-area">
       <div v-if="visibleEntries.length" class="file-list" data-id="recycler_view">
         <button
           v-for="entry in visibleEntries"
@@ -557,31 +558,6 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   background: var(--ac-background);
-}
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  width: 100%;
-  height: 30px;
-  margin: 10px 0;
-  padding: 0 10px;
-  border-radius: 15px;
-  background: rgba(255, 255, 255, 0.16);
-  color: inherit;
-}
-.search-box input {
-  flex: 1;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: inherit;
-  font-size: 13px;
-}
-.search-box input::placeholder {
-  color: inherit;
-  opacity: 0.75;
 }
 .path-bar {
   display: flex;

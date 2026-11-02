@@ -14,6 +14,10 @@ export function bookList(): Promise<Book[]> {
   return invoke<Book[]>(COMMANDS.bookList);
 }
 
+export function bookSearch(keyword: string): Promise<Book[]> {
+  return invoke<Book[]>(COMMANDS.bookSearch, { keyword });
+}
+
 export function bookGet(bookUrl: string): Promise<Book | null> {
   return invoke<Book | null>(COMMANDS.bookGet, { bookUrl });
 }

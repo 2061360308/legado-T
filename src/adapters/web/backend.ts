@@ -585,6 +585,15 @@ export function createWebBackend() {
           return "0.1.0-web" as T;
         case COMMANDS.bookList:
           return (await listBooks()) as T;
+        case COMMANDS.bookSearch: {
+          const keyword = argString(args, "keyword").trim().toLowerCase();
+          if (!keyword) return [] as T;
+          return (await listBooks()).filter(
+            (book) =>
+              book.name.toLowerCase().includes(keyword) ||
+              String(book.author || "").toLowerCase().includes(keyword),
+          ) as T;
+        }
         case COMMANDS.bookGet:
           await primeAssetUrls(["cover"]).catch(() => undefined);
           return ((await db.books.get(argString(args, "bookUrl"))) ?? null) as T;
@@ -659,6 +668,27 @@ export function createWebBackend() {
           return ((await db.kv.get(argString(args, "key")))?.value ?? null) as T;
         case COMMANDS.kvSet:
           await db.kv.put({ key: argString(args, "key"), value: argString(args, "value") });
+          return undefined as T;
+        case COMMANDS.appLogAdd:
+          await db.appLogs.add({
+            time: Date.now(),
+            level: argString(args, "level") || "info",
+            source: argString(args, "source"),
+            message: argString(args, "message"),
+          });
+          return undefined as T;
+        case COMMANDS.appLogList: {
+          const limit = Math.min(Math.max(argNumber(args, "limit") || 500, 1), 2000);
+          const source = (args.source as string | null | undefined) ?? null;
+          const rows = source
+            ? await db.appLogs.where("source").equals(source).toArray()
+            : await db.appLogs.toArray();
+          return rows
+            .sort((a, b) => b.time - a.time)
+            .slice(0, limit) as T;
+        }
+        case COMMANDS.appLogClear:
+          await db.appLogs.clear();
           return undefined as T;
         case COMMANDS.readRecordAddTime: {
           const seconds = argNumber(args, "seconds");
@@ -1168,6 +1198,18 @@ export function createWebBackend() {
           return (await bookSources.bookSourceGroups()) as T;
         case COMMANDS.bookSourceSearchHistory:
           return (await bookSources.listSourceSearchHistory(argNumber(args, "limit") || 20)) as T;
+        case COMMANDS.bookSourceSearchHistorySave:
+          await bookSources.saveSourceSearchHistory(argString(args, "keyword"));
+          return undefined as T;
+        case COMMANDS.bookSourceSearchHistoryDelete:
+          await bookSources.deleteSourceSearchHistory(argString(args, "keyword"));
+          return undefined as T;
+        case COMMANDS.bookSourceSearchHistoryClear:
+          await bookSources.clearSourceSearchHistory();
+          return undefined as T;
+        case COMMANDS.bookSourceSearchStart:
+        case COMMANDS.bookSourceSearchCancel:
+          return undefined as T;
         case COMMANDS.bookSourceSetVariable:
           await bookSources.setSourceVariable(
             argString(args, "bookSourceUrl"),
@@ -1188,6 +1230,12 @@ export function createWebBackend() {
             argString(args, "keyword"),
             args.sourceUrls as string[] | undefined,
             argNumber(args, "page") || 1,
+            args.recordHistory !== false,
+          )) as T;
+        case COMMANDS.bookSourceSearchPreview:
+          return (await bookSources.getSearchBook(
+            argString(args, "bookUrl"),
+            argString(args, "bookSourceUrl"),
           )) as T;
         case COMMANDS.bookSourceInfo:
           return (await bookSources.sourceBookInfo(
@@ -1254,6 +1302,46 @@ export function createWebBackend() {
             await db.chapters.where("bookUrl").equals(book.bookUrl).delete();
             await db.chapters.bulkPut(
               chapters.map((chapter, index) => ({
+                ...(chapter as unknown as BookChapter),
+                index: Number(chapter.index ?? index),
+                key: chapterKey(book.bookUrl, Number(chapter.index ?? index)),
+                bookUrl: book.bookUrl,
+              })),
+            );
+          });
+          return info as T;
+        }
+        case COMMANDS.bookSourceAddPrepared: {
+          const sourceUrl = argString(args, "bookSourceUrl");
+          const source = await bookSources.getBookSource(sourceUrl);
+          if (!source) throw new Error("书源不存在");
+          const info = (args.book as Record<string, unknown> | undefined) ?? {};
+          const rawChapters = (args.chapters as Record<string, unknown>[] | undefined) ?? [];
+          if (!rawChapters.length) throw new Error("目录为空，无法加入书架");
+          const book: Book = {
+            bookUrl: String(info.bookUrl ?? ""),
+            name: String(info.name ?? ""),
+            author: String(info.author ?? ""),
+            origin: sourceUrl,
+            originName: source.bookSourceName,
+            type: 1 << Math.max(0, Math.min(3, source.bookSourceType ?? 0)),
+            group: argNumber(args, "group"),
+            tocUrl: String(info.tocUrl ?? ""),
+            intro: (info.intro as string | null | undefined) ?? null,
+            kind: (info.kind as string | null | undefined) ?? null,
+            coverUrl: (info.coverUrl as string | null | undefined) ?? null,
+            latestChapterTitle:
+              (info.latestChapterTitle as string | null | undefined) ?? null,
+            totalChapterNum: rawChapters.length,
+            canUpdate: true,
+            syncTime: nowSeconds(),
+          };
+          if (!book.bookUrl) throw new Error("书籍地址为空");
+          await saveBook(book);
+          await db.transaction("rw", db.chapters, async () => {
+            await db.chapters.where("bookUrl").equals(book.bookUrl).delete();
+            await db.chapters.bulkPut(
+              rawChapters.map((chapter, index) => ({
                 ...(chapter as unknown as BookChapter),
                 index: Number(chapter.index ?? index),
                 key: chapterKey(book.bookUrl, Number(chapter.index ?? index)),

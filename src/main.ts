@@ -6,6 +6,9 @@ import "./styles/global.css";
 import { platform } from "./runtime";
 import { registerWebPwa } from "./pwa";
 import { useThemeStore } from "./stores/theme";
+import { installGlobalErrorLogging } from "./utils/appLog";
+
+installGlobalErrorLogging();
 
 const app = createApp(App);
 

@@ -31,13 +31,29 @@ const routes: RouteRecordRaw[] = [
     name: "book-info-edit",
     component: () => import("@/views/bookshelf/BookInfoEditView.vue"),
   },
-  { path: "/reader", name: "reader", component: () => import("@/views/reader/ReaderView.vue") },
-  { path: "/audio", name: "audio", component: () => import("@/views/audio/AudioPlayView.vue") },
-  { path: "/manga", name: "manga", component: () => import("@/views/reader/MangaView.vue") },
+  {
+    path: "/reader",
+    name: "reader",
+    component: () => import("@/views/reader/ReaderView.vue"),
+    meta: { keepAlive: false },
+  },
+  {
+    path: "/audio",
+    name: "audio",
+    component: () => import("@/views/audio/AudioPlayView.vue"),
+    meta: { keepAlive: false },
+  },
+  {
+    path: "/manga",
+    name: "manga",
+    component: () => import("@/views/reader/MangaView.vue"),
+    meta: { keepAlive: false },
+  },
   {
     path: "/file-source",
     name: "file-source",
     component: () => import("@/views/reader/FileSourceView.vue"),
+    meta: { keepAlive: false },
   },
   {
     path: "/book-search",
@@ -112,6 +128,7 @@ const routes: RouteRecordRaw[] = [
     path: "/welcome",
     name: "welcome",
     component: () => import("@/views/welcome/WelcomeView.vue"),
+    meta: { keepAlive: false },
   },
   {
     path: "/read-schemes",
@@ -204,37 +221,44 @@ const routes: RouteRecordRaw[] = [
     path: "/legacy",
     name: "legacy",
     component: () => import("@/views/legacy/LegacyGalleryView.vue"),
+    meta: { keepAlive: false },
   },
   {
     path: "/generated",
     name: "generated",
     component: () => import("@/views/legacy/GeneratedGalleryView.vue"),
+    meta: { keepAlive: false },
   },
   {
     path: "/generated/:kind/:name",
     name: "generated-xml",
     component: () => import("@/views/legacy/GeneratedXmlPage.vue"),
+    meta: { keepAlive: false },
   },
   { path: "/shell", redirect: `/shell/${shellStart}` },
   {
     path: "/shell/:name",
     name: "shell",
     component: () => import("@/views/legacy/AppShellView.vue"),
+    meta: { keepAlive: false },
   },
   {
     path: "/legacy/menu/:name",
     name: "legacy-menu",
     component: () => import("@/views/legacy/LegacyMenuPage.vue"),
+    meta: { keepAlive: false },
   },
   {
     path: "/legacy/pref/:name",
     name: "legacy-pref",
     component: () => import("@/views/legacy/LegacyPrefPage.vue"),
+    meta: { keepAlive: false },
   },
   {
     path: "/legacy/:name",
     name: "legacy-layout",
     component: () => import("@/views/legacy/LegacyLayoutPage.vue"),
+    meta: { keepAlive: false },
   },
 ];
 

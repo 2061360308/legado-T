@@ -1,6 +1,7 @@
 ﻿<script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import {
   bookSourceAddToShelf,
   bookSourceExplore,
@@ -13,6 +14,8 @@ import EmptyState from "@/components/android/EmptyState.vue";
 
 const route = useRoute();
 const router = useRouter();
+const resultListRef = ref<HTMLElement | null>(null);
+useScrollMemory(resultListRef);
 const sourceUrl = computed(() => String(route.query.sourceUrl || ""));
 const exploreUrl = computed(() => String(route.query.exploreUrl || ""));
 const title = computed(
@@ -123,7 +126,7 @@ onMounted(async () => {
     <TitleBar :title="title" @back="router.push('/explore')" />
 
     <p v-if="message" class="message">{{ message }}</p>
-    <main class="result-list" @scroll.passive="onScroll">
+    <main ref="resultListRef" class="result-list" @scroll.passive="onScroll">
       <EmptyState
         v-if="!results.length && !loading"
         icon="ic_bottom_explore_e"

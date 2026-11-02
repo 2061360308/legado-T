@@ -32,6 +32,10 @@ pub fn run() {
             let conn = data::db::open(&db_path.to_string_lossy()).expect("open database");
 
             if let Ok(res_dir) = app.path().resource_dir() {
+                let pdfium_dir = res_dir.join("pdfium");
+                if pdfium_dir.exists() {
+                    std::env::set_var("PDFIUM_LIB_PATH", &pdfium_dir);
+                }
                 let toc_rule_path = res_dir.join("defaultData").join("txtTocRule.json");
                 if let Ok(json) = std::fs::read_to_string(&toc_rule_path) {
                     let _ = data::default_data::load_toc_rules_from_json(&conn, &json);
@@ -49,12 +53,14 @@ pub fn run() {
                 conn: Mutex::new(conn),
                 reader_cache: Mutex::new(Default::default()),
                 storage,
+                explore_cache: Mutex::new(Default::default()),
             });
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             commands::version::app_version,
             commands::db::book_list,
+            commands::db::book_search,
             commands::db::book_get,
             commands::db::book_upsert,
             commands::db::book_delete,
@@ -66,6 +72,9 @@ pub fn run() {
             commands::db::txt_toc_rule_list,
             commands::db::kv_get,
             commands::db::kv_set,
+            commands::logs::app_log_add,
+            commands::logs::app_log_list,
+            commands::logs::app_log_clear,
             commands::db::replace_rule_list,
             commands::db::dict_rule_list,
             commands::db::http_tts_list,
@@ -141,13 +150,20 @@ pub fn run() {
             commands::book_source::book_source_export,
             commands::book_source::book_source_groups,
             commands::book_source::book_source_search_history,
+            commands::book_source::book_source_search_history_save,
+            commands::book_source::book_source_search_history_delete,
+            commands::book_source::book_source_search_history_clear,
+            commands::book_source::book_source_search_start,
+            commands::book_source::book_source_search_cancel,
             commands::book_source::book_source_set_variable,
             commands::book_source::book_source_get_variables,
             commands::book_source::book_source_search,
+            commands::book_source::book_source_search_preview,
             commands::book_source::book_source_info,
             commands::book_source::book_source_toc,
             commands::book_source::book_source_content,
             commands::book_source::book_source_add_to_shelf,
+            commands::book_source::book_source_add_prepared,
             commands::book_source::book_source_refresh,
             commands::book_source::book_source_reviews,
             commands::book_source::book_source_download_urls,

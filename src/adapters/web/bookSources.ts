@@ -163,10 +163,26 @@ export async function listSourceSearchHistory(limit = 20): Promise<string[]> {
   return (await searchHistory()).slice(0, Math.min(Math.max(limit, 1), HISTORY_LIMIT));
 }
 
+export async function saveSourceSearchHistory(keyword: string): Promise<void> {
+  await saveSearchHistory(keyword);
+}
+
+export async function deleteSourceSearchHistory(keyword: string): Promise<void> {
+  const text = keyword.trim();
+  if (!text) return;
+  const history = (await searchHistory()).filter((item) => item !== text);
+  await db.kv.put({ key: HISTORY_KEY, value: JSON.stringify(history) });
+}
+
+export async function clearSourceSearchHistory(): Promise<void> {
+  await db.kv.delete(HISTORY_KEY);
+}
+
 export async function searchBookSources(
   keyword: string,
   sourceUrls?: string[],
   page = 1,
+  recordHistory = true,
 ): Promise<unknown[]> {
   const text = keyword.trim();
   if (!text) return [];
@@ -178,7 +194,7 @@ export async function searchBookSources(
       (!selected.size || selected.has(source.bookSourceUrl)),
   );
   if (!sources.length) return [];
-  await saveSearchHistory(text);
+  if (recordHistory) await saveSearchHistory(text);
   const results: unknown[] = [];
   for (const source of sources) {
     try {
@@ -188,11 +204,21 @@ export async function searchBookSources(
         unknown
       >[];
       for (const book of books) {
-        results.push({
+        const result: Record<string, unknown> = {
           ...book,
           bookSourceUrl: source.bookSourceUrl,
           bookSourceName: source.bookSourceName,
-        });
+        };
+        results.push(result);
+        const bookUrl = String(result.bookUrl ?? "").trim();
+        if (bookUrl) {
+          await db.searchBooks.put({
+            bookUrl,
+            bookSourceUrl: source.bookSourceUrl,
+            json: JSON.stringify(result),
+            updatedAt: nowSeconds(),
+          });
+        }
       }
     } catch (error) {
       results.push({
@@ -202,7 +228,24 @@ export async function searchBookSources(
       });
     }
   }
+  await db.searchBooks
+    .where("updatedAt")
+    .below(nowSeconds() - 7 * 24 * 60 * 60)
+    .delete();
   return results;
+}
+
+export async function getSearchBook(
+  bookUrl: string,
+  bookSourceUrl: string,
+): Promise<Record<string, unknown> | null> {
+  const row = await db.searchBooks.get([bookUrl, bookSourceUrl]);
+  if (!row) return null;
+  try {
+    return JSON.parse(row.json) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
 }
 
 export async function sourceBookInfo(

@@ -1,41 +1,73 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import type { DictRule } from "@/core/domain";
+import { fetchRemoteText } from "@/utils/remoteFetch";
+import { saveTextFile } from "@/utils/fileSave";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import RuleRow from "@/components/android/RuleRow.vue";
 import SelectActionBar from "@/components/android/SelectActionBar.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
-import { dictRuleDelete, dictRuleExport, dictRuleImport, dictRuleSave, dictRules } from "@/core/application/rules";
+import OnlineImportDialog from "@/views/misc/OnlineImportDialog.vue";
+import QrCodeDialog from "@/views/source/QrCodeDialog.vue";
+import defaultDictRules from "@/assets/defaultData/dictRules.json";
+import {
+  dictRuleDelete,
+  dictRuleImport,
+  dictRuleSave,
+  dictRules,
+} from "@/core/application/rules";
 
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const rules = ref<DictRule[]>([]);
 const editing = ref(false);
 const message = ref("");
 const form = ref<DictRule>(emptyRule());
 const menuVisible = ref(false);
-const moreRule = ref<DictRule | null>(null);
 const selected = ref<Set<string>>(new Set());
 const importInput = ref<HTMLInputElement | null>(null);
+const onlineVisible = ref(false);
+const qrVisible = ref(false);
 
 const menuItems: PopupMenuItem[] = [
-  { key: "import", label: "导入规则", icon: "ic_import" },
-  { key: "export", label: "导出规则", icon: "ic_export" },
+  { key: "importLocal", label: "本地导入", icon: "ic_import" },
+  { key: "importOnline", label: "在线导入", icon: "ic_import" },
+  { key: "importQr", label: "二维码导入", icon: "ic_scan" },
+  { key: "importDefault", label: "导入默认规则", icon: "ic_import" },
+  { key: "help", label: "帮助", icon: "ic_help", muted: true },
 ];
-const ruleMenuItems: PopupMenuItem[] = [
-  { key: "up", label: "上移" },
-  { key: "down", label: "下移" },
-  { key: "delete", label: "删除", danger: true },
+const selectionMenuItems: PopupMenuItem[] = [
+  { key: "enable", label: "启用" },
+  { key: "disable", label: "禁用" },
+  { key: "top", label: "置顶" },
+  { key: "bottom", label: "置底" },
+  { key: "export", label: "导出选中" },
 ];
+
+const selectedRules = computed(() =>
+  rules.value.filter((rule) => selected.value.has(rule.name)),
+);
 
 function emptyRule(): DictRule {
   return { name: "", urlRule: "", showRule: "", enabled: true, sortNumber: 0, jsLib: "" };
 }
 
+function notify(text: string) {
+  message.value = text;
+  window.setTimeout(() => {
+    if (message.value === text) message.value = "";
+  }, 2500);
+}
+
 async function load() {
   rules.value = await dictRules();
+  const alive = new Set(rules.value.map((rule) => rule.name));
+  selected.value = new Set([...selected.value].filter((name) => alive.has(name)));
 }
 
 function startCreate() {
@@ -51,76 +83,108 @@ function startEdit(rule: DictRule) {
 
 async function save() {
   if (!form.value.name.trim() || !form.value.urlRule.trim()) {
-    message.value = "名称与请求规则不能为空";
+    notify("名称与请求规则不能为空");
     return;
   }
   await dictRuleSave({ ...form.value });
-  message.value = "规则已保存";
+  notify("规则已保存");
   editing.value = false;
   await load();
 }
 
 async function toggle(rule: DictRule) {
-  await dictRuleSave({ ...rule, enabled: !rule.enabled });
+  await dictRuleSave({ ...rule, enabled: rule.enabled === false });
+  await load();
+}
+
+async function setSelectedEnabled(enabled: boolean) {
+  for (const rule of selectedRules.value) {
+    if ((rule.enabled !== false) === enabled) continue;
+    await dictRuleSave({ ...rule, enabled });
+  }
   await load();
 }
 
 async function remove(rule: DictRule) {
   if (!confirm(`删除字典规则「${rule.name}」？`)) return;
   await dictRuleDelete(rule.name);
-  message.value = "规则已删除";
   selected.value.delete(rule.name);
+  notify("规则已删除");
   await load();
 }
 
-function select(rule: DictRule, value: boolean) {
+async function deleteSelected() {
+  if (!selectedRules.value.length) return;
+  if (!confirm(`删除选中的 ${selectedRules.value.length} 条字典规则？`)) return;
+  for (const rule of selectedRules.value) await dictRuleDelete(rule.name);
+  selected.value = new Set();
+  notify("规则已删除");
+  await load();
+}
+
+async function applyOrder(ordered: DictRule[]) {
+  for (let index = 0; index < ordered.length; index += 1) {
+    if ((ordered[index].sortNumber ?? index) !== index) {
+      await dictRuleSave({ ...ordered[index], sortNumber: index });
+    }
+  }
+  await load();
+}
+
+async function moveSelected(toTop: boolean) {
+  if (!selectedRules.value.length) return;
+  const selectedNames = new Set(selectedRules.value.map((rule) => rule.name));
+  const ordered = [...rules.value].sort(
+    (a, b) => (a.sortNumber ?? 0) - (b.sortNumber ?? 0),
+  );
+  const chosen = ordered.filter((rule) => selectedNames.has(rule.name));
+  const rest = ordered.filter((rule) => !selectedNames.has(rule.name));
+  await applyOrder(toTop ? [...chosen, ...rest] : [...rest, ...chosen]);
+}
+
+function setSelected(rule: DictRule, value: boolean) {
   const next = new Set(selected.value);
   if (value) next.add(rule.name);
   else next.delete(rule.name);
   selected.value = next;
 }
 
-function cancel() {
-  selected.value = new Set();
+function selectAll(value: boolean) {
+  selected.value = value ? new Set(rules.value.map((rule) => rule.name)) : new Set();
 }
 
-async function batchEnable(enabled: boolean) {
-  for (const name of selected.value) {
-    const rule = rules.value.find((item) => item.name === name);
-    if (rule) await dictRuleSave({ ...rule, enabled });
-  }
-  cancel();
-  await load();
+function revertSelection() {
+  selected.value = new Set(
+    rules.value.filter((rule) => !selected.value.has(rule.name)).map((rule) => rule.name),
+  );
 }
 
-async function batchDelete() {
-  for (const name of selected.value) await dictRuleDelete(name);
-  cancel();
-  await load();
-}
-
-async function move(rule: DictRule, delta: number) {
-  const index = rules.value.findIndex((item) => item.name === rule.name);
-  const target = index + delta;
-  if (index < 0 || target < 0 || target >= rules.value.length) return;
-  const a = rules.value[index];
-  const b = rules.value[target];
-  await dictRuleSave({ ...a, sortNumber: b.sortNumber ?? target });
-  await dictRuleSave({ ...b, sortNumber: a.sortNumber ?? index });
-  await load();
-}
-
-function onRuleMenu(key: string) {
-  const rule = moreRule.value;
-  if (!rule) return;
-  if (key === "up") move(rule, -1);
-  else if (key === "down") move(rule, 1);
-  else if (key === "delete") remove(rule);
+async function exportSelected() {
+  if (!selectedRules.value.length) return;
+  const saved = await saveTextFile(
+    "dictRules.json",
+    JSON.stringify(selectedRules.value, null, 2),
+    "字典规则 JSON",
+  );
+  if (saved) notify("规则已导出");
 }
 
 function onMenu(key: string) {
-  if (key === "import") importInput.value?.click();
-  else if (key === "export") onExport();
+  if (key === "importLocal") importInput.value?.click();
+  else if (key === "importOnline") onlineVisible.value = true;
+  else if (key === "importQr") qrVisible.value = true;
+  else if (key === "importDefault") importDefault();
+  else if (key === "help") notify("字典规则帮助暂未接入");
+}
+
+async function importDefault() {
+  try {
+    const report = await dictRuleImport(JSON.stringify(defaultDictRules));
+    notify(`已导入 ${report.entries.length} 条默认字典规则`);
+    await load();
+  } catch (error) {
+    notify(String(error));
+  }
 }
 
 async function onImport(event: Event) {
@@ -129,24 +193,41 @@ async function onImport(event: Event) {
   if (!file) return;
   try {
     const report = await dictRuleImport(await file.text());
-    message.value = `导入完成：共 ${report.entries.length} 条`;
+    notify(`导入完成：共 ${report.entries.length} 条`);
     await load();
-  } catch (e) {
-    message.value = String(e);
+  } catch (error) {
+    notify(String(error));
   } finally {
     input.value = "";
   }
 }
 
-async function onExport() {
-  const json = await dictRuleExport();
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "dictRules.json";
-  a.click();
-  URL.revokeObjectURL(url);
+async function importOnline(url: string) {
+  try {
+    const report = await dictRuleImport(await fetchRemoteText(url));
+    notify(`在线导入完成：共 ${report.entries.length} 条`);
+    await load();
+  } catch (error) {
+    notify(String(error));
+  }
+}
+
+async function importQr(text: string) {
+  try {
+    const report = await dictRuleImport(text);
+    notify(`二维码导入完成：共 ${report.entries.length} 条`);
+    await load();
+  } catch (error) {
+    notify(String(error));
+  }
+}
+
+async function onSelectionMenu(key: string) {
+  if (key === "enable") await setSelectedEnabled(true);
+  else if (key === "disable") await setSelectedEnabled(false);
+  else if (key === "top") await moveSelected(true);
+  else if (key === "bottom") await moveSelected(false);
+  else if (key === "export") await exportSelected();
 }
 
 onMounted(load);
@@ -164,6 +245,7 @@ onMounted(load);
         </button>
       </template>
     </TitleBar>
+
     <input
       ref="importInput"
       class="hidden-input"
@@ -172,37 +254,35 @@ onMounted(load);
       @change="onImport"
     />
     <PopupMenu v-model="menuVisible" :items="menuItems" @select="onMenu" />
-    <PopupMenu
-      :model-value="!!moreRule"
-      :items="ruleMenuItems"
-      @update:model-value="moreRule = null"
-      @select="onRuleMenu"
-    />
 
     <p v-if="message" class="message">{{ message }}</p>
 
-    <main class="list">
+    <main ref="listRef" class="list">
       <RuleRow
         v-for="rule in rules"
         :key="rule.name"
         :name="rule.name"
-        :subtitle="rule.urlRule"
         :enabled="rule.enabled !== false"
         :selected="selected.has(rule.name)"
-        @update:selected="select(rule, $event)"
+        :show-more="false"
+        show-delete
+        @update:selected="setSelected(rule, $event)"
         @toggle="toggle(rule)"
         @edit="startEdit(rule)"
-        @more="moreRule = rule"
+        @delete="remove(rule)"
       />
       <p v-if="rules.length === 0" class="empty">暂无字典规则</p>
     </main>
 
     <SelectActionBar
-      :count="selected.size"
-      @enable="batchEnable(true)"
-      @disable="batchEnable(false)"
-      @remove="batchDelete"
-      @cancel="cancel"
+      :count="selectedRules.length"
+      :total="rules.length"
+      main-text="删除"
+      :menu-items="selectionMenuItems"
+      @select-all="selectAll"
+      @revert="revertSelection"
+      @main="deleteSelected"
+      @menu="onSelectionMenu"
     />
 
     <AndroidDialog
@@ -229,6 +309,13 @@ onMounted(load);
         <button class="btn primary" @click="save">保存</button>
       </template>
     </AndroidDialog>
+
+    <OnlineImportDialog
+      v-model="onlineVisible"
+      title="在线导入字典规则"
+      @confirm="importOnline"
+    />
+    <QrCodeDialog v-model="qrVisible" mode="import" @import="importQr" />
   </div>
 </template>
 
@@ -237,6 +324,7 @@ onMounted(load);
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
   background: var(--ac-background);
 }
 .hidden-input {
@@ -249,6 +337,7 @@ onMounted(load);
 }
 .list {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 .empty {

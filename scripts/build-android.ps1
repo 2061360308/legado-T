@@ -1,5 +1,5 @@
 param(
-    [ValidateSet("all", "arm64", "x86_64")]
+    [ValidateSet("all", "split", "arm64", "x86_64")]
     [string]$Target = "all",
     [string]$ApiLevel = "24",
     [switch]$Release,
@@ -192,7 +192,7 @@ $sysroot = (Join-Path $toolchain "sysroot") -replace "\\", "/"
 $env:PATH = "$toolchainBin;$env:PATH"
 
 $infos = Get-TargetInfo
-$targetKeys = if ($Target -eq "all") { @("arm64", "x86_64") } else { @($Target) }
+$targetKeys = if ($Target -in @("all", "split")) { @("arm64", "x86_64") } else { @($Target) }
 
 if ($SizeOptimized -and -not $Release) {
     Fail "-SizeOptimized requires -Release."
@@ -293,6 +293,11 @@ try {
             "app:assembleX86_64$variant",
             "app:assembleUniversal$variant"
         )
+    } elseif ($Target -eq "split") {
+        @(
+            "app:assembleArm64$variant",
+            "app:assembleX86_64$variant"
+        )
     } else {
         $taskTarget = if ($Target -eq "arm64") { "Arm64" } else { "X86_64" }
         @("app:assemble$taskTarget$variant")
@@ -322,7 +327,13 @@ try {
     }
 
     $apkRoot = Join-Path $root "src-tauri\gen\android\app\build\outputs\apk"
-    $resultKeys = if ($Target -eq "all") { @("arm64", "x86_64", "universal") } else { @($Target) }
+    $resultKeys = if ($Target -eq "all") {
+        @("arm64", "x86_64", "universal")
+    } elseif ($Target -eq "split") {
+        @("arm64", "x86_64")
+    } else {
+        @($Target)
+    }
     $apks = @()
     foreach ($key in $resultKeys) {
         $apkDir = if ($key -eq "universal") { "universal" } else { $infos[$key].ApkDir }

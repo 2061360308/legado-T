@@ -10,6 +10,7 @@ import type { Book } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
+import AppLogDialog from "@/views/misc/AppLogDialog.vue";
 
 const router = useRouter();
 const webdavUrl = ref("");
@@ -26,6 +27,7 @@ const message = ref("");
 const log = ref("");
 const busy = ref(false);
 const menuVisible = ref(false);
+const logVisible = ref(false);
 const ignore = ref<string[]>([]);
 
 const menuItems: PopupMenuItem[] = [
@@ -278,7 +280,7 @@ function toggleIgnore(value: string) {
 
 function onMenu(key: string) {
   if (key === "help") message.value = "WebDAV 帮助暂未接入";
-  else if (key === "log") message.value = log.value || "暂无日志";
+  else if (key === "log") logVisible.value = true;
 }
 
 onMounted(loadConfig);
@@ -374,6 +376,7 @@ onMounted(loadConfig);
       <p v-if="message" class="message">{{ message }}</p>
       <pre v-if="log" class="log">{{ log }}</pre>
     </main>
+    <AppLogDialog v-model="logVisible" />
   </div>
 </template>
 

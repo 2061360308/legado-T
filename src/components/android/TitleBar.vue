@@ -9,6 +9,7 @@ withDefaults(
     flat?: boolean;
     dark?: boolean;
     safeTop?: boolean;
+    searchOnly?: boolean;
   }>(),
   {
     title: "",
@@ -17,6 +18,7 @@ withDefaults(
     flat: false,
     dark: false,
     safeTop: true,
+    searchOnly: false,
   },
 );
 
@@ -24,7 +26,10 @@ defineEmits<{ back: [] }>();
 </script>
 
 <template>
-  <header class="title-bar" :class="{ flat, dark }">
+  <header
+    class="title-bar"
+    :class="{ flat, dark, 'search-only': searchOnly, 'with-nav': back }"
+  >
     <div v-if="safeTop" class="status-bar-spacer" aria-hidden="true" />
     <div class="bar">
       <button v-if="back" class="nav-button" aria-label="返回" @click="$emit('back')">
@@ -75,6 +80,9 @@ defineEmits<{ back: [] }>();
   align-items: center;
   min-height: 56px;
   padding: 0 calc(4px + var(--safe-right, 0px)) 0 calc(4px + var(--safe-left, 0px));
+}
+.title-bar.search-only:not(.with-nav) .bar {
+  padding-left: calc(16px + var(--safe-left, 0px));
 }
 .nav-button,
 .actions :deep(button) {

@@ -255,6 +255,15 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             lastUsed INTEGER NOT NULL DEFAULT 0
         );
 
+        CREATE TABLE IF NOT EXISTS search_books (
+            bookUrl       TEXT NOT NULL,
+            bookSourceUrl TEXT NOT NULL,
+            json          TEXT NOT NULL,
+            updatedAt     INTEGER NOT NULL DEFAULT 0,
+            PRIMARY KEY (bookUrl, bookSourceUrl)
+        );
+        CREATE INDEX IF NOT EXISTS idx_search_books_updated ON search_books(updatedAt);
+
         CREATE TABLE IF NOT EXISTS chapter_contents (
             bookUrl      TEXT NOT NULL,
             chapterIndex INTEGER NOT NULL,
@@ -262,6 +271,16 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             updatedAt    INTEGER NOT NULL DEFAULT 0,
             PRIMARY KEY (bookUrl, chapterIndex)
         );
+
+        CREATE TABLE IF NOT EXISTS app_logs (
+            id      INTEGER PRIMARY KEY AUTOINCREMENT,
+            time    INTEGER NOT NULL DEFAULT 0,
+            level   TEXT NOT NULL DEFAULT 'info',
+            source  TEXT NOT NULL DEFAULT '',
+            message TEXT NOT NULL DEFAULT ''
+        );
+        CREATE INDEX IF NOT EXISTS idx_app_logs_time ON app_logs(time);
+        CREATE INDEX IF NOT EXISTS idx_app_logs_source ON app_logs(source);
 
         CREATE TABLE IF NOT EXISTS kv (
             key   TEXT PRIMARY KEY,
@@ -285,17 +304,66 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
     Ok(())
 }
 
+fn quote_identifier(value: &str) -> String {
+    format!("\"{}\"", value.replace('"', "\"\""))
+}
+
 fn ensure_column(conn: &Connection, table: &str, column: &str, kind: &str) -> Result<()> {
-    let mut stmt = conn.prepare(&format!("PRAGMA table_info({table})"))?;
+    let table_sql = quote_identifier(table);
+    let column_sql = quote_identifier(column);
+    let mut stmt = conn.prepare(&format!("PRAGMA table_info({table_sql})"))?;
     let exists = stmt
         .query_map([], |row| row.get::<_, String>(1))?
         .filter_map(std::result::Result::ok)
         .any(|name| name == column);
     if !exists {
         conn.execute(
-            &format!("ALTER TABLE {table} ADD COLUMN {column} {kind}"),
+            &format!("ALTER TABLE {table_sql} ADD COLUMN {column_sql} {kind}"),
             [],
         )?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn migrates_reserved_column_names_idempotently() {
+        let conn = Connection::open_in_memory().expect("open memory database");
+        conn.execute_batch(
+            r#"
+            CREATE TABLE rss_articles (
+                sourceUrl   TEXT NOT NULL,
+                link        TEXT NOT NULL,
+                sort        TEXT NOT NULL DEFAULT '',
+                title       TEXT NOT NULL DEFAULT '',
+                pubDate     TEXT,
+                description TEXT,
+                content     TEXT,
+                image       TEXT,
+                read        INTEGER NOT NULL DEFAULT 0,
+                favorite    INTEGER NOT NULL DEFAULT 0,
+                variables   TEXT NOT NULL DEFAULT '{}',
+                PRIMARY KEY (sourceUrl, link)
+            );
+            "#,
+        )
+        .expect("create legacy table");
+
+        init_schema(&conn).expect("first migration");
+        init_schema(&conn).expect("second migration");
+
+        let mut stmt = conn
+            .prepare("PRAGMA table_info(rss_articles)")
+            .expect("prepare table info");
+        let columns: Vec<String> = stmt
+            .query_map([], |row| row.get::<_, String>(1))
+            .expect("query columns")
+            .filter_map(std::result::Result::ok)
+            .collect();
+        assert!(columns.iter().any(|name| name == "group"));
+        assert!(columns.iter().any(|name| name == "order"));
+    }
 }

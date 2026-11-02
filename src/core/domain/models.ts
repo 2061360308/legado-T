@@ -287,3 +287,11 @@ export interface DiffReport {
 }
 
 export type AppVersionResult = string;
+
+export interface AppLogEntry {
+  id?: number;
+  time: number;
+  level: string;
+  source: string;
+  message: string;
+}

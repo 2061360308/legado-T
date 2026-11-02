@@ -86,7 +86,20 @@ function navigate(tab: MainTab) {
   <div class="app-bg" aria-hidden="true" />
   <div class="app-shell">
     <div class="app-content" :class="{ 'with-nav': showNav }">
-      <RouterView />
+      <RouterView v-slot="{ Component, route: currentRoute }">
+        <KeepAlive :max="40">
+          <component
+            :is="Component"
+            v-if="currentRoute.meta.keepAlive !== false"
+            :key="currentRoute.fullPath"
+          />
+        </KeepAlive>
+        <component
+          :is="Component"
+          v-if="currentRoute.meta.keepAlive === false"
+          :key="currentRoute.fullPath"
+        />
+      </RouterView>
     </div>
     <BottomNav v-if="showNav" :model-value="activeTab" @update:model-value="navigate" />
   </div>

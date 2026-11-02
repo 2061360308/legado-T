@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import { useBooksStore } from "@/stores/books";
 import { useConfigStore } from "@/stores/config";
 import {
@@ -17,9 +18,12 @@ import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 import BookItem from "./BookItem.vue";
 import BookshelfConfigDialog from "./BookshelfConfigDialog.vue";
+import AppLogDialog from "@/views/misc/AppLogDialog.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 
 const router = useRouter();
+const bookAreaRef = ref<HTMLElement | null>(null);
+useScrollMemory(bookAreaRef);
 
 const manageItems: PopupMenuItem[] = [
   { key: "updateToc", label: "更新目录", icon: "ic_refresh_black_24dp" },
@@ -38,6 +42,7 @@ const booksStore = useBooksStore();
 const configStore = useConfigStore();
 
 const bookshelfConfigVisible = ref(false);
+const logVisible = ref(false);
 const activeGroup = ref<number>(VIRTUAL_GROUP.all);
 const manageMenuVisible = ref(false);
 const userGroups = ref<BookGroup[]>([]);
@@ -210,7 +215,7 @@ function onManage(key: string) {
   else if (key === "layout") openBookshelfConfig();
   else if (key === "export") onExport();
   else if (key === "importShelf") void importShelf();
-  else if (key === "log") message.value = "日志暂未接入";
+  else if (key === "log") logVisible.value = true;
 }
 
 async function onConfigSaved() {
@@ -250,12 +255,19 @@ function onPullEnd() {
   pulling = false;
 }
 
+let activatedOnce = false;
 onMounted(async () => {
   const saved = localStorage.getItem("bookshelf:lastGroup");
   if (saved) activeGroup.value = Number(saved);
   await configStore.load();
   await loadGroups();
   await load();
+  activatedOnce = true;
+});
+onActivated(() => {
+  if (!activatedOnce) return;
+  void loadGroups();
+  void load();
 });
 </script>
 
@@ -304,6 +316,7 @@ onMounted(async () => {
     <div v-if="refreshing" class="refresh-bar">正在刷新…</div>
 
     <main
+      ref="bookAreaRef"
       class="book-area"
       data-id="refresh_layout"
       :class="{ 'pull-refresh': folderStyle }"
@@ -352,6 +365,7 @@ onMounted(async () => {
     </main>
 
     <BookshelfConfigDialog v-model="bookshelfConfigVisible" @saved="onConfigSaved" />
+    <AppLogDialog v-model="logVisible" />
   </div>
 </template>
 

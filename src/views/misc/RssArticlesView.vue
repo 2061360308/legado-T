@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import {
   rssArticleClear,
   rssArticles,
@@ -20,6 +21,8 @@ import RssReadRecordDialog from "./RssReadRecordDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
+const articleListRef = ref<HTMLElement | null>(null);
+useScrollMemory(articleListRef);
 const sourceUrl = computed(() => String(route.query.sourceUrl || ""));
 const sourceName = computed(() => String(route.query.sourceName || "订阅"));
 const source = ref<RssSource | null>(null);
@@ -221,6 +224,7 @@ onMounted(async () => {
     <p v-if="message" class="message">{{ message }}</p>
     <p v-if="refreshing" class="refresh-tip">正在刷新…</p>
     <main
+      ref="articleListRef"
       class="list"
       :class="`style-${articleStyle}`"
       @scroll.passive="onScroll"

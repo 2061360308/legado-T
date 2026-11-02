@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import { platform } from "@/runtime";
 import TitleBar from "@/components/android/TitleBar.vue";
 import PreferenceRow from "@/components/android/PreferenceRow.vue";
@@ -13,6 +14,8 @@ import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
 import helpMarkdown from "@/assets/help/appHelp.md?raw";
 
 const router = useRouter();
+const prefScrollRef = ref<HTMLElement | null>(null);
+useScrollMemory(prefScrollRef);
 const theme = useThemeStore();
 const themeModeVisible = ref(false);
 const helpVisible = ref(false);
@@ -89,7 +92,7 @@ function open(item: Item) {
         </button>
       </template>
     </TitleBar>
-    <main class="pref-scroll" data-id="pre_fragment">
+    <main ref="prefScrollRef" class="pref-scroll" data-id="pre_fragment">
       <PreferenceCategory title="">
         <PreferenceRow
           v-for="item in groups[0].items"

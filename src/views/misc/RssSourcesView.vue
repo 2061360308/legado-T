@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import {
   rssSourceDelete,
   rssSourceList,
@@ -8,11 +9,15 @@ import {
 } from "@/core/application/rss";
 import type { RssSource } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
+import SearchBar from "@/components/android/SearchBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
+import legadoIcon from "@/assets/android/drawable/image_legado.png";
 
 const router = useRouter();
+const rssGridRef = ref<HTMLElement | null>(null);
+useScrollMemory(rssGridRef);
 const sources = ref<RssSource[]>([]);
 const keyword = ref("");
 const loading = ref(false);
@@ -160,16 +165,21 @@ function chooseGroup(key: string) {
   keyword.value = key;
 }
 
-onMounted(load);
+let activatedOnce = false;
+onMounted(async () => {
+  await load();
+  activatedOnce = true;
+});
+onActivated(() => {
+  if (activatedOnce) void load();
+});
 </script>
 
 <template>
   <div class="rss-page">
-    <TitleBar title="订阅" :back="false">
+    <TitleBar :back="false" search-only>
       <template #content>
-        <label class="search">
-          <input v-model="keyword" type="search" placeholder="搜索" />
-        </label>
+        <SearchBar v-model="keyword" placeholder="搜索" />
       </template>
       <template #actions>
         <button aria-label="收藏" @click="router.push('/rss-favorites')">
@@ -195,10 +205,10 @@ onMounted(load);
 
     <p v-if="message" class="message">{{ message }}</p>
     <p v-if="loading" class="loading">加载中…</p>
-    <main v-else class="rss-grid">
+    <main v-else ref="rssGridRef" class="rss-grid">
       <button class="rss-item rule-sub" @click="router.push('/rule-sub')">
         <span class="rss-icon rule-icon">
-          <Icon name="ic_cfg_source" :size="28" />
+          <img :src="legadoIcon" alt="" />
         </span>
         <span class="rss-name">规则订阅</span>
       </button>
@@ -238,25 +248,6 @@ onMounted(load);
   min-height: 0;
   background: var(--ac-background);
 }
-.search {
-  flex: 1;
-  min-width: 0;
-  margin: 0 8px;
-}
-.search input {
-  width: 100%;
-  height: 30px;
-  border: none;
-  border-radius: 17px;
-  background: rgba(255, 255, 255, 0.22);
-  color: #fff;
-  font-size: 13px;
-  padding: 0 16px;
-  outline: none;
-}
-.search input::placeholder {
-  color: rgba(255, 255, 255, 0.65);
-}
 .message,
 .loading {
   margin: 8px 16px;
@@ -270,7 +261,7 @@ onMounted(load);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-content: start;
-  padding: 4px 8px 20px;
+  padding: 0 0 20px;
 }
 .empty-state {
   grid-column: 1 / -1;
@@ -279,8 +270,8 @@ onMounted(load);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 12px 6px;
+  gap: 16px;
+  padding: 16px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -306,8 +297,7 @@ onMounted(load);
   object-fit: cover;
 }
 .rule-icon {
-  background: var(--ac-primary);
-  color: #fff;
+  background: transparent;
 }
 .rss-name {
   width: 100%;

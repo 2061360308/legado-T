@@ -188,6 +188,65 @@ pub fn list_search_history(conn: &Connection, limit: usize) -> Result<Vec<String
     Ok(out)
 }
 
+pub fn delete_search_history(conn: &Connection, keyword: &str) -> Result<()> {
+    conn.execute(
+        "DELETE FROM search_history WHERE keyword = ?1",
+        [keyword.trim()],
+    )?;
+    Ok(())
+}
+
+pub fn clear_search_history(conn: &Connection) -> Result<()> {
+    conn.execute("DELETE FROM search_history", [])?;
+    Ok(())
+}
+
+pub fn save_search_books(conn: &Connection, books: &[Value]) -> Result<()> {
+    let now = now_seconds();
+    for book in books {
+        let book_url = book.get("bookUrl").and_then(Value::as_str).unwrap_or("");
+        let source_url = book
+            .get("bookSourceUrl")
+            .and_then(Value::as_str)
+            .unwrap_or("");
+        if book_url.is_empty() || source_url.is_empty() || book.get("error").is_some() {
+            continue;
+        }
+        conn.execute(
+            "INSERT INTO search_books (bookUrl,bookSourceUrl,json,updatedAt)
+             VALUES (?1,?2,?3,?4)
+             ON CONFLICT(bookUrl,bookSourceUrl) DO UPDATE SET
+               json=excluded.json,
+               updatedAt=excluded.updatedAt",
+            params![book_url, source_url, serde_json::to_string(book)?, now],
+        )?;
+    }
+    conn.execute(
+        "DELETE FROM search_books WHERE updatedAt < ?1",
+        [now - 7 * 24 * 60 * 60],
+    )?;
+    Ok(())
+}
+
+pub fn get_search_book(
+    conn: &Connection,
+    book_url: &str,
+    source_url: &str,
+) -> Result<Option<Value>> {
+    let mut stmt = conn.prepare(
+        "SELECT json FROM search_books
+         WHERE bookUrl = ?1 AND bookSourceUrl = ?2
+         ORDER BY updatedAt DESC LIMIT 1",
+    )?;
+    let mut rows = stmt.query_map(params![book_url, source_url], |row| {
+        row.get::<_, String>(0)
+    })?;
+    match rows.next() {
+        Some(row) => Ok(Some(serde_json::from_str(&row?)?)),
+        None => Ok(None),
+    }
+}
+
 pub fn set_source_variable(
     conn: &Connection,
     source_url: &str,

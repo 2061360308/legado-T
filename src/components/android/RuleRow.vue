@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Icon from "./Icon.vue";
+import ToggleSwitch from "./ToggleSwitch.vue";
 
 withDefaults(
   defineProps<{
@@ -8,47 +9,62 @@ withDefaults(
     enabled: boolean;
     selected?: boolean;
     showSelection?: boolean;
+    showMore?: boolean;
+    showDelete?: boolean;
   }>(),
   {
     subtitle: "",
     selected: false,
     showSelection: true,
+    showMore: true,
+    showDelete: false,
   },
 );
 
 const emit = defineEmits<{
   "update:selected": [value: boolean];
-  toggle: [];
+  toggle: [value: boolean];
   edit: [];
-  more: [];
+  more: [event: MouseEvent];
+  delete: [];
 }>();
 </script>
 
 <template>
   <div class="rule-row">
-    <label v-if="showSelection" class="select-box">
+    <label v-if="showSelection" class="rule-main">
       <input
         type="checkbox"
         :checked="selected"
         @change="emit('update:selected', ($event.target as HTMLInputElement).checked)"
       />
+      <span class="rule-text">
+        <span class="rule-name">{{ name }}</span>
+        <span v-if="subtitle" class="rule-subtitle">{{ subtitle }}</span>
+      </span>
     </label>
-    <div class="rule-text">
-      <p class="rule-name">{{ name }}</p>
-      <p v-if="subtitle" class="rule-subtitle">{{ subtitle }}</p>
-    </div>
-    <label class="switch">
-      <input
-        type="checkbox"
-        :checked="enabled"
-        @change="emit('toggle')"
-      />
-      <span class="slider" />
-    </label>
+    <span v-else class="rule-text">
+      <span class="rule-name">{{ name }}</span>
+      <span v-if="subtitle" class="rule-subtitle">{{ subtitle }}</span>
+    </span>
+    <ToggleSwitch :checked="enabled" @change="emit('toggle', $event)" />
     <button class="icon-btn" aria-label="编辑" @click="emit('edit')">
       <Icon name="ic_edit" :size="22" />
     </button>
-    <button class="icon-btn" aria-label="更多" @click="emit('more')">
+    <button
+      v-if="showDelete"
+      class="icon-btn"
+      aria-label="删除"
+      @click="emit('delete')"
+    >
+      <Icon name="ic_outline_delete" :size="22" />
+    </button>
+    <button
+      v-else-if="showMore"
+      class="icon-btn"
+      aria-label="更多"
+      @click="emit('more', $event)"
+    >
       <Icon name="ic_more_vert" :size="22" />
     </button>
   </div>
@@ -63,7 +79,16 @@ const emit = defineEmits<{
   padding: 8px 16px;
   border-bottom: 1px solid var(--ac-divider);
 }
-.select-box input {
+.rule-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.rule-main input {
+  flex: none;
   width: 18px;
   height: 18px;
   accent-color: var(--ac-primary);
@@ -76,63 +101,23 @@ const emit = defineEmits<{
   gap: 3px;
 }
 .rule-name {
-  margin: 0;
-  font-size: 15px;
   color: var(--ac-primary-text);
+  font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .rule-subtitle {
-  margin: 0;
-  font-size: 12px;
   color: var(--ac-secondary-text);
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.switch {
-  position: relative;
-  width: 36px;
-  height: 20px;
-  flex: none;
-  cursor: pointer;
-}
-.switch input {
-  position: absolute;
-  opacity: 0;
-  inset: 0;
-  margin: 0;
-  cursor: pointer;
-}
-.slider {
-  position: absolute;
-  inset: 0;
-  border-radius: 10px;
-  background: var(--ac-divider);
-  transition: background 0.18s ease;
-}
-.slider::after {
-  content: "";
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  left: 2px;
-  top: 2px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  transition: transform 0.18s ease;
-}
-.switch input:checked + .slider {
-  background: var(--ac-primary);
-}
-.switch input:checked + .slider::after {
-  transform: translateX(16px);
-}
 .icon-btn {
   width: 36px;
   height: 36px;
+  flex: none;
   border: none;
   background: transparent;
   color: var(--ac-secondary-text);

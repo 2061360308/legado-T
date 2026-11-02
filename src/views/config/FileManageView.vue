@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import { bookDelete, bookFileSize, bookList } from "@/core/application/books";
 import type { Book } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
+import SearchBar from "@/components/android/SearchBar.vue";
 import Icon from "@/components/android/Icon.vue";
 
 const router = useRouter();
+const contentRef = ref<HTMLElement | null>(null);
+useScrollMemory(contentRef);
 const files = ref<{ book: Book; size: number }[]>([]);
 const error = ref("");
 const message = ref("");
@@ -64,12 +68,12 @@ onMounted(load);
 
 <template>
   <div class="files-page">
-    <TitleBar title="文件管理" @back="router.back()">
+    <TitleBar search-only @back="router.back()">
       <template #content>
-        <input v-model="keyword" class="search" placeholder="搜索文件" />
+        <SearchBar v-model="keyword" placeholder="搜索文件" />
       </template>
     </TitleBar>
-    <main class="content">
+    <main ref="contentRef" class="content">
       <p class="path">应用数据目录 / books</p>
       <p class="summary">共 {{ files.length }} 本，占用 {{ formatSize(total) }}</p>
       <p v-if="error" class="error">{{ error }}</p>
@@ -104,18 +108,6 @@ onMounted(load);
   flex: 1;
   overflow-y: auto;
   padding: 12px 20px 24px;
-}
-.search {
-  flex: 1;
-  min-width: 0;
-  margin: 0 8px;
-  height: 30px;
-  border: none;
-  border-radius: 15px;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
-  padding: 0 10px;
-  outline: none;
 }
 .path,
 .summary {

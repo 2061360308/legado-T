@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import {
   bookGet,
   chapterList,
@@ -16,6 +17,7 @@ import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vu
 import Icon from "@/components/android/Icon.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
 import BookmarkDialog from "@/views/reader/dialogs/BookmarkDialog.vue";
+import AppLogDialog from "@/views/misc/AppLogDialog.vue";
 import { useReaderSettingsStore } from "@/stores/readerSettings";
 
 const route = useRoute();
@@ -27,6 +29,7 @@ const chapters = ref<BookChapter[]>([]);
 const bookmarks = ref<Bookmark[]>([]);
 const editingBookmark = ref<Bookmark | null>(null);
 const bookmarkDialogVisible = ref(false);
+const logVisible = ref(false);
 const rules = ref<TxtTocRule[]>([]);
 const selectedRule = ref("");
 const charset = ref("");
@@ -209,7 +212,7 @@ async function onTocMenu(key: string) {
   } else if (key === "exportBookmarkMd") {
     exportBookmarks("md");
   } else if (key === "log") {
-    message.value = "日志暂未实现";
+    logVisible.value = true;
   }
 }
 
@@ -254,6 +257,7 @@ function exportBookmarks(kind: "json" | "md") {
   message.value = `已导出 ${items.length} 条书签`;
 }
 const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 
 const CHARSETS = ["", "UTF-8", "GBK", "UTF-16LE", "UTF-16BE"];
 
@@ -476,6 +480,7 @@ onMounted(load);
       :bookmark="editingBookmark"
       @saved="load"
     />
+    <AppLogDialog v-model="logVisible" />
   </div>
 </template>
 

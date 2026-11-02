@@ -1,29 +1,44 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import {
   bookClearCache,
   bookFileSize,
   bookList,
-  chapterList,
   groupList,
-  readChapter,
 } from "@/core/application/books";
 import { onlineReaderDownload } from "@/core/application/reader";
+import { kvGet, kvSet } from "@/core/application/config";
+import {
+  DEFAULT_CACHE_EXPORT_OPTIONS,
+  buildEpub,
+  buildText,
+  formatFileName,
+  loadCachedBook,
+  type CacheExportOptions,
+} from "@/utils/cacheExport";
+import { uploadWebdav } from "@/utils/webdav";
 import { platform } from "@/runtime";
 import type { Book, BookGroup } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
+import AppLogDialog from "@/views/misc/AppLogDialog.vue";
 
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const books = ref<{ book: Book; size: number }[]>([]);
 const groups = ref<BookGroup[]>([]);
 const message = ref("");
 const busy = ref("");
 const groupFilter = ref(0);
 const menuVisible = ref(false);
+const logVisible = ref(false);
 const groupVisible = ref(false);
+const exportOptions = ref<CacheExportOptions>({ ...DEFAULT_CACHE_EXPORT_OPTIONS });
+const exportFolder = ref("");
 
 const groupItems = computed<PopupMenuItem[]>(() => [
   { key: "0", label: "全部", checked: groupFilter.value === 0 },
@@ -36,21 +51,21 @@ const groupItems = computed<PopupMenuItem[]>(() => [
     })),
 ]);
 
-const menuItems: PopupMenuItem[] = [
+const menuItems = computed<PopupMenuItem[]>(() => [
   { key: "download", label: "下载全部" },
-  { key: "exportAll", label: "导出全部", muted: true },
-  { key: "replace", label: "替换净化" },
-  { key: "custom", label: "自定义导出章节", muted: true },
-  { key: "webdav", label: "导出到 WebDAV", muted: true },
-  { key: "noChapter", label: "不导出章节名", muted: true },
-  { key: "pics", label: "导出图片", muted: true },
-  { key: "parallel", label: "并行导出", muted: true },
-  { key: "folder", label: "导出目录", muted: true },
-  { key: "filename", label: "导出文件名", muted: true },
-  { key: "type", label: "导出类型", muted: true },
-  { key: "charset", label: "导出编码", muted: true },
-  { key: "log", label: "日志", muted: true },
-];
+  { key: "exportAll", label: "导出全部" },
+  { key: "replace", label: "替换净化", checked: exportOptions.value.useReplace },
+  { key: "custom", label: "自定义导出章节" },
+  { key: "webdav", label: "导出到 WebDAV", checked: exportOptions.value.exportToWebdav },
+  { key: "noChapter", label: "不导出章节名", checked: exportOptions.value.noChapterName },
+  { key: "pics", label: "导出图片", checked: exportOptions.value.exportPictures },
+  { key: "parallel", label: "并行导出", checked: exportOptions.value.parallel },
+  { key: "folder", label: exportFolder.value ? `导出目录（${exportFolder.value}）` : "导出目录" },
+  { key: "filename", label: `导出文件名（${exportOptions.value.filenameTemplate}）` },
+  { key: "type", label: `导出类型（${exportOptions.value.type}）` },
+  { key: "charset", label: `导出编码（${exportOptions.value.charset}）` },
+  { key: "log", label: "日志" },
+]);
 
 const filtered = computed(() =>
   groupFilter.value
@@ -140,58 +155,206 @@ function onGroupMenu(key: string) {
   groupFilter.value = Number(key);
 }
 
-async function cachedText(book: Book): Promise<string> {
-  const chapters = await chapterList(book.bookUrl);
-  const parts = [`${book.name}${book.author ? ` / ${book.author}` : ""}`];
-  for (const chapter of chapters) {
-    try {
-      const content = await readChapter(book.bookUrl, chapter.index);
-      if (content.trim()) parts.push(`\n${chapter.title}\n\n${content}`);
-    } catch {
-      // skip chapters that are not cached
+function encodeText(text: string, charset: string): Uint8Array<ArrayBuffer> {
+  if (/^utf-?16le$/i.test(charset)) {
+    const buffer = new Uint8Array(2 + text.length * 2);
+    buffer[0] = 0xff;
+    buffer[1] = 0xfe;
+    const view = new DataView(buffer.buffer);
+    for (let index = 0; index < text.length; index++) {
+      view.setUint16(2 + index * 2, text.charCodeAt(index), true);
     }
+    return buffer;
   }
-  return parts.join("\n");
+  return new TextEncoder().encode(text);
 }
 
-async function exportBook(book: Book) {
-  const path = await platform.dialog.save({
-    defaultPath: `${book.name || "book"}.txt`,
-    filters: [{ name: "文本文件", extensions: ["txt"] }],
+async function loadExportOptions() {
+  try {
+    const raw = await kvGet("cacheExport:options");
+    if (raw) {
+      const parsed = JSON.parse(raw) as Partial<CacheExportOptions>;
+      exportOptions.value = { ...DEFAULT_CACHE_EXPORT_OPTIONS, ...parsed };
+    }
+    exportFolder.value = (await kvGet("cacheExport:folder")) ?? "";
+  } catch {
+    exportOptions.value = { ...DEFAULT_CACHE_EXPORT_OPTIONS };
+  }
+}
+
+async function saveExportOptions() {
+  await kvSet("cacheExport:options", JSON.stringify(exportOptions.value));
+}
+
+async function chooseExportFolder(): Promise<boolean> {
+  const path = await platform.dialog.open({
+    directory: true,
+    multiple: false,
+    title: "选择导出目录",
   });
+  if (typeof path !== "string" || !path) return false;
+  exportFolder.value = path;
+  await kvSet("cacheExport:folder", path);
+  return true;
+}
+
+async function buildBookBytes(book: Book): Promise<{ bytes: Uint8Array<ArrayBuffer>; name: string; ext: string; mime: string }> {
+  const chapters = await loadCachedBook(book, exportOptions.value);
+  if (!chapters.length) throw new Error("没有可导出的缓存章节");
+  const baseName = formatFileName(exportOptions.value.filenameTemplate, book);
+  if (exportOptions.value.type === "epub") {
+    return {
+      bytes: buildEpub(book, chapters),
+      name: `${baseName}.epub`,
+      ext: "epub",
+      mime: "application/epub+zip",
+    };
+  }
+  const text = buildText(book, chapters, exportOptions.value.noChapterName);
+  return {
+    bytes: encodeText(text, exportOptions.value.charset),
+    name: `${baseName}.txt`,
+    ext: "txt",
+    mime: "text/plain; charset=utf-8",
+  };
+}
+
+async function writeExportFile(
+  book: Book,
+  data: { bytes: Uint8Array<ArrayBuffer>; name: string; ext: string; mime: string },
+) {
+  if (exportOptions.value.exportToWebdav) {
+    const url = await uploadWebdav(data.name, data.bytes, data.mime);
+    message.value = `已导出《${book.name}》到 ${url}`;
+    return;
+  }
+  let path: string | null = exportFolder.value
+    ? await platform.files.join(exportFolder.value, data.name)
+    : "";
+  if (!path) {
+    path = await platform.dialog.save({
+      defaultPath: data.name,
+      filters: [
+        data.ext === "epub"
+          ? { name: "EPUB", extensions: ["epub"] }
+          : { name: "文本文件", extensions: ["txt"] },
+      ],
+    });
+  }
   if (!path) return;
-  await platform.files.writeFile(path, new TextEncoder().encode(await cachedText(book)));
+  await platform.files.writeFile(path, data.bytes);
   message.value = `已导出《${book.name}》`;
 }
 
-async function exportAll() {
-  const selected = filtered.value;
-  if (!selected.length) return;
-  const path = await platform.dialog.save({
-    defaultPath: "cached-books.txt",
-    filters: [{ name: "文本文件", extensions: ["txt"] }],
-  });
-  if (!path) return;
-  busy.value = "all";
+async function exportBook(book: Book) {
+  if (busy.value) return;
+  busy.value = book.bookUrl;
   try {
-    const parts: string[] = [];
-    for (const item of selected) parts.push(await cachedText(item.book));
-    await platform.files.writeFile(path, new TextEncoder().encode(parts.join("\n\n")));
-    message.value = `已导出 ${selected.length} 本书`;
+    await writeExportFile(book, await buildBookBytes(book));
+  } catch (error) {
+    message.value = String(error);
   } finally {
     busy.value = "";
   }
 }
 
-function onMenu(key: string) {
-  if (key === "replace") router.push("/replace");
-  else if (key === "download") void downloadAll();
-  else if (key === "exportAll") void exportAll();
-  else if (key === "log") message.value = "日志暂未接入";
-  else message.value = "该导出选项暂未接入";
+async function exportAll() {
+  const selected = filtered.value;
+  if (!selected.length) {
+    message.value = "没有可导出的书籍";
+    return;
+  }
+  if (!exportOptions.value.exportToWebdav && !exportFolder.value) {
+    if (!(await chooseExportFolder())) return;
+  }
+  busy.value = "all";
+  try {
+    if (exportOptions.value.parallel) {
+      await Promise.all(
+        selected.map(async (item) => {
+          await writeExportFile(item.book, await buildBookBytes(item.book));
+        }),
+      );
+    } else {
+      for (let index = 0; index < selected.length; index++) {
+        message.value = `正在导出 ${index + 1}/${selected.length}：《${selected[index].book.name}》`;
+        await writeExportFile(selected[index].book, await buildBookBytes(selected[index].book));
+      }
+    }
+    message.value = `已导出 ${selected.length} 本书`;
+  } catch (error) {
+    message.value = String(error);
+  } finally {
+    busy.value = "";
+  }
 }
 
-onMounted(load);
+async function toggleExportOption(key: "useReplace" | "exportToWebdav" | "noChapterName" | "exportPictures" | "parallel") {
+  exportOptions.value = { ...exportOptions.value, [key]: !exportOptions.value[key] };
+  await saveExportOptions();
+}
+
+async function setExportType() {
+  const value = window.prompt("导出类型（txt / epub）", exportOptions.value.type);
+  if (value !== "txt" && value !== "epub") return;
+  exportOptions.value = { ...exportOptions.value, type: value };
+  await saveExportOptions();
+}
+
+async function setExportCharset() {
+  const value = window.prompt("导出编码（UTF-8 / UTF-16LE）", exportOptions.value.charset);
+  if (!value) return;
+  if (!/^utf-?8$/i.test(value) && !/^utf-?16le$/i.test(value)) {
+    message.value = "当前仅支持 UTF-8 和 UTF-16LE";
+    return;
+  }
+  exportOptions.value = {
+    ...exportOptions.value,
+    charset: /^utf-?16le$/i.test(value) ? "UTF-16LE" : "UTF-8",
+  };
+  await saveExportOptions();
+}
+
+async function setExportFileName() {
+  const value = window.prompt(
+    "文件名模板，可用 {{name}}、{{author}}",
+    exportOptions.value.filenameTemplate,
+  );
+  if (value === null) return;
+  exportOptions.value = { ...exportOptions.value, filenameTemplate: value || "{{name}}" };
+  await saveExportOptions();
+}
+
+async function setExportScope() {
+  const value = window.prompt(
+    "导出章节范围，留空导出全部，示例：1-5,8,10-18",
+    exportOptions.value.scope,
+  );
+  if (value === null) return;
+  exportOptions.value = { ...exportOptions.value, scope: value.trim() };
+  await saveExportOptions();
+}
+
+function onMenu(key: string) {
+  if (key === "replace") void toggleExportOption("useReplace");
+  else if (key === "download") void downloadAll();
+  else if (key === "exportAll") void exportAll();
+  else if (key === "webdav") void toggleExportOption("exportToWebdav");
+  else if (key === "noChapter") void toggleExportOption("noChapterName");
+  else if (key === "pics") void toggleExportOption("exportPictures");
+  else if (key === "parallel") void toggleExportOption("parallel");
+  else if (key === "custom") void setExportScope();
+  else if (key === "folder") void chooseExportFolder();
+  else if (key === "filename") void setExportFileName();
+  else if (key === "type") void setExportType();
+  else if (key === "charset") void setExportCharset();
+  else if (key === "log") logVisible.value = true;
+}
+
+onMounted(async () => {
+  await loadExportOptions();
+  await load();
+});
 </script>
 
 <template>
@@ -217,7 +380,7 @@ onMounted(load);
     <PopupMenu v-model="groupVisible" :items="groupItems" :top="54" @select="onGroupMenu" />
 
     <p v-if="message" class="message">{{ message }}</p>
-    <main class="list">
+    <main ref="listRef" class="list">
       <div v-for="item in filtered" :key="item.book.bookUrl" class="row">
         <div class="text">
           <span class="name">{{ item.book.name }}</span>
@@ -246,6 +409,7 @@ onMounted(load);
       </div>
       <p v-if="filtered.length === 0" class="empty">暂无可缓存书籍</p>
     </main>
+    <AppLogDialog v-model="logVisible" />
   </div>
 </template>
 

@@ -2731,6 +2731,7 @@ dependencies = [
  "chardetng",
  "chrono",
  "encoding_rs",
+ "engine-http-native",
  "engine-model",
  "engine-native",
  "fancy-regex",

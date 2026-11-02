@@ -22,17 +22,20 @@
       "csp": "default-src 'self' asset: http: https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: http: https: data: blob:; media-src 'self' asset: http: https: data: blob:; font-src 'self' asset: data:; connect-src 'self' ipc: http://ipc.localhost http: https: ws: wss:",
       "assetProtocol": {
         "enable": true,
-        "scope": ["**"]
+        "scope": [
+          "**"
+        ]
       }
     }
   },
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["icons/icon.png"],
+    "icon": [
+      "icons/icon.png"
+    ],
     "resources": {
-      "resources/defaultData/*": "defaultData/",
-      "resources/pdfium/*": "pdfium/"
+      "resources/defaultData/*": "defaultData/"
     }
   }
 }

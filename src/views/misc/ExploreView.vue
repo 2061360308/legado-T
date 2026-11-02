@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import {
   bookSourceDelete,
   bookSourceExploreCategories,
@@ -9,11 +10,14 @@ import {
 } from "@/core/application/bookSources";
 import type { BookSource, ExploreCategory } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
+import SearchBar from "@/components/android/SearchBar.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
 import Icon from "@/components/android/Icon.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 
 const router = useRouter();
+const exploreListRef = ref<HTMLElement | null>(null);
+useScrollMemory(exploreListRef);
 const sources = ref<BookSource[]>([]);
 const keyword = ref("");
 const loading = ref(false);
@@ -206,16 +210,21 @@ function chooseGroup(key: string) {
   keyword.value = key;
 }
 
-onMounted(load);
+let activatedOnce = false;
+onMounted(async () => {
+  await load();
+  activatedOnce = true;
+});
+onActivated(() => {
+  if (activatedOnce) void load();
+});
 </script>
 
 <template>
   <div class="explore-page">
-    <TitleBar title="发现" :back="false">
+    <TitleBar :back="false" search-only>
       <template #content>
-        <label class="search">
-          <input v-model="keyword" type="search" placeholder="搜索书源" />
-        </label>
+        <SearchBar v-model="keyword" placeholder="搜索书源" />
       </template>
       <template #actions>
         <button aria-label="分组" @click="groupVisible = groupItems.length > 0">
@@ -235,7 +244,7 @@ onMounted(load);
 
     <p v-if="message" class="message">{{ message }}</p>
     <p v-if="loading" class="loading">加载中…</p>
-    <main v-else class="explore-list">
+    <main v-else ref="exploreListRef" class="explore-list">
       <EmptyState
         v-if="!filtered.length"
         icon="ic_bottom_explore_e"
@@ -295,25 +304,6 @@ onMounted(load);
   min-height: 0;
   background: var(--ac-background);
 }
-.search {
-  flex: 1;
-  min-width: 0;
-  margin: 0 8px;
-}
-.search input {
-  width: 100%;
-  height: 30px;
-  border: none;
-  border-radius: 17px;
-  background: rgba(255, 255, 255, 0.22);
-  color: #fff;
-  font-size: 13px;
-  padding: 0 16px;
-  outline: none;
-}
-.search input::placeholder {
-  color: rgba(255, 255, 255, 0.65);
-}
 .message,
 .loading {
   margin: 8px 16px;
@@ -326,26 +316,28 @@ onMounted(load);
   overflow-y: auto;
 }
 .source-block {
-  padding: 0 10px;
+  padding: 12px 16px 0;
+}
+.source-block:last-child {
+  padding-bottom: 12px;
 }
 .source-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 46px;
   padding: 6px 10px;
-  background: var(--ac-background-menu);
-  border-bottom: 1px solid var(--ac-divider);
+  border-radius: 6px;
+  background: var(--ac-transparent-10);
   cursor: pointer;
 }
 .source-title:active {
-  background: var(--ac-transparent-10);
+  background: rgba(0, 0, 0, 0.08);
 }
 .source-name {
   flex: 1;
   min-width: 0;
   color: var(--ac-primary-text);
-  font-size: 15px;
+  font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -354,8 +346,8 @@ onMounted(load);
   color: var(--ac-secondary-text);
 }
 .spinner {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border: 2px solid var(--ac-divider);
   border-top-color: var(--ac-primary);
   border-radius: 50%;
@@ -369,21 +361,20 @@ onMounted(load);
 .categories {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  padding: 10px 8px 14px;
+  gap: 8px;
+  padding: 8px;
 }
 .category {
   border: none;
-  background: var(--ac-transparent-10);
+  background: rgba(172, 172, 172, 0.39);
   color: var(--ac-primary-text);
   border-radius: 16px;
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 4px 12px;
+  font-size: 14px;
   cursor: pointer;
 }
 .category:active {
-  background: var(--ac-primary);
-  color: #fff;
+  background: rgba(133, 133, 133, 0.39);
 }
 .category.disabled {
   opacity: 0.4;

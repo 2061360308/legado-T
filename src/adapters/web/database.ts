@@ -1,5 +1,6 @@
 ﻿import Dexie, { type Table } from "dexie";
 import type {
+  AppLogEntry,
   Book,
   BookChapter,
   BookGroup,
@@ -47,6 +48,13 @@ export interface SourceVariableRow {
   value: string;
 }
 
+export interface SearchBookRow {
+  bookUrl: string;
+  bookSourceUrl: string;
+  json: string;
+  updatedAt: number;
+}
+
 export interface FileRow {
   path: string;
   bookUrl?: string | null;
@@ -74,10 +82,12 @@ export class ReaderDatabase extends Dexie {
   httpTts!: Table<HttpTts, number>;
   bookSources!: Table<BookSource, string>;
   sourceVariables!: Table<SourceVariableRow, [string, string]>;
+  searchBooks!: Table<SearchBookRow, [string, string]>;
   rssSources!: Table<RssSource, string>;
   rssArticles!: Table<RssArticle, [string, string]>;
   rssStars!: Table<RssStar, [string, string]>;
   rssReadRecords!: Table<RssReadRecord, string>;
+  appLogs!: Table<AppLogEntry, number>;
   files!: Table<FileRow, string>;
 
   constructor() {
@@ -179,6 +189,31 @@ export class ReaderDatabase extends Dexie {
       rssArticles: "[origin+link], origin, sort, order",
       rssStars: "[origin+link], origin, group, starTime",
       rssReadRecords: "record, readTime",
+    });
+    this.version(7).stores({
+      books: "bookUrl, order, durChapterTime, syncTime, group",
+      chapters: "key, bookUrl, [bookUrl+index]",
+      chapterContents: "key, bookUrl",
+      chapterBlocks: "key, bookUrl",
+      groups: "groupId, order",
+      kv: "key",
+      bookmarks: "time, bookUrl, bookName",
+      readRecords: "[deviceId+bookName], deviceId, lastRead",
+      txtTocRules: "id, serialNumber",
+      replaceRules: "id, sortOrder",
+      dictRules: "name, sortNumber",
+      httpTts: "id, name",
+      files: "path, bookUrl, kind, size",
+      bookSources: "bookSourceUrl, bookSourceName, bookSourceGroup, customOrder",
+      sourceVariables: "[bookSourceUrl+key], bookSourceUrl",
+      rssSources: "sourceUrl, sourceName, sourceGroup, customOrder",
+      rssArticles: "[origin+link], origin, sort, order",
+      rssStars: "[origin+link], origin, group, starTime",
+      rssReadRecords: "record, readTime",
+      appLogs: "++id, time, source, level",
+    });
+    this.version(8).stores({
+      searchBooks: "[bookUrl+bookSourceUrl], updatedAt",
     });
   }
 }

@@ -1,5 +1,7 @@
 # Android Debug APK 从头构建
 
+> 常用命令见 `docs/commands.md`。日常调试/发布优先使用 `npm run android:debug`、`npm run android:release`。
+
 本文记录 Windows 下从零构建 `local-reader` Android Debug APK 的步骤、已知问题和当前体积原因。
 
 ## 当前产物
@@ -49,7 +51,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-android.ps1 `
   -Target all -Release -SizeOptimized
 ```
 
-Release APK 默认是 `*-release-unsigned.apk`，脚本会跳过签名校验。安装或分发前必须配置签名。
+Release APK 已配置本机签名，输出为 `*-release.apk`。签名配置读取 `src-tauri/gen/android/app/key.properties`，keystore 保存于 `C:\Users\20613\.local\share\local-reader\keystore\local-reader-release.jks`。`key.properties` 已被 gitignore，不提交仓库。
 
 体积从约 388 MiB 降到约 23 MiB，主要来自移除调试符号、LTO 和尺寸优化，不是业务代码被删除。该配置优先体积，尚未在真机/模拟器上完整验证 PDF、EPUB、JS 规则等运行时行为。
 

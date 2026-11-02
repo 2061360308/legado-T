@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import { groupList, groupSave } from "@/core/application/books";
 import type { BookGroup } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
@@ -8,6 +9,8 @@ import Icon from "@/components/android/Icon.vue";
 import GroupEditDialog from "./GroupEditDialog.vue";
 
 const router = useRouter();
+const listRef = ref<HTMLElement | null>(null);
+useScrollMemory(listRef);
 const groups = ref<BookGroup[]>([]);
 const message = ref("");
 const editVisible = ref(false);
@@ -66,7 +69,7 @@ onMounted(load);
 
       <p v-if="message" class="message">{{ message }}</p>
 
-      <main class="list">
+      <main ref="listRef" class="list">
         <div v-for="(group, index) in groups" :key="group.groupId" class="group-row">
           <button class="move" :disabled="index === 0" @click="move(index, -1)">↑</button>
           <button class="move" :disabled="index === groups.length - 1" @click="move(index, 1)">↓</button>

@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onActivated, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { platform } from "@/runtime";
 import {
+  bookSourceAddPrepared,
+  bookSourceAddToShelf,
   bookSourceDownloadUrls,
+  bookSourceInfo,
   bookSourceRefresh,
   bookSourceReviews,
+  bookSourceSearchPreview,
+  bookSourceToc,
 } from "@/core/application/bookSources";
 import {
   bookClearCache,
@@ -20,22 +25,42 @@ import {
   chapterWordCounts,
   groupList,
 } from "@/core/application/books";
-import type { Book, BookChapter, BookGroup, BookReview } from "@/core/domain";
+import type {
+  Book,
+  BookChapter,
+  BookGroup,
+  BookReview,
+  OnlineBook,
+  OnlineChapter,
+  OnlineSearchResult,
+} from "@/core/domain";
+import { useBookSearchStore } from "@/stores/bookSearch";
+import { useScrollMemory } from "@/composables/useScrollMemory";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import GroupSelectDialog from "./GroupSelectDialog.vue";
+import AppLogDialog from "@/views/misc/AppLogDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
+const searchStore = useBookSearchStore();
 const bookUrl = computed(() => String(route.query.bookUrl || ""));
+const sourceUrl = computed(() => String(route.query.sourceUrl || ""));
+const previewMode = computed(
+  () => String(route.query.preview || "") === "1" && Boolean(sourceUrl.value),
+);
 const book = ref<Book | null>(null);
+const inShelf = ref(false);
+const scrollRef = ref<HTMLElement | null>(null);
+useScrollMemory(scrollRef);
 const chapters = ref<BookChapter[]>([]);
 const groups = ref<BookGroup[]>([]);
 const fileSize = ref(0);
 const wordCount = ref(0);
 const menuVisible = ref(false);
+const logVisible = ref(false);
 const groupDialogVisible = ref(false);
 const reviewsVisible = ref(false);
 const reviewsLoading = ref(false);
@@ -86,7 +111,9 @@ const kindTags = computed(() => {
   return tags;
 });
 const menuItems = computed<PopupMenuItem[]>(() => [
-  { key: "edit", label: "编辑书籍信息", icon: "ic_edit" },
+  ...(inShelf.value
+    ? [{ key: "edit", label: "编辑书籍信息", icon: "ic_edit" }]
+    : []),
   ...(isOnline.value
     ? [
         { key: "reviews", label: "查看评论", icon: "ic_cfg_about" },
@@ -118,18 +145,121 @@ function showToast(text: string) {
   }, 1800);
 }
 
-async function load() {
+async function loadLocalDetails() {
   if (!bookUrl.value) return;
-  book.value = await bookGet(bookUrl.value);
-  if (!book.value) return;
   chapters.value = await chapterList(bookUrl.value);
   groups.value = (await groupList()).filter((group) => group.groupId > 0);
   fileSize.value = await bookFileSize(bookUrl.value);
+  if (book.value?.sourcePath) {
+    window.setTimeout(() => {
+      void loadWordCount();
+    }, 300);
+  }
+}
+
+async function loadWordCount() {
   try {
     const counts = await chapterWordCounts(bookUrl.value);
     wordCount.value = counts.reduce((sum, item) => sum + item.count, 0);
   } catch {
     wordCount.value = 0;
+  }
+}
+
+async function loadPreview() {
+  let cached: OnlineSearchResult | null =
+    searchStore.results.find((item) => item.bookUrl === bookUrl.value) ?? null;
+  if (!cached) {
+    cached = await bookSourceSearchPreview(sourceUrl.value, bookUrl.value).catch(
+      () => null,
+    );
+  }
+  const name = String(cached?.name || route.query.name || "未知书籍");
+  const author = String(cached?.author || route.query.author || "未知作者");
+  book.value = {
+    bookUrl: bookUrl.value,
+    name,
+    author,
+    origin: sourceUrl.value,
+    originName: String(cached?.bookSourceName || sourceUrl.value),
+    type: 0,
+    group: 0,
+    tocUrl: "",
+    intro: cached?.intro ? String(cached.intro) : null,
+    kind: cached?.kind ? String(cached.kind) : null,
+    coverUrl: cached?.coverUrl ? String(cached.coverUrl) : null,
+    latestChapterTitle: cached?.latestChapterTitle
+      ? String(cached.latestChapterTitle)
+      : null,
+    canUpdate: true,
+  };
+  inShelf.value = false;
+  try {
+    const info = await bookSourceInfo(sourceUrl.value, bookUrl.value);
+    if (info) {
+      book.value = {
+        ...book.value,
+        name: String(info.name || book.value.name),
+        author: String(info.author || book.value.author),
+        origin: String(info.origin || book.value.origin || sourceUrl.value),
+        originName: String(info.originName || book.value.originName || sourceUrl.value),
+        tocUrl: String(info.tocUrl || ""),
+        intro: info.intro ?? book.value.intro,
+        kind: info.kind ?? book.value.kind,
+        coverUrl: info.coverUrl ?? book.value.coverUrl,
+        latestChapterTitle:
+          info.latestChapterTitle ?? book.value.latestChapterTitle,
+        totalChapterNum: info.totalChapterNum,
+      };
+    }
+    const toc = await bookSourceToc(
+      sourceUrl.value,
+      book.value as unknown as OnlineBook,
+    );
+    chapters.value = toc.map((chapter) => ({
+      url: chapter.url,
+      title: chapter.title,
+      index: chapter.index,
+      isVolume: chapter.isVolume,
+      isVip: chapter.isVip,
+      isPay: chapter.isPay,
+      tag: chapter.tag,
+      resourceUrl: chapter.resourceUrl,
+    }));
+  } catch (error) {
+    showToast(String(error));
+  }
+}
+
+async function load() {
+  if (!bookUrl.value) return;
+  const stored = await bookGet(bookUrl.value);
+  if (stored) {
+    book.value = stored;
+    inShelf.value = true;
+    await loadLocalDetails();
+    return;
+  }
+  if (!previewMode.value) return;
+  await loadPreview();
+}
+
+async function addToShelf() {
+  if (!sourceUrl.value || !bookUrl.value) return;
+  try {
+    if (previewMode.value && book.value && chapters.value.length) {
+      await bookSourceAddPrepared(
+        sourceUrl.value,
+        book.value as unknown as OnlineBook,
+        chapters.value as unknown as OnlineChapter[],
+      );
+    } else {
+      await bookSourceAddToShelf(sourceUrl.value, bookUrl.value);
+    }
+    await load();
+    showToast("已加入书架");
+  } catch (error) {
+    showToast(String(error));
   }
 }
 
@@ -141,17 +271,24 @@ const readLabel = computed(() => {
   return "阅读";
 });
 
-function read() {
+async function read() {
+  if (!inShelf.value) {
+    await addToShelf();
+    if (!inShelf.value) return;
+  }
   const type = book.value?.type ?? 0;
   const path = type & 2 ? "/audio" : type & 4 ? "/manga" : type & 8 ? "/file-source" : "/reader";
   router.push({ path, query: { bookUrl: bookUrl.value } });
 }
 
-function toc() {
+async function toc() {
+  if (!inShelf.value) await addToShelf();
+  if (!inShelf.value) return;
   router.push({ path: "/toc", query: { bookUrl: bookUrl.value } });
 }
 
 function edit() {
+  if (!inShelf.value) return;
   router.push({ path: "/book-info-edit", query: { bookUrl: bookUrl.value } });
 }
 
@@ -206,7 +343,7 @@ async function onMenu(key: string) {
       showToast(String(e));
     }
   } else if (key === "log") {
-    showToast("日志暂未接入");
+    logVisible.value = true;
   }
 }
 
@@ -271,6 +408,9 @@ watch(groupDialogVisible, (open) => {
 });
 
 onMounted(load);
+onActivated(() => {
+  if (inShelf.value) void load();
+});
 </script>
 
 <template>
@@ -282,7 +422,7 @@ onMounted(load);
     <div class="bg-mask" />
     <TitleBar title="书籍信息" dark @back="router.back()">
       <template #actions>
-        <button aria-label="编辑" @click="edit">
+        <button v-if="inShelf" aria-label="编辑" @click="edit">
           <Icon name="ic_edit" :size="24" />
         </button>
         <button aria-label="更多" @click="menuVisible = true">
@@ -291,7 +431,7 @@ onMounted(load);
       </template>
     </TitleBar>
 
-    <main class="scroll">
+    <main ref="scrollRef" class="scroll">
       <div class="hero">
         <div class="arc" />
         <div class="cover-wrap" @click="edit">
@@ -326,7 +466,13 @@ onMounted(load);
         <p class="line">
           <Icon name="ic_groups" :size="18" />
           <span>分组：{{ groupName }}</span>
-          <button class="inline-action" @click="groupDialogVisible = true">分组设置</button>
+          <button
+            v-if="inShelf"
+            class="inline-action"
+            @click="groupDialogVisible = true"
+          >
+            分组设置
+          </button>
         </p>
         <p class="line">
           <Icon name="ic_toc" :size="18" />
@@ -338,8 +484,9 @@ onMounted(load);
     </main>
 
     <footer class="actions">
-      <button @click="removeFromShelf">删除书籍</button>
-      <button class="primary" @click="read">{{ readLabel }}</button>
+      <button v-if="inShelf" @click="removeFromShelf">删除书籍</button>
+      <button v-if="!inShelf" class="primary" @click="addToShelf">加入书架</button>
+      <button v-if="inShelf" class="primary" @click="read">{{ readLabel }}</button>
     </footer>
 
     <PopupMenu v-model="menuVisible" :items="menuItems" :top="54" @select="onMenu" />
@@ -391,6 +538,7 @@ onMounted(load);
     </div>
 
     <p v-if="message" class="toast">{{ message }}</p>
+    <AppLogDialog v-model="logVisible" />
   </div>
   <div v-else class="loading">加载中…</div>
 </template>

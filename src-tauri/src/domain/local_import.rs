@@ -561,8 +561,8 @@ pub fn reimport_file(
 mod tests {
     use super::*;
 
-    #[test]
-    fn filename_script_uses_src() {
+    #[tokio::test]
+    async fn filename_script_uses_src() {
         let result = run_name_script(
             "name = src.split(' - ')[0]; author = src.split(' - ')[1]",
             "书名 - 作者",
