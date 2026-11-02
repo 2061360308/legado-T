@@ -4,11 +4,13 @@ import { useRouter } from "vue-router";
 import { useBooksStore } from "@/stores/books";
 import { useConfigStore } from "@/stores/config";
 import {
+  bookUpsert,
   bookshelfExport,
   bookshelfList,
   groupList,
   VIRTUAL_GROUP,
 } from "@/core/application/books";
+import { platform } from "@/runtime";
 import type { Book, BookGroup } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
@@ -163,6 +165,35 @@ async function onExport() {
   message.value = "书架已导出";
 }
 
+async function importShelf() {
+  try {
+    const path = await platform.dialog.open({
+      multiple: false,
+      filters: [{ name: "书架 JSON", extensions: ["json"] }],
+    });
+    if (typeof path !== "string" || !path) return;
+    const bytes = await platform.files.readFile(path);
+    const parsed = JSON.parse(new TextDecoder("utf-8").decode(bytes)) as unknown;
+    const books = Array.isArray(parsed)
+      ? parsed
+      : parsed && typeof parsed === "object" && Array.isArray((parsed as { books?: unknown }).books)
+        ? ((parsed as { books: unknown[] }).books)
+        : [];
+    let count = 0;
+    for (const item of books) {
+      if (!item || typeof item !== "object") continue;
+      const book = item as Book;
+      if (!book.bookUrl) continue;
+      await bookUpsert(book);
+      count += 1;
+    }
+    await load();
+    message.value = `已导入 ${count} 本书`;
+  } catch (error) {
+    message.value = String(error);
+  }
+}
+
 function openBookshelfConfig() {
   manageMenuVisible.value = false;
   bookshelfConfigVisible.value = true;
@@ -178,7 +209,7 @@ function onManage(key: string) {
   else if (key === "group") router.push("/group-manage");
   else if (key === "layout") openBookshelfConfig();
   else if (key === "export") onExport();
-  else if (key === "importShelf") message.value = "书单导入暂未接入";
+  else if (key === "importShelf") void importShelf();
   else if (key === "log") message.value = "日志暂未接入";
 }
 

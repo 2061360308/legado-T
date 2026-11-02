@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { bookClearCache, bookFileSize, bookList, groupList } from "@/core/application/books";
+import {
+  bookClearCache,
+  bookFileSize,
+  bookList,
+  chapterList,
+  groupList,
+  readChapter,
+} from "@/core/application/books";
+import { platform } from "@/runtime";
 import type { Book, BookGroup } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import Icon from "@/components/android/Icon.vue";
@@ -82,10 +90,53 @@ function onGroupMenu(key: string) {
   groupFilter.value = Number(key);
 }
 
+async function cachedText(book: Book): Promise<string> {
+  const chapters = await chapterList(book.bookUrl);
+  const parts = [`${book.name}${book.author ? ` / ${book.author}` : ""}`];
+  for (const chapter of chapters) {
+    try {
+      const content = await readChapter(book.bookUrl, chapter.index);
+      if (content.trim()) parts.push(`\n${chapter.title}\n\n${content}`);
+    } catch {
+      // skip chapters that are not cached
+    }
+  }
+  return parts.join("\n");
+}
+
+async function exportBook(book: Book) {
+  const path = await platform.dialog.save({
+    defaultPath: `${book.name || "book"}.txt`,
+    filters: [{ name: "文本文件", extensions: ["txt"] }],
+  });
+  if (!path) return;
+  await platform.files.writeFile(path, new TextEncoder().encode(await cachedText(book)));
+  message.value = `已导出《${book.name}》`;
+}
+
+async function exportAll() {
+  const selected = filtered.value;
+  if (!selected.length) return;
+  const path = await platform.dialog.save({
+    defaultPath: "cached-books.txt",
+    filters: [{ name: "文本文件", extensions: ["txt"] }],
+  });
+  if (!path) return;
+  busy.value = "all";
+  try {
+    const parts: string[] = [];
+    for (const item of selected) parts.push(await cachedText(item.book));
+    await platform.files.writeFile(path, new TextEncoder().encode(parts.join("\n\n")));
+    message.value = `已导出 ${selected.length} 本书`;
+  } finally {
+    busy.value = "";
+  }
+}
+
 function onMenu(key: string) {
   if (key === "replace") router.push("/replace");
-  else if (key === "download") message.value = "下载全部暂未接入";
-  else if (key === "exportAll") message.value = "导出暂未接入";
+  else if (key === "download") message.value = "请先打开书籍缓存章节，再使用导出";
+  else if (key === "exportAll") void exportAll();
   else if (key === "log") message.value = "日志暂未接入";
   else message.value = "该导出选项暂未接入";
 }
@@ -122,7 +173,9 @@ onMounted(load);
         <button class="icon-button" aria-label="下载" @click="message = '下载暂未接入'">
           <Icon name="ic_play_24dp" :size="22" />
         </button>
-        <button class="export" disabled>导出</button>
+        <button class="export" :disabled="busy === 'all'" @click="exportBook(item.book)">
+          导出
+        </button>
         <button
           class="icon-button"
           aria-label="清除缓存"
