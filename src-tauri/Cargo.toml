@@ -10,6 +10,7 @@ members = [
     "crates/engine-http-native",
     "crates/engine-flow",
     "crates/engine-rss",
+    "crates/engine-pipeline",
     "crates/engine-native",
     "crates/reader-core",
     "crates/backup-core",
@@ -79,6 +80,7 @@ engine-js = { path = "crates/engine-js" }
 engine-http-native = { path = "crates/engine-http-native" }
 engine-flow = { path = "crates/engine-flow" }
 engine-rss = { path = "crates/engine-rss" }
+engine-pipeline = { path = "crates/engine-pipeline" }
 engine-native = { path = "crates/engine-native" }
 
 [package]

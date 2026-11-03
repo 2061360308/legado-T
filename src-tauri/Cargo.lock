@@ -1300,6 +1300,7 @@ dependencies = [
  "engine-http-native",
  "engine-js",
  "engine-model",
+ "engine-pipeline",
  "engine-rss",
  "engine-rule",
  "futures",
@@ -1329,6 +1330,7 @@ dependencies = [
  "engine-http-native",
  "engine-js",
  "engine-model",
+ "engine-pipeline",
  "engine-regex",
  "engine-replace",
  "engine-rss",
@@ -1339,6 +1341,16 @@ dependencies = [
  "thiserror 2.0.21",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "engine-pipeline"
+version = "0.1.0"
+dependencies = [
+ "engine-flow",
+ "engine-model",
+ "engine-rss",
+ "engine-rule",
 ]
 
 [[package]]

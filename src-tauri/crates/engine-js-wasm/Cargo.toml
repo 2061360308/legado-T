@@ -13,6 +13,7 @@ engine-flow = { path = "../engine-flow", default-features = false }
 engine-http-native = { path = "../engine-http-native", default-features = false }
 engine-js = { path = "../engine-js" }
 engine-model = { path = "../engine-model" }
+engine-pipeline = { path = "../engine-pipeline" }
 engine-rule = { path = "../engine-rule" }
 engine-rss = { path = "../engine-rss", default-features = false }
 futures.workspace = true

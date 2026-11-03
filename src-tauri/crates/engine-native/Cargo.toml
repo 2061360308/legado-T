@@ -15,6 +15,7 @@ tracing.workspace = true
 
 engine-model.workspace = true
 engine-flow.workspace = true
+engine-pipeline.workspace = true
 engine-js.workspace = true
 engine-http-native.workspace = true
 engine-regex.workspace = true

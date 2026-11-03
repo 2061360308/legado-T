@@ -1,0 +1,13 @@
+[package]
+name = "engine-pipeline"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Shared book and RSS engine assembly"
+
+[dependencies]
+engine-flow = { workspace = true, default-features = false }
+engine-model.workspace = true
+engine-rule.workspace = true
+engine-rss = { workspace = true, default-features = false }

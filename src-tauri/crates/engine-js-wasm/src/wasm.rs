@@ -3,7 +3,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::slice;
 use std::sync::{Arc, Mutex};
 
-use engine_flow::{BookEngine, PageFetcher};
+use engine_flow::PageFetcher;
 use engine_http_native::{UrlRule, sub_domain};
 use engine_js::wasm::WasmEngine;
 use engine_model::{
@@ -11,8 +11,8 @@ use engine_model::{
     CacheStore, CookieStore, HttpResponse, JsEvaluator, JsRequest, JsValue, Result, RssArticle,
     RssSource, StatusCode,
 };
+use engine_pipeline::EnginePipeline;
 use engine_rule::RuleEngine;
-use engine_rss::RssEngine;
 use futures::executor::block_on;
 
 #[link(wasm_import_module = "engine_http")]
@@ -314,18 +314,14 @@ impl JsEvaluator for WasmJs {
     }
 }
 
-fn pipeline() -> BookEngine {
-    let rules = Arc::new(RuleEngine::new());
-    let js: Arc<dyn JsEvaluator> = Arc::new(WasmJs);
-    rules.set_js(js.clone());
-    BookEngine::new(rules, js, Arc::new(WasmPageFetcher))
-}
-
-fn rss_pipeline() -> RssEngine {
-    let rules = Arc::new(RuleEngine::new());
-    let js: Arc<dyn JsEvaluator> = Arc::new(WasmJs);
-    rules.set_js(js.clone());
-    RssEngine::new(rules, js, Arc::new(WasmPageFetcher))
+fn with_pipeline<T>(task: impl FnOnce(&EnginePipeline) -> Result<T>) -> Result<T> {
+    PIPELINE.with(|slot| {
+        let slot = slot.borrow();
+        let pipeline = slot
+            .as_ref()
+            .ok_or_else(|| engine_model::Error::Other("engine is not initialized".into()))?;
+        task(pipeline)
+    })
 }
 
 fn text_arg(ptr: *const u8, len: usize) -> std::result::Result<String, String> {
@@ -405,6 +401,7 @@ fn fetch_raw(url: &str, init: &str) -> std::result::Result<String, String> {
 
 thread_local! {
     static ENGINE: RefCell<Option<WasmEngine>> = const { RefCell::new(None) };
+    static PIPELINE: RefCell<Option<EnginePipeline>> = const { RefCell::new(None) };
     static COOKIES: RefCell<Option<Arc<WasmCookieStore>>> = const { RefCell::new(None) };
     static LAST: RefCell<Vec<u8>> = const { RefCell::new(Vec::new()) };
 }
@@ -439,7 +436,7 @@ pub extern "C" fn engine_wasm_init() -> i32 {
         let cache = Arc::new(WasmCacheStore::default());
         let js: Arc<dyn JsEvaluator> = Arc::new(WasmJs);
         let rules = Arc::new(RuleEngine::new());
-        rules.set_js(js);
+        let pipeline = EnginePipeline::new(rules.clone(), js.clone(), Arc::new(WasmPageFetcher));
         match WasmEngine::with_deps(
             Some(Arc::new(BrowserHttpFetcher)),
             Some(cache),
@@ -449,6 +446,7 @@ pub extern "C" fn engine_wasm_init() -> i32 {
         ) {
             Ok(value) => {
                 COOKIES.with(|slot| *slot.borrow_mut() = Some(cookies));
+                PIPELINE.with(|slot| *slot.borrow_mut() = Some(pipeline));
                 *engine = Some(value);
                 set_last(b"ok");
                 0
@@ -624,8 +622,7 @@ pub extern "C" fn engine_source_search(
     };
     let page = page.max(1);
     run_source(|| {
-        let pipeline = pipeline();
-        block_on(pipeline.search(&source, &key, page))
+        with_pipeline(|pipeline| block_on(pipeline.books().search(&source, &key, page)))
     })
 }
 
@@ -647,8 +644,7 @@ pub extern "C" fn engine_source_explore(
     };
     let page = page.max(1);
     run_source(|| {
-        let pipeline = pipeline();
-        block_on(pipeline.explore(&source, &url, page))
+        with_pipeline(|pipeline| block_on(pipeline.books().explore(&source, &url, page)))
     })
 }
 
@@ -674,9 +670,10 @@ pub extern "C" fn engine_source_info(
         book.origin_name = source.book_source_name.clone();
     }
     run_source(|| {
-        let pipeline = pipeline();
-        block_on(pipeline.book_info(&source, &mut book))?;
-        Ok(book)
+        with_pipeline(|pipeline| {
+            block_on(pipeline.books().book_info(&source, &mut book))?;
+            Ok(book)
+        })
     })
 }
 
@@ -696,8 +693,7 @@ pub extern "C" fn engine_source_toc(
         Err(error) => return set_error(error),
     };
     run_source(|| {
-        let pipeline = pipeline();
-        block_on(pipeline.chapters(&source, &mut book))
+        with_pipeline(|pipeline| block_on(pipeline.books().chapters(&source, &mut book)))
     })
 }
 
@@ -723,8 +719,9 @@ pub extern "C" fn engine_source_reviews(
         Err(error) => return set_error(error),
     };
     run_source(|| {
-        let pipeline = pipeline();
-        block_on(pipeline.reviews(&source, &mut book, &mut chapter))
+        with_pipeline(|pipeline| {
+            block_on(pipeline.books().reviews(&source, &mut book, &mut chapter))
+        })
     })
 }
 
@@ -744,8 +741,9 @@ pub extern "C" fn engine_source_download_urls(
         Err(error) => return set_error(error),
     };
     run_source(|| {
-        let pipeline = pipeline();
-        block_on(pipeline.download_urls(&source, &mut book))
+        with_pipeline(|pipeline| {
+            block_on(pipeline.books().download_urls(&source, &mut book))
+        })
     })
 }
 
@@ -770,7 +768,9 @@ pub extern "C" fn engine_source_pay(
         Ok(value) => value,
         Err(error) => return set_error(error),
     };
-    match block_on(pipeline().pay_action(&source, &mut book, &mut chapter)) {
+    match with_pipeline(|pipeline| {
+        block_on(pipeline.books().pay_action(&source, &mut book, &mut chapter))
+    }) {
         Ok(engine_flow::PayActionResult::Url(url)) => {
             set_last(serde_json::json!({ "result": "url", "value": url }).to_string().as_bytes());
             0
@@ -819,13 +819,14 @@ pub extern "C" fn engine_source_resource(
         }
     };
     run_text(|| {
-        let pipeline = pipeline();
-        block_on(pipeline.resource(
-            &source,
-            &mut book,
-            &mut chapter,
-            next_url.as_deref(),
-        ))
+        with_pipeline(|pipeline| {
+            block_on(pipeline.books().resource(
+                &source,
+                &mut book,
+                &mut chapter,
+                next_url.as_deref(),
+            ))
+        })
     })
 }
 
@@ -876,22 +877,23 @@ pub extern "C" fn engine_source_image(
         Err(error) => return set_error(error),
     };
     run_text(|| {
-        let pipeline = pipeline();
-        let resource = if url.trim().is_empty() {
-            block_on(pipeline.resource(&source, &mut book, &mut chapter, None))?
-        } else {
-            url
-        };
-        let bytes = block_on(pipeline.fetch_image(
-            &source,
-            &mut book,
-            &mut chapter,
-            &resource,
-            false,
-        ))?;
-        let mime = image_mime(&bytes);
-        let encoded = base64::engine::general_purpose::STANDARD.encode(&bytes);
-        Ok(format!("data:{mime};base64,{encoded}"))
+        with_pipeline(|pipeline| {
+            let resource = if url.trim().is_empty() {
+                block_on(pipeline.books().resource(&source, &mut book, &mut chapter, None))?
+            } else {
+                url
+            };
+            let bytes = block_on(pipeline.books().fetch_image(
+                &source,
+                &mut book,
+                &mut chapter,
+                &resource,
+                false,
+            ))?;
+            let mime = image_mime(&bytes);
+            let encoded = base64::engine::general_purpose::STANDARD.encode(&bytes);
+            Ok(format!("data:{mime};base64,{encoded}"))
+        })
     })
 }
 
@@ -918,14 +920,15 @@ pub extern "C" fn engine_rss_articles(
         Err(error) => return set_error(error),
     };
     run_source(|| {
-        let pipeline = rss_pipeline();
-        let (articles, next) = block_on(pipeline.articles(
-            &source,
-            &sort_name,
-            &sort_url,
-            page.max(1),
-        ))?;
-        Ok(serde_json::json!({ "articles": articles, "next": next }))
+        with_pipeline(|pipeline| {
+            let (articles, next) = block_on(pipeline.rss().articles(
+                &source,
+                &sort_name,
+                &sort_url,
+                page.max(1),
+            ))?;
+            Ok(serde_json::json!({ "articles": articles, "next": next }))
+        })
     })
 }
 
@@ -951,8 +954,7 @@ pub extern "C" fn engine_rss_content(
         Err(error) => return set_error(error),
     };
     run_text(|| {
-        let pipeline = rss_pipeline();
-        block_on(pipeline.content(&source, &article, &rule))
+        with_pipeline(|pipeline| block_on(pipeline.rss().content(&source, &article, &rule)))
     })
 }
 
@@ -988,13 +990,14 @@ pub extern "C" fn engine_source_content(
         }
     };
     run_text(|| {
-        let pipeline = pipeline();
-        block_on(pipeline.content(
-            &source,
-            &mut book,
-            &mut chapter,
-            next_url.as_deref(),
-        ))
+        with_pipeline(|pipeline| {
+            block_on(pipeline.books().content(
+                &source,
+                &mut book,
+                &mut chapter,
+                next_url.as_deref(),
+            ))
+        })
     })
 }
 

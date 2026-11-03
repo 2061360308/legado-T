@@ -11,7 +11,7 @@ use engine_model::{
 };
 use engine_js::JsEngine;
 use engine_http_native::{FileCookieStore, HttpClient, MemoryCookieStore};
-use engine_rss::RssEngine;
+use engine_pipeline::EnginePipeline;
 use engine_rule::RuleEngine;
 use serde_json::Value;
 
@@ -22,8 +22,7 @@ pub struct Pipeline {
     js: Arc<JsEngine>,
     http: Arc<HttpClient>,
     cookies: Arc<dyn CookieStore>,
-    books: BookEngine,
-    rss: RssEngine,
+    engine: EnginePipeline,
 }
 
 impl Pipeline {
@@ -74,16 +73,13 @@ impl Pipeline {
                 .build()
                 .map_err(|error| EngineError::Rule(error.to_string()))?,
         );
-        rules.set_js(js.clone());
-        let books = BookEngine::new(rules.clone(), js.clone(), http.clone());
-        let rss = RssEngine::new(rules.clone(), js.clone(), http.clone());
+        let engine = EnginePipeline::new(rules.clone(), js.clone(), http.clone());
         Ok(Self {
             rules,
             js,
             http,
             cookies,
-            books,
-            rss,
+            engine,
         })
     }
 
@@ -104,7 +100,7 @@ impl Pipeline {
     }
 
     pub fn books(&self) -> &BookEngine {
-        &self.books
+        self.engine.books()
     }
 
     pub fn get_cookie(&self, url: &str) -> String {
@@ -139,7 +135,7 @@ impl Pipeline {
         key: &str,
         page: i32,
     ) -> Result<Vec<SearchBook>> {
-        self.books
+        self.engine.books()
             .search(source, key, page)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -151,28 +147,28 @@ impl Pipeline {
         url: &str,
         page: i32,
     ) -> Result<Vec<SearchBook>> {
-        self.books
+        self.engine.books()
             .explore(source, url, page)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
     }
 
     pub async fn book_info(&self, source: &BookSource, book: &mut Book) -> Result<()> {
-        self.books
+        self.engine.books()
             .book_info(source, book)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
     }
 
     pub async fn download_urls(&self, source: &BookSource, book: &mut Book) -> Result<Vec<String>> {
-        self.books
+        self.engine.books()
             .download_urls(source, book)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
     }
 
     pub async fn chapters(&self, source: &BookSource, book: &mut Book) -> Result<Vec<BookChapter>> {
-        self.books
+        self.engine.books()
             .chapters(source, book)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -185,7 +181,7 @@ impl Pipeline {
         chapter: &mut BookChapter,
         next_chapter_url: Option<&str>,
     ) -> Result<String> {
-        self.books
+        self.engine.books()
             .content(source, book, chapter, next_chapter_url)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -197,7 +193,7 @@ impl Pipeline {
         book: &mut Book,
         chapter: &mut BookChapter,
     ) -> Result<Vec<BookReview>> {
-        self.books
+        self.engine.books()
             .reviews(source, book, chapter)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -209,7 +205,7 @@ impl Pipeline {
         book: &mut Book,
         chapter: &mut BookChapter,
     ) -> Result<engine_flow::PayActionResult> {
-        self.books
+        self.engine.books()
             .pay_action(source, book, chapter)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -222,7 +218,7 @@ impl Pipeline {
         sort_url: &str,
         page: i32,
     ) -> Result<(Vec<RssArticle>, Option<String>)> {
-        self.rss
+        self.engine.rss()
             .articles(source, sort_name, sort_url, page)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -234,7 +230,7 @@ impl Pipeline {
         article: &RssArticle,
         rule_content: &str,
     ) -> Result<String> {
-        self.rss
+        self.engine.rss()
             .content(source, article, rule_content)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -248,7 +244,7 @@ impl Pipeline {
         url: &str,
         is_cover: bool,
     ) -> Result<Vec<u8>> {
-        self.books
+        self.engine.books()
             .fetch_image(source, book, chapter, url, is_cover)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -262,7 +258,7 @@ impl Pipeline {
         bytes: &[u8],
         is_cover: bool,
     ) -> Result<Vec<u8>> {
-        self.books
+        self.engine.books()
             .decode_image(source, book, chapter, bytes, is_cover)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -275,7 +271,7 @@ impl Pipeline {
         chapter: &mut BookChapter,
         next_chapter_url: Option<&str>,
     ) -> Result<String> {
-        self.books
+        self.engine.books()
             .resource(source, book, chapter, next_chapter_url)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -289,7 +285,7 @@ impl Pipeline {
         next_chapter_url: Option<&str>,
         rules: &[ReplaceRule],
     ) -> Result<String> {
-        self.books
+        self.engine.books()
             .content_with_replace(source, book, chapter, next_chapter_url, rules)
             .await
             .map_err(|error| EngineError::Rule(error.to_string()))
@@ -301,7 +297,7 @@ impl Pipeline {
         chapter: &mut BookChapter,
         rules: &[ReplaceRule],
     ) -> Result<engine_replace::ReplaceOutcome> {
-        Ok(self.books.apply_title_replace(book, chapter, rules).await)
+        Ok(self.engine.books().apply_title_replace(book, chapter, rules).await)
     }
 }
 
