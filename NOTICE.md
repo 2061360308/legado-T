@@ -12,12 +12,7 @@
   - `app/src/main/assets/bg/*` 背景图
   - `app/src/main/res/anim/anim_readbook_*` 阅读菜单动画参数
 
-转换脚本位于 `scripts/android-ui/`，生成物位于 `src/design/` 与 `src/assets/android/`。
-如需重新生成：
-
-```bash
-npm run android:ui
-```
+Android UI 已转为仓库内直接维护的 Vue 组件；旧的 XML 转换脚本和中间产物已移除，不再提供 `npm run android:ui`。
 
 本项目整体按 GPL-3.0 兼容方式分发。
 

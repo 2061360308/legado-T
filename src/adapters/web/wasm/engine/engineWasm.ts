@@ -1,12 +1,13 @@
-import type { EngineEvalInput } from "./engineWasmCore";
+import type {
+  EngineOperationArgs,
+  EngineOperationName,
+  EngineOperationResult,
+  EngineOperations,
+  EngineRequest,
+  EngineResponseMessage,
+} from "./engineProtocol";
 
-export type { EngineEvalInput } from "./engineWasmCore";
-
-interface ResponseMessage {
-  id: number;
-  result?: unknown;
-  error?: string;
-}
+export type { EngineEvalInput } from "./engineProtocol";
 
 let worker: Worker | null = null;
 let sequence = 0;
@@ -24,7 +25,7 @@ function getWorker(): Worker {
     worker = new Worker(new URL("./engine.worker.ts", import.meta.url), {
       type: "module",
     });
-    worker.onmessage = (event: MessageEvent<ResponseMessage>) => {
+    worker.onmessage = (event: MessageEvent<EngineResponseMessage>) => {
       const data = event.data;
       const item = pending.get(data.id);
       if (!item) return;
@@ -47,10 +48,13 @@ function getWorker(): Worker {
   return worker;
 }
 
-function request<T>(op: string, args: unknown[]): Promise<T> {
+function request<K extends EngineOperationName>(
+  op: K,
+  args: EngineOperationArgs<K>,
+): Promise<EngineOperationResult<K>> {
   const target = getWorker();
   const id = ++sequence;
-  return new Promise<T>((resolve, reject) => {
+  return new Promise<EngineOperationResult<K>>((resolve, reject) => {
     const timer = window.setTimeout(() => {
       pending.delete(id);
       worker?.terminate();
@@ -58,128 +62,99 @@ function request<T>(op: string, args: unknown[]): Promise<T> {
       reject(new Error("引擎 Worker 超时"));
     }, 120_000);
     pending.set(id, {
-      resolve: (value) => resolve(value as T),
+      resolve: (value) => resolve(value as EngineOperationResult<K>),
       reject,
       timer,
     });
-    target.postMessage({ id, op, args });
+    target.postMessage({ id, op, args } as EngineRequest);
   });
 }
 
-export function evalEngine(input: EngineEvalInput): Promise<string> {
-  return request<string>("eval", [input]);
-}
+export const evalEngine: EngineOperations["eval"] = (input) =>
+  request("eval", [input]);
 
-export function searchSource(
-  sourceJson: string,
-  keyword: string,
+export const searchSource: EngineOperations["search"] = (
+  sourceJson,
+  keyword,
   page = 1,
-): Promise<unknown[]> {
-  return request<unknown[]>("search", [sourceJson, keyword, page]);
-}
+) => request("search", [sourceJson, keyword, page]);
 
-export function exploreSource(
-  sourceJson: string,
-  url: string,
+export const exploreSource: EngineOperations["explore"] = (
+  sourceJson,
+  url,
   page = 1,
-): Promise<unknown[]> {
-  return request<unknown[]>("explore", [sourceJson, url, page]);
-}
+) => request("explore", [sourceJson, url, page]);
 
-export function sourceInfo(sourceJson: string, bookJson: string): Promise<unknown> {
-  return request<unknown>("info", [sourceJson, bookJson]);
-}
+export const sourceInfo: EngineOperations["info"] = (sourceJson, bookJson) =>
+  request("info", [sourceJson, bookJson]);
 
-export function sourceToc(sourceJson: string, bookJson: string): Promise<unknown[]> {
-  return request<unknown[]>("toc", [sourceJson, bookJson]);
-}
+export const sourceToc: EngineOperations["toc"] = (sourceJson, bookJson) =>
+  request("toc", [sourceJson, bookJson]);
 
-export function sourceContent(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-  nextUrl?: string | null,
-): Promise<string> {
-  return request<string>("content", [sourceJson, bookJson, chapterJson, nextUrl ?? null]);
-}
+export const sourceContent: EngineOperations["content"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+  nextUrl,
+) => request("content", [sourceJson, bookJson, chapterJson, nextUrl ?? null]);
 
-export function sourceImage(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-  url?: string | null,
-): Promise<string> {
-  return request<string>("image", [sourceJson, bookJson, chapterJson, url ?? null]);
-}
+export const sourceImage: EngineOperations["image"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+  url,
+) => request("image", [sourceJson, bookJson, chapterJson, url ?? null]);
 
-export function rssArticles(
-  sourceJson: string,
-  sortName: string,
-  sortUrl: string,
+export const rssArticles: EngineOperations["rssArticles"] = (
+  sourceJson,
+  sortName,
+  sortUrl,
   page = 1,
-): Promise<unknown> {
-  return request<unknown>("rssArticles", [sourceJson, sortName, sortUrl, page]);
-}
+) => request("rssArticles", [sourceJson, sortName, sortUrl, page]);
 
-export function rssContent(
-  sourceJson: string,
-  articleJson: string,
-  ruleContent: string,
-): Promise<string> {
-  return request<string>("rssContent", [sourceJson, articleJson, ruleContent]);
-}
+export const rssContent: EngineOperations["rssContent"] = (
+  sourceJson,
+  articleJson,
+  ruleContent,
+) => request("rssContent", [sourceJson, articleJson, ruleContent]);
 
-export function sourceReviews(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-): Promise<unknown[]> {
-  return request<unknown[]>("reviews", [sourceJson, bookJson, chapterJson]);
-}
+export const sourceReviews: EngineOperations["reviews"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+) => request("reviews", [sourceJson, bookJson, chapterJson]);
 
-export function sourceDownloadUrls(
-  sourceJson: string,
-  bookJson: string,
-): Promise<unknown[]> {
-  return request<unknown[]>("downloadUrls", [sourceJson, bookJson]);
-}
+export const sourceDownloadUrls: EngineOperations["downloadUrls"] = (
+  sourceJson,
+  bookJson,
+) => request("downloadUrls", [sourceJson, bookJson]);
 
-export function sourcePay(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-): Promise<unknown> {
-  return request<unknown>("pay", [sourceJson, bookJson, chapterJson]);
-}
+export const sourcePay: EngineOperations["pay"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+) => request("pay", [sourceJson, bookJson, chapterJson]);
 
-export function sourceResource(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-  nextUrl?: string | null,
-): Promise<string> {
-  return request<string>("resource", [sourceJson, bookJson, chapterJson, nextUrl ?? null]);
-}
+export const sourceResource: EngineOperations["resource"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+  nextUrl,
+) => request("resource", [sourceJson, bookJson, chapterJson, nextUrl ?? null]);
 
-export function setSourceVariables(
-  sourceKey: string,
-  variables: Record<string, string>,
-): Promise<void> {
-  return request<void>("setVariables", [sourceKey, variables]);
-}
+export const setSourceVariables: EngineOperations["setVariables"] = (
+  sourceKey,
+  variables,
+) => request("setVariables", [sourceKey, variables]);
 
-export function setEngineCookie(url: string, cookie: string): Promise<void> {
-  return request<void>("setCookie", [url, cookie]);
-}
+export const setEngineCookie: EngineOperations["setCookie"] = (url, cookie) =>
+  request("setCookie", [url, cookie]);
 
-export function removeEngineCookie(url: string): Promise<void> {
-  return request<void>("removeCookie", [url]);
-}
+export const removeEngineCookie: EngineOperations["removeCookie"] = (url) =>
+  request("removeCookie", [url]);
 
-export function getEngineCookie(url: string): Promise<string> {
-  return request<string>("getCookie", [url]);
-}
+export const getEngineCookie: EngineOperations["getCookie"] = (url) =>
+  request("getCookie", [url]);
 
-export function warmupEngine(): Promise<void> {
-  return request<void>("warmup", []);
-}
+export const warmupEngine: EngineOperations["warmup"] = () =>
+  request("warmup", []);

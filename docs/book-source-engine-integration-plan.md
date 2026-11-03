@@ -594,6 +594,16 @@ POST /api/engine/fetch
 }
 ```
 
+### 请求头传递
+
+浏览器禁止页面设置 `Cookie`、`User-Agent`、`Referer`、`Sec-*` 等请求头。Web 引擎不能逐个头调用 `setRequestHeader`，而是把引擎请求头 URI 编码后放入：
+
+```text
+X-Engine-Headers: encodeURIComponent(JSON.stringify(headers))
+```
+
+服务端解析该头并还原到上游请求。浏览器直接发给代理的 Cookie 和 Referer 不转发；`User-Agent` 等安全头在 envelope 缺少时允许使用浏览器值兜底。hop-by-hop 头和 `X-Remote-Target`、`X-Proxy-Token`、`X-Engine-Headers` 不参与上游转发。
+
 ### 要求
 
 - 同源部署，避免 CORS

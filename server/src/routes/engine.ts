@@ -6,19 +6,35 @@ import {
   type Env,
 } from "../config";
 
-const FORWARD_HEADERS = [
+const ENGINE_HEADER_ENVELOPE = "x-engine-headers";
+const DIRECT_FALLBACK_HEADERS = [
   "authorization",
   "content-type",
   "accept",
   "accept-language",
   "user-agent",
-  "referer",
-  "cookie",
   "range",
   "if-none-match",
   "if-modified-since",
   "x-requested-with",
 ];
+const SKIPPED_UPSTREAM_HEADERS = new Set([
+  "connection",
+  "content-length",
+  "host",
+  "keep-alive",
+  "proxy-authenticate",
+  "proxy-authorization",
+  "te",
+  "trailer",
+  "transfer-encoding",
+  "upgrade",
+  "x-engine-headers",
+  "x-proxy-token",
+  "x-remote-target",
+]);
+const MAX_ENGINE_HEADER_BYTES = 64 * 1024;
+const MAX_ENGINE_HEADER_COUNT = 100;
 
 const PRIVATE_HOSTS = new Set(["localhost", "localhost.localdomain"]);
 
@@ -38,7 +54,7 @@ function corsHeaders(request: Request, env: Env): Headers {
   headers.set(
     "Access-Control-Allow-Headers",
     request.headers.get("access-control-request-headers") ||
-      "Authorization, Content-Type, Accept, X-Remote-Target, X-Proxy-Token, X-Final-Url",
+      "Authorization, Content-Type, Accept, X-Remote-Target, X-Proxy-Token, X-Engine-Headers, X-Final-Url",
   );
   headers.set(
     "Access-Control-Expose-Headers",
@@ -131,11 +147,58 @@ function validateTarget(value: string | null, env: Env): URL {
   return target;
 }
 
+function parseEngineHeaders(value: string | null): Headers {
+  const headers = new Headers();
+  if (!value) return headers;
+  if (value.length > MAX_ENGINE_HEADER_BYTES) {
+    throw new Error("engine header envelope is too large");
+  }
+  let text: string;
+  try {
+    text = decodeURIComponent(value);
+  } catch {
+    throw new Error("invalid engine header envelope");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error("invalid engine header envelope");
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error("invalid engine header envelope");
+  }
+  const entries = Object.entries(parsed as Record<string, unknown>);
+  if (entries.length > MAX_ENGINE_HEADER_COUNT) {
+    throw new Error("engine header envelope has too many headers");
+  }
+  for (const [rawName, rawValue] of entries) {
+    const name = rawName.trim().toLowerCase();
+    if (!name || SKIPPED_UPSTREAM_HEADERS.has(name)) continue;
+    if (typeof rawValue !== "string") continue;
+    try {
+      headers.set(name, rawValue);
+    } catch {
+      continue;
+    }
+  }
+  return headers;
+}
+
 function requestHeaders(request: Request): Headers {
   const headers = new Headers();
-  for (const name of FORWARD_HEADERS) {
+  for (const name of DIRECT_FALLBACK_HEADERS) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
+  }
+  for (const [name, value] of parseEngineHeaders(
+    request.headers.get(ENGINE_HEADER_ENVELOPE),
+  )) {
+    if (name === "user-agent" && value.trim().toLowerCase() === "null") {
+      headers.delete("user-agent");
+      continue;
+    }
+    headers.set(name, value);
   }
   return headers;
 }
@@ -164,6 +227,13 @@ async function handleEngineFetch(c: Context<{ Bindings: Env }>): Promise<Respons
     return errorResponse(c, 400, (error as Error).message);
   }
 
+  let upstreamHeaders: Headers;
+  try {
+    upstreamHeaders = requestHeaders(request);
+  } catch (error) {
+    return errorResponse(c, 400, (error as Error).message);
+  }
+
   const limits = resolveLimits(c.env);
   const declaredUpload = Number(request.headers.get("content-length") ?? "0");
   if (
@@ -182,7 +252,7 @@ async function handleEngineFetch(c: Context<{ Bindings: Env }>): Promise<Respons
   try {
     const init: RequestInit & { duplex?: "half" } = {
       method: request.method,
-      headers: requestHeaders(request),
+      headers: upstreamHeaders,
       body:
         request.method === "GET" ||
         request.method === "HEAD" ||
@@ -260,3 +330,4 @@ export const engineRoutes = new Hono<{ Bindings: Env }>();
 
 engineRoutes.post("/engine/fetch", handleEngineFetch);
 engineRoutes.get("/engine/fetch", handleEngineFetch);
+engineRoutes.options("/engine/fetch", handleEngineFetch);

@@ -9,6 +9,7 @@
     "dev:node": "tsx watch src/node.ts",
     "start:node": "tsx src/node.ts",
     "deploy": "wrangler deploy",
+    "test": "tsx --test src/routes/engine.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

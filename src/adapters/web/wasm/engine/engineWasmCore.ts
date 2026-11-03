@@ -1,3 +1,10 @@
+import type {
+  EngineOperationName,
+  EngineOperations,
+} from "./engineProtocol";
+
+export type { EngineEvalInput } from "./engineProtocol";
+
 type WasmExports = {
   memory: WebAssembly.Memory;
   engine_wasm_ping(): number;
@@ -127,15 +134,19 @@ type WasmExports = {
   ): number;
 };
 
-export interface EngineEvalInput {
-  script: string;
-  baseUrl: string;
-  result?: string;
-  sourceJson?: string | null;
-}
-
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
+const ENGINE_HEADER_ENVELOPE = "X-Engine-Headers";
+const SKIPPED_ENGINE_HEADERS = new Set([
+  "connection",
+  "content-length",
+  "host",
+  "transfer-encoding",
+  "upgrade",
+  "x-engine-headers",
+  "x-proxy-token",
+  "x-remote-target",
+]);
 let instance: WebAssembly.Instance | null = null;
 let initPromise: Promise<WasmExports> | null = null;
 let queue: Promise<unknown> = Promise.resolve();
@@ -235,6 +246,17 @@ function wasiImports(exports: () => WasmExports) {
   };
 }
 
+function encodeEngineHeaders(headers: Record<string, string> | undefined): string | null {
+  const forwarded: Record<string, string> = {};
+  for (const [key, value] of Object.entries(headers ?? {})) {
+    const name = key.trim().toLowerCase();
+    if (!name || SKIPPED_ENGINE_HEADERS.has(name)) continue;
+    forwarded[name] = value;
+  }
+  if (!Object.keys(forwarded).length) return null;
+  return encodeURIComponent(JSON.stringify(forwarded));
+}
+
 function httpImports(exports: () => WasmExports) {
   return {
     engine_http_fetch(urlPtr: number, urlLen: number, initPtr: number, initLen: number): number {
@@ -249,15 +271,8 @@ function httpImports(exports: () => WasmExports) {
         const xhr = new XMLHttpRequest();
         xhr.open(init.method || "GET", "/api/engine/fetch", false);
         xhr.setRequestHeader("X-Remote-Target", url);
-        for (const [key, value] of Object.entries(init.headers || {})) {
-          if (key.toLowerCase() !== "host" && key.toLowerCase() !== "content-length") {
-            try {
-              xhr.setRequestHeader(key, value);
-            } catch {
-              // ignore forbidden browser headers
-            }
-          }
-        }
+        const engineHeaders = encodeEngineHeaders(init.headers);
+        if (engineHeaders) xhr.setRequestHeader(ENGINE_HEADER_ENVELOPE, engineHeaders);
         xhr.send(init.body == null ? null : init.body);
         const headers: Record<string, string> = {};
         for (const line of (xhr.getAllResponseHeaders() || "").trim().split(/[\r\n]+/)) {
@@ -322,7 +337,7 @@ function runSerialized<T>(task: (exports: WasmExports) => T): Promise<T> {
   return next;
 }
 
-export function evalEngine(input: EngineEvalInput): Promise<string> {
+export const evalEngine: EngineOperations["eval"] = (input) => {
   return runSerialized((exports) => {
     const script = writeText(exports, input.script);
     const baseUrl = writeText(exports, input.baseUrl);
@@ -349,7 +364,7 @@ export function evalEngine(input: EngineEvalInput): Promise<string> {
       if (source) exports.engine_wasm_free(source.ptr, source.len);
     }
   });
-}
+};
 
 function callWithText<T>(
   parts: string[],
@@ -373,56 +388,56 @@ function parseJson<T>(value: string): T {
   return JSON.parse(value) as T;
 }
 
-export function searchSource(
-  sourceJson: string,
-  keyword: string,
+export const searchSource: EngineOperations["search"] = (
+  sourceJson,
+  keyword,
   page = 1,
-): Promise<unknown[]> {
+) => {
   return callWithText<unknown[]>(
     [sourceJson, keyword],
     (exports, [source, key]) =>
       exports.engine_source_search(source.ptr, source.len, key.ptr, key.len, page),
     parseJson,
   );
-}
+};
 
-export function exploreSource(
-  sourceJson: string,
-  url: string,
+export const exploreSource: EngineOperations["explore"] = (
+  sourceJson,
+  url,
   page = 1,
-): Promise<unknown[]> {
+) => {
   return callWithText<unknown[]>(
     [sourceJson, url],
     (exports, [source, target]) =>
       exports.engine_source_explore(source.ptr, source.len, target.ptr, target.len, page),
     parseJson,
   );
-}
+};
 
-export function sourceInfo(sourceJson: string, bookJson: string): Promise<unknown> {
+export const sourceInfo: EngineOperations["info"] = (sourceJson, bookJson) => {
   return callWithText(
     [sourceJson, bookJson],
     (exports, [source, book]) =>
       exports.engine_source_info(source.ptr, source.len, book.ptr, book.len),
     parseJson,
   );
-}
+};
 
-export function sourceToc(sourceJson: string, bookJson: string): Promise<unknown[]> {
+export const sourceToc: EngineOperations["toc"] = (sourceJson, bookJson) => {
   return callWithText<unknown[]>(
     [sourceJson, bookJson],
     (exports, [source, book]) =>
       exports.engine_source_toc(source.ptr, source.len, book.ptr, book.len),
     parseJson,
   );
-}
+};
 
-export function sourceContent(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-  nextUrl?: string | null,
-): Promise<string> {
+export const sourceContent: EngineOperations["content"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+  nextUrl,
+) => {
   return callWithText(
     [sourceJson, bookJson, chapterJson, nextUrl ?? ""],
     (exports, [source, book, chapter, next]) =>
@@ -438,14 +453,14 @@ export function sourceContent(
       ),
     (value) => value,
   );
-}
+};
 
-export function rssArticles(
-  sourceJson: string,
-  sortName: string,
-  sortUrl: string,
+export const rssArticles: EngineOperations["rssArticles"] = (
+  sourceJson,
+  sortName,
+  sortUrl,
   page = 1,
-): Promise<unknown> {
+) => {
   return callWithText(
     [sourceJson, sortName, sortUrl],
     (exports, [source, name, url]) =>
@@ -460,13 +475,13 @@ export function rssArticles(
       ),
     parseJson,
   );
-}
+};
 
-export function rssContent(
-  sourceJson: string,
-  articleJson: string,
-  ruleContent: string,
-): Promise<string> {
+export const rssContent: EngineOperations["rssContent"] = (
+  sourceJson,
+  articleJson,
+  ruleContent,
+) => {
   return callWithText(
     [sourceJson, articleJson, ruleContent],
     (exports, [source, article, rule]) =>
@@ -480,13 +495,13 @@ export function rssContent(
       ),
     (value) => value,
   );
-}
+};
 
-export function sourceReviews(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-): Promise<unknown[]> {
+export const sourceReviews: EngineOperations["reviews"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+) => {
   return callWithText<unknown[]>(
     [sourceJson, bookJson, chapterJson],
     (exports, [source, book, chapter]) =>
@@ -500,25 +515,25 @@ export function sourceReviews(
       ),
     parseJson,
   );
-}
+};
 
-export function sourceDownloadUrls(
-  sourceJson: string,
-  bookJson: string,
-): Promise<unknown[]> {
+export const sourceDownloadUrls: EngineOperations["downloadUrls"] = (
+  sourceJson,
+  bookJson,
+) => {
   return callWithText<unknown[]>(
     [sourceJson, bookJson],
     (exports, [source, book]) =>
       exports.engine_source_download_urls(source.ptr, source.len, book.ptr, book.len),
     parseJson,
   );
-}
+};
 
-export function sourcePay(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-): Promise<unknown> {
+export const sourcePay: EngineOperations["pay"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+) => {
   return callWithText(
     [sourceJson, bookJson, chapterJson],
     (exports, [source, book, chapter]) =>
@@ -532,14 +547,14 @@ export function sourcePay(
       ),
     parseJson,
   );
-}
+};
 
-export function sourceResource(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-  nextUrl?: string | null,
-): Promise<string> {
+export const sourceResource: EngineOperations["resource"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+  nextUrl,
+) => {
   return callWithText(
     [sourceJson, bookJson, chapterJson, nextUrl ?? ""],
     (exports, [source, book, chapter, next]) =>
@@ -555,14 +570,14 @@ export function sourceResource(
       ),
     (value) => value,
   );
-}
+};
 
-export function sourceImage(
-  sourceJson: string,
-  bookJson: string,
-  chapterJson: string,
-  url?: string | null,
-): Promise<string> {
+export const sourceImage: EngineOperations["image"] = (
+  sourceJson,
+  bookJson,
+  chapterJson,
+  url,
+) => {
   return callWithText(
     [sourceJson, bookJson, chapterJson, url ?? ""],
     (exports, [source, book, chapter, target]) =>
@@ -578,45 +593,66 @@ export function sourceImage(
       ),
     (value) => value,
   );
-}
+};
 
-export function setSourceVariables(
-  sourceKey: string,
-  variables: Record<string, string>,
-): Promise<void> {
+export const setSourceVariables: EngineOperations["setVariables"] = (
+  sourceKey,
+  variables,
+) => {
   return callWithText(
     [sourceKey, JSON.stringify(variables)],
     (exports, [key, value]) =>
       exports.engine_wasm_set_variables(key.ptr, key.len, value.ptr, value.len),
     () => undefined,
   );
-}
+};
 
-export function setEngineCookie(url: string, cookie: string): Promise<void> {
+export const setEngineCookie: EngineOperations["setCookie"] = (url, cookie) => {
   return callWithText(
     [url, cookie],
     (exports, [target, value]) =>
       exports.engine_wasm_set_cookie(target.ptr, target.len, value.ptr, value.len),
     () => undefined,
   );
-}
+};
 
-export function removeEngineCookie(url: string): Promise<void> {
+export const removeEngineCookie: EngineOperations["removeCookie"] = (url) => {
   return callWithText(
     [url],
     (exports, [target]) => exports.engine_wasm_remove_cookie(target.ptr, target.len),
     () => undefined,
   );
-}
+};
 
-export function getEngineCookie(url: string): Promise<string> {
+export const getEngineCookie: EngineOperations["getCookie"] = (url) => {
   return callWithText(
     [url],
     (exports, [target]) => exports.engine_wasm_get_cookie(target.ptr, target.len),
     (value) => value,
   );
-}
+};
 
-export function warmupEngine(): Promise<void> {
+export const warmupEngine: EngineOperations["warmup"] = () => {
   return runSerialized(() => undefined);
-}
+};
+
+export const engineHandlers = {
+  eval: evalEngine,
+  search: searchSource,
+  explore: exploreSource,
+  info: sourceInfo,
+  toc: sourceToc,
+  content: sourceContent,
+  image: sourceImage,
+  rssArticles,
+  rssContent,
+  reviews: sourceReviews,
+  downloadUrls: sourceDownloadUrls,
+  pay: sourcePay,
+  resource: sourceResource,
+  setVariables: setSourceVariables,
+  setCookie: setEngineCookie,
+  removeCookie: removeEngineCookie,
+  getCookie: getEngineCookie,
+  warmup: warmupEngine,
+} satisfies { [K in EngineOperationName]: EngineOperations[K] };

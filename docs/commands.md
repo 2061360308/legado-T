@@ -41,7 +41,6 @@
 | `npm run android:dev` | Tauri Android 热重载开发 |
 | `npm run android:debug` | Debug APK，`-Target split` |
 | `npm run android:release` | Release APK，`-Target split -Release -SizeOptimized` |
-| `npm run android:ui` | 重新生成 Android UI 资源 |
 
 需要 universal APK 时手动执行：
 
@@ -56,6 +55,7 @@
 | `npm run server:dev` | Hono watch 开发 |
 | `npm run server:start` | Hono 非 watch 启动 |
 | `npm run server:check` | Hono 类型检查 |
+| `npm run server:test` | Hono 引擎代理契约测试 |
 | `npm run server:deploy` | 部署 Hono Worker |
 
 ## 检查与维护
@@ -63,7 +63,7 @@
 | 命令 | 说明 |
 |---|---|
 | `npm run typecheck` | 前端类型检查 |
-| `npm run check` | 前端 + 服务端 + Rust 检查 |
+| `npm run check` | 前端 + 服务端 + 服务端测试 + Rust 检查 |
 | `npm run test:rust` | 运行 `local-reader` Rust 测试 |
 | `npm run doctor` | 检查 Node、Rust、wasm、Android、WASI 环境 |
 | `npm run version:apply` | 将根目录 `VERSION` 同步到各构建配置 |

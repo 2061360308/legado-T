@@ -1,5 +1,7 @@
 # Android XML 全量复刻执行计划
 
+> 历史文档：本计划执行时使用的 `scripts/android-ui/`、`src/design/` 中间产物和 `npm run android:ui` 已在独立仓库迁移中移除；文中相关命令与路径仅作历史记录，当前不可执行。
+
 ## 1. 目标
 
 以 legado 原始 `app/src/main/res` 为唯一视觉与结构依据，在 `local-reader` 中逐 XML 语义转化。未实现的业务功能保留完整视觉壳子，交互按钮统一提示“功能暂未接入”。
