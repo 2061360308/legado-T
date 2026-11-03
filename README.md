@@ -2,6 +2,29 @@
 
 LegadoT is a multi-platform reader built with Tauri 2, Vue 3, TypeScript, and Rust.
 
+## 下载
+
+| 平台 | 下载方式 |
+|---|---|
+| Web | [一键部署到 Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/2061360308/legado-T) |
+| Windows | [GitHub Release](https://github.com/2061360308/legado-T/releases/latest) |
+| Android | [GitHub Release](https://github.com/2061360308/legado-T/releases/latest) |
+| Linux | [GitHub Release](https://github.com/2061360308/legado-T/releases/latest) |
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/2061360308/legado-T)
+
+## Web 版使用
+
+点击上方“一键部署到 Cloudflare”，登录 Cloudflare 账号并按提示授权 GitHub。Cloudflare 会自动克隆项目、构建并部署到你自己的 Cloudflare 账号。
+
+部署完成后，Cloudflare 会提供一个 `*.workers.dev` 地址，打开即可使用。也可以后续绑定自己的域名。
+
+注意：
+
+- 这是部署到你自己的 Cloudflare 账号，不是公共在线站点。
+- 部署需要 Cloudflare 账号和 GitHub 账号。
+- Web 数据保存在浏览器本地，清除浏览器数据前请先备份。
+
 ## Development
 
 ```powershell
