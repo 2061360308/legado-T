@@ -23,7 +23,19 @@
 | `npm run build:web:prebuilt` | 使用现有 wasm 构建 Web |
 | `npm run build:wasm` | 构建全部 wasm |
 | `npm run check:wasm` | 校验 engine wasm 导出 |
+| `npm run cloudflare:build` | 下载当前版本 Release 的 wasm 并构建 Web |
 | `npm run deploy:web` | 构建 Web 并部署到 Cloudflare |
+
+Cloudflare Workers Builds 配置：
+
+```text
+Root directory: /
+Build command: npm ci
+Deploy command: npm --prefix server ci && npm --prefix server run deploy
+Build output directory: dist
+```
+
+`server/wrangler.toml` 的 `[build]` 会在 `wrangler deploy` 前执行 `npm run cloudflare:build`，下载 `release-<VERSION>/LegadoT-wasm.zip` 并生成 `dist`。
 
 ## PC
 

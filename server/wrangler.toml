@@ -2,6 +2,10 @@ name = "local-reader-server"
 main = "src/cloudflare.ts"
 compatibility_date = "2026-10-29"
 
+[build]
+cwd = ".."
+command = "npm run cloudflare:build"
+
 [assets]
 directory = "../dist"
 binding = "ASSETS"
