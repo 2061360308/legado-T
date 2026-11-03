@@ -164,6 +164,23 @@ jobs:
             exit 1
           fi
           echo "LIBCLANG_PATH=$(dirname "$libclang_path")" >> "$GITHUB_ENV"
+      - name: Configure Android Rust bindgen
+        shell: bash
+        run: |
+          ndk="$ANDROID_HOME/ndk/27.0.12077973"
+          toolchain="$ndk/toolchains/llvm/prebuilt/linux-x86_64"
+          clang_version="$(ls "$toolchain/lib/clang" | sort -V | tail -n 1)"
+          resource_dir="$toolchain/lib/clang/$clang_version"
+          sysroot="$toolchain/sysroot"
+          for target in aarch64-linux-android x86_64-linux-android; do
+            env_name="${target//-/_}"
+            upper_name="$(echo "$target" | tr '[:lower:]' '[:upper:]')"
+            echo "BINDGEN_EXTRA_CLANG_ARGS_${env_name}=--target=${target}24 --sysroot=${sysroot} -resource-dir=${resource_dir}" >> "$GITHUB_ENV"
+            echo "CC_${env_name}=$toolchain/bin/${target}24-clang" >> "$GITHUB_ENV"
+            echo "AR_${env_name}=$toolchain/bin/llvm-ar" >> "$GITHUB_ENV"
+            echo "RANLIB_${env_name}=$toolchain/bin/llvm-ranlib" >> "$GITHUB_ENV"
+            echo "CARGO_TARGET_${upper_name}_LINKER=$toolchain/bin/${target}24-clang" >> "$GITHUB_ENV"
+          done
       - name: Configure Android signing
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
