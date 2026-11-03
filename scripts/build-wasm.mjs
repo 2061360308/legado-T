@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { copyFileSync, mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { delimiter, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -54,12 +54,15 @@ function buildEngine() {
     throw new Error(message);
   }
   const srcTauri = resolve(root, "src-tauri");
+  const wasiBin = resolve(wasiSdk, "bin");
   const env = {
     ...process.env,
     WASI_SDK: wasiSdk,
-    LIBCLANG_PATH: resolve(wasiSdk, "bin"),
-    PATH: `${resolve(wasiSdk, "bin")};${process.env.PATH ?? ""}`,
+    PATH: `${wasiBin}${delimiter}${process.env.PATH ?? ""}`,
   };
+  if (!env.LIBCLANG_PATH) {
+    env.LIBCLANG_PATH = wasiBin;
+  }
   execFileSync(
     "cargo",
     ["build", "-p", "engine-js-wasm", "--target", "wasm32-wasip1", "--release"],

@@ -68,8 +68,20 @@ jobs:
           mkdir -p "$RUNNER_TEMP/wasi-sdk"
           tar -xzf "$RUNNER_TEMP/wasi-sdk.tar.gz" -C "$RUNNER_TEMP/wasi-sdk" --strip-components=1
           echo "WASI_SDK=$RUNNER_TEMP/wasi-sdk" >> "$GITHUB_ENV"
-          echo "LIBCLANG_PATH=$RUNNER_TEMP/wasi-sdk/bin" >> "$GITHUB_ENV"
+      - name: Install libclang
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libclang-dev
+          libclang_path="$(find /usr/lib /usr/local/lib -name 'libclang.so*' 2>/dev/null | head -n 1)"
+          if [ -z "$libclang_path" ]; then
+            echo "libclang.so not found" >&2
+            exit 1
+          fi
+          echo "LIBCLANG_PATH=$(dirname "$libclang_path")" >> "$GITHUB_ENV"
       - name: Build wasm
+        env:
+          RUST_BACKTRACE: "1"
         run: |
           npm ci
           node scripts/apply-version.mjs
@@ -91,7 +103,7 @@ jobs:
           if-no-files-found: error
 
   android:
-    needs: version
+    needs: [version, wasm]
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.version.outputs.version }}
@@ -111,12 +123,28 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - uses: android-actions/setup-android@v3
+      - uses: actions/download-artifact@v4
+        with:
+          name: legadot-wasm
+          path: wasm-artifact
+      - name: Extract wasm
+        shell: bash
+        run: unzip -o wasm-artifact/LegadoT-wasm.zip -d src/adapters/web/wasm
       - name: Install Android SDK and NDK
         shell: bash
         run: |
-          yes | sdkmanager --licenses >/dev/null 2>&1 || true
-          sdkmanager --install "platforms;android-37" "ndk;27.0.12077973"
+          export ANDROID_HOME="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          sdkmanager_bin="$(command -v sdkmanager || \
+            find "$ANDROID_HOME/cmdline-tools" -path '*/bin/sdkmanager' | sort | tail -n 1)"
+          if [ -z "$sdkmanager_bin" ]; then
+            echo "sdkmanager not found" >&2
+            exit 1
+          fi
+          yes | "$sdkmanager_bin" --licenses >/dev/null 2>&1 || true
+          "$sdkmanager_bin" --install "platforms;android-37.0" "ndk;27.0.12077973"
+          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
           echo "NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> "$GITHUB_ENV"
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> "$GITHUB_ENV"
       - uses: dtolnay/rust-toolchain@stable
@@ -130,7 +158,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libclang-dev
-          libclang_path="$(find /usr/lib -path '*/libclang.so' | head -n 1)"
+          libclang_path="$(find /usr/lib /usr/local/lib -name 'libclang.so*' 2>/dev/null | head -n 1)"
           if [ -z "$libclang_path" ]; then
             echo "libclang.so not found" >&2
             exit 1
@@ -187,7 +215,7 @@ jobs:
           if-no-files-found: error
 
   windows:
-    needs: version
+    needs: [version, wasm]
     runs-on: windows-latest
     env:
       VERSION: ${{ needs.version.outputs.version }}
@@ -198,6 +226,15 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: package-lock.json
+      - uses: actions/download-artifact@v4
+        with:
+          name: legadot-wasm
+          path: wasm-artifact
+      - name: Extract wasm
+        shell: pwsh
+        run: |
+          Expand-Archive -LiteralPath "wasm-artifact\LegadoT-wasm.zip" `
+            -DestinationPath "src\adapters\web\wasm" -Force
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
@@ -223,7 +260,7 @@ jobs:
           if-no-files-found: error
 
   linux:
-    needs: version
+    needs: [version, wasm]
     runs-on: ubuntu-22.04
     env:
       VERSION: ${{ needs.version.outputs.version }}
@@ -234,6 +271,13 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: package-lock.json
+      - uses: actions/download-artifact@v4
+        with:
+          name: legadot-wasm
+          path: wasm-artifact
+      - name: Extract wasm
+        shell: bash
+        run: unzip -o wasm-artifact/LegadoT-wasm.zip -d src/adapters/web/wasm
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
@@ -243,7 +287,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libwebkit2gtk-4.1-dev \
-            libappindicator3-dev \
             librsvg2-dev \
             patchelf \
             libgtk-3-dev \
