@@ -117,6 +117,7 @@ for (const name of [
   "engine_wasm_init",
   "engine_wasm_eval",
   "engine_source_search",
+  "engine_explore_categories",
   "engine_source_info",
   "engine_source_toc",
   "engine_source_content",
@@ -147,5 +148,56 @@ const code = instance.exports.engine_wasm_eval(
 );
 if (code !== 0 || last() !== '{"ok":2}') {
   throw new Error(`engine eval failed: ${last()}`);
+}
+const source = write(
+  JSON.stringify({
+    bookSourceUrl: "https://example.com",
+    bookSourceName: "test",
+  }),
+);
+const raw = write("其它小说::http://example.com/sort");
+const categoryCode = instance.exports.engine_explore_categories(
+  source.ptr,
+  source.len,
+  raw.ptr,
+  raw.len,
+);
+const categories = last();
+if (categoryCode !== 0 || !categories.includes("其它小说")) {
+  throw new Error(`engine explore categories failed: ${categories}`);
+}
+
+const compatLib = readFileSync(
+  resolve("src-tauri/crates/engine-native/tests/fixtures/tomato_js_lib.js"),
+  "utf8",
+);
+const compatSource = write(
+  JSON.stringify({
+    bookSourceUrl: "https://reading.snssdk.com",
+    bookSourceName: "tomato",
+    jsLib: compatLib,
+  }),
+);
+const compatScript = write(
+  'JSON.stringify([typeof OkHttpClient, StrUtil.reverse("abc"), Packages.cn.hutool.core.codec.Base64.encode("abc"), DigestUtil.md5Hex("abc"), java.bytesToStr(ZipUtil.unGzip(ZipUtil.gzip("abc", "UTF-8")))])',
+);
+const compatResult = write("");
+const compatCode = instance.exports.engine_wasm_eval(
+  compatScript.ptr,
+  compatScript.len,
+  base.ptr,
+  base.len,
+  compatResult.ptr,
+  compatResult.len,
+  compatSource.ptr,
+  compatSource.len,
+);
+const compatValue = last();
+if (
+  compatCode !== 0 ||
+  compatValue !==
+    '["function","cba","YWJj","900150983cd24fb0d6963f7d28e17f72","abc"]'
+) {
+  throw new Error(`engine wasm jsLib compat failed: ${compatValue}`);
 }
 console.log(`engine wasm ok: ${exports.length} exports`);

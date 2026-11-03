@@ -18,9 +18,17 @@ import RuleRow from "@/components/android/RuleRow.vue";
 import SelectActionBar from "@/components/android/SelectActionBar.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
+import ImportRuleDialog from "@/components/android/ImportRuleDialog.vue";
 import OnlineImportDialog from "@/views/misc/OnlineImportDialog.vue";
 import QrCodeDialog from "@/views/source/QrCodeDialog.vue";
 import defaultRssSources from "@/assets/defaultData/rssSources.json";
+import {
+  parseRuleList,
+  selectedByState,
+  stateByUpdateTime,
+  type RuleImportRow,
+} from "@/utils/ruleImport";
+import { showError } from "@/utils/errors";
 
 type GroupMode = "add" | "remove";
 
@@ -40,6 +48,9 @@ const moreTop = ref(52);
 const moreRight = ref(8);
 const qrVisible = ref(false);
 const onlineVisible = ref(false);
+const importVisible = ref(false);
+const importRows = ref<RuleImportRow<RssSource>[]>([]);
+const importItems = computed(() => importRows.value.map((row) => row.item));
 const importInput = ref<HTMLInputElement | null>(null);
 const groupDialogVisible = ref(false);
 const groupMode = ref<GroupMode>("add");
@@ -301,16 +312,55 @@ async function moveSource(source: RssSource, direction: "top" | "bottom") {
   await load();
 }
 
+async function openImport(json: string) {
+  try {
+    const values = parseRuleList<RssSource>(json, ["sources", "rssSources"]);
+    if (!values.length) throw new Error("没有可导入的订阅源");
+    const existing = await rssSourceList();
+    const byUrl = new Map(existing.map((source) => [source.sourceUrl, source]));
+    importRows.value = values.map((value, index) => {
+      const old = byUrl.get(value.sourceUrl);
+      const state = stateByUpdateTime(old?.lastUpdateTime, value.lastUpdateTime);
+      return {
+        value,
+        item: {
+          key: String(index),
+          title: value.sourceName || value.sourceUrl || `订阅源 ${index + 1}`,
+          subtitle: value.sourceUrl,
+          state,
+          selected: selectedByState(state),
+        },
+      };
+    });
+    importVisible.value = true;
+  } catch (error) {
+    showError("导入订阅源", error);
+  }
+}
+
+async function importSelected(keys: string[]) {
+  const values = keys
+    .map((key) => importRows.value[Number(key)]?.value)
+    .filter((value): value is RssSource => Boolean(value));
+  if (!values.length) return;
+  try {
+    const count = await rssSourceImport(JSON.stringify(values));
+    await load();
+    showMessage(`已导入 ${count} 个订阅源`);
+    importRows.value = [];
+  } catch (error) {
+    showError("导入订阅源", error);
+  }
+}
+
 async function onLocalFile(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
   if (!file) return;
   try {
-    const count = await rssSourceImport(await file.text());
-    await load();
-    showMessage(`已导入 ${count} 个订阅源`);
+    await openImport(await file.text());
   } catch (error) {
-    showMessage(String(error));
+    showError("读取订阅源文件", error);
   } finally {
     input.value = "";
   }
@@ -318,22 +368,14 @@ async function onLocalFile(event: Event) {
 
 async function importOnline(url: string) {
   try {
-    const count = await rssSourceImport(await fetchRemoteText(url));
-    await load();
-    showMessage(`已导入 ${count} 个订阅源`);
+    await openImport(await fetchRemoteText(url));
   } catch (error) {
-    showMessage(String(error));
+    showError("在线导入订阅源", error);
   }
 }
 
 async function importQr(text: string) {
-  try {
-    const count = await rssSourceImport(text);
-    await load();
-    showMessage(`二维码导入 ${count} 个订阅源`);
-  } catch (error) {
-    showMessage(String(error));
-  }
+  await openImport(text);
 }
 
 function onMenu(key: string) {
@@ -346,13 +388,7 @@ function onMenu(key: string) {
 }
 
 async function importDefault() {
-  try {
-    const count = await rssSourceImport(JSON.stringify(defaultRssSources));
-    await load();
-    showMessage(`已导入 ${count} 个默认订阅源`);
-  } catch (error) {
-    showMessage(String(error));
-  }
+  await openImport(JSON.stringify(defaultRssSources));
 }
 
 function openMore(source: RssSource, event: MouseEvent) {
@@ -483,6 +519,12 @@ onActivated(() => {
       @confirm="importOnline"
     />
     <QrCodeDialog v-model="qrVisible" mode="import" @import="importQr" />
+    <ImportRuleDialog
+      v-model="importVisible"
+      title="导入订阅源"
+      :items="importItems"
+      @confirm="importSelected"
+    />
   </div>
 </template>
 

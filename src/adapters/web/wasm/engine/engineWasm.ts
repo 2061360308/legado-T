@@ -85,6 +85,11 @@ export const exploreSource: EngineOperations["explore"] = (
   page = 1,
 ) => request("explore", [sourceJson, url, page]);
 
+export const exploreCategories: EngineOperations["exploreCategories"] = (
+  sourceJson,
+  raw,
+) => request("exploreCategories", [sourceJson, raw]);
+
 export const sourceInfo: EngineOperations["info"] = (sourceJson, bookJson) =>
   request("info", [sourceJson, bookJson]);
 

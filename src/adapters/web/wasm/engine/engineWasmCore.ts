@@ -1,6 +1,7 @@
 import type {
   EngineOperationName,
   EngineOperations,
+  ExploreCategory,
 } from "./engineProtocol";
 
 export type { EngineEvalInput } from "./engineProtocol";
@@ -50,6 +51,12 @@ type WasmExports = {
     urlPtr: number,
     urlLen: number,
     page: number,
+  ): number;
+  engine_explore_categories(
+    sourcePtr: number,
+    sourceLen: number,
+    rawPtr: number,
+    rawLen: number,
   ): number;
   engine_source_info(
     sourcePtr: number,
@@ -150,6 +157,7 @@ const SKIPPED_ENGINE_HEADERS = new Set([
 let instance: WebAssembly.Instance | null = null;
 let initPromise: Promise<WasmExports> | null = null;
 let queue: Promise<unknown> = Promise.resolve();
+let proxyRequestSequence = 0;
 
 function exportsOf(value: WebAssembly.Instance): WasmExports {
   return value.exports as unknown as WasmExports;
@@ -269,8 +277,10 @@ function httpImports(exports: () => WasmExports) {
       let response: Record<string, unknown>;
       try {
         const xhr = new XMLHttpRequest();
-        xhr.open(init.method || "GET", "/api/engine/fetch", false);
+        const proxyUrl = `/api/engine/fetch?_t=${Date.now()}-${++proxyRequestSequence}`;
+        xhr.open(init.method || "GET", proxyUrl, false);
         xhr.setRequestHeader("X-Remote-Target", url);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
         const engineHeaders = encodeEngineHeaders(init.headers);
         if (engineHeaders) xhr.setRequestHeader(ENGINE_HEADER_ENVELOPE, engineHeaders);
         xhr.send(init.body == null ? null : init.body);
@@ -281,10 +291,21 @@ function httpImports(exports: () => WasmExports) {
             headers[line.slice(0, index).trim().toLowerCase()] = line.slice(index + 1).trim();
           }
         }
+        let setCookies: unknown[] = [];
+        const setCookieHeader = headers["x-engine-set-cookie"];
+        if (setCookieHeader) {
+          try {
+            const decoded = JSON.parse(decodeURIComponent(setCookieHeader)) as unknown;
+            if (Array.isArray(decoded)) setCookies = decoded;
+          } catch {
+            setCookies = [];
+          }
+        }
         response = {
           status: xhr.status,
           url: xhr.responseURL || url,
           headers,
+          setCookies,
           text: xhr.responseText || "",
         };
       } catch (error) {
@@ -410,6 +431,23 @@ export const exploreSource: EngineOperations["explore"] = (
     [sourceJson, url],
     (exports, [source, target]) =>
       exports.engine_source_explore(source.ptr, source.len, target.ptr, target.len, page),
+    parseJson,
+  );
+};
+
+export const exploreCategories: EngineOperations["exploreCategories"] = (
+  sourceJson,
+  raw,
+) => {
+  return callWithText<ExploreCategory[]>(
+    [sourceJson, raw],
+    (exports, [source, target]) =>
+      exports.engine_explore_categories(
+        source.ptr,
+        source.len,
+        target.ptr,
+        target.len,
+      ),
     parseJson,
   );
 };
@@ -640,6 +678,7 @@ export const engineHandlers = {
   eval: evalEngine,
   search: searchSource,
   explore: exploreSource,
+  exploreCategories,
   info: sourceInfo,
   toc: sourceToc,
   content: sourceContent,

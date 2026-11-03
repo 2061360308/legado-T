@@ -7,6 +7,7 @@ import {
 } from "../config";
 
 const ENGINE_HEADER_ENVELOPE = "x-engine-headers";
+const ENGINE_SET_COOKIE_HEADER = "X-Engine-Set-Cookie";
 const DIRECT_FALLBACK_HEADERS = [
   "authorization",
   "content-type",
@@ -46,7 +47,10 @@ function corsHeaders(request: Request, env: Env): Headers {
     "Access-Control-Allow-Origin",
     configured === "*" ? "*" : origin === configured ? origin : configured,
   );
-  headers.set("Vary", "Origin");
+  headers.set("Vary", "Origin, X-Remote-Target, X-Engine-Headers");
+  headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+  headers.set("Pragma", "no-cache");
+  headers.set("Expires", "0");
   headers.set(
     "Access-Control-Allow-Methods",
     "GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE",
@@ -58,7 +62,7 @@ function corsHeaders(request: Request, env: Env): Headers {
   );
   headers.set(
     "Access-Control-Expose-Headers",
-    "Content-Length, Content-Type, X-Final-Url, X-Upstream-Status",
+    "Content-Length, Content-Type, X-Final-Url, X-Upstream-Status, X-Engine-Set-Cookie",
   );
   return headers;
 }
@@ -185,6 +189,15 @@ function parseEngineHeaders(value: string | null): Headers {
   return headers;
 }
 
+function responseSetCookies(headers: Headers): string[] {
+  const withSetCookie = headers as Headers & { getSetCookie?: () => string[] };
+  if (typeof withSetCookie.getSetCookie === "function") {
+    return withSetCookie.getSetCookie().filter(Boolean);
+  }
+  const value = headers.get("set-cookie");
+  return value ? [value] : [];
+}
+
 function requestHeaders(request: Request): Headers {
   const headers = new Headers();
   for (const name of DIRECT_FALLBACK_HEADERS) {
@@ -266,6 +279,7 @@ async function handleEngineFetch(c: Context<{ Bindings: Env }>): Promise<Respons
     let current = target;
     let redirects = 0;
     let upstream: Response;
+    const setCookies: { url: string; cookie: string }[] = [];
     for (;;) {
       upstream = await fetch(current, {
         ...init,
@@ -273,6 +287,10 @@ async function handleEngineFetch(c: Context<{ Bindings: Env }>): Promise<Respons
         method: redirects === 0 ? init.method : "GET",
         body: redirects === 0 ? init.body : undefined,
       });
+      const responseUrl = upstream.url || current.toString();
+      for (const cookie of responseSetCookies(upstream.headers)) {
+        setCookies.push({ url: responseUrl, cookie });
+      }
       if (
         upstream.status >= 300 &&
         upstream.status < 400 &&
@@ -309,6 +327,23 @@ async function handleEngineFetch(c: Context<{ Bindings: Env }>): Promise<Respons
     headers.delete("content-encoding");
     headers.delete("content-length");
     headers.delete("transfer-encoding");
+    for (const name of [
+      "cache-control",
+      "etag",
+      "last-modified",
+      "expires",
+      "age",
+      "pragma",
+      "vary",
+    ]) {
+      headers.delete(name);
+    }
+    if (setCookies.length) {
+      headers.set(
+        ENGINE_SET_COOKIE_HEADER,
+        encodeURIComponent(JSON.stringify(setCookies)),
+      );
+    }
     headers.set("X-Final-Url", upstream.url);
     headers.set("X-Upstream-Status", String(upstream.status));
     for (const [key, value] of corsHeaders(request, c.env)) {

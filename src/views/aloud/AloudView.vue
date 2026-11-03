@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import type { HttpTts } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
+import ImportRuleDialog from "@/components/android/ImportRuleDialog.vue";
 import {
   httpTtsDelete,
   httpTtsEngines,
@@ -10,10 +11,20 @@ import {
   httpTtsImport,
   httpTtsSave,
 } from "@/core/application/rules";
+import {
+  parseRuleList,
+  selectedByState,
+  stateByUpdateTime,
+  type RuleImportRow,
+} from "@/utils/ruleImport";
+import { showError } from "@/utils/errors";
 
 const router = useRouter();
 const engines = ref<HttpTts[]>([]);
 const editing = ref(false);
+const importVisible = ref(false);
+const importRows = ref<RuleImportRow<HttpTts>[]>([]);
+const importItems = computed(() => importRows.value.map((row) => row.item));
 const message = ref("");
 const form = ref<HttpTts>(emptyEngine());
 
@@ -66,16 +77,55 @@ async function remove(engine: HttpTts) {
   await load();
 }
 
+async function openImport(json: string) {
+  try {
+    const values = parseRuleList<HttpTts>(json);
+    if (!values.length) throw new Error("没有可导入的语音引擎");
+    const existing = await httpTtsEngines();
+    const byId = new Map(existing.map((engine) => [String(engine.id), engine]));
+    importRows.value = values.map((value, index) => {
+      const old = value.id ? byId.get(String(value.id)) : undefined;
+      const state = stateByUpdateTime(old?.lastUpdateTime, value.lastUpdateTime);
+      return {
+        value,
+        item: {
+          key: String(index),
+          title: value.name || `语音引擎 ${index + 1}`,
+          subtitle: value.url,
+          state,
+          selected: selectedByState(state),
+        },
+      };
+    });
+    importVisible.value = true;
+  } catch (error) {
+    showError("导入语音引擎", error);
+  }
+}
+
+async function importSelected(keys: string[]) {
+  const values = keys
+    .map((key) => importRows.value[Number(key)]?.value)
+    .filter((value): value is HttpTts => Boolean(value));
+  if (!values.length) return;
+  try {
+    const report = await httpTtsImport(JSON.stringify(values));
+    message.value = `导入完成：共 ${report.entries.length} 条`;
+    await load();
+    importRows.value = [];
+  } catch (error) {
+    showError("导入语音引擎", error);
+  }
+}
+
 async function onImport(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
   if (!file) return;
   try {
-    const report = await httpTtsImport(await file.text());
-    message.value = `导入完成：共 ${report.entries.length} 条`;
-    await load();
-  } catch (e) {
-    message.value = String(e);
+    await openImport(await file.text());
+  } catch (error) {
+    showError("读取语音引擎文件", error);
   } finally {
     input.value = "";
   }
@@ -153,6 +203,12 @@ onMounted(load);
       </li>
     </ol>
     <p v-if="engines.length === 0" class="empty">暂无在线语音引擎</p>
+    <ImportRuleDialog
+      v-model="importVisible"
+      title="导入语音引擎"
+      :items="importItems"
+      @confirm="importSelected"
+    />
   </div>
 </template>
 

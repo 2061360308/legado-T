@@ -12,13 +12,15 @@ function encodeEngineHeaders(headers: Record<string, string>): string {
   return encodeURIComponent(JSON.stringify(headers));
 }
 
-function captureUpstreamHeaders(): { headers: Headers | null } {
+function captureUpstreamHeaders(
+  responseHeaders?: HeadersInit,
+): { headers: Headers | null } {
   const captured: { headers: Headers | null } = { headers: null };
   globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
     captured.headers = new Headers(init?.headers);
     return new Response("ok", {
       status: 200,
-      headers: { "content-type": "text/plain" },
+      headers: responseHeaders ?? { "content-type": "text/plain" },
     });
   }) as typeof fetch;
   return captured;
@@ -137,6 +139,82 @@ test("strips hop-by-hop and internal proxy headers", async () => {
   assert.equal(captured.headers.get("x-remote-target"), null);
   assert.equal(captured.headers.get("transfer-encoding"), null);
   assert.equal(captured.headers.get("upgrade"), null);
+});
+
+test("returns upstream cookies in a readable response header", async () => {
+  const upstreamHeaders = new Headers();
+  upstreamHeaders.append("set-cookie", "sid=1; Path=/; HttpOnly");
+  upstreamHeaders.append("set-cookie", "theme=dark; Path=/");
+  captureUpstreamHeaders(upstreamHeaders);
+  const response = await request({
+    "x-remote-target": "https://example.com/book",
+  });
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("set-cookie"), null);
+  const raw = response.headers.get("x-engine-set-cookie");
+  assert.ok(raw);
+  assert.deepEqual(JSON.parse(decodeURIComponent(raw)), [
+    { url: "https://example.com/book", cookie: "sid=1; Path=/; HttpOnly" },
+    { url: "https://example.com/book", cookie: "theme=dark; Path=/" },
+  ]);
+});
+
+test("collects cookies set during redirects", async () => {
+  const redirectHeaders = new Headers();
+  redirectHeaders.append("location", "https://example.com/final");
+  redirectHeaders.append("set-cookie", "redirect=1; Path=/");
+  const finalHeaders = new Headers();
+  finalHeaders.append("set-cookie", "final=2; Path=/");
+  const responses = [
+    new Response(null, { status: 302, headers: redirectHeaders }),
+    new Response("ok", { status: 200, headers: finalHeaders }),
+  ];
+  globalThis.fetch = (async () => responses.shift() ?? new Response("ok")) as typeof fetch;
+
+  const response = await request({
+    "x-remote-target": "https://example.com/start",
+  });
+
+  assert.equal(response.status, 200);
+  const raw = response.headers.get("x-engine-set-cookie");
+  assert.ok(raw);
+  assert.deepEqual(JSON.parse(decodeURIComponent(raw)), [
+    { url: "https://example.com/start", cookie: "redirect=1; Path=/" },
+    { url: "https://example.com/final", cookie: "final=2; Path=/" },
+  ]);
+});
+
+test("does not let the browser cache proxy responses across targets", async () => {
+  const upstreamHeaders = new Headers({
+    "cache-control": "public, max-age=3600",
+    etag: '"upstream"',
+    "last-modified": "Wed, 21 Oct 2015 07:28:00 GMT",
+    expires: "Wed, 21 Oct 2015 07:28:00 GMT",
+    age: "120",
+    pragma: "cache",
+    "content-type": "text/html",
+  });
+  captureUpstreamHeaders(upstreamHeaders);
+
+  const response = await request({
+    "x-remote-target": "https://example.com/book",
+  });
+
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/i);
+  assert.equal(response.headers.get("etag"), null);
+  assert.equal(response.headers.get("last-modified"), null);
+  assert.equal(response.headers.get("expires"), "0");
+  assert.equal(response.headers.get("age"), null);
+  assert.match(response.headers.get("vary") ?? "", /x-remote-target/i);
+});
+
+test("marks proxy errors as non-cacheable", async () => {
+  const response = await request({ "x-remote-target": "not-a-url" });
+
+  assert.equal(response.status, 400);
+  assert.match(response.headers.get("cache-control") ?? "", /no-store/i);
 });
 
 test("rejects an invalid engine header envelope", async () => {

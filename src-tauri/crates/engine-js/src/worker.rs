@@ -254,12 +254,49 @@ pub(crate) fn build_context(runtime: &Runtime, host: &Rc<Host>, lib: Option<&str
         crate::host::install_static(&ctx, host)
             .map_err(|error| Error::Js(format!("装宿主对象失败: {error}")))?;
         if let Some(lib) = lib {
-            ctx.eval_with_options::<rquickjs::Value, _>(lib, eval_options())
-                .map_err(|error| Error::Js(format!("jsLib 执行失败: {error}")))?;
+            let loaded = ctx
+                .eval_with_options::<rquickjs::Value, _>(lib, eval_options())
+                .catch(&ctx);
+            if let Err(caught) = loaded {
+                return Err(Error::Js(format!(
+                    "jsLib 执行失败: {}",
+                    format_caught(caught)
+                )));
+            }
         }
         Ok::<(), Error>(())
     })?;
     Ok(context)
+}
+
+pub(crate) fn format_caught(caught: rquickjs::CaughtError<'_>) -> String {
+    const MAX_LEN: usize = 8 * 1024;
+    let text = match caught {
+        rquickjs::CaughtError::Exception(exception) => {
+            let message = exception
+                .message()
+                .filter(|message| !message.trim().is_empty())
+                .unwrap_or_else(|| "JS 异常".to_string());
+            match exception.stack() {
+                Some(stack) if !stack.trim().is_empty() => format!("{message}\n{stack}"),
+                _ => message,
+            }
+        }
+        rquickjs::CaughtError::Value(value) => value
+            .as_string()
+            .and_then(|text| text.to_string().ok())
+            .filter(|text| !text.is_empty())
+            .unwrap_or_else(|| format!("{value:?}")),
+        rquickjs::CaughtError::Error(error) => error.to_string(),
+    };
+    if text.len() <= MAX_LEN {
+        return text;
+    }
+    let mut end = MAX_LEN;
+    while !text.is_char_boundary(end) {
+        end -= 1;
+    }
+    format!("{}…", &text[..end])
 }
 
 fn eval_script(context: &Context, host: &Rc<Host>, script: &str) -> Result<Evaluated> {
@@ -312,13 +349,12 @@ fn eval_source(ctx: &Ctx<'_>, script: &str) -> Result<Evaluated> {
     match eval_with(ctx, &wrapped) {
         Ok(value) => Ok(evaluated(ctx, &value)),
         Err(caught) => {
-            let message = caught.to_string();
-            drop(caught);
+            let message = format_caught(caught);
             if message.contains("return not in a function") {
                 let wrapped = format!("(function(){{{script}\n}})()");
                 return match eval_with(ctx, &wrapped) {
                     Ok(value) => Ok(evaluated(ctx, &value)),
-                    Err(caught) => Err(Error::Js(caught.to_string())),
+                    Err(caught) => Err(Error::Js(format_caught(caught))),
                 };
             }
             Err(Error::Js(message))

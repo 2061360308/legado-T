@@ -604,6 +604,16 @@ X-Engine-Headers: encodeURIComponent(JSON.stringify(headers))
 
 服务端解析该头并还原到上游请求。浏览器直接发给代理的 Cookie 和 Referer 不转发；`User-Agent` 等安全头在 envelope 缺少时允许使用浏览器值兜底。hop-by-hop 头和 `X-Remote-Target`、`X-Proxy-Token`、`X-Engine-Headers` 不参与上游转发。
 
+### 响应 Cookie 传递
+
+浏览器禁止页面读取 `Set-Cookie`，服务端不能把上游的 `Set-Cookie` 直接透传。代理把上游返回的 Cookie 数组 URI 编码后放入：
+
+```text
+X-Engine-Set-Cookie: encodeURIComponent(JSON.stringify([{ url, cookie }]))
+```
+
+同时删除普通响应中的 `Set-Cookie`。Web 引擎按每条 Cookie 对应的 URL 更新 `WasmCookieStore`，使后续请求自动携带新 Cookie；重定向过程中设置的 Cookie 也会累计返回。
+
 ### 要求
 
 - 同源部署，避免 CORS

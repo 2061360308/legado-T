@@ -1,19 +1,21 @@
 use std::cell::RefCell;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::HashMap;
 use std::slice;
 use std::sync::{Arc, Mutex};
 
 use engine_flow::PageFetcher;
-use engine_http_native::{UrlRule, sub_domain};
+use engine_http_native::UrlRule;
 use engine_js::wasm::WasmEngine;
 use engine_model::{
-    Book, BookChapter, BookSource, BoxFuture, Bytes, HeaderMap, HttpFetcher, HttpRequest,
-    CacheStore, CookieStore, HttpResponse, JsEvaluator, JsRequest, JsValue, Result, RssArticle,
+    Book, BookChapter, BookSource, BoxFuture, Bytes, CacheStore, CookieStore, HeaderMap,
+    HttpFetcher, HttpRequest, HttpResponse, JsEvaluator, JsRequest, JsValue, Result, RssArticle,
     RssSource, StatusCode,
 };
 use engine_pipeline::EnginePipeline;
 use engine_rule::RuleEngine;
 use futures::executor::block_on;
+
+use crate::cookie::{COOKIES, WasmCookieStore, apply_set_cookie};
 
 #[link(wasm_import_module = "engine_http")]
 unsafe extern "C" {
@@ -66,69 +68,6 @@ impl CacheStore for WasmCacheStore {
             Ok(())
         })
     }
-}
-
-#[derive(Default)]
-struct WasmCookieStore {
-    cookies: Mutex<BTreeMap<String, String>>,
-}
-
-impl WasmCookieStore {
-    fn with<T>(&self, action: impl FnOnce(&mut BTreeMap<String, String>) -> T) -> T {
-        let mut cookies = self
-            .cookies
-            .lock()
-            .unwrap_or_else(|poisoned| poisoned.into_inner());
-        action(&mut cookies)
-    }
-}
-
-impl CookieStore for WasmCookieStore {
-    fn get_cookie(&self, url: &str) -> String {
-        let domain = sub_domain(url);
-        self.with(|cookies| cookies.get(&domain).cloned().unwrap_or_default())
-    }
-
-    fn set_cookie(&self, url: &str, cookie: &str) {
-        let domain = sub_domain(url);
-        self.with(|cookies| {
-            cookies.insert(domain, cookie.to_string());
-        });
-    }
-
-    fn replace_cookie(&self, url: &str, cookie: &str) {
-        let domain = sub_domain(url);
-        self.with(|cookies| {
-            let merged = match cookies.get(&domain) {
-                Some(existing) if !existing.is_empty() => merge_cookie_text(existing, cookie),
-                _ => cookie.to_string(),
-            };
-            cookies.insert(domain, merged);
-        });
-    }
-
-    fn remove_cookie(&self, url: &str) {
-        let domain = sub_domain(url);
-        self.with(|cookies| {
-            cookies.remove(&domain);
-        });
-    }
-}
-
-fn merge_cookie_text(left: &str, right: &str) -> String {
-    let mut map = BTreeMap::new();
-    for pair in left.split(';').chain(right.split(';')) {
-        if let Some((key, value)) = pair.split_once('=') {
-            let key = key.trim();
-            if !key.is_empty() {
-                map.insert(key.to_string(), value.trim().to_string());
-            }
-        }
-    }
-    map.into_iter()
-        .map(|(key, value)| format!("{key}={value}"))
-        .collect::<Vec<_>>()
-        .join("; ")
 }
 
 struct BrowserHttpFetcher;
@@ -191,6 +130,18 @@ impl HttpFetcher for BrowserHttpFetcher {
                         if let Ok(value) = http::header::HeaderValue::from_str(value) {
                             response_headers.insert(name, value);
                         }
+                    }
+                }
+            }
+            if let Some(cookies) = value.get("setCookies").and_then(serde_json::Value::as_array) {
+                for item in cookies {
+                    if let Some(cookie) = item.as_str() {
+                        apply_set_cookie(&url, cookie);
+                    } else if let (Some(cookie), Some(cookie_url)) = (
+                        item.get("cookie").and_then(serde_json::Value::as_str),
+                        item.get("url").and_then(serde_json::Value::as_str),
+                    ) {
+                        apply_set_cookie(cookie_url, cookie);
                     }
                 }
             }
@@ -402,7 +353,6 @@ fn fetch_raw(url: &str, init: &str) -> std::result::Result<String, String> {
 thread_local! {
     static ENGINE: RefCell<Option<WasmEngine>> = const { RefCell::new(None) };
     static PIPELINE: RefCell<Option<EnginePipeline>> = const { RefCell::new(None) };
-    static COOKIES: RefCell<Option<Arc<WasmCookieStore>>> = const { RefCell::new(None) };
     static LAST: RefCell<Vec<u8>> = const { RefCell::new(Vec::new()) };
 }
 
@@ -894,6 +844,30 @@ pub extern "C" fn engine_source_image(
             let encoded = base64::engine::general_purpose::STANDARD.encode(&bytes);
             Ok(format!("data:{mime};base64,{encoded}"))
         })
+    })
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn engine_explore_categories(
+    source_ptr: *const u8,
+    source_len: usize,
+    raw_ptr: *const u8,
+    raw_len: usize,
+) -> i32 {
+    let source = match source_arg(source_ptr, source_len) {
+        Ok(value) => value,
+        Err(error) => return set_error(error),
+    };
+    let raw = match text_arg(raw_ptr, raw_len) {
+        Ok(value) => value,
+        Err(error) => return set_error(error),
+    };
+    run_source(|| {
+        Ok(block_on(engine_explore::resolve_explore_categories(
+            &source,
+            &raw,
+            &WasmJs,
+        )))
     })
 }
 

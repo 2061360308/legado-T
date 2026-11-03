@@ -25,7 +25,7 @@
     "server:test": "npm --prefix server run test",
     "server:deploy": "npm --prefix server run deploy",
     "typecheck": "vue-tsc --noEmit",
-    "check": "npm run build && npm run server:check && npm run server:test && cargo check --manifest-path src-tauri/Cargo.toml -p local-reader",
+    "check": "npm run build && npm run server:check && npm run server:test && cargo test --manifest-path src-tauri/Cargo.toml -p engine-explore && cargo check --manifest-path src-tauri/Cargo.toml -p local-reader",
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml -p local-reader",
     "doctor": "node scripts/doctor.mjs",
     "clean:dist": "node scripts/clean-dist.mjs",

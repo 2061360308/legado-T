@@ -6,12 +6,10 @@ use serde_json::{json, Value};
 
 #[test]
 fn matches_kotlin_cookie_parser() {
-    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../app/build/ab/cookie.jsonl");
+    let path =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/cookie.jsonl");
     let text = fs::read_to_string(&path).unwrap_or_else(|error| {
-        panic!(
-            "read Kotlin cookie oracle {}: {error}; run CookieOracleTest first",
-            path.display()
-        )
+        panic!("read cookie oracle {}: {error}", path.display())
     });
     let oracle: Value = serde_json::from_str(text.trim()).expect("cookie oracle");
     assert_eq!(oracle["ok"], Value::Bool(true));

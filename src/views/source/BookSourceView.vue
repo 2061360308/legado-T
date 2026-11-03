@@ -22,9 +22,17 @@ import EmptyState from "@/components/android/EmptyState.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import SelectActionBar from "@/components/android/SelectActionBar.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
+import ImportRuleDialog from "@/components/android/ImportRuleDialog.vue";
 import OnlineImportDialog from "@/views/misc/OnlineImportDialog.vue";
 import BookSourceRow from "./BookSourceRow.vue";
 import QrCodeDialog from "./QrCodeDialog.vue";
+import {
+  parseRuleList,
+  selectedByState,
+  stateByUpdateTime,
+  type RuleImportRow,
+} from "@/utils/ruleImport";
+import { showError } from "@/utils/errors";
 
 type SortKey = "manual" | "auto" | "name" | "url" | "time" | "respond" | "enable";
 type GroupMode = "add" | "remove";
@@ -58,6 +66,9 @@ const checkKeyword = ref("斗破");
 const checkStates = ref<Record<string, CheckState>>({});
 const qrVisible = ref(false);
 const onlineVisible = ref(false);
+const importVisible = ref(false);
+const importRows = ref<RuleImportRow<BookSource>[]>([]);
+const importItems = computed(() => importRows.value.map((row) => row.item));
 const groupDialogVisible = ref(false);
 const groupMode = ref<GroupMode>("add");
 const groupName = ref("");
@@ -549,6 +560,47 @@ async function runCheck() {
   }
 }
 
+async function openImport(json: string) {
+  try {
+    const values = parseRuleList<BookSource>(json, ["sources", "bookSources"]);
+    if (!values.length) throw new Error("没有可导入的书源");
+    const existing = await bookSourceList();
+    const byUrl = new Map(existing.map((source) => [source.bookSourceUrl, source]));
+    importRows.value = values.map((value, index) => {
+      const old = byUrl.get(value.bookSourceUrl);
+      const state = stateByUpdateTime(old?.lastUpdateTime, value.lastUpdateTime);
+      return {
+        value,
+        item: {
+          key: String(index),
+          title: value.bookSourceName || value.bookSourceUrl || `书源 ${index + 1}`,
+          subtitle: value.bookSourceUrl,
+          state,
+          selected: selectedByState(state),
+        },
+      };
+    });
+    importVisible.value = true;
+  } catch (error) {
+    showError("导入书源", error);
+  }
+}
+
+async function importSelected(keys: string[]) {
+  const values = keys
+    .map((key) => importRows.value[Number(key)]?.value)
+    .filter((value): value is BookSource => Boolean(value));
+  if (!values.length) return;
+  try {
+    const count = await bookSourceImport(JSON.stringify(values));
+    await load();
+    showMessage(`已导入 ${count} 个书源`);
+    importRows.value = [];
+  } catch (error) {
+    showError("导入书源", error);
+  }
+}
+
 async function importSource() {
   const path = await platform.dialog.open({
     multiple: false,
@@ -558,32 +610,22 @@ async function importSource() {
   try {
     const bytes = await platform.files.readFile(path);
     const json = new TextDecoder("utf-8").decode(bytes);
-    const count = await bookSourceImport(json);
-    await load();
-    showMessage(`已导入 ${count} 个书源`);
+    await openImport(json);
   } catch (error) {
-    showMessage(String(error));
+    showError("读取书源文件", error);
   }
 }
 
 async function importOnline(url: string) {
   try {
-    const count = await bookSourceImport(await fetchRemoteText(url));
-    await load();
-    showMessage(`已导入 ${count} 个书源`);
+    await openImport(await fetchRemoteText(url));
   } catch (error) {
-    showMessage(String(error));
+    showError("在线导入书源", error);
   }
 }
 
 async function importQr(text: string) {
-  try {
-    const count = await bookSourceImport(text);
-    await load();
-    showMessage(`二维码导入 ${count} 个书源`);
-  } catch (error) {
-    showMessage(String(error));
-  }
+  await openImport(text);
 }
 
 function onSort(key: string) {
@@ -777,6 +819,12 @@ onActivated(() => {
       @confirm="importOnline"
     />
     <QrCodeDialog v-model="qrVisible" mode="import" @import="importQr" />
+    <ImportRuleDialog
+      v-model="importVisible"
+      title="导入书源"
+      :items="importItems"
+      @confirm="importSelected"
+    />
   </div>
 </template>
 

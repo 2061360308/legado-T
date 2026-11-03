@@ -11,9 +11,12 @@ import RuleRow from "@/components/android/RuleRow.vue";
 import SelectActionBar from "@/components/android/SelectActionBar.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
+import ImportRuleDialog from "@/components/android/ImportRuleDialog.vue";
 import OnlineImportDialog from "@/views/misc/OnlineImportDialog.vue";
 import QrCodeDialog from "@/views/source/QrCodeDialog.vue";
 import defaultDictRules from "@/assets/defaultData/dictRules.json";
+import { parseRuleList, type RuleImportRow } from "@/utils/ruleImport";
+import { showError } from "@/utils/errors";
 import {
   dictRuleDelete,
   dictRuleImport,
@@ -33,6 +36,9 @@ const selected = ref<Set<string>>(new Set());
 const importInput = ref<HTMLInputElement | null>(null);
 const onlineVisible = ref(false);
 const qrVisible = ref(false);
+const importVisible = ref(false);
+const importRows = ref<RuleImportRow<DictRule>[]>([]);
+const importItems = computed(() => importRows.value.map((row) => row.item));
 
 const menuItems: PopupMenuItem[] = [
   { key: "importLocal", label: "本地导入", icon: "ic_import" },
@@ -177,14 +183,49 @@ function onMenu(key: string) {
   else if (key === "help") notify("字典规则帮助暂未接入");
 }
 
-async function importDefault() {
+async function openImport(json: string) {
   try {
-    const report = await dictRuleImport(JSON.stringify(defaultDictRules));
-    notify(`已导入 ${report.entries.length} 条默认字典规则`);
-    await load();
+    const values = parseRuleList<DictRule>(json);
+    if (!values.length) throw new Error("没有可导入的字典规则");
+    const existing = await dictRules();
+    const byName = new Map(existing.map((rule) => [rule.name, rule]));
+    importRows.value = values.map((value, index) => {
+      const old = byName.get(value.name);
+      const state = old ? ("existing" as const) : ("new" as const);
+      return {
+        value,
+        item: {
+          key: String(index),
+          title: value.name || `字典规则 ${index + 1}`,
+          subtitle: value.urlRule,
+          state,
+          selected: state === "new",
+        },
+      };
+    });
+    importVisible.value = true;
   } catch (error) {
-    notify(String(error));
+    showError("导入字典规则", error);
   }
+}
+
+async function importSelected(keys: string[]) {
+  const values = keys
+    .map((key) => importRows.value[Number(key)]?.value)
+    .filter((value): value is DictRule => Boolean(value));
+  if (!values.length) return;
+  try {
+    const report = await dictRuleImport(JSON.stringify(values));
+    notify(`导入完成：共 ${report.entries.length} 条`);
+    await load();
+    importRows.value = [];
+  } catch (error) {
+    showError("导入字典规则", error);
+  }
+}
+
+async function importDefault() {
+  await openImport(JSON.stringify(defaultDictRules));
 }
 
 async function onImport(event: Event) {
@@ -192,11 +233,9 @@ async function onImport(event: Event) {
   const file = input.files?.[0];
   if (!file) return;
   try {
-    const report = await dictRuleImport(await file.text());
-    notify(`导入完成：共 ${report.entries.length} 条`);
-    await load();
+    await openImport(await file.text());
   } catch (error) {
-    notify(String(error));
+    showError("读取字典规则文件", error);
   } finally {
     input.value = "";
   }
@@ -204,22 +243,14 @@ async function onImport(event: Event) {
 
 async function importOnline(url: string) {
   try {
-    const report = await dictRuleImport(await fetchRemoteText(url));
-    notify(`在线导入完成：共 ${report.entries.length} 条`);
-    await load();
+    await openImport(await fetchRemoteText(url));
   } catch (error) {
-    notify(String(error));
+    showError("在线导入字典规则", error);
   }
 }
 
 async function importQr(text: string) {
-  try {
-    const report = await dictRuleImport(text);
-    notify(`二维码导入完成：共 ${report.entries.length} 条`);
-    await load();
-  } catch (error) {
-    notify(String(error));
-  }
+  await openImport(text);
 }
 
 async function onSelectionMenu(key: string) {
@@ -316,6 +347,12 @@ onMounted(load);
       @confirm="importOnline"
     />
     <QrCodeDialog v-model="qrVisible" mode="import" @import="importQr" />
+    <ImportRuleDialog
+      v-model="importVisible"
+      title="导入字典规则"
+      :items="importItems"
+      @confirm="importSelected"
+    />
   </div>
 </template>
 

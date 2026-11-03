@@ -38,70 +38,6 @@ fn clear_explore_cache(state: &State<'_, AppState>) {
     }
 }
 
-fn explore_category(title: &str, url: &str, style: Option<Value>) -> Option<Value> {
-    let title = title.trim();
-    let url = url.trim();
-    if title.is_empty() && url.is_empty() {
-        return None;
-    }
-    let mut value = serde_json::json!({
-        "title": if title.is_empty() { url } else { title },
-        "url": url,
-    });
-    if let (Some(style), Some(object)) = (style, value.as_object_mut()) {
-        object.insert("style".to_string(), style);
-    }
-    Some(value)
-}
-
-fn explore_categories_from_value(value: Value) -> Vec<Value> {
-    let items = match value {
-        Value::Array(items) => items,
-        Value::Object(_) => vec![value],
-        _ => Vec::new(),
-    };
-    items
-        .into_iter()
-        .filter_map(|item| match item {
-            Value::Object(object) => {
-                let title = object
-                    .get("title")
-                    .or_else(|| object.get("name"))
-                    .and_then(Value::as_str)
-                    .unwrap_or("");
-                let url = object
-                    .get("url")
-                    .or_else(|| object.get("link"))
-                    .and_then(Value::as_str)
-                    .unwrap_or("");
-                explore_category(title, url, object.get("style").cloned())
-            }
-            Value::Array(parts) => {
-                let title = parts.first().and_then(Value::as_str).unwrap_or("");
-                let url = parts.get(1).and_then(Value::as_str).unwrap_or("");
-                explore_category(title, url, None)
-            }
-            Value::String(line) if line.contains('\n') => {
-                explore_categories_from_lines(&line).into_iter().next()
-            }
-            Value::String(line) => {
-                let (title, url) = line.split_once("::")?;
-                explore_category(title, url, None)
-            }
-            _ => None,
-        })
-        .collect()
-}
-
-fn explore_categories_from_lines(raw: &str) -> Vec<Value> {
-    raw.lines()
-        .filter_map(|line| {
-            let (title, url) = line.trim().split_once("::")?;
-            explore_category(title, url, None)
-        })
-        .collect()
-}
-
 #[tauri::command]
 pub fn book_source_list(state: State<'_, AppState>) -> CmdResult<Vec<Value>> {
     load_sources(&state)?
@@ -901,76 +837,34 @@ pub async fn book_source_explore_categories(
     {
         return Ok(cached);
     }
-    if trimmed.contains("::")
-        && !trimmed.starts_with('[')
-        && !trimmed.starts_with('{')
-        && !trimmed.starts_with("@js:")
-    {
-        let values = explore_categories_from_lines(&trimmed);
-        if !values.is_empty() {
-            if let Ok(mut cache) = state.explore_cache.lock() {
-                cache.insert(cache_key, values.clone());
-            }
-            return Ok(values);
-        }
-    }
     let values = tauri::async_runtime::spawn_blocking(move || -> Result<Vec<Value>, String> {
         let runtime = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
             .map_err(|error| error.to_string())?;
         let pipeline = create_search_pipeline(&app)?;
-        let parsed = if let Ok(value) = serde_json::from_str::<Value>(&trimmed) {
-            Some(value)
-        } else {
-            let script = trimmed
-                .strip_prefix("@js:")
-                .unwrap_or(&trimmed)
-                .trim()
-                .to_string();
-            let request = engine_model::JsRequest {
-                script: &script,
-                source: Some(&source),
-                base_url: &source.book_source_url,
-                page: Some(1),
-                key: None,
-                result: None,
-                result_bytes: None,
-                src: None,
-                response: None,
-                book: None,
-                chapter: None,
-                variables: None,
-            };
-            let text = runtime.block_on(async {
-                tokio::time::timeout(
-                    SEARCH_TIMEOUT,
-                    engine_model::JsEvaluator::eval(pipeline.js().as_ref(), request),
-                )
-                .await
-                .ok()
-                .and_then(|result| result.ok())
-            });
-            text.and_then(|text| {
-                let text = text.trim();
-                serde_json::from_str::<Value>(text).ok().or_else(|| {
-                    let values = explore_categories_from_lines(text);
-                    (!values.is_empty()).then_some(Value::Array(values))
-                })
-            })
+        let result = runtime.block_on(async {
+            tokio::time::timeout(
+                SEARCH_TIMEOUT,
+                engine_explore::resolve_explore_categories(
+                    &source,
+                    &trimmed,
+                    pipeline.js().as_ref(),
+                ),
+            )
+            .await
+        });
+        let categories = match result {
+            Ok(categories) => categories,
+            Err(_) => vec![engine_explore::ExploreCategory::error(format!(
+                "发现分类脚本超时（{}秒）",
+                SEARCH_TIMEOUT.as_secs()
+            ))],
         };
-        let Some(value) = parsed else {
-            return Ok(explore_category("全部", &trimmed, None)
-                .into_iter()
-                .collect());
-        };
-        let values = explore_categories_from_value(value);
-        if values.is_empty() {
-            return Ok(explore_category("全部", &trimmed, None)
-                .into_iter()
-                .collect());
-        }
-        Ok(values)
+        categories
+            .into_iter()
+            .map(|category| serde_json::to_value(category).map_err(|error| error.to_string()))
+            .collect()
     })
     .await
     .map_err(|error| error.to_string())??;

@@ -11,6 +11,7 @@ members = [
     "crates/engine-flow",
     "crates/engine-rss",
     "crates/engine-pipeline",
+    "crates/engine-explore",
     "crates/engine-native",
     "crates/reader-core",
     "crates/backup-core",
@@ -81,6 +82,7 @@ engine-http-native = { path = "crates/engine-http-native" }
 engine-flow = { path = "crates/engine-flow" }
 engine-rss = { path = "crates/engine-rss" }
 engine-pipeline = { path = "crates/engine-pipeline" }
+engine-explore = { path = "crates/engine-explore" }
 engine-native = { path = "crates/engine-native" }
 
 [package]
@@ -126,6 +128,7 @@ reader-core = { path = "crates/reader-core", features = ["ebook", "epub"] }
 backup-core = { path = "crates/backup-core" }
 engine-model = { path = "crates/engine-model" }
 engine-http-native = { path = "crates/engine-http-native" }
+engine-explore = { path = "crates/engine-explore" }
 engine-native = { path = "crates/engine-native" }
 tokio = { version = "1", features = ["rt", "time"] }
 

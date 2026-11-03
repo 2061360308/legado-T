@@ -5,10 +5,17 @@ export interface EngineEvalInput {
   sourceJson?: string | null;
 }
 
+export interface ExploreCategory {
+  title: string;
+  url: string;
+  style?: unknown;
+}
+
 export interface EngineOperations {
   eval(input: EngineEvalInput): Promise<string>;
   search(sourceJson: string, keyword: string, page?: number): Promise<unknown[]>;
   explore(sourceJson: string, url: string, page?: number): Promise<unknown[]>;
+  exploreCategories(sourceJson: string, raw: string): Promise<ExploreCategory[]>;
   info(sourceJson: string, bookJson: string): Promise<unknown>;
   toc(sourceJson: string, bookJson: string): Promise<unknown[]>;
   content(
@@ -87,6 +94,7 @@ export const ENGINE_OPERATION_NAMES = [
   "eval",
   "search",
   "explore",
+  "exploreCategories",
   "info",
   "toc",
   "content",

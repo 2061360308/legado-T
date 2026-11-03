@@ -18,9 +18,17 @@ import Icon from "@/components/android/Icon.vue";
 import RuleRow from "@/components/android/RuleRow.vue";
 import SelectActionBar from "@/components/android/SelectActionBar.vue";
 import AndroidDialog from "@/views/reader/dialogs/AndroidDialog.vue";
+import ImportRuleDialog from "@/components/android/ImportRuleDialog.vue";
 import OnlineImportDialog from "@/views/misc/OnlineImportDialog.vue";
 import QrCodeDialog from "@/views/source/QrCodeDialog.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
+import {
+  parseRuleList,
+  selectedByState,
+  stateByContent,
+  type RuleImportRow,
+} from "@/utils/ruleImport";
+import { showError } from "@/utils/errors";
 
 const router = useRouter();
 const listRef = ref<HTMLElement | null>(null);
@@ -54,6 +62,9 @@ const moreRight = ref(8);
 const importInput = ref<HTMLInputElement | null>(null);
 const onlineVisible = ref(false);
 const qrVisible = ref(false);
+const importVisible = ref(false);
+const importRows = ref<RuleImportRow<TxtTocRule>[]>([]);
+const importItems = computed(() => importRows.value.map((row) => row.item));
 const message = ref("");
 const form = ref<TxtTocRule>(emptyRule());
 
@@ -193,19 +204,58 @@ async function restoreDefault() {
   await load();
 }
 
+async function openImport(json: string) {
+  try {
+    const values = parseRuleList<TxtTocRule>(json);
+    if (!values.length) throw new Error("没有可导入的目录规则");
+    const existing = await txtTocRules();
+    const byId = new Map(existing.map((rule) => [String(rule.id), rule]));
+    importRows.value = values.map((value, index) => {
+      const old = value.id ? byId.get(String(value.id)) : undefined;
+      const state = stateByContent(old, value);
+      return {
+        value,
+        item: {
+          key: String(index),
+          title: value.name || `目录规则 ${index + 1}`,
+          subtitle: value.rule,
+          state,
+          selected: selectedByState(state, false),
+        },
+      };
+    });
+    importVisible.value = true;
+  } catch (error) {
+    showError("导入目录规则", error);
+  }
+}
+
+async function importSelected(keys: string[]) {
+  const values = keys
+    .map((key) => importRows.value[Number(key)]?.value)
+    .filter((value): value is TxtTocRule => Boolean(value));
+  if (!values.length) return;
+  try {
+    const report = await txtTocRuleImport(JSON.stringify(values));
+    const added = report.entries.filter((entry) => entry.status === "new").length;
+    const updated = report.entries.filter((entry) => entry.status === "updated").length;
+    notify(`导入完成：新增 ${added}，更新 ${updated}`);
+    await load();
+    importRows.value = [];
+  } catch (error) {
+    showError("导入目录规则", error);
+  }
+}
+
 async function onImport(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
   if (!file) return;
   menuVisible.value = false;
   try {
-    const report = await txtTocRuleImport(await file.text());
-    const added = report.entries.filter((entry) => entry.status === "new").length;
-    const updated = report.entries.filter((entry) => entry.status === "updated").length;
-    notify(`导入完成：新增 ${added}，更新 ${updated}`);
-    await load();
+    await openImport(await file.text());
   } catch (error) {
-    notify(String(error));
+    showError("读取目录规则文件", error);
   } finally {
     input.value = "";
   }
@@ -213,22 +263,14 @@ async function onImport(event: Event) {
 
 async function importOnline(url: string) {
   try {
-    const report = await txtTocRuleImport(await fetchRemoteText(url));
-    notify(`在线导入完成：共 ${report.entries.length} 条`);
-    await load();
+    await openImport(await fetchRemoteText(url));
   } catch (error) {
-    notify(String(error));
+    showError("在线导入目录规则", error);
   }
 }
 
 async function importQr(text: string) {
-  try {
-    const report = await txtTocRuleImport(text);
-    notify(`二维码导入完成：共 ${report.entries.length} 条`);
-    await load();
-  } catch (error) {
-    notify(String(error));
-  }
+  await openImport(text);
 }
 
 function onMenuSelect(key: string) {
@@ -347,6 +389,12 @@ onMounted(load);
       @confirm="importOnline"
     />
     <QrCodeDialog v-model="qrVisible" mode="import" @import="importQr" />
+    <ImportRuleDialog
+      v-model="importVisible"
+      title="导入目录规则"
+      :items="importItems"
+      @confirm="importSelected"
+    />
   </div>
 </template>
 

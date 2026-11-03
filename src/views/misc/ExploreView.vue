@@ -14,6 +14,7 @@ import SearchBar from "@/components/android/SearchBar.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
 import Icon from "@/components/android/Icon.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
+import { showError } from "@/utils/errors";
 
 const router = useRouter();
 const exploreListRef = ref<HTMLElement | null>(null);
@@ -106,7 +107,7 @@ async function load() {
   try {
     sources.value = await bookSourceList();
   } catch (error) {
-    showMessage(String(error));
+    showError("加载发现书源", error);
   } finally {
     loading.value = false;
   }
@@ -123,7 +124,7 @@ async function loadCategories(source: BookSource, force = false) {
     };
   } catch (error) {
     categories.value = { ...categories.value, [key]: [] };
-    showMessage(String(error));
+    showError("加载发现分类", error);
   } finally {
     if (categoryLoading.value === key) categoryLoading.value = "";
   }

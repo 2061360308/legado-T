@@ -81,3 +81,51 @@ async fn supports_javax_crypto_aes() {
         "67fHA+Z12z2jlwOLTBeCPA=="
     );
 }
+
+#[tokio::test]
+async fn supports_hutool_str_util_base64_and_gzip() {
+    assert_eq!(
+        eval(r#"Packages.cn.hutool.core.util.StrUtil.reverse("abc")"#).await,
+        "cba"
+    );
+    assert_eq!(
+        eval(r#"Packages.cn.hutool.core.util.StrUtil.isEmpty("")"#).await,
+        "true"
+    );
+    assert_eq!(
+        eval(r#"Packages.cn.hutool.core.util.StrUtil.isBlank(" ")"#).await,
+        "true"
+    );
+    assert_eq!(
+        eval(r#"Packages.cn.hutool.core.util.StrUtil.format("a{}b", 1)"#).await,
+        "a1b"
+    );
+    assert_eq!(
+        eval(r#"Packages.cn.hutool.core.codec.Base64.encode("abc")"#).await,
+        "YWJj"
+    );
+    assert_eq!(
+        eval(r#"java.bytesToStr(Packages.cn.hutool.core.codec.Base64.decode("YWJj"))"#).await,
+        "abc"
+    );
+    assert_eq!(
+        eval(r#"java.bytesToStr(Packages.cn.hutool.core.util.ZipUtil.unGzip(Packages.cn.hutool.core.util.ZipUtil.gzip("abc", "UTF-8")))"#).await,
+        "abc"
+    );
+}
+
+#[tokio::test]
+async fn supports_okhttp3_compat_classes() {
+    assert_eq!(
+        eval(r#"typeof Packages.okhttp3.OkHttpClient"#).await,
+        "function"
+    );
+    assert_eq!(
+        eval(r#"new Packages.okhttp3.Request.Builder().url("https://example.com").get().build().url"#).await,
+        "https://example.com"
+    );
+    assert_eq!(
+        eval(r#"Packages.okhttp3.MediaType.parse("application/json").__mediaType"#).await,
+        "application/json"
+    );
+}

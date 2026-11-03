@@ -6,11 +6,12 @@ import {
   bookSourceAddToShelf,
   bookSourceExplore,
 } from "@/core/application/bookSources";
-import { bookList } from "@/core/application/books";
+import { bookGet, bookList } from "@/core/application/books";
 import type { OnlineSearchResult } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
 import EmptyState from "@/components/android/EmptyState.vue";
+import { showError } from "@/utils/errors";
 
 const route = useRoute();
 const router = useRouter();
@@ -77,7 +78,7 @@ async function loadPage(next: number, append = false) {
     }
     if (!list.length) hasMore.value = false;
   } catch (error) {
-    message.value = String(error);
+    showError("加载发现页书籍", error);
     hasMore.value = false;
   } finally {
     loading.value = false;
@@ -97,19 +98,32 @@ function onScroll(event: Event) {
   }
 }
 
+function readPath(book: unknown): string {
+  const type = Number((book as { type?: number } | null)?.type ?? 0);
+  if (type & 2) return "/audio";
+  if (type & 4) return "/manga";
+  if (type & 8) return "/file-source";
+  return "/reader";
+}
+
 async function openBook(item: OnlineSearchResult) {
   if (!item.bookUrl || adding.value) return;
   if (inShelf(item)) {
-    router.push({ path: "/book-info", query: { bookUrl: item.bookUrl } });
+    try {
+      const book = await bookGet(item.bookUrl);
+      router.push({ path: readPath(book), query: { bookUrl: item.bookUrl } });
+    } catch (error) {
+      showError("打开书籍", error);
+    }
     return;
   }
   adding.value = item.bookUrl;
   try {
     const book = await bookSourceAddToShelf(sourceUrl.value, item.bookUrl);
     await loadShelf();
-    router.push({ path: "/book-info", query: { bookUrl: book.bookUrl } });
+    router.push({ path: readPath(book), query: { bookUrl: book.bookUrl } });
   } catch (error) {
-    message.value = String(error);
+    showError("加入书架并阅读", error);
   } finally {
     adding.value = "";
   }

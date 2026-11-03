@@ -17,9 +17,17 @@ import SearchBar from "@/components/android/SearchBar.vue";
 import Icon from "@/components/android/Icon.vue";
 import RuleRow from "@/components/android/RuleRow.vue";
 import SelectActionBar from "@/components/android/SelectActionBar.vue";
+import ImportRuleDialog from "@/components/android/ImportRuleDialog.vue";
 import OnlineImportDialog from "@/views/misc/OnlineImportDialog.vue";
 import QrCodeDialog from "@/views/source/QrCodeDialog.vue";
 import PopupMenu, { type PopupMenuItem } from "@/components/android/PopupMenu.vue";
+import {
+  parseRuleList,
+  selectedByState,
+  stateByContent,
+  type RuleImportRow,
+} from "@/utils/ruleImport";
+import { showError } from "@/utils/errors";
 
 const router = useRouter();
 const listRef = ref<HTMLElement | null>(null);
@@ -37,6 +45,9 @@ const moreTop = ref(52);
 const moreRight = ref(8);
 const onlineVisible = ref(false);
 const qrVisible = ref(false);
+const importVisible = ref(false);
+const importRows = ref<RuleImportRow<ReplaceRule>[]>([]);
+const importItems = computed(() => importRows.value.map((row) => row.item));
 const importInput = ref<HTMLInputElement | null>(null);
 
 const menuItems: PopupMenuItem[] = [
@@ -219,17 +230,56 @@ async function exportSelected() {
   if (saved) notify("规则已导出");
 }
 
+async function openImport(json: string) {
+  try {
+    const values = parseRuleList<ReplaceRule>(json);
+    if (!values.length) throw new Error("没有可导入的替换规则");
+    const existing = await replaceRules();
+    const byId = new Map(existing.map((rule) => [String(rule.id), rule]));
+    importRows.value = values.map((value, index) => {
+      const old = value.id ? byId.get(String(value.id)) : undefined;
+      const state = stateByContent(old, value);
+      return {
+        value,
+        item: {
+          key: String(index),
+          title: value.name || `替换规则 ${index + 1}`,
+          subtitle: value.group || value.pattern,
+          state,
+          selected: selectedByState(state, false),
+        },
+      };
+    });
+    importVisible.value = true;
+  } catch (error) {
+    showError("导入替换规则", error);
+  }
+}
+
+async function importSelected(keys: string[]) {
+  const values = keys
+    .map((key) => importRows.value[Number(key)]?.value)
+    .filter((value): value is ReplaceRule => Boolean(value));
+  if (!values.length) return;
+  try {
+    const report = await replaceRuleImport(JSON.stringify(values));
+    await readerInvalidateAll();
+    await load();
+    notify(`导入完成：新增 ${report.entries.filter((entry) => entry.status === "new").length}`);
+    importRows.value = [];
+  } catch (error) {
+    showError("导入替换规则", error);
+  }
+}
+
 async function onImport(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
   if (!file) return;
   try {
-    const report = await replaceRuleImport(await file.text());
-    await readerInvalidateAll();
-    await load();
-    notify(`导入完成：新增 ${report.entries.filter((entry) => entry.status === "new").length}`);
+    await openImport(await file.text());
   } catch (error) {
-    notify(String(error));
+    showError("读取替换规则文件", error);
   } finally {
     input.value = "";
   }
@@ -237,24 +287,14 @@ async function onImport(event: Event) {
 
 async function importOnline(url: string) {
   try {
-    const report = await replaceRuleImport(await fetchRemoteText(url));
-    await readerInvalidateAll();
-    await load();
-    notify(`在线导入完成：共 ${report.entries.length} 条`);
+    await openImport(await fetchRemoteText(url));
   } catch (error) {
-    notify(String(error));
+    showError("在线导入替换规则", error);
   }
 }
 
 async function importQr(text: string) {
-  try {
-    const report = await replaceRuleImport(text);
-    await readerInvalidateAll();
-    await load();
-    notify(`二维码导入完成：共 ${report.entries.length} 条`);
-  } catch (error) {
-    notify(String(error));
-  }
+  await openImport(text);
 }
 
 function onMenu(key: string) {
@@ -373,6 +413,12 @@ onActivated(() => {
       @confirm="importOnline"
     />
     <QrCodeDialog v-model="qrVisible" mode="import" @import="importQr" />
+    <ImportRuleDialog
+      v-model="importVisible"
+      title="导入替换规则"
+      :items="importItems"
+      @confirm="importSelected"
+    />
   </div>
 </template>
 

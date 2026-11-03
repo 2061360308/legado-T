@@ -1224,6 +1224,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "engine-explore"
+version = "0.1.0"
+dependencies = [
+ "engine-model",
+ "futures",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "engine-flow"
 version = "0.1.0"
 dependencies = [
@@ -1296,6 +1306,7 @@ name = "engine-js-wasm"
 version = "0.1.0"
 dependencies = [
  "base64 0.23.1",
+ "engine-explore",
  "engine-flow",
  "engine-http-native",
  "engine-js",
@@ -2743,6 +2754,7 @@ dependencies = [
  "chardetng",
  "chrono",
  "encoding_rs",
+ "engine-explore",
  "engine-http-native",
  "engine-model",
  "engine-native",

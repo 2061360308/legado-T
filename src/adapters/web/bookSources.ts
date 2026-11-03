@@ -1,7 +1,7 @@
 import type { BookSource } from "@/core/domain";
 import { db, nowSeconds } from "./database";
 import {
-  evalEngine,
+  exploreCategories as exploreCategoriesWasm,
   exploreSource,
   removeEngineCookie,
   searchSource,
@@ -339,42 +339,6 @@ export async function sourceExplore(
   }));
 }
 
-function category(title: string, url: string, style?: unknown) {
-  const name = title.trim() || url.trim();
-  if (!name && !url.trim()) return null;
-  return style && typeof style === "object"
-    ? { title: name, url: url.trim(), style }
-    : { title: name, url: url.trim() };
-}
-
-function categoriesFromValue(value: unknown): { title: string; url: string; style?: unknown }[] {
-  const items = Array.isArray(value) ? value : value && typeof value === "object" ? [value] : [];
-  const out: { title: string; url: string; style?: unknown }[] = [];
-  for (const item of items) {
-    if (Array.isArray(item)) {
-      const entry = category(String(item[0] ?? ""), String(item[1] ?? ""));
-      if (entry) out.push(entry);
-    } else if (item && typeof item === "object") {
-      const object = item as Record<string, unknown>;
-      const entry = category(
-        String(object.title ?? object.name ?? ""),
-        String(object.url ?? object.link ?? ""),
-        object.style,
-      );
-      if (entry) out.push(entry);
-    } else if (typeof item === "string") {
-      for (const line of item.split(/\r?\n/)) {
-        const [title, url] = line.split("::");
-        if (url) {
-          const entry = category(title ?? "", url);
-          if (entry) out.push(entry);
-        }
-      }
-    }
-  }
-  return out;
-}
-
 export async function exploreCategories(
   bookSourceUrl: string,
 ): Promise<{ title: string; url: string; style?: unknown }[]> {
@@ -383,28 +347,7 @@ export async function exploreCategories(
   if (!source) throw new Error("书源不存在");
   const raw = source.exploreUrl?.trim() ?? "";
   if (!raw) return [];
-  if (!raw.startsWith("@js:") && !raw.startsWith("[") && !raw.startsWith("{")) {
-    const lines = categoriesFromValue(raw);
-    if (lines.length) return lines;
-  }
-  let value: unknown = raw;
-  try {
-    value = JSON.parse(raw);
-  } catch {
-    const script = raw.startsWith("@js:") ? raw.slice(4).trim() : raw;
-    const text = await evalEngine({
-      script,
-      baseUrl: source.bookSourceUrl,
-      sourceJson: JSON.stringify(source),
-    });
-    try {
-      value = JSON.parse(text);
-    } catch {
-      value = text;
-    }
-  }
-  const categories = categoriesFromValue(value);
-  return categories.length ? categories : [category("全部", raw) as { title: string; url: string }];
+  return exploreCategoriesWasm(JSON.stringify(source), raw);
 }
 
 export async function checkBookSources(

@@ -204,6 +204,118 @@ async fn java_put_persists_across_evaluations() {
 }
 
 #[tokio::test]
+async fn js_lib_errors_include_the_real_js_message_and_stack() {
+    let source: BookSource = serde_json::from_str(
+        r#"{"bookSourceUrl":"https://example.com","jsLib":"throw new Error('boom-js-lib')"}"#,
+    )
+    .unwrap();
+    let js = Arc::new(engine_js::JsEngine::new().unwrap());
+    let engine = RuleEngine::new();
+    engine.set_js(js.clone());
+    let mut ctx = EvalContext::new(Content::text(""))
+        .with_source(&source)
+        .with_js(js.as_ref());
+
+    let error = engine
+        .eval_string("@js:1", &mut ctx)
+        .await
+        .unwrap_err()
+        .to_string();
+
+    assert!(error.contains("jsLib 执行失败"), "{error}");
+    assert!(error.contains("boom-js-lib"), "{error}");
+    assert!(error.contains('\n'), "expected a stack, got: {error}");
+}
+
+#[tokio::test]
+async fn js_lib_errors_name_the_missing_package() {
+    let source: BookSource = serde_json::from_str(
+        r#"{"bookSourceUrl":"https://example.com","jsLib":"Packages.missing"}"#,
+    )
+    .unwrap();
+    let js = Arc::new(engine_js::JsEngine::new().unwrap());
+    let engine = RuleEngine::new();
+    engine.set_js(js.clone());
+    let mut ctx = EvalContext::new(Content::text(""))
+        .with_source(&source)
+        .with_js(js.as_ref());
+
+    let error = engine
+        .eval_string("@js:1", &mut ctx)
+        .await
+        .unwrap_err()
+        .to_string();
+
+    assert!(
+        error.contains("Packages 里没有注册 Packages.missing"),
+        "{error}"
+    );
+}
+
+#[tokio::test]
+async fn tomato_js_lib_supports_hutool_and_okhttp_compat() {
+    let source: BookSource = serde_json::from_value(serde_json::json!({
+        "bookSourceUrl": "https://reading.snssdk.com",
+        "bookSourceName": "tomato",
+        "jsLib": include_str!("fixtures/tomato_js_lib.js"),
+    }))
+    .unwrap();
+    let js = Arc::new(engine_js::JsEngine::new().unwrap());
+    let engine = RuleEngine::new();
+    engine.set_js(js.clone());
+    let mut ctx = EvalContext::new(Content::text(""))
+        .with_source(&source)
+        .with_js(js.as_ref());
+
+    let value = engine
+        .eval_string(
+            r#"@js:[
+                typeof OkHttpClient,
+                StrUtil.reverse("abc"),
+                Packages.cn.hutool.core.codec.Base64.encode("abc"),
+                DigestUtil.md5Hex("abc"),
+                typeof ZipUtil.gzip
+            ].join("|")"#,
+            &mut ctx,
+        )
+        .await
+        .unwrap();
+
+    assert_eq!(
+        value,
+        "function|cba|YWJj|900150983cd24fb0d6963f7d28e17f72|function"
+    );
+}
+
+#[tokio::test]
+async fn tomato_xgorgon_without_body_returns_a_signed_url() {
+    let source: BookSource = serde_json::from_value(serde_json::json!({
+        "bookSourceUrl": "https://reading.snssdk.com",
+        "bookSourceName": "tomato",
+        "jsLib": include_str!("fixtures/tomato_js_lib.js"),
+    }))
+    .unwrap();
+    let js = Arc::new(engine_js::JsEngine::new().unwrap());
+    let engine = RuleEngine::new();
+    engine.set_js(js.clone());
+    let mut ctx = EvalContext::new(Content::text(""))
+        .with_source(&source)
+        .with_js(js.as_ref());
+
+    let value = engine
+        .eval_string(
+            r#"@js:xGorgon("new_category/front", "a=1", null, "")"#,
+            &mut ctx,
+        )
+        .await
+        .unwrap();
+
+    assert!(value.contains("reading.snssdk.com"), "{value}");
+    assert!(value.contains("X-Gorgon"), "{value}");
+    assert!(value.contains("X-Khronos"), "{value}");
+}
+
+#[tokio::test]
 async fn bare_json_member_rule_reads_object_field() {
     let engine = RuleEngine::new();
     let mut ctx = EvalContext::new(Content::Json(serde_json::json!({

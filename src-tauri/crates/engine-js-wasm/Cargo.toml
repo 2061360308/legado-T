@@ -11,6 +11,7 @@ crate-type = ["cdylib", "rlib"]
 base64.workspace = true
 engine-flow = { path = "../engine-flow", default-features = false }
 engine-http-native = { path = "../engine-http-native", default-features = false }
+engine-explore = { path = "../engine-explore" }
 engine-js = { path = "../engine-js" }
 engine-model = { path = "../engine-model" }
 engine-pipeline = { path = "../engine-pipeline" }

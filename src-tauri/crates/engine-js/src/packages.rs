@@ -105,7 +105,7 @@ fn java_lang_thread<'js>(ctx: &Ctx<'js>) -> rquickjs::Result<Object<'js>> {
 }
 
 fn zip_util<'js>(ctx: &Ctx<'js>) -> rquickjs::Result<Object<'js>> {
-    use std::io::Read as _;
+    use std::io::{Read as _, Write as _};
 
     let object = Object::new(ctx.clone())?;
     for (name, gzip) in [("unGzip", true), ("unZlib", false)] {
@@ -126,6 +126,24 @@ fn zip_util<'js>(ctx: &Ctx<'js>) -> rquickjs::Result<Object<'js>> {
             })?,
         )?;
     }
+    object.set(
+        "gzip",
+        Function::new(
+            ctx.clone(),
+            |ctx: Ctx<'js>, data: JsValue<'js>, _charset: Opt<String>| {
+                let bytes = crate::java::js_bytes(&data);
+                let mut encoder =
+                    flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
+                encoder.write_all(&bytes).map_err(|error| {
+                    rquickjs::Error::new_from_js_message("zip", "java", error.to_string())
+                })?;
+                let out = encoder.finish().map_err(|error| {
+                    rquickjs::Error::new_from_js_message("zip", "java", error.to_string())
+                })?;
+                Ok::<_, rquickjs::Error>(crate::java::bytes_to_js(&ctx, &out))
+            },
+        )?,
+    )?;
     Ok(object)
 }
 
@@ -272,6 +290,143 @@ const TREE: &str = r#"
   const DatatypeConverter = reg.DatatypeConverter, RandomUtil = reg.RandomUtil, ZipUtil = reg.ZipUtil;
   const URLDecoder = reg.URLDecoder, URLEncoder = reg.URLEncoder, Jsoup = reg.Jsoup;
 
+  const StrUtil = {
+    reverse: function (value) {
+      return Array.from(String(value === undefined || value === null ? '' : value)).reverse().join('');
+    },
+    isEmpty: function (value) {
+      return value === undefined || value === null || String(value).length === 0;
+    },
+    isBlank: function (value) {
+      return value === undefined || value === null || String(value).trim().length === 0;
+    },
+    format: function (template) {
+      const args = Array.prototype.slice.call(arguments, 1);
+      return String(template).replace(/\{\}/g, function () {
+        return args.length ? String(args.shift()) : '{}';
+      });
+    },
+    toString: function (value) {
+      return value === undefined || value === null ? '' : String(value);
+    },
+  };
+
+  function binaryCall(op, payload) {
+    const result = JSON.parse(__binary(op, JSON.stringify(payload)));
+    if (result.error) throw new Error(result.error);
+    return result.value;
+  }
+
+  const HutoolBase64 = {
+    encode: function (value) {
+      if (Array.isArray(value)) return String(binaryCall('base64Encode', { data: value }));
+      return String(java.base64Encode(String(value)));
+    },
+    decode: function (value) {
+      return java.base64DecodeToByteArray(String(value));
+    },
+  };
+
+  function okhttpHeaders(text) {
+    const headers = {};
+    String(text || '').split(/\r?\n/).forEach(function (line) {
+      const index = line.indexOf(':');
+      if (index > 0) {
+        headers[line.slice(0, index).trim().toLowerCase()] = line.slice(index + 1).trim();
+      }
+    });
+    return headers;
+  }
+
+  function okhttpResponse(response) {
+    const bodyText = String(response && response.body ? response.body() : '');
+    const headers = okhttpHeaders(response && response.headers ? response.headers() : '');
+    return {
+      code: function () { return Number(response && response.code ? response.code : 0); },
+      body: function () {
+        return {
+          string: function () { return bodyText; },
+          bytes: function () {
+            return response && response.bodyAsBytes ? response.bodyAsBytes() : [];
+          },
+        };
+      },
+      headers: function () {
+        return {
+          names: function () { return Object.keys(headers); },
+          get: function (name) {
+            const key = String(name).toLowerCase();
+            return Object.prototype.hasOwnProperty.call(headers, key) ? headers[key] : null;
+          },
+        };
+      },
+    };
+  }
+
+  function MediaType() {}
+  MediaType.parse = function (value) {
+    return { __mediaType: String(value) };
+  };
+
+  function RequestBody() {}
+  RequestBody.create = function (body, mediaType) {
+    return { __body: body, mediaType: mediaType };
+  };
+
+  function RequestBuilder() {
+    this.headers = {};
+    this.method = 'GET';
+    this.body = null;
+  }
+  RequestBuilder.prototype.url = function (value) {
+    this.url = String(value);
+    return this;
+  };
+  RequestBuilder.prototype.get = function () {
+    this.method = 'GET';
+    this.body = null;
+    return this;
+  };
+  RequestBuilder.prototype.post = function (body) {
+    this.method = 'POST';
+    this.body = body && body.__body !== undefined ? body.__body : body;
+    return this;
+  };
+  RequestBuilder.prototype.addHeader = function (name, value) {
+    this.headers[String(name)] = String(value);
+    return this;
+  };
+  RequestBuilder.prototype.build = function () {
+    return {
+      url: this.url,
+      method: this.method,
+      body: this.body,
+      headers: this.headers,
+    };
+  };
+
+  function Request() {}
+  Request.Builder = RequestBuilder;
+
+  function OkHttpClient() {}
+  OkHttpClient.prototype.newCall = function (request) {
+    return {
+      execute: function () {
+        const option = {
+          method: request.method || 'GET',
+          headers: request.headers || {},
+        };
+        if (request.body !== undefined && request.body !== null) {
+          option.body = request.body;
+        }
+        const response = java.ajax(String(request.url) + ',' + JSON.stringify(option));
+        return okhttpResponse(response);
+      },
+    };
+  };
+
+  function Response() {}
+
   const tree = {
     cn: { hutool: {
       crypto: {
@@ -279,10 +434,14 @@ const TREE: &str = r#"
         asymmetric: { RSA, KeyType },
         digest: { DigestUtil },
       },
-      core: { util: { RandomUtil, ZipUtil } },
+      core: {
+        util: { RandomUtil, ZipUtil, StrUtil },
+        codec: { Base64: HutoolBase64 },
+      },
     } },
     java: { net: { URLDecoder, URLEncoder },
             lang: { System: __legado_java_lang_system, Thread: __legado_java_lang_thread } },
+    okhttp3: { MediaType, RequestBody, Request, OkHttpClient, Response },
     org: { jsoup: { Jsoup } },
     javax: { crypto: { Mac, Cipher, spec: { SecretKeySpec, IvParameterSpec } },
              xml: { bind: { DatatypeConverter } } },

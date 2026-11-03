@@ -8,7 +8,7 @@ use engine_model::{
     BookSource, CacheStore, CookieStore, HttpFetcher, JsRequest, JsVariables, Result, RuleRunner,
     Source,
 };
-use rquickjs::{Context, Runtime};
+use rquickjs::{CatchResultExt as _, Context, Runtime};
 
 use crate::host::{Binding, Host};
 use crate::worker::{self, Deps, Evaluated};
@@ -120,16 +120,20 @@ impl WasmEngine {
                 .get(source_key)
                 .is_none_or(|loaded| loaded != lib);
             if needs_load {
-                self.context
-                    .with(|ctx| {
-                        let mut options = rquickjs::context::EvalOptions::default();
-                        options.strict = false;
-                        ctx.eval_with_options::<rquickjs::Value, _>(lib, options)
-                            .map(|_| ())
-                    })
-                    .map_err(|error| {
-                        engine_model::Error::Js(format!("jsLib 执行失败: {error}"))
-                    })?;
+                self.context.with(|ctx| {
+                    let mut options = rquickjs::context::EvalOptions::default();
+                    options.strict = false;
+                    match ctx
+                        .eval_with_options::<rquickjs::Value, _>(lib, options)
+                        .catch(&ctx)
+                    {
+                        Ok(_) => Ok(()),
+                        Err(caught) => Err(engine_model::Error::Js(format!(
+                            "jsLib 执行失败: {}",
+                            worker::format_caught(caught)
+                        ))),
+                    }
+                })?;
                 self.loaded_libs
                     .borrow_mut()
                     .insert(source_key.to_string(), lib.to_string());

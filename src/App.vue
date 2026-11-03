@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { computed, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import BottomNav, { type MainTab } from "@/components/android/BottomNav.vue";
+import GlobalErrorDialog from "@/components/android/GlobalErrorDialog.vue";
+import AppLogDialog from "@/views/misc/AppLogDialog.vue";
+import { globalError } from "@/utils/errors";
 import { syncPwaThemeColor } from "@/pwa";
 import { useThemeStore } from "@/stores/theme";
 
 const route = useRoute();
 const router = useRouter();
 const theme = useThemeStore();
+const logVisible = ref(false);
 
 watchEffect(() => {
   const reader = route.path === "/reader";
@@ -103,6 +107,13 @@ function navigate(tab: MainTab) {
     </div>
     <BottomNav v-if="showNav" :model-value="activeTab" @update:model-value="navigate" />
   </div>
+  <GlobalErrorDialog
+    v-model="globalError.visible"
+    :source="globalError.source"
+    :message="globalError.message"
+    @open-log="logVisible = true"
+  />
+  <AppLogDialog v-model="logVisible" />
 </template>
 
 <style scoped>
