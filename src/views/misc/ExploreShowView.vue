@@ -2,11 +2,8 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useScrollMemory } from "@/composables/useScrollMemory";
-import {
-  bookSourceAddToShelf,
-  bookSourceExplore,
-} from "@/core/application/bookSources";
-import { bookGet, bookList } from "@/core/application/books";
+import { bookSourceExplore } from "@/core/application/bookSources";
+import { bookList } from "@/core/application/books";
 import type { OnlineSearchResult } from "@/core/domain";
 import TitleBar from "@/components/android/TitleBar.vue";
 import CoverImage from "@/components/android/CoverImage.vue";
@@ -29,7 +26,6 @@ const loading = ref(false);
 const message = ref("");
 const page = ref(0);
 const hasMore = ref(true);
-const adding = ref("");
 const shelfKeys = ref(new Set<string>());
 
 function shelfKey(name: string, author: string): string {
@@ -98,35 +94,18 @@ function onScroll(event: Event) {
   }
 }
 
-function readPath(book: unknown): string {
-  const type = Number((book as { type?: number } | null)?.type ?? 0);
-  if (type & 2) return "/audio";
-  if (type & 4) return "/manga";
-  if (type & 8) return "/file-source";
-  return "/reader";
-}
-
-async function openBook(item: OnlineSearchResult) {
-  if (!item.bookUrl || adding.value) return;
-  if (inShelf(item)) {
-    try {
-      const book = await bookGet(item.bookUrl);
-      router.push({ path: readPath(book), query: { bookUrl: item.bookUrl } });
-    } catch (error) {
-      showError("打开书籍", error);
-    }
-    return;
-  }
-  adding.value = item.bookUrl;
-  try {
-    const book = await bookSourceAddToShelf(sourceUrl.value, item.bookUrl);
-    await loadShelf();
-    router.push({ path: readPath(book), query: { bookUrl: book.bookUrl } });
-  } catch (error) {
-    showError("加入书架并阅读", error);
-  } finally {
-    adding.value = "";
-  }
+function openBook(item: OnlineSearchResult) {
+  if (!item.bookUrl) return;
+  router.push({
+    path: "/book-info",
+    query: {
+      bookUrl: item.bookUrl,
+      sourceUrl: sourceUrl.value,
+      name: String(item.name || ""),
+      author: String(item.author || ""),
+      preview: "1",
+    },
+  });
 }
 
 onMounted(async () => {

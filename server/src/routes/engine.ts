@@ -79,6 +79,17 @@ function withCors(response: Response, request: Request, env: Env): Response {
   });
 }
 
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    const cause = error.cause;
+    if (cause instanceof Error && cause.message) {
+      return `${error.message}: ${cause.message}`;
+    }
+    return error.message || String(error);
+  }
+  return String(error);
+}
+
 function errorResponse(
   c: Context<{ Bindings: Env }>,
   status: number,
@@ -355,7 +366,11 @@ async function handleEngineFetch(c: Context<{ Bindings: Env }>): Promise<Respons
       headers,
     });
   } catch (error) {
-    return errorResponse(c, 502, (error as Error).message || "upstream request failed");
+    return errorResponse(
+      c,
+      502,
+      `${errorMessage(error) || "upstream request failed"}\ntarget: ${target.toString()}`,
+    );
   } finally {
     if (timer) clearTimeout(timer);
   }

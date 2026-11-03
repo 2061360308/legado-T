@@ -269,6 +269,25 @@ pub(crate) fn build_context(runtime: &Runtime, host: &Rc<Host>, lib: Option<&str
     Ok(context)
 }
 
+fn script_preview(script: &str) -> String {
+    let mut preview = String::new();
+    for ch in script.trim_start().chars().take(500) {
+        preview.push(ch);
+    }
+    if script.trim_start().chars().count() > 500 {
+        preview.push('…');
+    }
+    preview
+}
+
+pub(crate) fn format_script_error(script: &str, caught: rquickjs::CaughtError<'_>) -> String {
+    format!(
+        "{}\n--- script ---\n{}",
+        format_caught(caught),
+        script_preview(script)
+    )
+}
+
 pub(crate) fn format_caught(caught: rquickjs::CaughtError<'_>) -> String {
     const MAX_LEN: usize = 8 * 1024;
     let text = match caught {
@@ -349,12 +368,12 @@ fn eval_source(ctx: &Ctx<'_>, script: &str) -> Result<Evaluated> {
     match eval_with(ctx, &wrapped) {
         Ok(value) => Ok(evaluated(ctx, &value)),
         Err(caught) => {
-            let message = format_caught(caught);
+            let message = format_script_error(script, caught);
             if message.contains("return not in a function") {
                 let wrapped = format!("(function(){{{script}\n}})()");
                 return match eval_with(ctx, &wrapped) {
                     Ok(value) => Ok(evaluated(ctx, &value)),
-                    Err(caught) => Err(Error::Js(format_caught(caught))),
+                    Err(caught) => Err(Error::Js(format_script_error(script, caught))),
                 };
             }
             Err(Error::Js(message))

@@ -217,6 +217,23 @@ test("marks proxy errors as non-cacheable", async () => {
   assert.match(response.headers.get("cache-control") ?? "", /no-store/i);
 });
 
+test("reports the target and cause when the upstream request fails", async () => {
+  globalThis.fetch = (async () => {
+    throw new TypeError("fetch failed", {
+      cause: new Error("getaddrinfo ENOTFOUND example.com"),
+    });
+  }) as typeof fetch;
+
+  const response = await request({
+    "x-remote-target": "https://example.com/blocked",
+  });
+
+  assert.equal(response.status, 502);
+  const body = await response.text();
+  assert.match(body, /getaddrinfo ENOTFOUND example\.com/);
+  assert.match(body, /target: https:\/\/example\.com\/blocked/);
+});
+
 test("rejects an invalid engine header envelope", async () => {
   const captured = captureUpstreamHeaders();
   const response = await request({
